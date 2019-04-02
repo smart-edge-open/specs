@@ -1,0 +1,946 @@
+// Copyright 2019 Smart-Edge.com, Inc. All rights reserved.
+ 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+ 
+//     http://www.apache.org/licenses/LICENSE-2.0
+ 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package openness.ela;
+option go_package = "code.smart-edge.com/ela/pb";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+    info: {
+        title: "ELA Interface";
+        version: "1.0";
+        contact: {
+            name: "Smart Edge";
+            url: "code.smart-edge.com/ela";
+            email: "support@smart-edge.com";
+        };
+        license: {
+            name: "Apache 2.0 License";
+            url: "https://github.com/smartedgemec/blob/master/LICENSE";
+        };
+    };
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+// The services in this proto are for calls from the controller to an appliance
+// and so do not include the /devices/{id} prefix in the URL since the appliance
+// is already known.
+
+// ApplicationDeploymentService manages application deployments for an appliance.
+service ApplicationDeploymentService {
+    rpc DeployContainer (Application) returns (ApplicationID) {
+        option (google.api.http) = {
+            post: "/applications"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Deploy a container application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "Container application deployment commenced";
+                }
+            }
+        };
+    }
+
+    rpc DeployVM (Application) returns (ApplicationID) {
+        option (google.api.http) = {
+            post: "/applications"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Deploy a VM application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VM application deployment commenced";
+                }
+            }
+        };
+    }
+
+    rpc GetAll (google.protobuf.Empty) returns (Applications) {
+        option (google.api.http) = {
+            get: "/applications"
+            response_body: "applications"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve all deployed applications";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Application list";
+                }
+            }
+        };
+    }
+
+    rpc Get (ApplicationID) returns (Application) {
+        option (google.api.http) = {
+            get: "/applications/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve a deployed application";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Application";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+
+    rpc Redeploy (Application) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/applications/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Redeploy an application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "Application redeployment commenced";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+
+    rpc Remove (ApplicationID) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/applications/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Remove a deployed application";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Application removed";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+            responses: {
+                key: "409";
+                value: {
+                    description: "Application running, must be stopped before removal";
+                }
+            }
+        };
+    }
+}
+
+// ApplicationLifecycleService manages application lifecycles for an appliance.
+service ApplicationLifecycleService {
+    rpc Start (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/applications/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Start a deployed application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "Application start commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "Application already running or starting";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+
+    rpc Stop (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/applications/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Stop a deployed application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "Application shutdown commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "Application already shut down or shutting down";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+
+    rpc Restart (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/applications/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Restart a deployed application";
+            responses: {
+                key: "202";
+                value: {
+                    description: "Application restart commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "Application already restarted or restarting";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+}
+
+// VNFDeploymentService manages VNF (Virtual Network Function) deployments
+// for an appliance.
+service VNFDeploymentService {
+    rpc Deploy (VNF) returns (VNFID) {
+        option (google.api.http) = {
+            post: "/vnfs"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Deploy a VNF";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VNF deployment commenced";
+                }
+            }
+        };
+    }
+
+    rpc GetAll (google.protobuf.Empty) returns (VNFs) {
+        option (google.api.http) = {
+            get: "/vnfs"
+            response_body: "vnfs"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve all deployed VNFs";
+            responses: {
+                key: "200";
+                value: {
+                    description: "VNF list";
+                }
+            }
+        };
+    }
+
+    rpc Get (VNFID) returns (VNF) {
+        option (google.api.http) = {
+            get: "/vnfs/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve a deployed VNF";
+            responses: {
+                key: "200";
+                value: {
+                    description: "VNF";
+                }
+            }
+        };
+    }
+
+    rpc Redeploy (VNF) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/vnfs/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update a deployed VNF";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VNF redeployment commenced";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "VNF not found";
+                }
+            }
+        };
+    }
+
+    rpc Remove (VNFID) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/vnfs/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Remove a deployed VNF";
+            responses: {
+                key: "204";
+                value: {
+                    description: "VNF removed";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "VNF not found";
+                }
+            }
+            responses: {
+                key: "409";
+                value: {
+                    description: "VNF running, must be stopped before removal";
+                }
+            }
+        };
+    }
+}
+
+// VNFLifecycleService manages VNF (Virtual Network Function) lifecycles
+// for an appliance.
+service VNFLifecycleService {
+    rpc Start (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/vnfs/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Start a deployed VNF";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VNF start commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "VNF already running or starting";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "VNF not found";
+                }
+            }
+        };
+    }
+
+    rpc Stop (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/vnfs/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Stop a deployed VNF";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VNF shutdown commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "VNF already shut down or shutting down";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "VNF not found";
+                }
+            }
+        };
+    }
+
+    rpc Restart (LifecycleCommand) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/vnfs/{id}"
+            body: "cmd"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Restart a deployed VNF";
+            responses: {
+                key: "202";
+                value: {
+                    description: "VNF restart commenced";
+                }
+            }
+            responses: {
+                key: "204";
+                value: {
+                    description: "VNF already restarted or restarting";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "VNF not found";
+                }
+            }
+        };
+    }
+}
+
+// InterfaceService is for managing interface configurations.
+service InterfaceService {
+    rpc Update (NetworkInterface) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/interfaces/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update an interface configuration";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Interface configuration updated";
+                }
+            }
+        };
+    }
+
+    rpc BulkUpdate (NetworkInterfaces) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/interfaces"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update multiple interface configurations";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Interface configurations updated";
+                }
+            }
+        };
+    }
+
+    rpc GetAll (google.protobuf.Empty) returns (NetworkInterfaces) {
+        option (google.api.http) = {
+            get: "/interfaces"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve all interface configurations";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Interface configurations";
+                }
+            }
+        };
+    }
+
+    rpc Get (InterfaceID) returns (NetworkInterface) {
+        option (google.api.http) = {
+            get: "/interfaces/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve an interface configuration";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Interface configuration";
+                }
+            }
+        };
+    }
+}
+
+// ZoneService is for managing zone configurations.
+service ZoneService {
+    rpc Create (NetworkZone) returns (ZoneID) {
+        option (google.api.http) = {
+            post: "/zones"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Create a zone configuration";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Zone configuration created";
+                }
+            }
+        };
+    }
+
+    rpc Update (NetworkZone) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/zones/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update a zone configuration";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Zone configuration updated";
+                }
+            }
+        };
+    }
+
+    rpc BulkUpdate (NetworkZones) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/zones"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update multiple zone configurations";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Zones updated";
+                }
+            }
+        };
+    }
+
+    rpc GetAll (google.protobuf.Empty) returns (NetworkZones) {
+        option (google.api.http) = {
+            get: "/zones"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve all zone configurations";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Zone configurations";
+                }
+            }
+        };
+    }
+
+    rpc Get (ZoneID) returns (NetworkZone) {
+        option (google.api.http) = {
+            get: "/zones/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve a zone configuration";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Zone configuration";
+                }
+            }
+        };
+    }
+
+    rpc Delete (ZoneID) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/zones/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Delete a zone configuration";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Zone configuration deleted";
+                }
+            }
+        };
+    }
+}
+
+// ApplicationPolicyService manages application policies. Since
+// polices are attached to applications, the endpoint format is
+// /applications/{id}/policies.
+service ApplicationPolicyService {
+    rpc Set (TrafficPolicy) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/applications/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Create/update an application policy.";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Application policy set";
+                }
+            }
+        };
+    }
+
+    rpc Get (ApplicationID) returns (TrafficPolicy) {
+        option (google.api.http) = {
+            get: "/applications/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve an application policy.";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Application policy";
+                }
+            }
+        };
+    }
+}
+
+// InterfacePolicyService manages interface policies. Since
+// polices are attached to interfaces, the endpoint format is
+// /interfaces/{id}/policies.
+service InterfacePolicyService {
+    rpc Set (TrafficPolicy) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/interfaces/{id}"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Create/update an interface policy.";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Interface policy set";
+                }
+            }
+        };
+    }
+
+    rpc Get (InterfaceID) returns (TrafficPolicy) {
+        option (google.api.http) = {
+            get: "/interfaces/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve an interface policy.";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Interface policy";
+                }
+            }
+        };
+    }
+}
+
+enum LifecycleStatus {
+    UNKNOWN = 0;
+    READY = 1;
+    STARTING = 2;
+    RUNNING = 3;
+    STOPPING = 4;
+    STOPPED = 5;
+    ERROR = 6;
+}
+
+// Application message - contains information about the application
+// we're about to deploy (or one already deployed).
+// image string is used to build the url to download the image from over http
+// url is the following: http://${controller_name}/app_images/${image}
+// - so the last part is our image string - which is basically a file name
+// with a possible additional path prefixed
+message Application {
+    string id = 1; // ignored for deployment requests
+    string name = 2;
+    string vendor = 3;
+    string description = 4;
+    string image = 5;
+    int32 cores = 6;
+    int32 memory = 7;
+    LifecycleStatus status = 8; // read only
+}
+
+message Applications {
+    repeated Application applications = 1;
+}
+
+message VNF {
+    string id = 1; // ignored for deployment requests
+    string name = 2;
+    string vendor = 3;
+    string description = 4;
+    string image = 5;
+    int32 cores = 6;
+    int32 memory = 7;
+    LifecycleStatus status = 8; // read only
+}
+
+message VNFs {
+    repeated VNF vnfs = 1;
+}
+
+// TrafficPolicy is a policy that defines a set of traffic rules for the
+// identified component (i.e. an application, an interface, etc.)
+//
+// A policy engine applies these rules, using the context of the identified
+// component in order to send traffic to a target. The policy engine acts as
+// a man-in-the-middle. It may modify the packets in order to facilitate the
+// traffic flow. Examples of a policy engine are DPDK, VPP or iptables
+// applications.
+message TrafficPolicy {
+    string id = 1;
+    repeated TrafficRule traffic_rules = 2;
+}
+
+// TrafficRule defines a single traffic rule. The traffic selectors are used in
+// order to construct both a rule that must be matched as well as what action
+// to take on the traffic if the rule is matched.
+//
+// Since this is generic, the receiver of this rule must validate if the 
+// information provided by the caller is sufficient enough to construct a
+// policy of a particular type.
+//
+// A single rule only allows one of each traffic selector to be specified.
+// However, if a system supports advanced networking rules, a traffic rule can
+// specify a subnet mask or a range in order to create a more dynamic rule. 
+//
+// For example, a rule with a source selector of 10.20.30.0/24 could match all
+// source traffic in that subnet block.
+message TrafficRule {
+    string description = 1; // Description of the rule
+    uint32 priority = 2; // Priority of the rule
+    TrafficSelector source = 3; // Original source
+    TrafficSelector destination = 4; // Original destination
+    TrafficTarget target = 5; // Target for the traffic
+}
+
+// TrafficSelector defines the parameters for a traffic selector in a
+// TrafficRule. If a filter is empty, the selector does not evaluate it. The
+// receiver can select traffic by using the filters as it is examining a packet
+// or payload. They must filter using the OSI stack from layer 7 to layer 1. 
+// For example, if a MAC and IP are provided, the selector must first evaluate
+// the IP (layer 3) before the MAC (layer 2).
+// 
+// If a TrafficSelector has only the MAC filter specified, the selector is 
+// created only for that filter. However, if the selector contains a GTP and IP
+// filter, the selector is created on both and the traffic must match both
+// filters.
+message TrafficSelector {
+    string description = 1; // Description of the selector
+    MACFilter macs = 2; // Contains MAC information on which to match
+    IPFilter ip = 3; // Contains IP information on which to match
+    GTPFilter gtp = 4; // Contains GTP information on which to match
+}
+
+// MACFilter specifies properties related to MAC filters. Some implementations
+// may not support multiple MAC addresses.
+message MACFilter {
+    repeated string mac_addresses = 1; // MAC addresses in colon notation
+}
+
+// IPFilter specifies properties related to IP filters. Some implementations
+// may not support multiple IP address (subnets) or have IPv6 support.
+//
+// If a caller wishes to define a single port, begin_port and end_port should
+// be the same. For example, if the port is 3306, begin_port is 3306 and
+// end_port is 3306. It is invalid to provide a begin_port that is greater than
+// the end_port.
+//
+// Leaving the address and mask fields empty implies that all possible IP 
+// addresses are in the filter. Leaving these primitive datatypes empty
+// defaults to the type's zero-value (as is the norm in protobuf). The
+// following describes the behavior depending on how the fields are populated:
+//  ___________________________________________________________________________
+// |      Address      |      Mask      |               Result                |
+// |   Zero-value ("") | Zero-value (0) |  All IPv4 (and IPv6, if supported)  |
+// |    "0.0.0.0"      | Zero-value (0) |  All IPv4 only                      |
+// |       "::"        | Zero-value (0) |  All IPv6 only (if supported)       |
+// |    "1.2.3.4"      | Zero-value (0) |  Invalid                            |
+// |   Zero-value ("") |       24       |  Invalid                            |
+//  ___________________________________________________________________________
+message IPFilter {
+    string address = 1; // IPv4 or IPv6 address
+    uint32 mask = 2; // Subnet mask (for a host, IPv4 is 32 & IPv6 is 128)
+    uint32 begin_port = 3; // A begin port, inclusive (usually from 0 to 65535)
+    uint32 end_port = 4; // An end port, inclusive (usually from 0 to 65535)
+    string protocol = 5; // TCP, UDP, ICMP, SCTP
+}
+
+// GTPFilter specifies properties related to GTP filters. Some implementations
+// may not support multiple addresses or multiple IMSIs.
+message GTPFilter {
+    string address = 1; // IPv4 or IPv6 address
+    uint32 mask = 2; // Subnet mask (for a host, IPv4 is 32 & IPv6 is 128)
+    repeated string imsis = 3; // The IMSIs in the GTP payload
+}
+
+// TrafficTarget defines the parameters for a traffic target in a TrafficRule.
+// The action indicates what target action to perform. If a modify field is
+// empty, the target does not perform that type of modification.
+//
+// For example, if the target should modify the MAC address, then it should be
+// provided in the message. The modifiers are currently only applicable if the
+// interface is trying to modify the traffic, such as is the case with a
+// breakout interface.
+message TrafficTarget {
+    string description = 1; // Description of the target
+    enum TargetAction {
+        ACCEPT = 0; // Accepts the traffic
+        REJECT = 1; // Rejects the traffic
+        DROP = 2; // Drops the traffic
+    }
+    TargetAction action = 2; // Action for the target
+    MACModifier mac = 3; // Contains MAC information to modify
+    IPModifier ip = 4; // Contains IP information to modify
+}
+
+// MACModifier defines the MAC properties that should be modified.
+message MACModifier {
+    string mac_address = 1; // MAC address in colon notation
+}
+
+// IPModifier defines the IP properties that should be modified
+message IPModifier {
+    string address = 1; // IPv4 or IPv6 address
+    uint32 port = 2; // Port usually from 0 to 65535
+}
+
+// NetworkInterface defines a network interface available on the host. 
+// Interfaces are typically kernel interfaces by default, and can be changed if
+// the caller wishes to do so.
+//
+// The interface's type assists the policy engine in determining what types of
+// traffic the interface can expect to be handling, and is mainly here for
+// support of legacy implementations (which may require the field is updated in
+// order to work properly).
+//
+// An interface can belong to multiple zones, which can be useful for when
+// the amount of actual interfaces is limited.
+message NetworkInterface {
+    string id = 1; // Unique identifier for the interface
+    string description = 2; // Description of the interface
+    enum InterfaceDriver {
+        KERNEL = 0; // Represents a kernel-managed interface
+        USERSPACE = 1; // Represents an interface managed by an accelerated userspace driver
+    }
+    enum InterfaceType {
+        NONE = 0; // No port flow constraints (see TrafficPolicy for control)
+        UPSTREAM = 1; // (LEGACY) Indicates upstream only port
+        DOWNSTREAM = 2; // (LEGACY) Indicates downstream only port
+        BIDIRECTIONAL = 3; // (LEGACY) Indicates bidirectional port
+        BREAKOUT = 4; // (LEGACY) Indicates breakout port
+    }
+    InterfaceDriver driver = 3; // The driver of the interface
+    repeated InterfaceType types = 4; // The types of the interface
+
+    string mac_address = 5; // The MAC address for the interface
+    uint32 vlan = 6; // If supported, indicates the VLAN identifier
+
+    repeated string zones = 7; // The assigned zone identifiers
+
+    // (LEGACY) The fallback interface for this interface. This only exists for
+    // legacy dataplane implementations. In future implementations, a traffic
+    // policy should be used to yield the same results. Using this is not
+    // advisable as it belongs in the traffic policy and exposes a fallback
+    // behavior that can be seen as insecure.
+    string fallback_interface = 8;
+}
+
+message NetworkInterfaces {
+    repeated NetworkInterface network_interfaces = 1;
+}
+
+// NetworkZone defines a network zone. A zone is effectively a label that
+// isolates network traffic within an appliance. It allows for further rules
+// to be made surrounding the zone and interfaces that are assigned to it.
+message NetworkZone {
+    string id = 1; // Unique identifier for the zone
+    string description = 2; // Description of the zone
+}
+
+message NetworkZones {
+    repeated NetworkZone network_zones = 1;
+}
+
+// NetworkSetting defines a network setting. It can be included in an interface
+// to configure it's IP properties.
+message NetworkSetting {
+    enum Status {
+        NONE = 0;
+        STATIC = 1;
+        DHCPv4 = 2;
+        DHCPv6 = 3;
+        SLAAC = 4;
+    }
+    Status status = 1;
+    string address = 2;
+    uint32 mask = 3;
+    string gateway = 4;
+    repeated string dns = 5;
+}
+
+message LifecycleCommand {
+    string id = 1;
+    enum Command {
+        START = 0;
+        STOP = 1;
+        RESTART = 2;
+    }
+    Command cmd = 2;
+}
+
+message ApplicationID {
+    string id = 1;
+}
+
+message InterfaceID {
+    string id = 1;
+}
+
+message VNFID {
+    string id = 1;
+}
+
+message ZoneID {
+    string id = 1;
+}
