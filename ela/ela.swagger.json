@@ -751,11 +751,8 @@
         "driver": {
           "$ref": "#/definitions/NetworkInterfaceInterfaceDriver"
         },
-        "types": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NetworkInterfaceInterfaceType"
-          }
+        "type": {
+          "$ref": "#/definitions/NetworkInterfaceInterfaceType"
         },
         "mac_address": {
           "type": "string"

@@ -871,7 +871,7 @@ message NetworkInterface {
         BREAKOUT = 4; // (LEGACY) Indicates breakout port
     }
     InterfaceDriver driver = 3; // The driver of the interface
-    repeated InterfaceType types = 4; // The types of the interface
+    InterfaceType type = 4; // The type of the interface
 
     string mac_address = 5; // The MAC address for the interface
     uint32 vlan = 6; // If supported, indicates the VLAN identifier
