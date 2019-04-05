@@ -673,6 +673,71 @@ service InterfacePolicyService {
     }
 }
 
+// DNSService manages DNS configuration on the appliance.
+service DNSService {
+    rpc SetA (DNSARecordSet) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/",
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Set a DNS A record set";
+            responses: {
+                key: "204";
+                value: {
+                    description: "DNS A record set";
+                }
+            }
+        };
+    }
+    rpc DeleteA (DNSARecordSet) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/",
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Delete a DNS A record set";
+            responses: {
+                key: "204";
+                value: {
+                    description: "DNS A record set";
+                }
+            }
+        };
+    }
+
+    rpc SetForwarders (DNSForwarders) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/",
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Set DNS forwarders";
+            responses: {
+                key: "204";
+                value: {
+                    description: "DNS forwarders set";
+                }
+            }
+        };
+    }
+    rpc DeleteForwarders (DNSForwarders) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/",
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Delete DNS forwarders";
+            responses: {
+                key: "204";
+                value: {
+                    description: "DNS forwarders deleted";
+                }
+            }
+        };
+    }
+}
+
 enum LifecycleStatus {
     UNKNOWN = 0;
     READY = 1;
@@ -927,6 +992,32 @@ message LifecycleCommand {
         RESTART = 2;
     }
     Command cmd = 2;
+}
+
+// The following are specific DNS resource record (RR) message types. There are
+// well-documented options for RR types that can be extended within this schema
+// They can be found here:
+//
+// https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-4
+//
+// When adding new message types, consider the names as defined in the above
+// reference. If a user is seeking advanced DNS configuration, they should opt
+// to use a DNS forwarder to an external, more advanced DNS server. As such, we
+// should be certain that adding a new DNS RR message type is necessary.
+
+// DNSForwarders represents the upstream DNS forwarders, which may be used when
+// the DNS services is performing a recursive lookup. Forwarders should be
+// utilized when more advanced DNS usage is desired.
+message DNSForwarders {
+   repeated string ip_addresses = 1; // DNS IP addresses of upstream forwarders
+}
+
+// DNSARecordSet contains one or more values for a name, which is a fully
+// qualified domain name (FQDN). The values are typically either an ID for
+// the record (such as an application ID or a VNF ID) or an IP address.
+message DNSARecordSet {
+    string name = 1; // The FQDN for the record (www.a.com, foo.org, etc.)
+    repeated string values = 2; // The target values (app ID, IP address, etc.)
 }
 
 message ApplicationID {
