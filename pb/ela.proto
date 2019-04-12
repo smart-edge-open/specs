@@ -46,7 +46,7 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
 
 // ApplicationDeploymentService manages application deployments for an appliance.
 service ApplicationDeploymentService {
-    rpc DeployContainer (Application) returns (ApplicationID) {
+    rpc DeployContainer (Application) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/applications"
             body: "*"
@@ -62,7 +62,7 @@ service ApplicationDeploymentService {
         };
     }
 
-    rpc DeployVM (Application) returns (ApplicationID) {
+    rpc DeployVM (Application) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/applications"
             body: "*"
@@ -78,28 +78,12 @@ service ApplicationDeploymentService {
         };
     }
 
-    rpc GetAll (google.protobuf.Empty) returns (Applications) {
-        option (google.api.http) = {
-            get: "/applications"
-            response_body: "applications"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve all deployed applications";
-            responses: {
-                key: "200";
-                value: {
-                    description: "Application list";
-                }
-            }
-        };
-    }
-
-    rpc Get (ApplicationID) returns (Application) {
+    rpc GetStatus (ApplicationID) returns (LifecycleStatus) {
         option (google.api.http) = {
             get: "/applications/{id}"
         };
         option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve a deployed application";
+            description: "Get a deployed application's status";
             responses: {
                 key: "200";
                 value: {
@@ -137,7 +121,7 @@ service ApplicationDeploymentService {
         };
     }
 
-    rpc Remove (ApplicationID) returns (google.protobuf.Empty) {
+    rpc Undeploy (ApplicationID) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             delete: "/applications/{id}"
         };
@@ -255,7 +239,7 @@ service ApplicationLifecycleService {
 // VNFDeploymentService manages VNF (Virtual Network Function) deployments
 // for an appliance.
 service VNFDeploymentService {
-    rpc Deploy (VNF) returns (VNFID) {
+    rpc Deploy (VNF) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/vnfs"
             body: "*"
@@ -271,28 +255,12 @@ service VNFDeploymentService {
         };
     }
 
-    rpc GetAll (google.protobuf.Empty) returns (VNFs) {
-        option (google.api.http) = {
-            get: "/vnfs"
-            response_body: "vnfs"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve all deployed VNFs";
-            responses: {
-                key: "200";
-                value: {
-                    description: "VNF list";
-                }
-            }
-        };
-    }
-
-    rpc Get (VNFID) returns (VNF) {
+    rpc GetStatus (VNFID) returns (LifecycleStatus) {
         option (google.api.http) = {
             get: "/vnfs/{id}"
         };
         option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve a deployed VNF";
+            description: "Get a deployed VNF's status";
             responses: {
                 key: "200";
                 value: {
@@ -308,7 +276,7 @@ service VNFDeploymentService {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Update a deployed VNF";
+            description: "Redeploy a VNF";
             responses: {
                 key: "202";
                 value: {
@@ -324,7 +292,7 @@ service VNFDeploymentService {
         };
     }
 
-    rpc Remove (VNFID) returns (google.protobuf.Empty) {
+    rpc Undeploy (VNFID) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             delete: "/vnfs/{id}"
         };
@@ -507,7 +475,7 @@ service InterfaceService {
 
 // ZoneService is for managing zone configurations.
 service ZoneService {
-    rpc Create (NetworkZone) returns (ZoneID) {
+    rpc Create (NetworkZone) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/zones"
             body: "*"
@@ -620,21 +588,6 @@ service ApplicationPolicyService {
             }
         };
     }
-
-    rpc Get (ApplicationID) returns (TrafficPolicy) {
-        option (google.api.http) = {
-            get: "/applications/{id}"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve an application policy.";
-            responses: {
-                key: "200";
-                value: {
-                    description: "Application policy";
-                }
-            }
-        };
-    }
 }
 
 // InterfacePolicyService manages interface policies. Since
@@ -656,24 +609,12 @@ service InterfacePolicyService {
             }
         };
     }
-
-    rpc Get (InterfaceID) returns (TrafficPolicy) {
-        option (google.api.http) = {
-            get: "/interfaces/{id}"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Retrieve an interface policy.";
-            responses: {
-                key: "200";
-                value: {
-                    description: "Interface policy";
-                }
-            }
-        };
-    }
 }
 
 // DNSService manages DNS configuration on the appliance.
+// TODO this service provides `patch "/"` endpoints which the protoc_gen_swagger
+// tool is not able to handle. It reports the following error:
+// --swagger_out: segment neither wildcards, literal or variable: expected "{" but got "\x00": /
 service DNSService {
     rpc SetA (DNSARecordSet) returns (google.protobuf.Empty) {
         option (google.api.http) = {
@@ -738,14 +679,28 @@ service DNSService {
     }
 }
 
-enum LifecycleStatus {
-    UNKNOWN = 0;
-    READY = 1;
-    STARTING = 2;
-    RUNNING = 3;
-    STOPPING = 4;
-    STOPPED = 5;
-    ERROR = 6;
+message LifecycleCommand {
+    string id = 1;
+    enum Command {
+        START = 0;
+        STOP = 1;
+        RESTART = 2;
+    }
+    Command cmd = 2;
+}
+
+message LifecycleStatus {
+    enum Status {
+        UNKNOWN = 0;
+        DEPLOYING = 1;
+        READY = 2;
+        STARTING = 3;
+        RUNNING = 4;
+        STOPPING = 5;
+        STOPPED = 6;
+        ERROR = 7;
+    }    
+    Status status = 1;
 }
 
 // Application message - contains information about the application
@@ -762,7 +717,7 @@ message Application {
     string image = 5;
     int32 cores = 6;
     int32 memory = 7;
-    LifecycleStatus status = 8; // read only
+    LifecycleStatus.Status status = 8; // read only
 }
 
 message Applications {
@@ -777,7 +732,7 @@ message VNF {
     string image = 5;
     int32 cores = 6;
     int32 memory = 7;
-    LifecycleStatus status = 8; // read only
+    LifecycleStatus.Status status = 8; // read only
 }
 
 message VNFs {
@@ -785,7 +740,7 @@ message VNFs {
 }
 
 // TrafficPolicy is a policy that defines a set of traffic rules for the
-// identified component (i.e. an application, an interface, etc.)
+// identified component (i.e. an application, an interface, etc.).
 //
 // A policy engine applies these rules, using the context of the identified
 // component in order to send traffic to a target. The policy engine acts as
@@ -982,16 +937,6 @@ message NetworkSetting {
     uint32 mask = 3;
     string gateway = 4;
     repeated string dns = 5;
-}
-
-message LifecycleCommand {
-    string id = 1;
-    enum Command {
-        START = 0;
-        STOP = 1;
-        RESTART = 2;
-    }
-    Command cmd = 2;
 }
 
 // The following are specific DNS resource record (RR) message types. There are
