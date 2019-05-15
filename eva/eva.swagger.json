@@ -1,0 +1,72 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Application Virtualization API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Smart Edge",
+      "url": "github.com/smartedgemec/eva",
+      "email": "support@smart-edge.com"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/smartedgemec/schema/blob/master/LICENSE"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/container": {
+      "get": {
+        "summary": "GetContainerByIP queries an external orchestrator (e.g. Kubernetes) for\nan application running (not stopped) on the Node making the request with\na given (active) Pod IP address. The identity of the Node making the\nrequest is determined by the TLS certificate it presents at transport\nauthentication time.",
+        "description": "Request info on a container managed by an external orchestrator like Kubernetes",
+        "operationId": "GetContainerByIP",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/evaContainerInfo"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {}
+          },
+          "404": {
+            "description": "No running container has such IP address on the Node making the request",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ControllerVirtualizationAgent"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "evaContainerInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "description": "ContainerInfo represents the state of a running application."
+    }
+  }
+}
