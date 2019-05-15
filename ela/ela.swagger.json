@@ -10,7 +10,7 @@
     },
     "license": {
       "name": "Apache 2.0 License",
-      "url": "https://github.com/smartedgemec/blob/master/LICENSE"
+      "url": "https://github.com/smartedgemec/schema/blob/master/LICENSE"
     }
   },
   "schemes": [
@@ -24,29 +24,10 @@
   ],
   "paths": {
     "/applications": {
-      "get": {
-        "description": "Retrieve all deployed applications",
-        "operationId": "GetAll",
-        "responses": {
-          "200": {
-            "description": "Application list",
-            "schema": {}
-          }
-        },
-        "tags": [
-          "ApplicationDeploymentService"
-        ]
-      },
       "post": {
         "description": "Deploy a VM application",
         "operationId": "DeployVM",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/elaApplicationID"
-            }
-          },
           "202": {
             "description": "VM application deployment commenced",
             "schema": {}
@@ -69,11 +50,17 @@
     },
     "/applications/{id}": {
       "get": {
-        "description": "Retrieve an application policy.",
-        "operationId": "Get",
+        "description": "Get a deployed application's status",
+        "operationId": "GetStatus",
         "responses": {
           "200": {
-            "description": "Application policy",
+            "description": "Application",
+            "schema": {
+              "$ref": "#/definitions/elaLifecycleStatus"
+            }
+          },
+          "404": {
+            "description": "Application not found",
             "schema": {}
           }
         },
@@ -86,19 +73,13 @@
           }
         ],
         "tags": [
-          "ApplicationPolicyService"
+          "ApplicationDeploymentService"
         ]
       },
       "delete": {
         "description": "Remove a deployed application",
-        "operationId": "Remove",
+        "operationId": "Undeploy",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Application removed",
             "schema": {}
@@ -128,12 +109,6 @@
         "description": "Create/update an application policy.",
         "operationId": "Set",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Application policy set",
             "schema": {}
@@ -167,7 +142,9 @@
         "responses": {
           "200": {
             "description": "Interface configurations",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/elaNetworkInterfaces"
+            }
           }
         },
         "tags": [
@@ -178,12 +155,6 @@
         "description": "Update multiple interface configurations",
         "operationId": "BulkUpdate",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Interface configurations updated",
             "schema": {}
@@ -206,12 +177,14 @@
     },
     "/interfaces/{id}": {
       "get": {
-        "description": "Retrieve an interface policy.",
+        "description": "Retrieve an interface configuration",
         "operationId": "Get",
         "responses": {
           "200": {
-            "description": "Interface policy",
-            "schema": {}
+            "description": "Interface configuration",
+            "schema": {
+              "$ref": "#/definitions/elaNetworkInterface"
+            }
           }
         },
         "parameters": [
@@ -223,19 +196,13 @@
           }
         ],
         "tags": [
-          "InterfacePolicyService"
+          "InterfaceService"
         ]
       },
       "patch": {
         "description": "Create/update an interface policy.",
         "operationId": "Set",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Interface policy set",
             "schema": {}
@@ -263,29 +230,10 @@
       }
     },
     "/vnfs": {
-      "get": {
-        "description": "Retrieve all deployed VNFs",
-        "operationId": "GetAll",
-        "responses": {
-          "200": {
-            "description": "VNF list",
-            "schema": {}
-          }
-        },
-        "tags": [
-          "VNFDeploymentService"
-        ]
-      },
       "post": {
         "description": "Deploy a VNF",
         "operationId": "Deploy",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/elaVNFID"
-            }
-          },
           "202": {
             "description": "VNF deployment commenced",
             "schema": {}
@@ -308,12 +256,14 @@
     },
     "/vnfs/{id}": {
       "get": {
-        "description": "Retrieve a deployed VNF",
-        "operationId": "Get",
+        "description": "Get a deployed VNF's status",
+        "operationId": "GetStatus",
         "responses": {
           "200": {
             "description": "VNF",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/elaLifecycleStatus"
+            }
           }
         },
         "parameters": [
@@ -330,14 +280,8 @@
       },
       "delete": {
         "description": "Remove a deployed VNF",
-        "operationId": "Remove",
+        "operationId": "Undeploy",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "VNF removed",
             "schema": {}
@@ -367,12 +311,6 @@
         "description": "Restart a deployed VNF",
         "operationId": "Restart",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "202": {
             "description": "VNF restart commenced",
             "schema": {}
@@ -414,7 +352,9 @@
         "responses": {
           "200": {
             "description": "Zone configurations",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/elaNetworkZones"
+            }
           }
         },
         "tags": [
@@ -427,7 +367,9 @@
         "responses": {
           "200": {
             "description": "Zone configuration created",
-            "schema": {}
+            "schema": {
+              "properties": {}
+            }
           }
         },
         "parameters": [
@@ -448,12 +390,6 @@
         "description": "Update multiple zone configurations",
         "operationId": "BulkUpdate",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Zones updated",
             "schema": {}
@@ -481,7 +417,9 @@
         "responses": {
           "200": {
             "description": "Zone configuration",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/elaNetworkZone"
+            }
           }
         },
         "parameters": [
@@ -500,12 +438,6 @@
         "description": "Delete a zone configuration",
         "operationId": "Delete",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Zone configuration deleted",
             "schema": {}
@@ -527,12 +459,6 @@
         "description": "Update a zone configuration",
         "operationId": "Update",
         "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
           "204": {
             "description": "Zone configuration updated",
             "schema": {}
@@ -607,13 +533,13 @@
         "name": {
           "type": "string"
         },
+        "version": {
+          "type": "string"
+        },
         "vendor": {
           "type": "string"
         },
         "description": {
-          "type": "string"
-        },
-        "image": {
           "type": "string"
         },
         "cores": {
@@ -625,29 +551,24 @@
           "format": "int32"
         },
         "status": {
-          "$ref": "#/definitions/elaLifecycleStatus"
+          "$ref": "#/definitions/elaLifecycleStatusStatus"
+        },
+        "http_uri": {
+          "$ref": "#/definitions/elaApplicationHTTPSource"
         }
       },
-      "title": "Application message - contains information about the application\nwe're about to deploy (or one already deployed).\nimage string is used to build the url to download the image from over http\nurl is the following: http://${controller_name}/app_images/${image}\n- so the last part is our image string - which is basically a file name\nwith a possible additional path prefixed"
+      "description": "Application message - contains information about the application we're about\nto deploy (or one already deployed).\n\nImage sources will be added over time. For example, pulling from external\nDocker registries may be supported with a source such as:\n\n   // Image will be downloaded from a Docker registry\n   message DockerRegistrySource {\n       string repo = 1;\n       string tag = 2;\n\n       // authentication\n       string user = 3;\n       string token = 4;\n   }\n\nAnd then adding to the source field:\n\n    oneof source {\n        ...\n        DockerRegistrySource docker_registry = 9 + N;\n    }"
     },
-    "elaApplicationID": {
+    "elaApplicationHTTPSource": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
+        "http_uri": {
+          "type": "string",
+          "description": "docker import ${app.source.uri} ${app.id}:latest",
+          "title": "Location of VM image or container tarball. In the case of a\ncontainer, it will be imported with:"
         }
-      }
-    },
-    "elaApplications": {
-      "type": "object",
-      "properties": {
-        "applications": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/elaApplication"
-          }
-        }
-      }
+      },
+      "title": "Image will be downloaded from an HTTP GET endpoint"
     },
     "elaGTPFilter": {
       "type": "object",
@@ -706,9 +627,18 @@
       "title": "IPModifier defines the IP properties that should be modified"
     },
     "elaLifecycleStatus": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/elaLifecycleStatusStatus"
+        }
+      }
+    },
+    "elaLifecycleStatusStatus": {
       "type": "string",
       "enum": [
         "UNKNOWN",
+        "DEPLOYING",
         "READY",
         "STARTING",
         "RUNNING",
@@ -821,8 +751,7 @@
           }
         }
       },
-      "description": "A policy engine applies these rules, using the context of the identified\ncomponent in order to send traffic to a target. The policy engine acts as\na man-in-the-middle. It may modify the packets in order to facilitate the\ntraffic flow. Examples of a policy engine are DPDK, VPP or iptables\napplications.",
-      "title": "TrafficPolicy is a policy that defines a set of traffic rules for the\nidentified component (i.e. an application, an interface, etc.)"
+      "description": "TrafficPolicy is a policy that defines a set of traffic rules for the\nidentified component (i.e. an application, an interface, etc.).\n\nA policy engine applies these rules, using the context of the identified\ncomponent in order to send traffic to a target. The policy engine acts as\na man-in-the-middle. It may modify the packets in order to facilitate the\ntraffic flow. Examples of a policy engine are DPDK, VPP or iptables\napplications."
     },
     "elaTrafficRule": {
       "type": "object",
@@ -891,13 +820,13 @@
         "name": {
           "type": "string"
         },
+        "version": {
+          "type": "string"
+        },
         "vendor": {
           "type": "string"
         },
         "description": {
-          "type": "string"
-        },
-        "image": {
           "type": "string"
         },
         "cores": {
@@ -909,36 +838,24 @@
           "format": "int32"
         },
         "status": {
-          "$ref": "#/definitions/elaLifecycleStatus"
+          "$ref": "#/definitions/elaLifecycleStatusStatus"
+        },
+        "http_uri": {
+          "$ref": "#/definitions/elaVNFHTTPSource"
         }
-      }
+      },
+      "description": "VNF message - contains information about the application we're about to\ndeploy (or one already deployed).\n\nImage sources will be added over time. For example, pulling from external\nDocker registries may be supported with a source such as:\n\n   // Image will be downloaded from a Docker registry\n   message DockerRegistrySource {\n       string repo = 1;\n       string tag = 2;\n\n       // authentication\n       string user = 3;\n       string token = 4;\n   }\n\nAnd then adding to the source field:\n\n    oneof source {\n        ...\n        DockerRegistrySource docker_registry = 9 + N;\n    }"
     },
-    "elaVNFID": {
+    "elaVNFHTTPSource": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
+        "http_uri": {
+          "type": "string",
+          "description": "docker import ${app.source.uri} ${app.id}:latest",
+          "title": "Location of VM image or container tarball. In the case of a\ncontainer, it will be imported with:"
         }
-      }
-    },
-    "elaVNFs": {
-      "type": "object",
-      "properties": {
-        "vnfs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/elaVNF"
-          }
-        }
-      }
-    },
-    "elaZoneID": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
+      },
+      "title": "Image will be downloaded from an HTTP GET endpoint"
     }
   }
 }
