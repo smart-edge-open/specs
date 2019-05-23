@@ -550,6 +550,12 @@
           "type": "integer",
           "format": "int32"
         },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/elaPortProto"
+          }
+        },
         "status": {
           "$ref": "#/definitions/elaLifecycleStatusStatus"
         },
@@ -738,6 +744,19 @@
         }
       }
     },
+    "elaPortProto": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocol": {
+          "type": "string"
+        }
+      },
+      "title": "PortProto defines a port and protocol tuple (used for apps \u0026 VNFs)"
+    },
     "elaTrafficPolicy": {
       "type": "object",
       "properties": {
@@ -836,6 +855,12 @@
         "memory": {
           "type": "integer",
           "format": "int32"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/elaPortProto"
+          }
         },
         "status": {
           "$ref": "#/definitions/elaLifecycleStatusStatus"

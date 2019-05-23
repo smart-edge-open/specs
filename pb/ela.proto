@@ -733,8 +733,9 @@ message Application {
     string description = 5; // helpful description of the application
     int32 cores = 6;        // cores to start the application with (ignored if externally orchestrated)
     int32 memory = 7;       // memory (in MB) to reserve/allow the application (ignored if externally orchestrated)
+    repeated PortProto ports = 8; // ports and protocols that the service listens on (for port exposing)
 
-    LifecycleStatus.Status status = 8; // read only
+    LifecycleStatus.Status status = 9; // read only
 
     // Image will be downloaded from an HTTP GET endpoint
     message HTTPSource {
@@ -747,7 +748,7 @@ message Application {
     // Source to retrieve the container or VM from. It is expected that more
     // sources will be added over time.
     oneof source {
-        HTTPSource http_uri = 9;
+        HTTPSource http_uri = 10;
     }
 }
 
@@ -785,8 +786,9 @@ message VNF {
     string description = 5; // helpful description of the application
     int32 cores = 6;        // cores to start the application with (ignored if externally orchestrated)
     int32 memory = 7;       // memory (in MB) to reserve/allow the application (ignored if externally orchestrated)
+    repeated PortProto ports = 8; // ports and protocols that the service listens on (for port exposing)
 
-    LifecycleStatus.Status status = 8; // read only
+    LifecycleStatus.Status status = 9; // read only
 
     // Image will be downloaded from an HTTP GET endpoint
     message HTTPSource {
@@ -799,12 +801,18 @@ message VNF {
     // Source to retrieve the container or VM from. It is expected that more
     // sources will be added over time.
     oneof source {
-        HTTPSource http_uri = 9;
+        HTTPSource http_uri = 10;
     }
 }
 
 message VNFs {
     repeated VNF vnfs = 1;
+}
+
+// PortProto defines a port and protocol tuple (used for apps & VNFs)
+message PortProto {
+    uint32 port = 1;
+    string protocol = 2;
 }
 
 // TrafficPolicy is a policy that defines a set of traffic rules for the
