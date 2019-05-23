@@ -26,7 +26,7 @@
     "/notifications": {
       "get": {
         "summary": "Connection Establishment",
-        "description": "Connect to a secure WebSocket to receive streaming notifications.",
+        "description": "Connect to a secure WebSocket to receive streaming notifications (see reference for notification to consumer for schema of messages received on websocket).",
         "operationId": "GetNotifications",
         "responses": {
           "101": {
@@ -62,7 +62,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/eaaNotification"
+              "$ref": "#/definitions/eaaNotificationFromProducer"
             }
           }
         ],
@@ -120,7 +120,9 @@
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {}
+            "schema": {
+              "properties": {}
+            }
           },
           "400": {
             "description": "Invalid content, a required property is missing",
@@ -352,25 +354,6 @@
     }
   },
   "definitions": {
-    "eaaNotification": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "Name of notification type"
-        },
-        "version": {
-          "type": "string",
-          "title": "Version of notification type",
-          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
-        },
-        "payload": {
-          "$ref": "#/definitions/eaaRawJSONObject",
-          "description": "The payload can be any JSON object with a name and version-specific schema."
-        }
-      },
-      "title": "Notification payload"
-    },
     "eaaNotificationDescriptor": {
       "type": "object",
       "properties": {
@@ -389,6 +372,48 @@
         }
       },
       "title": "Notification descriptor"
+    },
+    "eaaNotificationFromProducer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of notification type"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version of notification type",
+          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
+        },
+        "payload": {
+          "$ref": "#/definitions/eaaRawJSONObject",
+          "description": "The payload can be any JSON object with a name and version-specific schema."
+        }
+      },
+      "title": "Notification payload (from producer)"
+    },
+    "eaaNotificationToConsumer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of notification type"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version of notification type",
+          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
+        },
+        "payload": {
+          "$ref": "#/definitions/eaaRawJSONObject",
+          "description": "The payload can be any JSON object with a name and version-specific schema."
+        },
+        "urn": {
+          "$ref": "#/definitions/eaaURN",
+          "description": "Namespace and id of the producer that notification comes from. Used only\nwhen sending notification from EAA to consumer. Producer do not have to\nfill this field."
+        }
+      },
+      "title": "Notification payload (to subscriber)"
     },
     "eaaRawJSONObject": {
       "type": "object",

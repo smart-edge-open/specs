@@ -102,14 +102,28 @@ message SubscriptionList {
     repeated Subscription subscriptions = 1;
 }
 
-// Notification payload
-message Notification {
+// Notification payload (from producer)
+message NotificationFromProducer {
     // Name of notification type
     string name = 1;
     // Version of notification type
     string version = 2 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {pattern: "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"}];
     // The payload can be any JSON object with a name and version-specific schema.
     RawJSONObject payload = 3;
+}
+
+// Notification payload (to subscriber)
+message NotificationToConsumer {
+    // Name of notification type
+    string name = 1;
+    // Version of notification type
+    string version = 2 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {pattern: "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"}];
+    // The payload can be any JSON object with a name and version-specific schema.
+    RawJSONObject payload = 3;
+    // Namespace and id of the producer that notification comes from. Used only
+    // when sending notification from EAA to consumer. Producer do not have to
+    // fill this field.
+    URN urn = 4; 
 }
 
 // Any object
@@ -123,7 +137,7 @@ service Eaa {
             get: "/notifications"
         };
         option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Connect to a secure WebSocket to receive streaming notifications.";
+            description: "Connect to a secure WebSocket to receive streaming notifications (see reference for notification to consumer for schema of messages received on websocket).";
             responses: {
                 key: "101";
                 value: {
@@ -257,7 +271,7 @@ service Eaa {
     }
 
     // Publish Notification
-    rpc PushNotificationToSubscribers (Notification) returns (google.protobuf.Empty) {
+    rpc PushNotificationToSubscribers (NotificationFromProducer) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/notifications"
             body: "*"
@@ -272,4 +286,9 @@ service Eaa {
             }
         };
     }
+
+    // Websocket defines the messages sent over a websocket (unused in REST API).
+    // This is just included here such that the schema ref can be generated, and
+    // is not to be implemented as a handler.
+    rpc Websocket (google.protobuf.Empty) returns (NotificationToConsumer) {}
 }
