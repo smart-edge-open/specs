@@ -78,27 +78,6 @@ service ApplicationDeploymentService {
         };
     }
 
-    rpc GetStatus (ApplicationID) returns (LifecycleStatus) {
-        option (google.api.http) = {
-            get: "/applications/{id}"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Get a deployed application's status";
-            responses: {
-                key: "200";
-                value: {
-                    description: "Application";
-                }
-            }
-            responses: {
-                key: "404";
-                value: {
-                    description: "Application not found";
-                }
-            }
-        };
-    }
-
     rpc Redeploy (Application) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             patch: "/applications/{id}"
@@ -224,6 +203,27 @@ service ApplicationLifecycleService {
                 key: "204";
                 value: {
                     description: "Application already restarted or restarting";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Application not found";
+                }
+            }
+        };
+    }
+
+    rpc GetStatus (ApplicationID) returns (LifecycleStatus) {
+        option (google.api.http) = {
+            get: "/applications/{id}"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Get a deployed application's status";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Application";
                 }
             }
             responses: {
