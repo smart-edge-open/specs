@@ -156,23 +156,25 @@ service CUPSUserplane {
 message Userplane {
     // The identifier of the userplane (read-only)
     string id = 1;
+    // The UUID of the userplane (optional, can be user-defined)
+    string uuid = 2;
     // The function of the userplane
-    Function function = 2;
+    Function function = 3;
     // The configuration of the userplane, used to configure
     // things such as networking on the userplane (optional)
-    Config config = 3;
+    Config config = 4;
     // The radios that should be directed towards the userplane.
     // This is used to assist with userplane selection during
     // an attach (i.e. a create session request) to the control
     // plane. (optional)
-    repeated Selector selectors = 4;
+    repeated Selector selectors = 5;
     // The UEs that should be entitled to access privileged networks
     // via this userplane.
     //
     // Note: UEs not in this list will still be able to get a bearer
     // via the userplane. The UEs in this list are just for entitlement
     // purposes. (optional)
-    repeated Entitlement entitlements = 5;
+    repeated Entitlement entitlements = 6;
 
     // Function of the userplane
     enum Function {

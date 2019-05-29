@@ -395,6 +395,10 @@
           "type": "string",
           "title": "The identifier of the userplane (read-only)"
         },
+        "uuid": {
+          "type": "string",
+          "title": "The UUID of the userplane (optional, can be user-defined)"
+        },
         "function": {
           "$ref": "#/definitions/UserplaneFunction",
           "title": "The function of the userplane"
