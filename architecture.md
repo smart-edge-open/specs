@@ -1,7 +1,7 @@
 # OpenNESS Architecture
 
 * [Overview](#overview)
- * [OpenNESS Controller Community edition](#ctrl)
+ * [OpenNESS Controller Community edition](#openness-controller-community-edition)
  * [OpenNESS Edge Node](#node)
 * [On-Premise Edge cloud](#onprem)
 * [Network edge cloud](#netkedge)
