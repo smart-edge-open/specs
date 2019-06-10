@@ -1,20 +1,20 @@
 # OpenNESS Architecture
 
 * [Overview](#overview)
- * [OpenNESS Controller Community edition](#openness-controller-community-edition)
- * [OpenNESS Edge Node](#node)
+  * [OpenNESS Controller Community edition](#openness-controller-community-edition)
+  * [OpenNESS Edge Node](#node)
 * [On-Premise Edge cloud](#onprem)
 * [Network edge cloud](#netkedge)
 * [OpenNESS API](#api)
- * [Edge Application APIs](#eaa)
- * [Edge Application Authentication APIs](#auth)
- * [Edge Lifecycle Management APIs](#ela)
- * [Edge Virtualization Infrastructure APIs](#eva)
- * [EPC Configuration APIs for edge cloud](#epc)
+  * [Edge Application APIs](#eaa)
+  * [Edge Application Authentication APIs](#auth)
+  * [Edge Lifecycle Management APIs](#ela)
+  * [Edge Virtualization Infrastructure APIs](#eva)
+  * [EPC Configuration APIs for edge cloud](#epc)
 * [Edge cloud applications](#edgeapps)
- * [Producer Application](#prod)
- * [Consumer Application](#cons)
- * [Cloud Adapter Edge cloud Application](#cons)
+  * [Producer Application](#prod)
+  * [Consumer Application](#cons)
+  * [Cloud Adapter Edge cloud Application](#cons)
 * [OpenNESS steps to get started](#testdrive)
 
 
@@ -27,7 +27,7 @@ OpenNESS based edge cloud reference stack consists of one or more OpenNESS Edge 
 
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on Intel Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge cloud specific APIs and network abstraction on to provide a unique and one window development solution for edge cloud. 
 
-## OpenNESS Controller Community edition
+### OpenNESS Controller Community edition
 OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable edge cloud node and application management. Community edition implements the right set of functions needed for a reference Edge cloud controller.
 - Web UI front end: HTML5 based web frontend for managing edge cloud.
 - User account management: Create administrator user for the edge cloud management. 
