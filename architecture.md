@@ -41,7 +41,8 @@ OpenNESS Controller Community edition consists of set of microservices that impl
   - Configure the Edge cloud application specific Traffic policy 
   - Configure the Edge cloud application specific DNS policy 
 - Edge virtualization infrastructure management: Use the existing industry standard NFV infrastructure API to stacks like Kubernetes or Libvert or Docker to start and stop edge cloud applications on the Edge node
-- Telemetry: Get basic edge cloud microservices telemetry from connected Edge nodes
+- Telemetry: Get basic edge cloud microservices telemetry from connected Edge nodes. 
+
 Most of the microservices on controller are written in Go lang. OpenNESS Controller Community Edition addresses the essential functionalities of Multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
 
 ### OpenNESS Edge Node
