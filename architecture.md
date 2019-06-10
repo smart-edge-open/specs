@@ -34,12 +34,12 @@ OpenNESS Controller Community edition consists of set of microservices that impl
 - Edge cloud application image repository: Provide edge cloud application image (VM/Container image) upload capability to the controller. 
 - Edge application life cycle management: Support set of APIs that enable
 - Configure CUPS EPC: Using reference REST API to configure 4G EPC control plane 
--- Enrolling OpenNESS edge node
--- Configure the interfaces and OpenNESS edge node microservices 
--- Configure the Local break out interfaces and policy 
--- Deploy edge cloud applications from the image repository 
--- Configure the Edge cloud application specific Traffic policy 
--- Configure the Edge cloud application specific DNS policy 
+  -- Enrolling OpenNESS edge node
+  -- Configure the interfaces and OpenNESS edge node microservices 
+  -- Configure the Local break out interfaces and policy 
+  -- Deploy edge cloud applications from the image repository 
+  -- Configure the Edge cloud application specific Traffic policy 
+  -- Configure the Edge cloud application specific DNS policy 
 - Edge virtualization infrastructure management: Use the existing industry standard NFV infrastructure API to stacks like Kubernetes or Libvert or Docker to start and stop edge cloud applications on the Edge node
 - Telemetry: Get basic edge cloud microservices telemetry from connected Edge nodes 
 
