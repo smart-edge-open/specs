@@ -32,8 +32,8 @@ OpenNESS Controller Community edition consists of set of microservices that impl
 - Web UI front end: HTML5 based web frontend for managing edge cloud.
 - User account management: Create administrator user for the edge cloud management. 
 - Edge cloud application image repository: Provide edge cloud application image (VM/Container image) upload capability to the controller. 
-- Edge application life cycle management: Support set of APIs that enable
 - Configure CUPS EPC: Using reference REST API to configure 4G EPC control plane 
+- Edge application life cycle management: Support set of APIs that enable
   - Enrolling OpenNESS edge node
   - Configure the interfaces and OpenNESS edge node microservices 
   - Configure the Local break out interfaces and policy 
