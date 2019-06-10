@@ -1,8 +1,8 @@
 # OpenNESS Architecture
 
 * [Overview](#overview)
-  * [OpenNESS Controller Community edition](#openness-controller-community-edition)
-  * [OpenNESS Edge Node](#node)
+  * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
+  * [OpenNESS Edge Node](#openness-edge-node)
 * [On-Premise Edge cloud](#onprem)
 * [Network edge cloud](#netkedge)
 * [OpenNESS API](#api)
@@ -27,7 +27,7 @@ OpenNESS based edge cloud reference stack consists of one or more OpenNESS Edge 
 
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on Intel Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge cloud specific APIs and network abstraction on to provide a unique and one window development solution for edge cloud. 
 
-### OpenNESS Controller Community edition
+### OpenNESS Controller Community Edition
 OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable edge cloud node and application management. Community edition implements the right set of functions needed for a reference Edge cloud controller.
 - Web UI front end: HTML5 based web frontend for managing edge cloud.
 - User account management: Create administrator user for the edge cloud management. 
@@ -41,7 +41,10 @@ OpenNESS Controller Community edition consists of set of microservices that impl
   - Configure the Edge cloud application specific Traffic policy 
   - Configure the Edge cloud application specific DNS policy 
 - Edge virtualization infrastructure management: Use the existing industry standard NFV infrastructure API to stacks like Kubernetes or Libvert or Docker to start and stop edge cloud applications on the Edge node
-- Telemetry: Get basic edge cloud microservices telemetry from connected Edge nodes 
+- Telemetry: Get basic edge cloud microservices telemetry from connected Edge nodes
+Most of the microservices on controller are written in Go lang. OpenNESS Controller Community Edition addresses the essential functionalities of Multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
+
+### OpenNESS Edge Node
 
 
 
