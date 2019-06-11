@@ -96,10 +96,21 @@ OpenNESS supports steering traffic to the applications that are already running 
 ###Multi Access Support
 OpenNESS Supports edge cloud deployment on LTE S1, SGi, LTE CUPS and IP. These different type of user traffic can be simultaneously deployed on the OpenNESS solution because of the Network abstraction built into the Dataplane NTS and Traffic policy APIs. The network abstraction also extends to Edge application as they need not be aware if they are deployed on the LTE/IP/Wireleine network. All the Edge application receive pure IP traffic. OpenNESS supports IPv4 Traffic. 
 
-![OpenNESS Native and LBP Applications](arch-images/openness_multiaccess.png)
+![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
+##On-Premise Edge cloud
+OpenNESS solution support On-Premise Edge cloud deployment. This is deployment is applicable in a Enterprise Edge cloud deployment scenario. Enterprise customers typically have pre-existing IT infrastructure that hosts all the enterprise application and is managed by a existing NFV infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to directly manage the virtualization infrastructure (using Libvirt/Docker containers) on the Edge node instead of creating a requirement of Kubernetes or Openstack. This type of deployment is also typical when Edge cloud solution vendor wants to host the Edge cloud controller in the cloud and have multiple Edge Cloud nodes in individual customer premise spanning across different enterprises. 
 
+OpenNESS support both Native and Local break out application for this deployment model.
 
+![On-Premise Edge cloud](arch-images/openness_onprem.png)
+
+##Network Edge cloud
+OpenNESS solution support Network Edge cloud deployment. This is deployment is applicable in a telco-operator deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to call the industry standard API to the NFVi manager like Kubernetes to manage the applications on the the Edge node. The Kubernetes master is assumed to be part of the exisitng infrastrucre and Edge node is added to the Kubernetes cluster. 
+
+OpenNESS support both Native and Local break out application for this deployment model.
+
+![Network Edge cloud](arch-images/openness_onprem.png)
 
 
 
