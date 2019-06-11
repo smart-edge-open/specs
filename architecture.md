@@ -93,8 +93,9 @@ OpenNESS supports steering traffic to the applications that are already running 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
-  
-
+###Multi Access Support
+OpenNESS Supports edge cloud deployment on LTE S1, SGi, LTE CUPS and IP. 
+![OpenNESS Native and LBP Applications](arch-images/openness_multiaccess.png)
 
 
 
