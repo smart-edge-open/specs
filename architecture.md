@@ -214,6 +214,15 @@ The consumer application is based on OpenVINO [OpenVINO] (https://software.intel
 - Video input stream is captured from a webcam installed on an Embedded Linux client device
 - The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
 
+### Cloud Adapter Edge cloud Application
+IOT usecases at the edge are becoming more relevant not only to addresses constant connectivity and backhaul networking requirement but also to address low latency response time. OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud vendors like Amazon AWS IoT Greengrass and Baidu OpenEdge on edge cloud platform. The existing IOT gateways can be migrated to OpenNESS as is or enhanced to call EAA APIs using extensions like Lambda functions. 
+
+![OpenNESS Cloud Adapters](arch-images/openness_cloudadapter.png)
+
+More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
+
+More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://www.openness.org/resources). 
+
 ## OpenNESS OS environment
 OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNESS also depends on following opensource components 
 Docker
