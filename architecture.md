@@ -3,8 +3,8 @@
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
   * [OpenNESS Edge Node](#openness-edge-node)
-    * [Edge Cloud Applications - Native](#edge-cloud-applications-native)
-    * [Edge Cloud Applications - Local Breakout](#edge-cloud-applications-local-breakout)
+    * [Edge Cloud Applications: Native](#edge-cloud-applications-native)
+    * [Edge Cloud Applications: Local Breakout](#edge-cloud-applications-local-breakout)
   * [Multi Access Support](#multi-access-support)
 * [On-Premise Edge cloud](#on-premise-edge-cloud)
 * [Network Edge cloud](#network-edge-cloud)
@@ -85,10 +85,10 @@ OpenNESS Edge Node consists of set of microservices that implement the following
 
 Resource usage: OpenNESS Edge node run all the non-critical/non-realtime microservices on the OS core, Dataplane NTS and DPDK PMD thread would need dedicated core/thread for high performance. Since DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
 
-#### Edge Cloud Applications - Native
+#### Edge Cloud Applications: Native
 OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge cloud platforms with expectation of resource pooling across Edge Applications and services. OpenNESS supports both native edge cloud apps and IOT Gateways to run as edge cloud applications or services co-existing on the same platform and sharing resources. 
 
-#### Edge Cloud Applications - Local Breakout
+#### Edge Cloud Applications: Local Breakout
 OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
