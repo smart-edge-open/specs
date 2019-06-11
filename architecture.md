@@ -215,7 +215,20 @@ The consumer application is based on OpenVINO [OpenVINO] (https://software.intel
 - The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
 
 ## OpenNESS OS environment
-OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. 
+OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNESS also depends on following opensource components 
+Docker
+Libvirt
+Boost
+openssl
+polyglot
+qemu
+DPDK
+Ansible
+Oracle MySQL Server
+Amazon Web Services
+Go libraries 
+
+Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
 ## OpenNESS steps to get started
 1. Go through the overview of the OpenNESS solution 
