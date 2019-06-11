@@ -3,6 +3,8 @@
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
   * [OpenNESS Edge Node](#openness-edge-node)
+    * [Edge Cloud Applications - Native](#edge-cloud-applications-native)
+    * [Edge Cloud Applications - Local Breakout](#edge-cloud-applications-local-breakout)
 * [On-Premise Edge cloud](#onprem)
 * [Network edge cloud](#netkedge)
 * [OpenNESS API](#api)
@@ -46,6 +48,32 @@ OpenNESS Controller Community edition consists of set of microservices that impl
 Most of the microservices on controller are written in Go lang. OpenNESS Controller Community Edition addresses the essential functionalities of Multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
 
 ### OpenNESS Edge Node
+OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge cloud applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
+- Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
+- Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
+- DNS service: Support DNS resolution and forwarding services for the application deployed on the edge cloud. DNS server is implemented based on Go DNS library. 
+- Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
+- Edge application traffic policy: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
+- Dataplane: Provide application specific traffic steering towards the Edge cloud application running on the edge node or on connected Local break out port. Note Datapalne NTS (Network Transport Service) is running on every Edge node instance. It is implemented in C lang using DPDK for high performance IO.
+  - Provide Reference ACL based Application specific packet tuple filtering 
+  - Provide reference GTPU base packet learning for S1 deployment 
+  - Provide reference Simultaneous IP and S1 deployment 
+  - Provide Reference API for REST/grpc to C API 
+  - Future enhancement of UE based traffic steering for authentication (not there now)
+  - Reference implementation which does not depend on EPC implementation 
+  - Reference Packet forwarding decision independent of IO
+  - Implement KNI based interface to Edge applications running as Containers/POD 
+  - Implement DPDK vHost user based interface to Edge applications running as Virtual Machine 
+  - Implement Scatter and Gather in upstream and downstream 
+- Application Authentication: Ability to authenticate Edge cloud application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
+- Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang.APIs are classified into:
+  - Edge Service Discovery 
+  - Edge Service Subscription/Unsubscription 
+  - Edge Service Notification update (using web socket)
+  - Edge Service data update 
+  
+
+
 
 
 
