@@ -14,12 +14,12 @@
   * [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
   * [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
   * [EPC Configuration APIs for edge cloud](#epc-configuration-apis-for-edge-cloud)
-* [Edge cloud applications](#edgeapps)
-  * [Producer Application](#prod)
-  * [Consumer Application](#cons)
-  * [Cloud Adapter Edge cloud Application](#cons)
-* [OpenNESS OS environment](#testdrive)
-* [OpenNESS steps to get started](#testdrive)
+* [Edge cloud applications](#edge-cloud-applications)
+  * [Producer Application](#producer-application)
+  * [Consumer Application](#consumer-application)
+  * [Cloud Adapter Edge cloud Application](#cloud-adapter-edge-cloud-application)
+* [OpenNESS OS environment](#openness-os-environment)
+* [OpenNESS steps to get started](#openness-steps-to-get-started)
 
 
 ## Overview
@@ -173,3 +173,28 @@ OpenNESS Reference solution provides framework for managing multiple Edge nodes 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
 
 Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://www.openness.org/resources).
+
+## Edge cloud applications
+OpenNESS Applications can onboarded and provisioned on the edge node only through OpenNESS Controller. The first step in Onboarding involves uploading the application image to the controller through the web interface. Both VM and Container images are supported. 
+
+OpenNESS application can be categorised in different ways depending on the scenarios. 
+
+- Depending on the OpenNESS APIs support 
+  - Applications calling EAA APIs for providing or consuming service on the edge cloud along with servicing end-users traffic 
+  - Applications not availing any services on the edge cloud just servicing end-user traffic 
+
+- Depending on the Application Execution platform 
+  - Application running natively on Edge node in a VM/Container provisioned by the OpenNESS controller 
+  - Application running on Local breakout not provisioned by the OpenNESS controller 
+
+- Depending on the servicing the end-user traffic
+  - Producer Application
+  - Consumer Application 
+
+### Producer Application
+
+### Consumer Application 
+
+## OpenNESS OS environment
+
+## OpenNESS steps to get started
