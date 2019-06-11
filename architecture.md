@@ -130,7 +130,7 @@ OpenNESS support deployment both types of applications. EAA APIs are implemented
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources) 
 
-![Edge Application APIs](arch-images/eaa.png)
+![Edge Application APIs](arch-images/openness-eaa.png)
 
 ### Edge Application Authentication APIs
 OpenNESS supports authentication of Edge cloud apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two catagories of Applications as discussed above and here is the implication for the authentication. 
@@ -160,3 +160,16 @@ As an example, an RPC to list the running containers on the node can take two pa
 2. If the node is orchestrated, then it can call the Controller EVA service which in turn will query the orchestrator for a list of containers on the requesting edge node.
 
 EVA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Virtualization Infrastructure APIs](https://www.openness.org/resources) 
+
+### EPC Configuration APIs for edge cloud 
+As part of the OpenNESS reference edge stack the OpenNESS controller community edition is used for configuring the traffic policy for CUPS EPC to steer traffic towards the edge cloud, This API is based on HTTP REST. Since 3GPP or ETSI MEC does not provide reference for these APIs various implementation of this Edge Controller to CUPS EPC might exist. OpenNESS has tried to take the approach of minimal changes to 3GPP CUPS EPC to achieve the edge cloud deployment. OpenNESS and HTTP REST APIs to the EPC CUPS is a reference implementation so customers using OpenNESS can integrate their own HTTP REST APIs to the EPC CUPS into the OpenNESS Controller. Special care has been taken to make these components Modular microservices. The diagram below show the LTE environment that was used for testing OpenNESS edge cloud end-to-end. 
+
+![LTE end-to-end setup](arch-images/openness-epc.png)
+
+OpenNESS Reference solution provides framework for managing multiple Edge nodes through centralized OpenNESS controller. In case of co-located EPC userplane and edge node deployment models, LTE user plane elements can be controlled through VIM infrastructure provided by OpenNESS reference solution. OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller. LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes. It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
+
+![LTE EPC Configuration](arch-images/openness-epcconfig.png)
+
+More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
+
+Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://www.openness.org/resources).
