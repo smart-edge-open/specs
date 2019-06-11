@@ -8,12 +8,12 @@
   * [Multi Access Support](#multi-access-support)
 * [On-Premise Edge cloud](#on-premise-edge-cloud)
 * [Network Edge cloud](#network-edge-cloud)
-* [OpenNESS API](#api)
-  * [Edge Application APIs](#eaa)
-  * [Edge Application Authentication APIs](#auth)
-  * [Edge Lifecycle Management APIs](#ela)
-  * [Edge Virtualization Infrastructure APIs](#eva)
-  * [EPC Configuration APIs for edge cloud](#epc)
+* [OpenNESS API](#openness-api)
+  * [Edge Application APIs](#edge-application-apis)
+  * [Edge Application Authentication APIs](#edge-application-authentication-apis)
+  * [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
+  * [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
+  * [EPC Configuration APIs for edge cloud](#epc-configuration-apis-for-edge-cloud)
 * [Edge cloud applications](#edgeapps)
   * [Producer Application](#prod)
   * [Consumer Application](#cons)
@@ -111,6 +111,25 @@ OpenNESS solution support Network Edge cloud deployment. This is deployment is a
 OpenNESS support both Native and Local break out application for this deployment model.
 
 ![Network Edge cloud](arch-images/openness_onprem.png)
+
+## OpenNESS API
+
+OpenNESS solution supports following APIs:
+- Edge Application APIs
+- Edge Application Authentication APIs
+- Edge Lifecycle Management APIs
+- Edge Virtualization Infrastructure APIs
+- EPC Configuration APIs for edge cloud 
+
+### Edge Application APIs
+Edge Application APIs are important APIs for Edge application developers. There are two types of use cases here. 
+1. Porting of existing pubic cloud application to the edge cloud based on OpenNESS: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the only requirement is Application image (VM/Container) should be uploaded to the controller and provisioned on the Edge node using OpenNESS Controller. In this case the Application can not call any EAA APIs and consume services on the edge cloud. It just services the end-user traffic. 
+2. Native Edge cloud Application calling EAA APIs: This is the scenario where customer want to develop Edge cloud applications that take advantages of the Edge cloud services resulting in more tactile application that responds to the changing user, network or resource scenarios. 
+
+OpenNESS support deployment both types of applications. EAA APIs are implemented as HTTPS REST. Edge Application APIs is implemented by the EAA. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The sequence diagram below show the supported APIs for the application 
+
+![Edge Application APIs](arch-images/eaa.png)
+
 
 
 
