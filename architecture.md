@@ -5,8 +5,9 @@
   * [OpenNESS Edge Node](#openness-edge-node)
     * [Edge Cloud Applications - Native](#edge-cloud-applications-native)
     * [Edge Cloud Applications - Local Breakout](#edge-cloud-applications-local-breakout)
-* [On-Premise Edge cloud](#onprem)
-* [Network edge cloud](#netkedge)
+  * [Multi Access Support](#multi-access-support)
+* [On-Premise Edge cloud](#on-premise-edge-cloud)
+* [Network Edge cloud](#network-edge-cloud)
 * [OpenNESS API](#api)
   * [Edge Application APIs](#eaa)
   * [Edge Application Authentication APIs](#auth)
@@ -26,7 +27,7 @@ OpenNESS is a opensource Edge cloud reference stack. It enables provides edge cl
 
 OpenNESS based edge cloud reference stack consists of one or more OpenNESS Edge node that hosts edge cloud applications or serve local breakout servers and an edge cloud OpenNESS controller (Community edition) that manages the OpenNESS edge cloud nodes. 
 
-![OpenNESS Architecture overview](arch-images/openness_overview.png#center)
+![OpenNESS Architecture overview](arch-images/openness_overview.png)
 
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on Intel Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge cloud specific APIs and network abstraction on to provide a unique and one window development solution for edge cloud. 
 
@@ -52,7 +53,7 @@ Most of the microservices on controller are written in Go lang. OpenNESS Control
 OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge cloud applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
 - Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
 
-![OpenNESS Edge Node Autentication](arch-images/openness_nodeauth.png#center)
+![OpenNESS Edge Node Autentication](arch-images/openness_nodeauth.png)
 
 - Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - DNS service: Support DNS resolution and forwarding services for the application deployed on the edge cloud. DNS server is implemented based on Go DNS library. 
@@ -71,7 +72,7 @@ OpenNESS Edge Node consists of set of microservices that implement the following
   - Implement Scatter and Gather in upstream and downstream 
 - Application Authentication: Ability to authenticate Edge cloud application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
-![OpenNESS Application Authentication](arch-images/openness_appauth.png#center)
+![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
 - Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang.APIs are classified into:
   - Edge Service Activation/Deactivation
@@ -90,7 +91,7 @@ OpenNESS supports execution of application on the Edge node as a VM/Container in
 ####Edge Cloud Applications - Local Breakout
 OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). 
 
-![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png#center)
+![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
   
 
