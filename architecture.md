@@ -50,6 +50,7 @@ Most of the microservices on controller are written in Go lang. OpenNESS Control
 ### OpenNESS Edge Node
 OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge cloud applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
 - Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
+![OpenNESS Edge Node Autentication](arch-images/openness_nodeauth.png)
 - Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - DNS service: Support DNS resolution and forwarding services for the application deployed on the edge cloud. DNS server is implemented based on Go DNS library. 
 - Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
@@ -66,11 +67,15 @@ OpenNESS Edge Node consists of set of microservices that implement the following
   - Implement DPDK vHost user based interface to Edge applications running as Virtual Machine 
   - Implement Scatter and Gather in upstream and downstream 
 - Application Authentication: Ability to authenticate Edge cloud application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
+![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 - Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang.APIs are classified into:
+  - Edge Service Activation/Deactivation
   - Edge Service Discovery 
   - Edge Service Subscription/Unsubscription 
   - Edge Service Notification update (using web socket)
   - Edge Service data update 
+  - Edge Service list subscription 
+
   
 
 
