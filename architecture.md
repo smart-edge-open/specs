@@ -94,8 +94,10 @@ OpenNESS supports steering traffic to the applications that are already running 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
 ###Multi Access Support
-OpenNESS Supports edge cloud deployment on LTE S1, SGi, LTE CUPS and IP. 
+OpenNESS Supports edge cloud deployment on LTE S1, SGi, LTE CUPS and IP. These different type of user traffic can be simultaneously deployed on the OpenNESS solution because of the Network abstraction built into the Dataplane NTS and Traffic policy APIs. The network abstraction also extends to Edge application as they need not be aware if they are deployed on the LTE/IP/Wireleine network. All the Edge application receive pure IP traffic. OpenNESS supports IPv4 Traffic. 
+
 ![OpenNESS Native and LBP Applications](arch-images/openness_multiaccess.png)
+
 
 
 
