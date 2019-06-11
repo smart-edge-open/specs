@@ -85,27 +85,27 @@ OpenNESS Edge Node consists of set of microservices that implement the following
 
 Resource usage: OpenNESS Edge node run all the non-critical/non-realtime microservices on the OS core, Dataplane NTS and DPDK PMD thread would need dedicated core/thread for high performance. Since DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
 
-####Edge Cloud Applications - Native
+#### Edge Cloud Applications - Native
 OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge cloud platforms with expectation of resource pooling across Edge Applications and services. OpenNESS supports both native edge cloud apps and IOT Gateways to run as edge cloud applications or services co-existing on the same platform and sharing resources. 
 
-####Edge Cloud Applications - Local Breakout
+#### Edge Cloud Applications - Local Breakout
 OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
-###Multi Access Support
+### Multi Access Support
 OpenNESS Supports edge cloud deployment on LTE S1, SGi, LTE CUPS and IP. These different type of user traffic can be simultaneously deployed on the OpenNESS solution because of the Network abstraction built into the Dataplane NTS and Traffic policy APIs. The network abstraction also extends to Edge application as they need not be aware if they are deployed on the LTE/IP/Wireleine network. All the Edge application receive pure IP traffic. OpenNESS supports IPv4 Traffic. 
 
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
-##On-Premise Edge cloud
+## On-Premise Edge cloud
 OpenNESS solution support On-Premise Edge cloud deployment. This is deployment is applicable in a Enterprise Edge cloud deployment scenario. Enterprise customers typically have pre-existing IT infrastructure that hosts all the enterprise application and is managed by a existing NFV infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to directly manage the virtualization infrastructure (using Libvirt/Docker containers) on the Edge node instead of creating a requirement of Kubernetes or Openstack. This type of deployment is also typical when Edge cloud solution vendor wants to host the Edge cloud controller in the cloud and have multiple Edge Cloud nodes in individual customer premise spanning across different enterprises. 
 
 OpenNESS support both Native and Local break out application for this deployment model.
 
 ![On-Premise Edge cloud](arch-images/openness_onprem.png)
 
-##Network Edge cloud
+## Network Edge cloud
 OpenNESS solution support Network Edge cloud deployment. This is deployment is applicable in a telco-operator deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to call the industry standard API to the NFVi manager like Kubernetes to manage the applications on the the Edge node. The Kubernetes master is assumed to be part of the exisitng infrastrucre and Edge node is added to the Kubernetes cluster. 
 
 OpenNESS support both Native and Local break out application for this deployment model.
