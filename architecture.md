@@ -152,7 +152,7 @@ ELA APIs are implemented over gRPC. For the purpose of visualization they are co
 ### Edge Virtualization Infrastructure APIs
 EVA APIs are implemented by the EVA microservice on the edge node. The EVA operates as a mediator between the infrastructure that the apps run on and the other edge components.
 
-The EVA abstracts how applications were deployed, whether with native calls to the edge node or through an external orchestrator, such as Kubernetes for containerized apps. In order to achieve this, there is also a complementary EVA service running on the Controller that the appliance EVA service can call when the appliance was configured as a node/slave of an external orchestrator.
+The EVA abstracts how applications were deployed, whether with native calls to the edge node or through an external orchestrator, such as Kubernetes for containerized apps. In order to achieve this, there is also a complementary EVA service running on the Controller that the edge node EVA service can call when the edge node was configured as a node/slave of an external orchestrator.
 
 As an example, an RPC to list the running containers on the node can take two paths:
 
@@ -192,9 +192,42 @@ OpenNESS application can be categorised in different ways depending on the scena
   - Consumer Application 
 
 ### Producer Application
+OpenNESS Producer application are edge cloud application that provide services to other applications running on the edge cloud platform. Producer applications do not serve end users traffic directly. They are sometime also referred to as Edge services. Here are some of the characteristics of a producer app.
+- It is mandatory for all producer apps to authenticate and acquire TLS 
+- All producer apps need to activate if the service provided by them needs to be discoverable by other edge applications 
+- A producer application can have one or more fields for which it will provide notification update 
 
 ### Consumer Application 
+OpenNESS Consumer application are edge cloud application that serve end users traffic directly. Consumer applications might or might not subscribe to the services from other producer applications on the edge node. Here are some of the characteristics of a consumer app.
+- It is not mandatory for consumer apps to authenticate if they don't wish to call EAA APIs.  
+- A consumer application can subscribe to any number of services from producer apps. Future extension can implement entitlements to consumer apps to create access control lists. 
+- Producer to Consumer update will use web socket for notification. If there is further data to be shared between producer and consumer other NFVi components like OVS/VPP/NIC-VF can be used for data transfer. 
+
+As part of the OpenNESS reference application there is a producer and consumer application. 
+
+![OpenNESS Reference Application](arch-images/openness_apps.png)
+
+The consumer application is based on OpenVINO [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
+
+- OpenVINO consumer app executes inference on input video stream
+- OpenVINO producer app generates notifications to the consumer app for changing the inference model
+- Video input stream is captured from a webcam installed on an Embedded Linux client device
+- The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
 
 ## OpenNESS OS environment
+OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. 
 
 ## OpenNESS steps to get started
+1. Go through the overview of the OpenNESS solution 
+2. Acquire the supported hardware components 
+3. Clone the Controller, Edge Node, Application and Common github repos
+4. Follow the README to build and set up Edge node 
+5. Follow the README to build and set up Controller
+6. Follow the README to build the reference Application 
+7. Connect required Upstream, Downstream and Local breakout devices
+8. Start the Controller and create Administrator user 
+9. Start the Edge node and complete enrolment and Interface configuration 
+10. Upload the Reference application image to the controller 
+11. Provision the reference applications (Producer and Consumer) from the controller to the Edge node
+12. Configure the traffic and DNS policy for the reference application
+13. Check for traffic being served on the edge cloud - monitor the telemetry for configured policy and packets in/out of the dataplane and application
