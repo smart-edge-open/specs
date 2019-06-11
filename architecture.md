@@ -128,8 +128,35 @@ Edge Application APIs are important APIs for Edge application developers. There 
 
 OpenNESS support deployment both types of applications. EAA APIs are implemented as HTTPS REST. Edge Application APIs is implemented by the EAA. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The sequence diagram below show the supported APIs for the application 
 
+More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources) 
+
 ![Edge Application APIs](arch-images/eaa.png)
 
+### Edge Application Authentication APIs
+OpenNESS supports authentication of Edge cloud apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two catagories of Applications as discussed above and here is the implication for the authentication. 
+1. Existing pubic cloud application ported to OpenNESS: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the Application can not call any EAA APIs and consume services on the edge cloud. It just services the end-user traffic. So the Application will not call authentication API to acquire a TLS certificate. 
+2. Native Edge cloud Application calling EAA APIs: This is the scenario where customer want to develop Edge cloud applications that take advantages of the Edge cloud services resulting in more tactile application that responds to the changing user, network or resource scenarios. Suck Application should first call authentication APIs and acquire TLS certificate. Authentication of Applications that provide services to other Applications on the edge cloud (Producer Apps) is  mandatory.
+
+For applications executing on the Local breakout the Authentication is not applicable since its not provisioned by the OpenNESS controller. 
+
+Authentication APIs are implemented as HTTP REST APIs. 
+
+More details about the APIs can be found here [Application Authentication APIs](https://www.openness.org/resources) 
+
+### Edge Lifecycle Management APIs
+ELA APIs are implemented by the ELA microservice on the edge node. The ELA runs on the Edge node and operates as a deployment and lifecycle service for applications and VNFs (Virtual Network Functions). It also provides network interface, network zone, and application/interface policy services.
+
+ELA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Lifecycle Management APIs](https://www.openness.org/resources) 
 
 
+### Edge Virtualization Infrastructure APIs
+EVA APIs are implemented by the EVA microservice on the edge node. The EVA operates as a mediator between the infrastructure that the apps run on and the other edge components.
 
+The EVA abstracts how applications were deployed, whether with native calls to the edge node or through an external orchestrator, such as Kubernetes for containerized apps. In order to achieve this, there is also a complementary EVA service running on the Controller that the appliance EVA service can call when the appliance was configured as a node/slave of an external orchestrator.
+
+As an example, an RPC to list the running containers on the node can take two paths:
+
+1. If the node is unorchestrated, then it can call the Docker daemon to get its response data.
+2. If the node is orchestrated, then it can call the Controller EVA service which in turn will query the orchestrator for a list of containers on the requesting edge node.
+
+EVA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Virtualization Infrastructure APIs](https://www.openness.org/resources) 
