@@ -126,7 +126,7 @@ As mentioned above, any single solution may not be a best fit for all deployment
 -	Control and User Plane Separation of EPC nodes (CUPS) (https://www.3gpp.org/cups)
 -	3GPP TS 23.501 V15.1.0, “3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 15)” (2018-03)
 
-## 6.2	List of Abbreviations
+## List of Abbreviations
 - OpenNESS: Open Network Edge Services Software
 - MEC: Multi-Access Edge Computing
 - ETSI: European Telecommunications Standards Institute
