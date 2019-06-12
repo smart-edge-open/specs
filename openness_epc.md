@@ -1,5 +1,5 @@
 # Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC
-## A white paper for reference architecture suggested using OpenNESS solution  
+  - A white paper for reference architecture suggested using OpenNESS solution  
 
 * [Abstract](#abstract)
 * [Introduction](#introduction)
@@ -33,4 +33,120 @@ Architectural enhancement for Control plane and User plane separation suggested 
 
 Exponential growth in mobile subscribers use of wireless network for various use cases raised the demand for the requirements likes reduced latency in application data service, location-based content serving and many more.   Not to discuss further details of requirements and advantages of CUPS in LTE network to keep the focus of this writing around topic, selection of proper user plane function for processing a given subscriber(s) data is one of the key aspects to achieve the CUPS advantages. 
 
-As the selection of Serving Gateway (SGW-U) and PDN Gateway (PGW-U) happens at UE initial attach process or PDN connection establishment phase, 3GPP standard suggests multiple ways to select SGW and PGWs.  Though implementation has flexibility to choose any method that best servers the Edge requirements, this technical writing would like to suggest one of those procedures for selection of user plane and steering subscriber’s data to closest userplane nodes, where the application data processing can be co-located with gateway.    APN (or APN FQDN per 3GPP TS 23.003) can be used in selection process of PGW-U, following the selection of SGW-U can be based on TAC which is based on location of Network topology and UE current location. 
+As the selection of Serving Gateway (SGW-U) and PDN Gateway (PGW-U) happens at UE initial attach process or PDN connection establishment phase, 3GPP standard suggests multiple ways to select SGW and PGWs.  Though implementation has flexibility to choose any method that best servers the Edge requirements, this technical writing would like to suggest one of those procedures for selection of user plane and steering subscriber’s data to closest userplane nodes, where the application data processing can be co-located with gateway. APN (or APN FQDN per 3GPP TS 23.003) can be used in selection process of PGW-U, following the selection of SGW-U can be based on TAC which is based on location of Network topology and UE current location. 
+
+## Implementation guidelines for Edge solutions
+Taking the advantage of 3GG CUPS architecture into consideration, the OpenNESS reference solution would like to suggest co-located LTE Userplane along with the Edge compute nodes where the subscribes application data can be processed is one of best implementation strategy for Edge solutions.     The term “Co-Located” can be taken loosely taken in implementation as any single solution model may not best fit in all types of deployment requirements.  Below three deployment models are further studied with respect to Edge deployment solutions. 
+
+Deployment model – I:   S-GW, P-GW User planes and Edge compute node components are deployed as different nodes.   An Edge controller can centrally control and manage the Edge compute nodes which are co-located but physically deployed on different hardware platforms. 
+
+![3GPP CUPS model 1](epc-images/openness_epc1.png)
+
+Deployment model – II:  PDN GW Userplane is co-located along with Edge compute node on the same hardware platform and can be managed through VIM infrastructure of OpenNESS solution.  PDN GW userplane function can run on a bare-metal or Virtual machine or Containerized on OpenNESS Edge compute node platform. 
+
+![3GPP CUPS model 2](epc-images/openness_epc2.png)
+
+Deployment model – III:  Combined userplane with SGW and PGW functionality running on Edge compute node platform is one of the most preferred Edge solutions when possible.   Having a single gateway (sgw+pgw) reduces the hop count in dataplane path before processing subscriber’s data by applications launched at edge nodes.  Userplane functionality can be bare-metal or VM or containerized solution on edge compute node platform. 
+
+![3GPP CUPS model 3](epc-images/openness_epc3.png)
+
+## OpenNESS solution space
+OpenNESS Reference solution provides the complete frame work for managing multiple Edge nodes through a centralized edge controller.   In case of co-located userplane and edge node deployment models, LTE user plane elements can be controlled through VIM infrastructure provided by OpenNESS reference solution.   OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller.  LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes.   It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
+In order to keep the API interface simple and to the purpose, single HTTP API endpoint “/userplane” is being suggested with JSON formatted REST body with multiple optional fields to configure userplane instances launched through Edge controller.  Typical HTTP commands POST, PATCH, GET, and DELETE operations can be performed on this API for add, update, get and remove userplane configuration operations respectively.  
+
+The parameters of this API endpoint can logically form into three groups 
+- Userplane connectivity configuration 
+- Userplane selection criteria 
+- UE entitlement for further controlling traffic routed towards userplane. 
+
+###	OpenNESS suggested API flows for CUPS integration
+A high-level CUPS EPC configuration flow from OpenNESS controller community edition is shown in the diagram below. The HTTP REST API interface is only between OpenNESS controller community edition and Reference EPC control plane. There are some predefined configuration for the CUPS EPC userplane that is used by the userplane at the startup. 
+
+![LTE CUPS Configuration](epc-images/openness_epcconfig.png)
+
+Below is the detailed sequence diagrams showing the API communication between Edge Controller and OAM Agent of EPC Control plane, Edge Controller and EPC User plane. These flows shown for configuration of combined userplane mode (ie., SGW-U + PGW-U) functionality. However similar flows can be visualized for other possible configuration of co-located userplane and Edge compute node deployment models. 
+
+![LTE CUPS Configuration Sequence diagram 1](epc-images/openness_epcseq1.png)
+
+![LTE CUPS Configuration Sequence diagram 2](epc-images/openness_epcseq2.png)
+
+![LTE CUPS Configuration Sequence diagram 3](epc-images/openness_epcseq3.png)
+
+OpenNESS suggested API end point has be integrated and verified in an end-to-end lab conditions with one of the Intel partnered pioneered EPC vendor solution for completeness of this study.   
+
+### JSON schema for userplane API endpoint
+
+{
+  "id": "string",
+  "uuid": "string",
+  "function": "NONE",
+  "config": {
+    "sxa": {
+      "cp_ip_address": "string",
+      "up_ip_address": "string"
+    },
+    "sxb": {
+      "cp_ip_address": "string",
+      "up_ip_address": "string"
+          },
+    "s1u": {
+      "up_ip_address": "string"
+    },
+    "s5u_sgw": {
+      "up_ip_address": "string"
+    },
+    "s5u_pgw": {
+      "up_ip_address": "string"
+    },
+    "sgi": {
+      "up_ip_address": "string"
+    },
+    "breakout": [
+      {
+        "up_ip_address": "string"
+      }
+    ],
+    "dns": [
+      {
+        "up_ip_address": "string"
+      }
+    ]
+  },
+  "selectors": [
+    {
+      "id": "string",
+      "network": {
+        "mcc": "string",
+        "mnc": "string"
+      },
+      "uli": {
+        "tai": {
+          "tac": 0
+        },
+        "ecgi": {
+          "eci": 0
+        }
+      },
+      "pdn": {
+        "apns": [
+          "string"
+        ]
+      }
+    }
+  ],
+  "entitlements": [
+    {
+      "id": "string",
+      "apns": [
+        "string"
+      ],
+      "imsis": [
+        {
+          "begin": "string",
+          "end": "string"
+        }
+      ]
+    }
+  ]
+}
+
