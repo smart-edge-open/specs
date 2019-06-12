@@ -76,77 +76,79 @@ OpenNESS suggested API end point has be integrated and verified in an end-to-end
 
 ### JSON schema for userplane API endpoint
 
-{
-  "id": "string",
-  "uuid": "string",
-  "function": "NONE",
-  "config": {
-    "sxa": {
-      "cp_ip_address": "string",
-      "up_ip_address": "string"
-    },
-    "sxb": {
-      "cp_ip_address": "string",
-      "up_ip_address": "string"
-          },
-    "s1u": {
-      "up_ip_address": "string"
-    },
-    "s5u_sgw": {
-      "up_ip_address": "string"
-    },
-    "s5u_pgw": {
-      "up_ip_address": "string"
-    },
-    "sgi": {
-      "up_ip_address": "string"
-    },
-    "breakout": [
-      {
-        "up_ip_address": "string"
-      }
-    ],
-    "dns": [
-      {
-        "up_ip_address": "string"
-      }
-    ]
-  },
-  "selectors": [
-    {
-      "id": "string",
-      "network": {
-        "mcc": "string",
-        "mnc": "string"
-      },
-      "uli": {
-        "tai": {
-          "tac": 0
-        },
-        "ecgi": {
-          "eci": 0
-        }
-      },
-      "pdn": {
-        "apns": [
-          "string"
-        ]
-      }
-    }
-  ],
-  "entitlements": [
-    {
-      "id": "string",
-      "apns": [
-        "string"
-      ],
-      "imsis": [
-        {
-          "begin": "string",
-          "end": "string"
-        }
-      ]
-    }
-  ]
-}
+More details about the APIs can be found here [TBD EPC APIs - json](https://www.openness.org/resources). 
 
+Parameter “Function” represents function of userplane.
+default: NONE
+- NONE: No function
+-	SGWU: 4G serving gateway userplane (SGW-U)
+-	PGWU: 4G packet data network (PDN) gateway userplane (PGW-U)
+-	SAEGWU: 4G combination SGW-U and PGW-U
+Except id, UUID and function parameters, rest of all the parameters are optional and can used based on operational requirements and capabilities of EPC solution.  
+The above JSON parameters are grouped into three categories 
+1. Config:  through which Sxx related IP address of userplane can be configured.  The requirement of this parameter(s) is implementation dependent, as EPC control plane can also learn Sxx interface configuration of userplane through other design logic. 
+2. Selectors: allows userplane to bind to APN, TAC, etc.. in the control plane, so that UEs can be assigned to a particular userplane (PGW-U and/or SGW-U) at the time of initial attach or PDN selection. 
+3. Entitlements: will allow further level of controlling in gateway selection for UEs at EPC Control plane through IMSIs.  It is recommended to use some level of indirect reference of IMSIs (proprietary to operators network) to identify UEs rather than IMSI itself. 
+
+### Further recommendations for more controlled subscriber data steering
+In addition to the APN (for PDN GW selection) and TAC (for S-GW selection),  specific UE level configuration in entitling the subscribers to use the Edge resources can be made for controlled subscriber data steering and processing.   This can be achieved by Edge controller configuring which UEs allowed to use Edge compute node resources.   Though the OpenNESS referenced API shows the IMSI to identify UE uniquely during entitlement configuration, UE tagging is left out as implementation decision as it is not suggested to exposed IMSI information outside the operator’s environment scope for multiple reasons. 
+
+Application data filtering functionality for processing at the edge can be further implemented in the PDN Gateway data pipeline itself to reduce overhead of data processing in Edge compute node data plane. Indeed, many of EPC solutions already supports application level packet filtering based on 5-tuples through proprietary implementation, which can be leveraged and extended for Edge solutions. 
+
+###	Validation and Data path models 
+
+Below listed various data paths has been exercised using the OpenNESS reference solution by configuring the userplane through the suggested APIs in lab environment. 
+
+#### UE selects a particular PGW-U (based on APN) and SGW-U based on TAC.  Subscriber’s application data is processed at the MEC application launched at the OpenNESS Edge compute node. 
+
+![LTE CUPS Configuration test flow 1](epc-images/openness_epctest1.png)
+
+#### UE selects a particular PGW-U (based on APN) and SGW-U based on TAC. Subscriber’s application data is processed at MEC application launched at OpenNESS Edge compute node and has been sent back to PDN for further processing. 
+
+![LTE CUPS Configuration test flow 2](epc-images/openness_epctest2.png)
+
+#### UE selects a particular PGW-U (based on APN) and SGW-U based on TAC.  Subscriber’s application data is not configured for Edge location processing. 
+
+![LTE CUPS Configuration test flow 3](epc-images/openness_epctest3.png)
+
+#### UE connects to a different Userplane function, as its location and APN configurations are different and are not in Edge service location. Hence, subscriber’s application data uses a different UPF to reach PDN. 
+
+![LTE CUPS Configuration test flow 4](epc-images/openness_epctest4.png)
+
+## Summary
+As mentioned above, any single solution may not be a best fit for all deployment models considering operators requirements and challenges.  In case of Edge deployments, Edge controllers plays a major role in managing and controlling multiples of Edge compute nodes which may have a co-located UPF. Through this technical writing OpenNESS reference solution would like to publish a suggested API interface for configuring 3GPP 4G/LTE CUPS based userplane from Edge controller when co-located with Edge compute nodes. Network operator’s OAM agents may consume this APIs into their operations infrastructure interface to adapt to the Edge solutions evolved over period of time based on OpenNESS reference architecture.  3GPP 5G standards has been taken care some of these configuration aspects through well-defined service-based architecture by defined AF and NEF components, in particularly Northbound APIs of NEF (in 5G TS 29522V150000p) more refer to traffic routing policy with few parameters exposed to third party. But from a deployment perspective may not be able to directly influence UPF, thus we still see the need for this kind of APIs in case of Edge deployments. 
+
+## References
+-	ETSI GS MEC 003 V1.1.1, “Mobile Edge Computing (MEC); Framework and Reference Architecture” (2016-03)
+-	TS 23.214 Architecture enhancements for control and user plane separation of EPC nodes.
+-	TS 29.244 Interface between the Control Plane and the User Plane of EPC Nodes.
+-	TS 29.303 DNS procedures for UP function selection  
+-	Control and User Plane Separation of EPC nodes (CUPS) (https://www.3gpp.org/cups)
+-	3GPP TS 23.501 V15.1.0, “3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 15)” (2018-03)
+
+## 6.2	List of Abbreviations
+OpenNESS: Open Network Edge Services Software
+MEC: Multi-Access Edge Computing
+ETSI: European Telecommunications Standards Institute
+LTE: Long-Term Evolution
+EPC: Evolved Packet Core
+MME: Mobility Management Entity
+SGW: Serving Gateway
+PGW: PDN Gateway
+PDN: Packet Data Network
+CUPS: Control and User Plane Separation
+UE: User Equipment in the context of LTE
+APN: Access Point Name
+TAC: Tracking Area Code
+MNC: Mobile Network Code
+MCC: Mobile Country Code
+NEF: Network Exposure Function
+AF: Application Function
+FQDN: Fully Qualified Domain Name
+OAM: Operations, Administration and Maintenance
+HTTP: Hyper Text Transfer Protocol
+REST: REpresentational State Transfer
+JSON:	JavaScript Object Notation
+API: Application Programming Interface
+VIM: Virtualized Infrastructure Manager 
+UUID: Universally Unique IDentifier 
