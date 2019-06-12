@@ -127,28 +127,28 @@ As mentioned above, any single solution may not be a best fit for all deployment
 -	3GPP TS 23.501 V15.1.0, “3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 15)” (2018-03)
 
 ## 6.2	List of Abbreviations
-OpenNESS: Open Network Edge Services Software
-MEC: Multi-Access Edge Computing
-ETSI: European Telecommunications Standards Institute
-LTE: Long-Term Evolution
-EPC: Evolved Packet Core
-MME: Mobility Management Entity
-SGW: Serving Gateway
-PGW: PDN Gateway
-PDN: Packet Data Network
-CUPS: Control and User Plane Separation
-UE: User Equipment in the context of LTE
-APN: Access Point Name
-TAC: Tracking Area Code
-MNC: Mobile Network Code
-MCC: Mobile Country Code
-NEF: Network Exposure Function
-AF: Application Function
-FQDN: Fully Qualified Domain Name
-OAM: Operations, Administration and Maintenance
-HTTP: Hyper Text Transfer Protocol
-REST: REpresentational State Transfer
-JSON:	JavaScript Object Notation
-API: Application Programming Interface
-VIM: Virtualized Infrastructure Manager 
-UUID: Universally Unique IDentifier 
+- OpenNESS: Open Network Edge Services Software
+- MEC: Multi-Access Edge Computing
+- ETSI: European Telecommunications Standards Institute
+- LTE: Long-Term Evolution
+- EPC: Evolved Packet Core
+- MME: Mobility Management Entity
+- SGW: Serving Gateway
+- PGW: PDN Gateway
+- PDN: Packet Data Network
+- CUPS: Control and User Plane Separation
+- UE: User Equipment in the context of LTE
+- APN: Access Point Name
+- TAC: Tracking Area Code
+- MNC: Mobile Network Code
+- MCC: Mobile Country Code
+- NEF: Network Exposure Function
+- AF: Application Function
+- FQDN: Fully Qualified Domain Name
+- OAM: Operations, Administration and Maintenance
+- HTTP: Hyper Text Transfer Protocol
+- REST: REpresentational State Transfer
+- JSON:	JavaScript Object Notation
+- API: Application Programming Interface
+- VIM: Virtualized Infrastructure Manager 
+- UUID: Universally Unique IDentifier 
