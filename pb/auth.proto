@@ -34,7 +34,7 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
             url: "https://github.com/smartedgemec/schema/blob/master/LICENSE";
         };
     };
-    schemes: HTTPS;
+    schemes: HTTP;
     consumes: "application/json";
     produces: "application/json";
     responses: {
