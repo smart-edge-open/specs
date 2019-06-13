@@ -100,7 +100,7 @@ Integration Architecture
 
 Figure 1. Integration Architecture for openEdge on openNESS.
 
-![](arch-images/openness_baiduedge_integration_arch.png)
+![](baidu-cloudadapter-images//openness_baiduedge_integration_arch.png)
 
 - OpenNESS Edge Platform support Cloud Native Infrastructure. Baidu OpenEdge and other edge apps can run as separated container.
   
@@ -530,7 +530,7 @@ Overview
 
 Figure 2. End to End Example Diagram.
 
-![](arch-images/openness_baiduedge_end2end_demosetup.png)
+![](baidu-cloudadapter-images//openness_baiduedge_end2end_demosetup.png)
 
 This is an end to end example demo for MQTT traffic. This could be an
 IOT industrial application. It consists of the following elements and
