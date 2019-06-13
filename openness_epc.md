@@ -36,7 +36,7 @@ Exponential growth in mobile subscribers use of wireless network for various use
 As the selection of Serving Gateway (SGW-U) and PDN Gateway (PGW-U) happens at UE initial attach process or PDN connection establishment phase, 3GPP standard suggests multiple ways to select SGW and PGWs.  Though implementation has flexibility to choose any method that best servers the Edge requirements, this technical writing would like to suggest one of those procedures for selection of user plane and steering subscriber’s data to closest userplane nodes, where the application data processing can be co-located with gateway. APN (or APN FQDN per 3GPP TS 23.003) can be used in selection process of PGW-U, following the selection of SGW-U can be based on TAC which is based on location of Network topology and UE current location. 
 
 ## Implementation guidelines for Edge solutions
-Taking the advantage of 3GG CUPS architecture into consideration, the OpenNESS reference solution would like to suggest co-located LTE Userplane along with the Edge compute nodes where the subscribes application data can be processed is one of best implementation strategy for Edge solutions.     The term “Co-Located” can be taken loosely taken in implementation as any single solution model may not best fit in all types of deployment requirements.  Below three deployment models are further studied with respect to Edge deployment solutions. 
+Taking the advantage of 3GPP CUPS architecture into consideration, the OpenNESS reference solution would like to suggest co-located LTE Userplane along with the Edge compute nodes where subscribes application data can be processed is one of best implementation strategy for Edge solutions.     The term “Co-Located” can be taken loosely in implementation as any single solution model may not best fit in all types of deployment requirements.  Below three deployment models are further studied with respect to Edge deployment solutions. 
 
 Deployment model – I:   S-GW, P-GW User planes and Edge compute node components are deployed as different nodes.   An Edge controller can centrally control and manage the Edge compute nodes which are co-located but physically deployed on different hardware platforms. 
 
@@ -60,7 +60,7 @@ The parameters of this API endpoint can logically form into three groups
 - UE entitlement for further controlling traffic routed towards userplane. 
 
 ###	OpenNESS suggested API flows for CUPS integration
-A high-level CUPS EPC configuration flow from OpenNESS controller community edition is shown in the diagram below. The HTTP REST API interface is only between OpenNESS controller community edition and Reference EPC control plane. There are some predefined configuration for the CUPS EPC userplane that is used by the userplane at the startup. 
+A high-level CUPS EPC configuration flow from OpenNESS controller community edition is shown in the diagram below. The HTTP REST API interface is only between OpenNESS controller community edition and Reference EPC control plane. The same API endpoint can be implimented at LTE Userplane to configure from Edge controller.  During the validation phase in the course of this writting, there are some predefined configuration for the CUPS EPC userplane that is used by the userplane at the startup . 
 
 ![LTE CUPS Configuration](epc-images/openness_epcconfig.png)
 
@@ -72,7 +72,7 @@ Below is the detailed sequence diagrams showing the API communication between Ed
 
 ![LTE CUPS Configuration Sequence diagram 3](epc-images/openness_epcseq3.png)
 
-OpenNESS suggested API end point has be integrated and verified in an end-to-end lab conditions with one of the Intel partnered pioneered EPC vendor solution for completeness of this study.   
+OpenNESS suggested API end point has be integrated and verified in an end-to-end lab conditions with one of the Intel partnered EPC vendor solution for completeness of this study.   
 
 ### JSON schema for userplane API endpoint
 
