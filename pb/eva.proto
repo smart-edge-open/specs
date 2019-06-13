@@ -17,33 +17,65 @@ syntax = "proto3";
 package openness.eva;
 option go_package = "github.com/smartedgemec/eva";
 
-import "google/api/annotations.proto";
-import "protoc-gen-swagger/options/annotations.proto";
+import "google/protobuf/empty.proto";
+import "ela.proto";
 
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
-    info: {
-        title: "Application Virtualization API";
-        version: "1.0.0";
-        contact: {
-            name: "Smart Edge";
-            url: "github.com/smartedgemec/eva";
-            email: "support@smart-edge.com";
-        };
-        license: {
-            name: "Apache 2.0 License";
-            url: "https://github.com/smartedgemec/schema/blob/master/LICENSE";
-        };
-    };
-    schemes: HTTPS;
-    consumes: "application/json";
-    produces: "application/json";
-    responses: {
-        key: "401";
-        value: {
-            description: "Unauthorized";
-        }
+// The services below are for calls from the controller to an edge node and so
+// do not include the /devices/{id} prefix in the URL since the edge node is
+// already known.
+
+// ApplicationDeploymentService manages application deployments for an appliance.
+service ApplicationDeploymentService {
+    rpc DeployContainer (openness.ela.Application) returns (google.protobuf.Empty) {}
+    rpc DeployVM (openness.ela.Application) returns (google.protobuf.Empty) {}
+    rpc Redeploy (openness.ela.Application) returns (google.protobuf.Empty) {}
+    rpc Undeploy (ApplicationID) returns (google.protobuf.Empty) {}
+}
+
+// ApplicationLifecycleService manages application lifecycles for an appliance.
+service ApplicationLifecycleService {
+    rpc Start (LifecycleCommand) returns (google.protobuf.Empty) {}
+    rpc Stop (LifecycleCommand) returns (google.protobuf.Empty) {}
+    rpc Restart (LifecycleCommand) returns (google.protobuf.Empty) {}
+    rpc GetStatus (ApplicationID) returns (openness.ela.LifecycleStatus) {}
+}
+
+// VNFDeploymentService manages VNF (Virtual Network Function) deployments
+// for an appliance.
+service VNFDeploymentService {
+    rpc Deploy (openness.ela.VNF) returns (google.protobuf.Empty) {}
+    rpc GetStatus (VNFID) returns (openness.ela.LifecycleStatus) {}
+    rpc Redeploy (openness.ela.VNF) returns (google.protobuf.Empty) {}
+    rpc Undeploy (VNFID) returns (google.protobuf.Empty) {}
+}
+
+// VNFLifecycleService manages VNF (Virtual Network Function) lifecycles
+// for an appliance.
+service VNFLifecycleService {
+    rpc Start (LifecycleCommand) returns (google.protobuf.Empty) {}
+    rpc Stop (LifecycleCommand) returns (google.protobuf.Empty) {}
+    rpc Restart (LifecycleCommand) returns (google.protobuf.Empty) {}
+}
+
+message ApplicationID {
+    string id = 1;
+}
+
+message VNFID {
+    string id = 1;
+}
+
+message LifecycleCommand {
+    string id = 1;
+    enum Command {
+        START = 0;
+        STOP = 1;
+        RESTART = 2;
     }
-};
+    Command cmd = 2;
+}
+
+// The services below are for calls from an edge node to the controller.
 
 // The Controller Virtualization Agent has endpoints for requesting information
 // on virtualized (VM/container) application state managed by an external
@@ -55,18 +87,6 @@ service ControllerVirtualizationAgent {
     // request is determined by the TLS certificate it presents at transport
     // authentication time.
     rpc GetContainerByIP (ContainerIP) returns (ContainerInfo) {
-        option (google.api.http) = {
-            get: "/container"
-        };
-        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-            description: "Request info on a container managed by an external orchestrator like Kubernetes";
-            responses: {
-                key: "404";
-                value: {
-                    description: "No running container has such IP address on the Node making the request";
-                }
-            }
-        };
     }
 }
 
