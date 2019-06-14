@@ -245,12 +245,12 @@ Go libraries
 Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
 ## OpenNESS steps to get started
-1. Go through the overview of the OpenNESS solution 
-2. Acquire the supported hardware components 
+1. Go through the OpenNESS Architecture and Solution overview of the OpenNESS solution (this document)
+2. Acquire the supported hardware components for OpenNESS solution stack (Refer to the OpenNESS Edge node and Controller User Guide)
 3. Clone the Controller, Edge Node, Application and Common github repos
-4. Follow the README to build and set up Edge node 
-5. Follow the README to build and set up Controller
-6. Follow the README to build the reference Application 
+4. Follow the README to build and set up Edge node (Refer to the OpenNESS Edge node User guide)
+5. Follow the README to build and set up Controller (Refer to the OpenNESS Controller CE User guide)
+6. Follow the README to build the reference Application (Refer to the OpenNESS Reference Application User guide)
 7. Connect required Upstream, Downstream and Local breakout devices
 8. Start the Controller and create Administrator user 
 9. Start the Edge node and complete enrolment and Interface configuration 
@@ -271,3 +271,9 @@ Installation and configuration scripts will be provided to get the relevant vers
 
 
 ## Key OpenNESS solution documentation 
+- OpenNESS Architecture and Solution overview [OpenNESS Architecture and Solution overview link TBD](https://www.openness.org/resources): Current Document. 
+- OpenNESS Edge Node User guide [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
+- OpenNESS Controller Community Edition User guide [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
+- OpenNESS Reference Application User guide [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge cloud application. 
+- OpenNESS Amazon AWS IoT Greengrass application note [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge Cloud Apps on OpenNESS. 
+- OpenNESS Baidu Cloud application note [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge Cloud Apps on OpenNESS. 
