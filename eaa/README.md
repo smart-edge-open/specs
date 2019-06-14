@@ -108,8 +108,6 @@ return ""HTTP 200: application/json""\n\
 ""]""
 
 == Service Subscription ==
-note over app1, eaa: Additionally, ""POST /subscriptions/{urn.namespace}"" will\n\
-subscribe to all current and future resources with the given namespace
 app1 -> eaa: ""POST /subscriptions/{urn.namespace}/{urn.id}""\n\
 ""[ ""\n\
 ""  "name": "string" ""\n\
@@ -133,7 +131,7 @@ eaa -->> app1: ""[WSS] DATA""\n\
 ""  "name": "string" ""\n\
 ""  "version": "string" ""\n\
 ""  "payload": "object" ""\n\
-""  "producer": {""\n\
+""  "urn": {""\n\
 ""    "id": "string"""\n\
 ""    "namespace": "string"""\n\
 ""  }""\n\
@@ -161,8 +159,6 @@ return ""HTTP 200: application/json""\n\
 ""]""
 
 == Service Unsubscription ==
-note over app1, eaa: Additionally, ""DELETE /subscriptions/{urn.namespace}"" will unsubscribe\n\
-from all current and future resources with the given namespace
 app1 -> eaa: ""DELETE /subscriptions/{urn.namespace}/{urn.id}""
 activate eaa
 return ""HTTP 204: Unsubscribed""
