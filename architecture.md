@@ -114,7 +114,7 @@ OpenNESS solution support Network Edge cloud deployment. This is deployment is a
 
 OpenNESS support both Native and Local break out application for this deployment model.
 
-![Network Edge cloud](arch-images/openness_onprem.png)
+![Network Edge cloud](arch-images/openness_networkedge.png)
 
 ## OpenNESS API
 
