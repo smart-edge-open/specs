@@ -2,7 +2,7 @@ SPDX-License-Identifier: Apache-2.0-Clause.
 
 Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
 
-# OpenNESS Architecture
+# OpenNESS Architecture and Solution overview
 
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
@@ -24,7 +24,8 @@ Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
   * [Cloud Adapter Edge cloud Application](#cloud-adapter-edge-cloud-application)
 * [OpenNESS OS environment](#openness-os-environment)
 * [OpenNESS steps to get started](#openness-steps-to-get-started)
-
+* [OpenNESS Repository Structure](#openness-repository-structure)
+* [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
 
 ## Overview
 OpenNESS is a opensource Edge cloud reference stack. It enables provides edge cloud reference deployments for Network edge and On-Premise Edge. OpenNESS is intended for Customers like Operators to conduct lab/field trials of edge cloud in Network edge and On-Premise Edge, ISVs or OSVs to develop edge cloud infrastructure solution that takes advantages of goodness of Intel Architecture and Application developers who intend to develop application for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge cloud deployments.
@@ -257,3 +258,16 @@ Installation and configuration scripts will be provided to get the relevant vers
 11. Provision the reference applications (Producer and Consumer) from the controller to the Edge node
 12. Configure the traffic and DNS policy for the reference application
 13. Check for traffic being served on the edge cloud - monitor the telemetry for configured policy and packets in/out of the dataplane and application
+
+## OpenNESS Repository Structure
+- OpenNESS github root [OpenNESS Github link TBD](https://www.openness.org/resources)
+  - edgenode [edgenode link TBD](https://www.openness.org/resources): Repository containing OpenNESS Edge Node microservices, dataplane, build, installation scripts and test. 
+  - edgecontroller [edgecontroller link TBD](https://www.openness.org/resources): Repository containing OpenNESS Controller Community Edition microservices, webui, build, installation scripts and test. 
+  - edgeapps [edgeapps link TBD](https://www.openness.org/resources): Repository containing Reference Edge Cloud applications built and tested using OpenNESS Solution APIs. This repo includes scripts for building and running IOT gateways based on Amazon AWS IoT Greengrass and Baidu OpenEdge as Edge Cloud Apps on OpenNESS. 
+  - specs [specs link TBD](https://www.openness.org/resources): Repository containing architecture, usage and implementation documentation of key components in the OpenNESS Edge cloud solution. 
+  - test [test link TBD](https://www.openness.org/resources): Repository containing integration tests of key components in the OpenNESS Edge cloud solution. 
+  - common [common link TBD](https://www.openness.org/resources): Repository containing some of the common libraries, packages that are common to OpenNESS Edge Node and OpenNESS Controller Community Edition. 
+  - epcforedge [epcforedge link TBD](https://www.openness.org/resources): Repository containing reference implementations and reference APIs of some of the EPC components that enable Edge Cloud Solution. 
+
+
+## Key OpenNESS solution documentation 
