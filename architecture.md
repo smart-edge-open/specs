@@ -17,7 +17,7 @@ Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
   * [Edge Application Authentication APIs](#edge-application-authentication-apis)
   * [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
   * [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
-  * [EPC Configuration APIs for edge cloud](#epc-configuration-apis-for-edge-cloud)
+  * [Core Network Configuration APIs for edge cloud](#epc-configuration-apis-for-edge-cloud)
 * [Edge cloud applications](#edge-cloud-applications)
   * [Producer Application](#producer-application)
   * [Consumer Application](#consumer-application)
@@ -124,7 +124,7 @@ OpenNESS solution supports following APIs:
 - Edge Application Authentication APIs
 - Edge Lifecycle Management APIs
 - Edge Virtualization Infrastructure APIs
-- EPC Configuration APIs for edge cloud 
+- Core Network Configuration APIs for edge cloud 
 
 ### Edge Application APIs
 Edge Application APIs are important APIs for Edge application developers. There are two types of use cases here. 
@@ -166,7 +166,7 @@ As an example, an RPC to list the running containers on the node can take two pa
 
 EVA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Virtualization Infrastructure APIs](https://www.openness.org/resources) 
 
-### EPC Configuration APIs for edge cloud 
+### Core Network Configuration APIs for edge cloud 
 As part of the OpenNESS reference edge stack the OpenNESS controller community edition is used for configuring the traffic policy for CUPS EPC to steer traffic towards the edge cloud, This API is based on HTTP REST. Since 3GPP or ETSI MEC does not provide reference for these APIs various implementation of this Edge Controller to CUPS EPC might exist. OpenNESS has tried to take the approach of minimal changes to 3GPP CUPS EPC to achieve the edge cloud deployment. OpenNESS and HTTP REST APIs to the EPC CUPS is a reference implementation so customers using OpenNESS can integrate their own HTTP REST APIs to the EPC CUPS into the OpenNESS Controller. Special care has been taken to make these components Modular microservices. The diagram below show the LTE environment that was used for testing OpenNESS edge cloud end-to-end. 
 
 ![LTE end-to-end setup](arch-images/openness_epc.png)
