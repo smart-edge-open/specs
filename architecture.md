@@ -28,7 +28,9 @@ Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
 * [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
 
 ## Overview
-OpenNESS is a opensource Edge Compute reference stack. "Edge Compute" term referred here corresponds to "Edge Computing" referenced in ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture and 3GPP TS 23.501 V16.1.0 (2019-06) section 15.13  It provides edge compute reference deployments for Network edge and On-Premise Edge. OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solution that takes advantages of goodness of Intel Architecture and Application developers who intend to develop application for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge compute deployments.
+OpenNESS is a opensource Edge Compute reference stack. "Edge Compute" term referred here corresponds to "Edge Computing" referenced in ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture and 3GPP TS 23.501 V16.1.0 (2019-06) section 15.13  It provides edge compute reference deployments for Network edge and On-Premise Edge. 
+
+OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solution that takes advantages of goodness of Intel Architecture and Application developers who intend to develop application for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge compute deployments.
 
 OpenNESS based edge compute reference stack consists of one or more OpenNESS Edge node that hosts edge compute applications or serve as a local breakout servers and an edge compute OpenNESS controller (Community edition) that manages the OpenNESS edge compute nodes. 
 
@@ -58,13 +60,13 @@ Most of the microservices on controller are written in Go lang. OpenNESS Control
 OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge compute applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
 - Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
 
-![OpenNESS Edge Node Autentication](arch-images/openness_nodeauth.png)
+![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
 
 - Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - DNS service: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
 - Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
 - Edge application traffic policy: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
-- Dataplane: Provide application specific traffic steering towards the Edge compute application running on the edge node or on connected Local break out port. Note Datapalne NTS (Network Transport Service) is running on every Edge node instance. It is implemented in C lang using DPDK for high performance IO.
+- Dataplane: Provide application specific traffic steering towards the Edge compute application running on the edge node or on connected Local break out port. Note Dataplane NTS (Network Transport Service) is running on every Edge node instance. It is implemented in C lang using DPDK for high performance IO.
   - Provide Reference ACL based Application specific packet tuple filtering 
   - Provide reference GTPU base packet learning for S1 deployment 
   - Provide reference Simultaneous IP and S1 deployment 
@@ -111,7 +113,7 @@ OpenNESS support both Native and Local break out application for this deployment
 ![On-Premise Edge compute](arch-images/openness_onprem.png)
 
 ## Network Edge compute
-OpenNESS solution support Network Edge compute deployment. This is deployment is applicable in a telco-operator deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to call the industry standard API to the NFVi manager like Kubernetes to manage the applications on the the Edge node. The Kubernetes master is assumed to be part of the exisitng infrastrucre and Edge node is added to the Kubernetes cluster. 
+OpenNESS solution support Network Edge compute deployment. This is deployment is applicable in a Central office Edge Compute deployments and telco-operator Edge Compute deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to call the industry standard API to the NFVi manager like Kubernetes to manage the applications on the the Edge node. The Kubernetes master is assumed to be part of the existing infrastructure and Edge node is added to the Kubernetes cluster. 
 
 OpenNESS support both Native and Local break out application for this deployment model.
 
@@ -138,7 +140,7 @@ More details about the APIs can be found here [Edge Application APIs](https://ww
 ![Edge Application APIs](arch-images/openness_eaa.png)
 
 ### Edge Application Authentication APIs
-OpenNESS supports authentication of Edge compute apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two catagories of Applications as discussed above and here is the implication for the authentication. 
+OpenNESS supports authentication of Edge compute apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two categories of Applications as discussed above and here is the implication for the authentication. 
 1. Existing pubic cloud application ported to OpenNESS: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the Application can not call any EAA APIs and consume services on the edge compute. It just services the end-user traffic. So the Application will not call authentication API to acquire a TLS certificate. 
 2. Native Edge compute Application calling EAA APIs: This is the scenario where customer want to develop Edge compute applications that take advantages of the Edge compute services resulting in more tactile application that responds to the changing user, network or resource scenarios. Suck Application should first call authentication APIs and acquire TLS certificate. Authentication of Applications that provide services to other Applications on the edge compute (Producer Apps) is  mandatory.
 
