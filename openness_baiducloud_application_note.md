@@ -1,40 +1,11 @@
-SPDX-License-Identifier: Apache-2.0
-Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
+SPDX-License-Identifier: Apache-2.0-Clause.
+
+Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
 
 Intel® OpenNESS Integration with Baidu® OpenEdge
-
-Application Note
-
-June 2019
-
-You may not use or facilitate the use of this document in connection
-with any infringement or other legal analysis concerning Intel products
-described herein. You agree to grant Intel a non-exclusive, royalty-free
-license to any patent claim thereafter drafted which includes subject
-matter disclosed herein.
-
-No license (express or implied, by estoppel or otherwise) to any
-intellectual property rights is granted by this document.
-
-All information provided here is subject to change without notice.
-Contact your Intel representative to obtain the latest Intel product
-specifications and roadmaps.
-
-The products described may contain design defects or errors known as
-errata which may cause the product to deviate from published
-specifications. Current characterized errata are available on request.
-
-Copies of documents which have an order number and are referenced in
-this document may be obtained by calling 1-800-548-4725 or by visiting:
-[http://](http://www.intel.com/design/literature.htm)www.intel.com/design/literature.htm
-
-Intel Xeon, Hyper-Threading, Virtualization Technology and the Intel
-logo are trademarks of Intel Corporation in the U.S. and/or other
-countries.
-
-\*Other names and brands may be claimed as the property of others.
-
-Copyright © 2019, Intel Corporation. All rights reserved.
+=======
+# Running Baidu OpenEdge IOT gateway as Edge Application on OpenNESS 
+- Application Note
 
 Contents
 
