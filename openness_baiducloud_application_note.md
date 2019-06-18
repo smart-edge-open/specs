@@ -2,6 +2,8 @@ SPDX-License-Identifier: Apache-2.0-Clause.
 
 Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
 
+Intel® OpenNESS Integration with Baidu® OpenEdge
+=======
 # Running Baidu OpenEdge IOT gateway as Edge Application on OpenNESS 
 - Application Note
 
