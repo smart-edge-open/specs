@@ -1,6 +1,5 @@
-SPDX-License-Identifier: Apache-2.0-Clause.
-
-Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
+SPDX-License-Identifier: Apache-2.0    
+Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.    
 
 # Intel® OpenNESS Integration with AWS Greengrass
 
