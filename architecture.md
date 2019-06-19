@@ -183,9 +183,9 @@ More details about the APIs can be found here [Edge Application APIs](https://ww
 Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://www.openness.org/resources).
 
 ### OpenNESS Controller APIs
-OpenNESS Controller APIs are important APIs for those managing one or many edge nodes. OpenNESS Controller APIs are called by the UI frontend and can be called by external orchestrators. These APIs allow centralize management of nodes. The API enables a developer to maintain a list of nodes, configure apps, manage policies and DNS, and more. The Controller API represents an abstraction layer for an operations administrator. While individual edge nodes may be managed singularly, the Controller API allows for management in a scalable way. Furthermore, it allows for secure communication to the many edge nodes.
+OpenNESS Controller APIs are important APIs for those managing one or many OpenNESS edge nodes. OpenNESS Controller APIs are called by the UI frontend and can be called by external orchestrators. These APIs allow centralized management of OpenNESS Edge nodes. The API enables a developer to maintain a list of OpenNESS Edge nodes, configure apps, manage policies and DNS, and more. The OpenNESS Controller API represents an abstraction layer for an operations administrator. While individual OpenNESS edge nodes may be managed singularly, the OpenNESS Controller API allows for management in a scalable way. Furthermore, it allows for secure communication to the many edge nodes.
 
-The Controller API is implemented using HTTP REST.
+The OpenNESS Controller API is implemented using HTTP REST.
 
 ## Edge compute applications
 OpenNESS Applications can onboarded and provisioned on the edge node only through OpenNESS Controller. The first step in Onboarding involves uploading the application image to the controller through the web interface. Both VM and Container images are supported. 
