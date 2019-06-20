@@ -60,7 +60,8 @@ The Controller microservices make extensive use of the Go programming language a
 
 ### OpenNESS Edge Node
 OpenNESS Edge Node consists of set of microservices that implements the following functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
-- Edge Application Enrolling: During initial bootup, the Edge Node connects to the designated OpenNESS Controller and sends an enrollment request. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of the enrollment sequence, the Edge Node provides a TLS based certificate, which is used for further API communication. 
+
+- Edge Node Enrolling: During initial bootup, the Edge Node connects to the designated OpenNESS Controller and sends an enrollment request. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of the enrollment sequence, the Edge Node provides a TLS based certificate, which is used for further API communication. 
 
 ![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
 
@@ -81,11 +82,11 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
   - Implement Scatter and Gather in upstream and downstream 
 - Application Authentication: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
-Apps on the Edge Node can be classified into:  
+![OpenNESS Application Authentication](arch-images/openness_appauth.png)
+
+Applications on the Edge Node can be classified into:  
 - Producer Application: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
 - Consumer Application: OpenNESS Consumer application are edge compute application that serve end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. 
-
-![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
 - Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
   - Edge Service Activation/Deactivation: This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node. 
@@ -108,7 +109,7 @@ OpenNESS Edge Node Resource usage:
   - DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
 
 #### Edge Compute Applications: Native
-OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge compute platforms with expectation of resource pooling across Edge Applications and services. OpenNESS supports both native edge compute apps and IOT Gateways to run as edge compute applications or services co-existing on the same platform and sharing resources. 
+OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge compute platforms with expectation of resource pooling across Edge Applications (in some cases Edge Applications co-existing with VNFs). OpenNESS supports both native edge compute apps and IOT Gateways to run as edge compute applications co-existing on the same platform with VNFs and share platform resources. 
 
 #### Edge Compute Applications: Local Breakout
 OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). 
