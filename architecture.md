@@ -38,10 +38,10 @@ OpenNESS based edge compute reference stack consists of one or more OpenNESS Edg
 
 The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
 
-OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge compute specific APIs and network abstraction on to provide a unique and one window development solution for edge compute. 
+OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with essential amount of Edge compute specific APIs and network abstraction on to provide a unique and one-stop-shop development solution for edge compute. 
 
 ### OpenNESS Controller Community Edition
-OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable edge compute node and application management. Community edition implements the right set of functions needed for a reference Edge compute controller.
+OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable management of the edge compute node and applications it hosts. Community edition implements the right set of functions needed for a reference Edge compute controller.
 - Web UI front end: HTML5 based web frontend for managing edge compute.
 - User account management: Create administrator user for the edge compute management. 
 - Edge compute application image repository: Provide edge compute application image (VM/Container image) upload capability to the controller. 
@@ -53,22 +53,22 @@ OpenNESS Controller Community edition consists of set of microservices that impl
   - Deploy edge compute applications from the image repository 
   - Configure the Edge compute application specific Traffic policy 
   - Configure the Edge compute application specific DNS policy 
-- Edge virtualization infrastructure management: Use the existing industry standard NFV infrastructure API to stacks like Kubernetes or Libvert or Docker to start and stop edge compute applications on the Edge node
+- Edge virtualization infrastructure management: Invoke industry standard NFV infrastructure APIs for stacks like Kubernetes, Libvert or Docker to start and stop edge compute applications on the Edge node
 - Telemetry: Get basic edge compute microservices telemetry from connected Edge nodes. 
 
 Most of the microservices on controller are written in Go lang. OpenNESS Controller Community Edition addresses the essential functionalities of Multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
 
 ### OpenNESS Edge Node
-OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge compute applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
-- Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
+OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge compute applications natively on the edge node or forward user traffic to application running on connected local breakout. 
+- Edge Application Enrolling: During initial boot-up, the Edge Node connects to the designated OpenNESS Controller CE, and send an enrolment request. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
 
 ![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
 
-- Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
+- Edge node interface configuration: During initial boot-up, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - DNS service: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
 - Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
 - Edge application traffic policy: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
-- Dataplane: Provide application specific traffic steering towards the Edge compute application running on the edge node or on connected Local break out port. Note Dataplane NTS (Network Transport Service) is running on every Edge node instance. It is implemented in C lang using DPDK for high performance IO.
+- Dataplane Service: Steers traffic towards applications running on the Edge Node or the Local Break-out Port, utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO.
   - Provide Reference ACL based Application specific packet tuple filtering 
   - Provide reference GTPU base packet learning for S1 deployment 
   - Provide reference Simultaneous IP and S1 deployment 
@@ -81,18 +81,31 @@ OpenNESS Edge Node consists of set of microservices that implement the following
   - Implement Scatter and Gather in upstream and downstream 
 - Application Authentication: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
+Apps on the Edge Node can be classified into:  
+- Producer Application: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
+- Consumer Application: OpenNESS Consumer application are edge compute application that serve end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. 
+
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
-- Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang.APIs are classified into:
-  - Edge Service Activation/Deactivation
-  - Edge Service Discovery 
-  - Edge Service Subscription/Unsubscription 
-  - Edge Service Notification update (using web socket)
-  - Edge Service data update 
-  - Edge Service list subscription 
-- Edge Node telemetry: Utilizing the rsyslog all the OpenNESS microservices send the telemetry update which includes the logging and packet forwarding statistics data from dataplane. 
+- Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
+  - Edge Service Activation/Deactivation: This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node. 
+    - E.g. Location Service Producer app will call this API first after being deployed from the controller. 
+  - Edge Service Discovery: This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node. 
+    - E.g. A CDN App will be able to discover Location Service Application on the Edge Node. 
+  - Edge Service Subscription/Unsubscription : This API Endpoint enables Consumer application to subscribe to Producer application service and notification updates. 
+    - E.g. A CDN application can subscribe to the Location Service application and Notification update from the service. 
+  - Edge Service Notification update (using web socket): This is a Web socket connection that needs to be created by a Consumer Application which intends to subscribe to services from Producer Applications. This websocket will be used for push-notification when there is update from Producer Application. 
+    - E.g. Location update is sent as Push Notification update to CDN Application. 
+  - Edge Service data update:  This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service. 
+    - E.g. Location Service Producer App publishes Location update of a user to the Edge Node. 
+  - Edge Service list subscription: This API endpoint allows Consumer Application to get the list of Producer Application services it has availed.  
+    -E.g. CDN Application can call this API to check if it has subscribed to Location and Transcoding services. 
+- Edge Node telemetry: Utilizing the rsyslog all the OpenNESS microservices send the telemetry update which includes the logging and packet forwarding statistics data from dataplane. This is also the mechanism that is encouraged for OpenNESS users for Debugging and Troubleshooting. 
 
-Resource usage: OpenNESS Edge node run all the non-critical/non-realtime microservices on the OS core, Dataplane NTS and DPDK PMD thread would need dedicated core/thread for high performance. Since DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
+OpenNESS Edge Node Resource usage: 
+- All non-critical/non-realtime microservices OpenNESS Edge node execute OS core typically Core 0.
+- Dataplane NTS and DPDK PMD thread would need dedicated core/thread for high performance. 
+  - DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
 
 #### Edge Compute Applications: Native
 OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge compute platforms with expectation of resource pooling across Edge Applications and services. OpenNESS supports both native edge compute apps and IOT Gateways to run as edge compute applications or services co-existing on the same platform and sharing resources. 
