@@ -28,9 +28,9 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 * [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
 
 ## Overview
-OpenNESS is a opensource Edge Compute reference stack. "Edge Compute" term referred here corresponds to "Edge Computing" referenced in ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture and 3GPP TS 23.501 V16.1.0 (2019-06) section 15.13  It provides edge compute reference deployments for Network edge and On-Premise Edge. 
+OpenNESS is an open source software toolkit to enable easy orchestration and management of edge services across diverse network platform and access technologies in multi-cloud environments. The "Edge Compute" term referred to here corresponds to "Edge Computing" referenced in ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture and 3GPP TS 23.501 V16.1.0 (2019-06) section 15.13  It provides edge compute reference deployments for Network edge and On-Premise Edge. 
 
-OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solutions that takes advantages of goodness of COTS Architecture and Application developers who intend to develop applications for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge compute deployments.
+OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solutions that take advantage of the goodness of COTS Architecture and Application developers who intend to develop applications for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services.
 
 OpenNESS based edge compute reference stack consists of one or more OpenNESS Edge node that hosts edge compute applications or serve as a local breakout servers and an edge compute OpenNESS controller (Community edition) that manages the OpenNESS edge compute nodes. 
 
@@ -38,14 +38,14 @@ OpenNESS based edge compute reference stack consists of one or more OpenNESS Edg
 
 The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
 
-OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge compute specific APIs and network abstraction on to provide a unique and one window development solution for edge compute. 
+OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on heterogeneous hardware platforms (CPU,Memory,IO and Acceleration) from open source projects with APIs and network abstraction to provide a unique one stop shop development solution for edge compute. 
 
 ### OpenNESS Controller Community Edition
-OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable edge compute node and application management. Community edition implements the right set of functions needed for a reference Edge compute controller.
-- Web UI front end: HTML5 based web frontend for managing edge compute.
-- User account management: Create administrator user for the edge compute management. 
-- Edge compute application image repository: Provide edge compute application image (VM/Container image) upload capability to the controller. 
-- Configure CUPS EPC: Using reference REST API to configure 4G EPC control plane 
+The OpenNESS Controller consists of a set of microservices that implement the following functionality to enable the management of the Edge Node and the applications that it will host. 
+- Web UI front end: HTML5 based web front end for Administrator management of the edge node
+- User account management: Create administrator and user accounts for edge node management. 
+- Edge compute application image repository: Provide capability of uploading application images (in VM or container format) to the Controller. 
+- Configure CUPS EPC: Using reference REST APIs to configure a 4G EPC control plane 
 - Edge application life cycle management: Support set of APIs that enable
   - Enrolling OpenNESS edge node
   - Configure the interfaces and OpenNESS edge node microservices 
@@ -56,15 +56,15 @@ OpenNESS Controller Community edition consists of set of microservices that impl
 - Edge virtualization infrastructure management: Use the existing industry standard NFV infrastructure API to stacks like Kubernetes or Libvert or Docker to start and stop edge compute applications on the Edge node
 - Telemetry: Get basic edge compute microservices telemetry from connected Edge nodes. 
 
-Most of the microservices on controller are written in Go lang. OpenNESS Controller Community Edition addresses the essential functionalities of Multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
+The Controller microservices make extensive use of the Go programming language and its runtime libraries. The OpenNESS Controller addresses the essential functionalities of a multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
 
 ### OpenNESS Edge Node
-OpenNESS Edge Node consists of set of microservices that implement the following functionality to enable execution of edge compute applications natively on the edge node or forward required user traffic to application running on connected local breakout. 
-- Edge Application Enrolling: During the first boot connect to the designated OpenNESS Controller Community Edition and request for enrolling.This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of enrolling Edge node is provided TLS based certificate. Which is used for further API communication. 
+OpenNESS Edge Node consists of set of microservices that implements the following functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
+- Edge Application Enrolling: During initial bootup, the Edge Node connects to the designated OpenNESS Controller and sends an enrollment request. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice and is implemented in Go lang. As part of the enrollment sequence, the Edge Node provides a TLS based certificate, which is used for further API communication. 
 
 ![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
 
-- Edge node interface configuration: During the first boot sent the map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
+- Edge node interface configuration: During initial bootup, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - DNS service: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
 - Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
 - Edge application traffic policy: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
