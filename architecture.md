@@ -112,7 +112,7 @@ OpenNESS Edge Node Resource usage:
 OpenNESS supports execution of application on the Edge node as a VM/Container instance. This is typically the case when customers are looking for high density edge compute platforms with expectation of resource pooling across Edge Applications (in some cases Edge Applications co-existing with VNFs). OpenNESS supports both native edge compute apps and IOT Gateways to run as edge compute applications co-existing on the same platform with VNFs and share platform resources. 
 
 #### Edge Compute Applications: Local Breakout
-OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). 
+OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). In the diagram below the Edge node data plane is connected to a Local Breakout which is terminated on a Switch. There are Enterprise Application server that are running enterprise apps connected to the TOR. Users can use OpenNESS Controller to configure certain users application traffic to be steered to the Enterprise Application servers. This deployment removes restriction of creating Edge Compute Apps from scratch and reuse the existing Enterprise Application software and Hardware infrastructure. 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
