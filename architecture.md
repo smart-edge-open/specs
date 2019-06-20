@@ -30,13 +30,15 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 ## Overview
 OpenNESS is a opensource Edge Compute reference stack. "Edge Compute" term referred here corresponds to "Edge Computing" referenced in ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture and 3GPP TS 23.501 V16.1.0 (2019-06) section 15.13  It provides edge compute reference deployments for Network edge and On-Premise Edge. 
 
-OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solution that takes advantages of goodness of Intel Architecture and Application developers who intend to develop application for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge compute deployments.
+OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solutions that takes advantages of goodness of COTS Architecture and Application developers who intend to develop applications for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services. OpenNESS drives inspiration from ETSI MEC architecture addressing both Network edge and On-Premise Edge compute deployments.
 
 OpenNESS based edge compute reference stack consists of one or more OpenNESS Edge node that hosts edge compute applications or serve as a local breakout servers and an edge compute OpenNESS controller (Community edition) that manages the OpenNESS edge compute nodes. 
 
 ![OpenNESS Architecture overview](arch-images/openness_overview.png)
 
-OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on Intel Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge compute specific APIs and network abstraction on to provide a unique and one window development solution for edge compute. 
+The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
+
+OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with right amount of Edge compute specific APIs and network abstraction on to provide a unique and one window development solution for edge compute. 
 
 ### OpenNESS Controller Community Edition
 OpenNESS Controller Community edition consists of set of microservices that implement the following functionality to enable edge compute node and application management. Community edition implements the right set of functions needed for a reference Edge compute controller.
