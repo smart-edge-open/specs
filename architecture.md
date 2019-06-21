@@ -122,16 +122,16 @@ OpenNESS Supports edge compute deployment on LTE S1, SGi, LTE CUPS and IP. These
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
 ## On-Premise Edge Compute
-OpenNESS solution support On-Premise Edge compute deployment. This is deployment is applicable in a Enterprise Edge compute deployment scenario. Enterprise customers typically have pre-existing IT infrastructure that hosts all the enterprise application and is managed by a existing NFV infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to directly manage the virtualization infrastructure (using Libvirt/Docker containers) on the Edge node instead of creating a requirement of Kubernetes or Openstack. This type of deployment is also typical when Edge compute solution vendor wants to host the Edge compute controller in the cloud and have multiple Edge compute nodes in individual customer premise spanning across different enterprises. 
+OpenNESS solution support On-Premise Edge compute deployment. This is deployment is applicable in a Enterprise Edge compute deployment scenario. Enterprise customers typically have pre-existing IT infrastructure that hosts all the enterprise application and is managed by a existing NFV infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to directly manage the virtualization infrastructure (using Libvirt/Docker containers) on the Edge node. This means that OpenNESS does not add a dependency for deploying and managing Edge compute nodes with Kubernetes or Openstack. This type of deployment is also typical when Edge compute solution vendor wants to host the Edge compute controller in the cloud and have multiple Edge compute nodes in individual customer premise spanning across different enterprises. 
 
-OpenNESS support both Native and Local break out application for this deployment model.
+OpenNESS supports both Native and Local break out application for this deployment model.
 
 ![On-Premise Edge compute](arch-images/openness_onprem.png)
 
 ## Network Edge compute
-OpenNESS solution support Network Edge compute deployment. This is deployment is applicable in a Central office Edge Compute deployments and telco-operator Edge Compute deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments OpenNESS Controller Community edition provides a mechanism to call the industry standard API to the NFVi manager like Kubernetes to manage the applications on the the Edge node. The Kubernetes master is assumed to be part of the existing infrastructure and Edge node is added to the Kubernetes cluster. 
+OpenNESS solution support Network Edge compute deployment. This is deployment is applicable in a Central office Edge Compute deployments and telco-operator Edge Compute deployment scenario where the operator controls the entire RAN, Edge and Core network infrastructure. In such deployments, OpenNESS Controller CE provides an API integration with Kubernetes, which is an industry standard NFV infrastructure Manager (for cloud native), to manage the manage the deployment of applications on the Edge Node. The Kubernetes master is assumed to be part of the existing infrastructure and Edge node is added to the Kubernetes cluster. 
 
-OpenNESS support both Native and Local break out application for this deployment model.
+OpenNESS supports both Native and Local break out application for this deployment model.
 
 ![Network Edge compute](arch-images/openness_networkedge.png)
 
@@ -146,11 +146,11 @@ OpenNESS solution supports following APIs:
 - OpenNESS Controller APIs 
 
 ### Edge Application APIs
-Edge Application APIs are important APIs for Edge application developers. There are two types of use cases here. 
-1. Porting of existing pubic cloud application to the edge compute based on OpenNESS: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the only requirement is Application image (VM/Container) should be uploaded to the controller and provisioned on the Edge node using OpenNESS Controller. In this case the Application can not call any EAA APIs and consume services on the edge compute. It just services the end-user traffic. 
+Edge Application APIs is implemented by the EAA. Edge Application APIs are important APIs for Edge application developers. EAA APIs are implemented as HTTPS REST. There are two types of use cases here. 
+1. Porting of existing Public/Private Cloud application to the edge compute based on OpenNESS: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the only requirement is Application image (VM/Container) should be uploaded to the controller and provisioned on the Edge node using OpenNESS Controller. In this case the Application can not call any EAA APIs and consume services on the edge compute. It just services the end-user traffic. 
 2. Native Edge compute Application calling EAA APIs: This is the scenario where customer want to develop Edge compute applications that take advantages of the Edge compute services resulting in more tactile application that responds to the changing user, network or resource scenarios. 
 
-OpenNESS support deployment both types of applications. EAA APIs are implemented as HTTPS REST. Edge Application APIs is implemented by the EAA. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The sequence diagram below show the supported APIs for the application 
+OpenNESS supports deployment both types of applications mentioned above. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The sequence diagram below show the supported APIs for the application 
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources) 
 
@@ -168,10 +168,9 @@ Authentication APIs are implemented as HTTP REST APIs.
 More details about the APIs can be found here [Application Authentication APIs](https://www.openness.org/resources) 
 
 ### Edge Lifecycle Management APIs
-ELA APIs are implemented by the ELA microservice on the edge node. The ELA runs on the Edge node and operates as a deployment and lifecycle service for applications and VNFs (Virtual Network Functions). It also provides network interface, network zone, and application/interface policy services.
+ELA APIs are implemented by the ELA microservice on the edge node. The ELA runs on the Edge node and operates as a deployment and lifecycle service for Edge applications and VNFs (Virtual Network Functions) that are needed for Edge compute deployment like e.g. 4G EPC CUPS User plane and DNS server. It also provides network interface, network zone, and application/interface policy services.
 
 ELA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Lifecycle Management APIs](https://www.openness.org/resources) 
-
 
 ### Edge Virtualization Infrastructure APIs
 EVA APIs are implemented by the EVA microservice on the edge node. The EVA operates as a mediator between the infrastructure that the apps run on and the other edge components.
@@ -190,7 +189,7 @@ As part of the OpenNESS reference edge stack the OpenNESS controller community e
 
 ![LTE end-to-end setup](arch-images/openness_epc.png)
 
-OpenNESS Reference solution provides framework for managing multiple Edge nodes through centralized OpenNESS controller. In case of co-located EPC userplane and edge node deployment models, LTE user plane elements can be controlled through VIM infrastructure provided by OpenNESS reference solution. OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller. LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes. It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
+OpenNESS Reference solution provides framework for managing multiple Edge nodes through centralized OpenNESS controller. In case of co-located EPC userplane and edge node deployment models, LTE user plane elements can be controlled through NFV infrastructure provided by OpenNESS reference solution. OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller. LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes. It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
 
 ![LTE EPC Configuration](arch-images/openness_epcconfig.png)
 
