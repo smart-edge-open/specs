@@ -231,7 +231,7 @@ OpenNESS Consumer application are edge compute application that serve end users 
 - A consumer application can subscribe to any number of services from producer apps. Future extension can implement entitlements to consumer apps to create access control lists. 
 - Producer to Consumer update will use web socket for notification. If there is further data to be shared between producer and consumer other NFVi components like OVS/VPP/NIC-VF can be used for data transfer. 
 
-As part of the OpenNESS reference application there is a producer and consumer application. 
+The OpenNESS release includes reference producer and consumer applications.
 
 ![OpenNESS Reference Application](arch-images/openness_apps.png)
 
@@ -243,7 +243,11 @@ The consumer application is based on OpenVINO [OpenVINO] (https://software.intel
 - The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
 
 ### Cloud Adapter Edge compute Application
-IOT usecases at the edge are becoming more relevant not only to addresses constant connectivity and backhaul networking requirement but also to address low latency response time. OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud vendors like Amazon AWS IoT Greengrass and Baidu OpenEdge on edge compute platform. The existing IOT gateways can be migrated to OpenNESS as is or enhanced to call EAA APIs using extensions like Lambda functions. 
+All the major Cloud Service providers are implementing frameworks to deploy edge applications that link back to their cloud via connectors. For example, Amazon Greengrass enables lambda functions to be deployed on the edge and connecting to the AWS cloud using the GreenGrass service. While it was originally intended to host this type of edge software on IoT gateways, the same framework can be utilized by Service Providers and Enterprises, to implement a multi-cloud strategy for their Edge Nodes.  
+
+OpenNESS enables this approach by running the Greengrass Core (with the Edge software) as Edge applications on the Edge Node. They can run unchanged, or modified to utilize the EAA APIs to serve as Producer or Consumer apps on the edge Node. By running multiple cloud connector instances from different cloud service providers on the same edge node, a multi-cloud experience can be easily implemented. 
+
+OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud vendors like Amazon AWS IoT Greengrass and Baidu OpenEdge on edge compute platform. The existing IOT gateways can be migrated to OpenNESS as is or enhanced to call EAA APIs using extensions like Lambda functions. 
 
 ![OpenNESS Cloud Adapters](arch-images/openness_cloudadapter.png)
 
@@ -252,18 +256,17 @@ More details about running Baidu OpenEdge as OpenNESS application can be found h
 More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://www.openness.org/resources). 
 
 ## OpenNESS OS environment
-OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNESS also depends on following opensource components 
-Docker
-Libvirt
-Boost
-openssl
-polyglot
-qemu
-DPDK
-Ansible
-Oracle MySQL Server
-Amazon Web Services
-Go libraries 
+OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNESS also depends on following opensource components:
+Docker      
+Libvirt    
+Boost    
+openssl     
+qemu    
+DPDK    
+Ansible    
+Oracle MySQL Server    
+Amazon Web Services   
+Go libraries          
 
 Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
