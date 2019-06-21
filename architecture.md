@@ -101,19 +101,6 @@ Provide API endpoint for edge applications to avail edge services. This function
 | Edge Service data update                 | This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service\.                                                                                                                                   |  Location Service Producer App publishes Location update of a user to the Edge Node\.                           |
 | Edge Service list subscription           | This API endpoint allows Consumer Application to get the list of Producer Application services it has availed\.                                                                                                                                             | CDN Application can call this API to check if it has subscribed to Location and Transcoding services\.          |
 
-
-  - Edge Service Activation/Deactivation: This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node. 
-    - E.g. Location Service Producer app will call this API first after being deployed from the controller. 
-  - Edge Service Discovery: This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node. 
-    - E.g. A CDN App will be able to discover Location Service Application on the Edge Node. 
-  - Edge Service Subscription/Unsubscription : This API Endpoint enables Consumer application to subscribe to Producer application service and notification updates. 
-    - E.g. A CDN application can subscribe to the Location Service application and Notification update from the service. 
-  - Edge Service Notification update (using web socket): This is a Web socket connection that needs to be created by a Consumer Application which intends to subscribe to services from Producer Applications. This websocket will be used for push-notification when there is update from Producer Application. 
-    - E.g. Location update is sent as Push Notification update to CDN Application. 
-  - Edge Service data update:  This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service. 
-    - E.g. Location Service Producer App publishes Location update of a user to the Edge Node. 
-  - Edge Service list subscription: This API endpoint allows Consumer Application to get the list of Producer Application services it has availed.  
-    -E.g. CDN Application can call this API to check if it has subscribed to Location and Transcoding services. 
 - Edge Node telemetry: Utilizing the rsyslog all the OpenNESS microservices send the telemetry update which includes the logging and packet forwarding statistics data from dataplane. This is also the mechanism that is encouraged for OpenNESS users for Debugging and Troubleshooting. 
 
 OpenNESS Edge Node Resource usage: 
