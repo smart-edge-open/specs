@@ -6,6 +6,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
   * [OpenNESS Edge Node](#openness-edge-node)
+    * [Edge Application API support](#edge-application-api-support)
     * [Edge Compute Applications: Native](#edge-compute-applications-native)
     * [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
   * [Multi Access Support](#multi-access-support)
@@ -88,7 +89,19 @@ Applications on the Edge Node can be classified into:
 - Producer Application: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
 - Consumer Application: OpenNESS Consumer application are edge compute application that serve end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. 
 
-- Edge Application API support: Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
+#### Edge Application API support
+Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
+
+| Edge Application API                     | Description                                                                                                                                                                                                                                                 | Example                                                                                                         |
+|------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Edge Service Activation/Deactivation     | This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node\. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node\.                                                    | Location Service Producer app will call this API first after being deployed from the controller\.               |
+| Edge Service Discovery                   | This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node\.                                                                                                                                          | A CDN App will be able to discover Location Service Application on the Edge Node\.                              |
+| Edge Service Subscription/Unsubscription | This API Endpoint enables Consumer application to subscribe to Producer application service and notification updates\.                                                                                                                                      | A CDN application can subscribe to the Location Service application and Notification update from the service\.  |
+| Edge Service Notification update         | This is a Web socket connection that needs to be created by a Consumer Application which intends to subscribe to services from Producer Applications\. This WebSocket will be used for push\-notification when there is update from Producer Application\.  | Location update is sent as Push Notification update to CDN Application\.                                        |
+| Edge Service data update                 | This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service\.                                                                                                                                   |  Location Service Producer App publishes Location update of a user to the Edge Node\.                           |
+| Edge Service list subscription           | This API endpoint allows Consumer Application to get the list of Producer Application services it has availed\.                                                                                                                                             | CDN Application can call this API to check if it has subscribed to Location and Transcoding services\.          |
+
+
   - Edge Service Activation/Deactivation: This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node. 
     - E.g. Location Service Producer app will call this API first after being deployed from the controller. 
   - Edge Service Discovery: This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node. 
