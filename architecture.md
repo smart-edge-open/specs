@@ -383,7 +383,7 @@ Installation and configuration scripts will be provided to get the relevant vers
 - OpenNESS Baidu Cloud application note [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
 - OpenNESS How-to Guide[OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
 
-##Other References
+## Other References
 - [3GPP_23401]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
 - [3GPP_23214]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; Architecture enhancements for control and user plane separation of EPC nodes; Stage 2.
 - [ETSI_MEC 003]  ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture     
