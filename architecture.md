@@ -26,12 +26,11 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [Core Network Configuration Agent APIs](#core-network-configuration-agent-apis)
     * [OPENNESS Controller APIs](#openness-controller-apis)
 * [OpenNESS OS Environment](#openness-os-environment)
-
 * [OpenNESS steps to get started](#openness-steps-to-get-started)
 * [OpenNESS Repository Structure](#openness-repository-structure)
 * [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
 
-##Introduction
+## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration and management of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
  
 It leverages major industry edge orchestration frameworks such as Kubernetes and OpenStack to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that finds objects of interest, such as pedestrians and cars, and serves the metadata from those objects to other applications that perform hazard notifications and other higher-level operations.
