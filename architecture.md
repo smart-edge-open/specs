@@ -2,7 +2,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.    
 
 # OpenNESS Architecture and Solution overview
-* [Introduction](#introduction)
+* [Introduction](#introduction)     
    *[Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
