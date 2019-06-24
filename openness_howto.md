@@ -143,12 +143,46 @@ On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Tra
 
 ![Adding Traffic Policy To Interface 3](howto-images/AddingTrafficPolicyToInterface3.png)
 
-
 #### Configuring Interface
+Prerequisites:
+- Enrollment phase completed succesfully.
+- User is logged in to UI.
 
+In order to configure interface available on the Edge Node for the NTS the following steps are to be taken:
+- From UI navigate to 'INTERFACES' tab of the Edge Node.
+- Find the interface to be used in the interface list and click 'EDIT' button under 'Action' column for that interface.
+
+![Configuring Interface 1](howto-images/AddingInterfaceToNTS.png)
+
+- A window will pop-up titled "Edit Interface". The following fields need to be set:
+  - Driver: userspace
+  - Type: upstream
+  - Fallback Interface: PCI address of another available interface ie. '0000:3d:00.1'
+- Click 'SAVE'.
+
+![Configuring Interface 2](howto-images/AddingInterfaceToNTS1.png)
+
+- The interface's 'Driver' and 'Type' columns will reflect changes made.
+
+![Configuring Interface 3](howto-images/AddingInterfaceToNTS2.png)
 
 #### Starting NTS
-TBA
+Prerequisite:
+- Enrollment phase completed succesfully.
+- User is logged in to UI.
+- Interfaces to be used by NTS configured correctly.
+
+Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
+
+Once the interfaces are configured accordingly the following steps need to be done:
+- From UI navigate to 'INTERFACES' tab of the Edge Node.
+- Click 'COMMIT CHANGES'
+
+![Starting NTS 1](howto-images/StartingNTS.png)
+
+- NTS will start
+
+![Starting NTS 2](howto-images/StartingNTS2.png)
 
 ### Creating Applications
 TBA
