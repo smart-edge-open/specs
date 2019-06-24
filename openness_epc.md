@@ -9,16 +9,16 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 * [Introduction](#introduction)
 * [4G LTE CUPS Architectural Aspects](#4g-lte-cups-architectural-aspects)
 * [Integration with Edge Platform](#integration-with-edge-platform)
-    * [Open Network Edge Services Software (OpenNESS)](#Open-Network-Edge-Services-Software)
-    * [OpenNESS EPC Deployment Models and Integration with Edge Platforms](#openness-epc-deployment-models)
+    * [Open Network Edge Services Software (OpenNESS)](#Open-Network-Edge-Services-Software-(OpenNESS))
+    * [EPC Deployment Models and Integration with Edge Platforms](#epc-deployment-models-and-integration-with-edge-platforms)
     * [OpenNESS Implementation](#openness-implementation)
     * [OpenNESS API Flows for CUPS Integration](#openness-api-flows-for-cups-integration)
-    * [API Schema for the Core Network Configuration Agent Endpoint](#api-schema-for-cnca)
-  * [Validation and Data Path Models](#validation-and-datapath-models)
+    * [API Schema for the Core Network Configuration Agent Endpoint](#api-schema-for-the-core-network-configuration-agent-(CNCA)-endpoint)
+  * [Validation and Data Path Models](#validation-and-data-path-models)
     * [UE to Application](#ue-to-application)
-    * [UE - Application - Internet](#ue-application-internet)
-    * [UE - Forward to Internet due to Lack of Authentication](*ue-forward-lack-of-authentication)
-    * [Non-Edge-Application Traffic](*non-edge-application-traffic)
+    * [UE to Application to Internet](#ue-to-application-to-internet)
+    * [UE traffic forward to internet due to lack of Authentication](#ue-traffic-forward-to-internet-due-to-lack-of-authentication)
+    * [Non Edge Application Traffic](#non-edge-application-traffic)
 * [Summary](#summary)
  * [References](#references)
  * [List of Abbreviations](#list-of-abbreviations)
@@ -199,7 +199,7 @@ Figure 11 depicts this test. This flow is a basic session between an application
 Figure 11 - User Plane Routing between UE and Edge Application
 
 
-### UE - Application - Internet
+### UE to Application to Internet
 Figure 12 depicts this test. An example of this flow is a media stream from a web camera to a computer vision application on an edge node, which computes metadata from the media stream and forwards the metadata to the cloud.
 
 - The UE indicates it's desired APN which reflects in the right PGW-U being selected; based on current TAC the network assigns the correct SGW-U". 
@@ -211,7 +211,8 @@ Figure 12 depicts this test. An example of this flow is a media stream from a we
 Figure 12 - User Plane Routing UE - Edge Application - Internet
 
 
-### UE - Forward to Internet due to lack of Authentication
+### UE traffic forward to internet due to lack of Authentication
+
 Figure 13 depicts this test. An example of this flow is a UE that attempts to use an edge application, but is not authorized for it (e.g., the user may be authorized to use "best available service" QoS and run the application in the cloud, but not to run a higher-performance version running on the edge node).
 
 - The UE indicates it's desired APN which reflects in the right PGW-U being selected; based on current TAC the network assigns the correct SGW-U"
@@ -222,7 +223,7 @@ Figure 13 depicts this test. An example of this flow is a UE that attempts to us
 Figure 13 - User Plane Routing of Unauthenticated Traffic - UE to Internet
 
 
-### Non-Edge-Application Traffic
+### Non Edge Application Traffic
 Figure 14 depicts this test. This is another default case, where the UE matches no rules for an edge application, and is treated as a "vanilla" session that happens to be routed through the edge node EPC.
 
 - UE connects to a different User plane function, as its location and/or APN configurations are different and are not in Edge service location. 
