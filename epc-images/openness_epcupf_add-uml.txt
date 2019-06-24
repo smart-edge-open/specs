@@ -1,0 +1,70 @@
+Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+version: OpenNESS_TBD
+
+@startuml
+hide footbox
+skinparam roundcorner 20
+
+title EPC Control Plane Function add/update for Edge Userplane network topology
+
+box "OpenNESS Edge Controller" #LightBlue
+	participant "Core Network \n Configuration Agent" as epcagent
+end box
+
+box "LTE Control-Plane Elements" #LightGreen
+	participant "EPC OAM Agent" as epcoam #LightPink
+	participant "EPC CPF" as epccpf #LightPink
+end box
+
+box "OpenNESS Edge Node" #SkyBlue
+		participant "EPC UPF" as epcupf #LightPink
+	note over epcupf
+		Combined SGW-U 
+		and PGW-U mode
+		configuration of UPF
+	end note
+end box
+
+== Add/Update uplane ==
+
+epcagent -> epcoam ++ : Preconfigure Userplane\n{UUID, APN, ECGI|TAC+CGI}\nHTTP REST API	
+	epcoam -> epccpf ++ :  {Internal communication}
+	epccpf --> epcoam -- : SUCCESS
+epcoam --> epcagent -- : OK
+
+/'
+ref over epcupf
+	Userplane VNF deployment and start
+	(Mm5, Mm6)
+end ref
+'/
+
+epcagent -> epcupf ++ : \n\nOnboarding userplane component
+	epcupf -> epccpf ++ : Register
+	epccpf --> epcupf -- : OK
+epcupf --> epcagent -- : Ready for service\n(status update)
+
+epcagent -> epcoam ++ : \n\nOptional: Post configuration (Update)
+/'
+note right of epcagent
+	Update UPF NFV status to CPF
+	Optional params: IP addresses 
+	{sgws1u,sgws5u,sxa,pgws5u,sxb,pridns,secdns}
+end note 
+'/
+epcoam --> epcagent -- : OK
+
+@enduml
