@@ -56,17 +56,17 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 - Navigate to 'NODES' tab.
 - Click on 'ADD EDGE NODE' button.
 
-![Add Edge Node 1](howto-images/Enrollment1.png)
+![Add Edge Node 1](howto-images/Enroll1.png)
 
 - Enter previously obtained Edge Node Serial Key into 'Serial*' field.
 - Enter the name and location of Edge Node.
 - Press 'ADD EDGE NODE'.
 
-![Add Edge Node 2](howto-images/Enrollment2.png)
+![Add Edge Node 2](howto-images/Enroll2.png)
 
 - Check that your Edge Node is visible under 'List of Edge Nodes' (Also at this stage the Ansible script for bringing up Edge Node should successfully finish executing).
 
-![Add Edge Node 3](howto-images/Enrollment3.png)
+![Add Edge Node 3](howto-images/Enroll3.png)
 
 ### NTS Configuration
 TBA
