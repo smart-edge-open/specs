@@ -2,7 +2,8 @@ SPDX-License-Identifier: Apache-2.0
 Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.    
 
 # OpenNESS Architecture and Solution overview
-* [Introduction](#introduction)
+* [Introduction](#introduction)     
+  * [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
   * [OpenNESS Edge Node](#openness-edge-node)
@@ -14,30 +15,37 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [On-Premise Edge Deployment Scenario](#on-premise-edge-deployment-scenario)
     * [Network Edge Deployment Scenario](#network-edge-deployment-scenario)
 * [OpenNESS Edge Node Applications](#openness-edge-node-applications)
-    * [Edge Native Applications](#edge-native-applications)
-        * [example of Producer and Consumer Applications](#example-of-producer-consumer-app)
-    * [Local Breakout (LBO) Application](#local-breakout-application)
-    * [Cloud Adapter Edge Application](#cloud-adapter-edge-application)
+    * [Producer Application](#producer-application)
+    * [Consumer Application](#consumer-application)
+    * [Example of Producer and Consumer Applications](#example-of-producer-consumer-app)
+    * [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
 * [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
     * [Edge Application APIs](#edge-application-apis)
     * [Edge Application Authentication APIs](#edge-application-authentication-apis)
     * [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
     * [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
     * [Core Network Configuration Agent APIs](#core-network-configuration-agent-apis)
-    * [OPENNESS Controller APIs](#openness-controller-apis)
+    * [OpenNESS Controller APIs](#openness-controller-apis)
 * [OpenNESS OS Environment](#openness-os-environment)
 * [OpenNESS steps to get started](#openness-steps-to-get-started)
 * [OpenNESS Repository Structure](#openness-repository-structure)
 * [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
 
 ## Introduction
-OpenNESS is an open source software toolkit to enable easy orchestration and management of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
+OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
  
 It leverages major industry edge orchestration frameworks such as Kubernetes and OpenStack to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that finds objects of interest, such as pedestrians and cars, and serves the metadata from those objects to other applications that perform hazard notifications and other higher-level operations.
  
 OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with regard to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
  
 Because it is an open source platform, OpenNESS enables operators, ISVs, and OSVs to innovate with new technologies and services. Field trials may be run with platforms implemented via OpenNESS, or functionality from the OpenNESS platform may be imported into existing third-party products.
+
+### Key Terminologies defining OpenNESS 
+- Orchestration: Orchestration in the context of OpenNESS refers to exposing northbound APIs for Deploying, Managing, Automating the Edge compute cluster and Applications that run on the cluster. E.g. OpenNESS North bound APIs that can be used by Orchestrators like ONAP for managing the OpenNESS edge solution.  
+- Edge Services: Edge Services in the context of OpenNESS refers to the Applications that service end-user traffic and Applications that provide services to other Edge compute Applications. E.g. CDN is a Edge application that services end-user traffic and Transcoding services is a application that provides service to CDN application.  
+- Network platform: Network platform in the context of OpenNESS refers to nodes that are deployed in Network or On-Premise edge compute processing. These are typically COTS platforms which can host both Applications and VNFs. 
+- Access technologies: Access technologies in the context of OpenNESS refers to various types of traffic types that OpenNESS solution can be handle. They include LTE (GTP/IP), Wireline (IP) and Wifi (IP).  
+- Multi Cloud: Multi Cloud in the context of OpenNESS refers to support in OpenNESS to host multiple Public or Private cloud application on the same node or in the OpenNESS compute cluster. These cloud applicaitons can come from e.g. Amazon aws greengrass, Baidu cloud etc. 
   
 ## Overview
 An OpenNESS subsystem consists of one or more OpenNESS Edge Nodes, and an OpenNESS Controller. 
@@ -58,9 +66,9 @@ OpenNESS based edge compute reference stack consists of one or more OpenNESS Edg
 
 Figure 1 - OpenNESS Architecture
 
-The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
-
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with essential amount of Edge compute specific APIs and network abstraction on to provide a unique and one-stop-shop development solution for edge compute. 
+
+The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
 
 ### OpenNESS Controller Community Edition
 Throughput the rest of this document, “OpenNESS Controller Community Edition” will be referred to simply as “Controller” or “OpenNESS Controller”.
@@ -149,7 +157,9 @@ OpenNESS supports steering traffic to the applications that are already running 
 Figure 4 shows a possible deployment of LBP servers, in this case a rack of Enterprise App Servers routed through a Top-of-Rack (TOR) switch. 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
+
 Figure 4 - OpenNESS Native and LBP Applications
+
 ### Multi Access Support
 OpenNESS supports traffic steering to applications already running on a customer IT infrastructure. The infrastructure is attached to the edge node via a Local Breakout Port (LBP), and traffic steering rules are defined to direct traffic to the LBP, rather than to an edge application running on the edge node.
  
@@ -160,6 +170,7 @@ OpenNESS supports multiple deployment options on an LTE cellular network, as sho
 Alternatively, the edge node may be attached to the SGi interface of an EPC. Traffic from the EPC arrives as IP traffic, and is steered as appropriate to edge applications. EPCs may combine the control or user plane, or they may follow the Control-User Plane Separation (CUPS) architecture of [3GPP_23214], which provides for greater flexibility in routing data plane traffic through the LTE network. 
 
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
+
 Figure 5 - Edge Node Deployment with Access Networks
 
 ## Deployment Scenarios
@@ -176,7 +187,8 @@ In this environment, it may not be necessary to add another level of infrastruct
  
 The OpenNESS Controller may be hosted locally, or be hosted in an enterprise or public cloud to manage edge nodes in multiple physical locations.
 
-![On-Premise Edge compute](arch-images/openness_onprem2.png)
+![On-Premise Edge compute](arch-images/openness_onprem.png)
+
 Figure 6 - On-Premise Edge Deployment Scenario
 
 ### Network Edge Deployment Scenario
@@ -185,6 +197,7 @@ The network edge deployment scenario is depicted in Figure 7. In this scenario, 
 In this environment, OpenNESS integrates with the virtualization infrastructure in use in the operator network; the OpenNESS Controller manages the edge nodes in its domain via the virtualization infrastructure.
 
 ![Network Edge compute](arch-images/openness_networkedge.png)
+
 Figure 7 - Network Edge Deployment Scenario
 
 ## OpenNESS Edge Node Applications
@@ -216,9 +229,11 @@ OpenNESS Consumer application are edge compute application that serve end users 
 - A consumer application can subscribe to any number of services from producer apps. Future extension can implement entitlements to consumer apps to create access control lists. 
 - Producer to Consumer update will use web socket for notification. If there is further data to be shared between producer and consumer other NFVi components like OVS/VPP/NIC-VF can be used for data transfer. 
 
+### Example of Producer and Consumer Applications
 The OpenNESS release includes reference producer and consumer applications.
 
 ![OpenNESS Reference Application](arch-images/openness_apps.png)
+
 Figure 8 - Example of Producer and Consumer Applications
 
 The consumer application is based on OpenVINO [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
@@ -236,6 +251,7 @@ OpenNESS enables this approach by running the Greengrass Core (with the Edge sof
 OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud vendors like Amazon AWS IoT Greengrass and Baidu OpenEdge on edge compute platform. The existing IOT gateways can be migrated to OpenNESS as is or enhanced to call EAA APIs using extensions like Lambda functions. 
 
 ![OpenNESS Cloud Adapters](arch-images/openness_cloudadapter.png)
+
 Figure 9 - Example of Cloud Adapter Edge Application in OpenNESS Platform
 
 More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
@@ -300,11 +316,13 @@ EVA APIs are implemented over gRPC. For the purpose of visualization they are co
 As part of the OpenNESS reference edge stack the OpenNESS controller community edition is used for configuring the traffic policy for CUPS EPC to steer traffic towards the edge compute, This API is based on HTTP REST. Since 3GPP or ETSI MEC does not provide reference for these APIs various implementation of this Edge Controller to CUPS EPC might exist. OpenNESS has tried to take the approach of minimal changes to 3GPP CUPS EPC to achieve the edge compute deployment. OpenNESS and HTTP REST APIs to the EPC CUPS is a reference implementation so customers using OpenNESS can integrate their own HTTP REST APIs to the EPC CUPS into the OpenNESS Controller. Special care has been taken to make these components Modular microservices. The diagram below show the LTE environment that was used for testing OpenNESS edge compute end-to-end. 
 
 ![LTE end-to-end setup](arch-images/openness_epc.png)
+
 Figure 11 - OpenNESS LTE end-to-end test setup for CUPS deplyment
 
 OpenNESS Reference solution provides framework for managing multiple Edge nodes through centralized OpenNESS controller. In case of co-located EPC userplane and edge node deployment models, LTE user plane elements can be controlled through NFV infrastructure provided by OpenNESS reference solution. OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller. LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes. It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
 
-![LTE EPC Configuration](arch-images/openness_epcconfig.png)
+![LTE EPC Configuration](arch-images/openness_epcconfig.png)     
+
 Figure 12 - LTE EPC Configuration
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
@@ -363,10 +381,10 @@ Installation and configuration scripts will be provided to get the relevant vers
 - OpenNESS Reference Application User guide [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
 - OpenNESS Amazon AWS IoT Greengrass application note [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
 - OpenNESS Baidu Cloud application note [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
+- OpenNESS How-to Guide[OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
 
-##Other References
+## Other References
 - [3GPP_23401]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
 - [3GPP_23214]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; Architecture enhancements for control and user plane separation of EPC nodes; Stage 2.
 - [ETSI_MEC 003]  ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture     
-- [ETSI_23501] 5G; System Architecture for the 5G System (3GPP TS 23.501 version 15.2.0 Release 15), ETSI TS 123 501     
-
+- [ETSI_23501] 5G; System Architecture for the 5G System (3GPP TS 23.501 version 15.2.0 Release 15), ETSI TS 123 501    
