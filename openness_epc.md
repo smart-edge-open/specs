@@ -75,7 +75,7 @@ The functional elements of the OpenNESS platform interact with each other via se
 The reader is directed to [OpenNESS_2019] for a more detailed description of the architecture and the service interfaces.
 
 
-![OpenNESS Architecture overview](epc-images/openness_highlevel.png)
+![OpenNESS Architecture overview](epc-images/Openness_highlevel.png)
 Figure 1 - Open Network Edge Services Software (OpenNESS) Architecture
 
 
