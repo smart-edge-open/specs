@@ -43,12 +43,7 @@ The distributed EPC case has more flexibility; an edge platform is attached to a
 ## 4G LTE CUPS architectural aspects
 In 3GPP Release 14 (2016-2017), a study item, "Control and User Plane Separation of EPC Nodes (CUPS)" was introduced. As explained in [3GPP_CUPS], the motivation for this work was to keep up with the growth rate in user data traffic, which has been growing at 100%/year in recent years, due to the proliferation of smart devices and the usage of video traffic. Reducing user plane latency and increasing throughput was a high priority. The study item responded with a specification in which the control and user planes of the EPC could be scaled in a flexible manner.
 
-CUPS is being adopted widely by network operators, making the integration of the CUPS architecture with edge computing is high priority. The most recent release of CUPS is in Release 15, [3GPP_23214], and depicted in Figure 1, extracted from that document. The remainder of this white paper will focus on the CUPS architecture and its integration with edge computing platforms.
-
-
-![3GPP CUPS Architecture overview](epc-images/openness_3gpp.png)
-
-**Figure 1 - Architecture reference model with separation of user plane and control plane (from [3GPP_23214], Figure 4.2.1-1)
+CUPS is being adopted widely by network operators, making the integration of the CUPS architecture with edge computing is high priority. The most recent release of CUPS in Release 15, [3GPP_23214], for architecture reference model is described at https://www.3gpp.org/cups.  The remainder of this white paper will focus on the CUPS architecture and its integration with edge computing platforms.
 
 In CUPS, additional reference points Sxa,  Sxb, and Sxc between the corresponding control plane,  user plane, and traffic detection functions of the EPC, are defined. The Packet Forwarding Control Protocol (PFCP) runs on these reference points, allowing sessions to be set up between control plane and user plane elements. With some restrictions at initialization time, multiple sessions between control plane functions and user plane functions may be established. The Sx sessions establish the detection, forwarding,  QoS, and DNS rules to be followed by the user plane functions; these rules determine the initial selection of an SGW-U when a UE is first attached, the destinations to where user plane packets are routed by the user plane functions, and how user plane data streams may be buffered or throttled during the process.
 
