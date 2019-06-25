@@ -36,13 +36,13 @@ This section describe how to setup and run AWS Greengrass on openNESS in a Docke
 #### Download Dockerfile from AWS
 
 AWS provides a Dockerfile and Docker image to enable running AWS IoT Greengrass in a Docker container.
-The procedures for downloading and using it are in the AWS IoT Greengrass Developer Guide [AWS IoT Greengrass Developer Guide](https://docs.aws.amazon.com/greengrass/latest/developerguide). 
+The procedures for downloading and using it are in the [AWS IoT Greengrass Developer Guide](https://docs.aws.amazon.com/greengrass/latest/developerguide). 
 
-In the Downloads section of "What is AWS IoT Greengrass" <https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download>, find and download the Docker package.
+In the Downloads section of [What is AWS IoT Greengrass](https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download), find and download the Docker package.
 
 #### AWS IoT Greengrass
 
-Go to the "Configure AWS IoT Greengrass on AWS IoT" section of AWS IoT Greengrass Developer Guide (<https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-config.html>) and follow it until you download and store your Core's security resources as a tar.gz.
+Go to the "Configure AWS IoT Greengrass on AWS IoT" section of [AWS IoT Greengrass Developer Guide](https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-config.html) and follow it until you download and store your Core's security resources as a tar.gz.
 
 Unzip its content into the same diectory where the Dockerfile is.
 
@@ -55,11 +55,8 @@ Add the following section in the Dockerfile:
 ```docker
 
 \# Copy certs files
-
 COPY "./certs/*" /greengrass/certs/
-
 COPY "./config/*" /greengrass/config/
-
 RUN chmod 444 /greengrass/config/config.json
 
 ```
@@ -68,13 +65,9 @@ In ```docker-compose.yml``` file comment out ```volumes``` section with ```#``` 
 
 ```docker
 \#    volumes:
-
 \#      - ./certs:/greengrass/certs
-
-\\#      - ./config:/greengrass/config
-
+\#      - ./config:/greengrass/config
 \#      - ./deployment:/greengrass/ggc/deployment
-
 \#      - ./log:/greengrass/ggc/var/log
 
 ```
