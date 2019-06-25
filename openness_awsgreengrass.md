@@ -14,7 +14,6 @@ Certain commercial cloud service providers (CSPs), such as Amazon, have the capa
 
 The OpenNESS platform supports Amazon Greengrass. This Application note describes how to deploy Greengrass on the OpenNESS platform.
 
-
 ![OpenNESS Architecture overview](awsgg-images/openness_overview.png)
 
 Figure 1 - OpenNESS Architecture
@@ -32,6 +31,8 @@ Figure 2 - Amazon AWS greengrass OpenNESS integrated solution
 
 This section describe how to setup and run AWS Greengrass on openNESS in a Docker container.
 ### Running AWS IoT Greengrass in a Docker Container
+
+OpenNESS was tested with Docker v1.9.2 of the AWS IoT Greengrass Core software version. 
 
 #### Download Dockerfile from AWS
 
@@ -54,7 +55,7 @@ Add the following section in the Dockerfile:
 
 ```docker
 
-\# Copy certs files
+# Copy certs files
 COPY "./certs/*" /greengrass/certs/
 COPY "./config/*" /greengrass/config/
 RUN chmod 444 /greengrass/config/config.json
@@ -64,11 +65,11 @@ RUN chmod 444 /greengrass/config/config.json
 In ```docker-compose.yml``` file comment out ```volumes``` section with ```#``` sign:
 
 ```docker
-\#    volumes:
-\#      - ./certs:/greengrass/certs
-\#      - ./config:/greengrass/config
-\#      - ./deployment:/greengrass/ggc/deployment
-\#      - ./log:/greengrass/ggc/var/log
+#    volumes:
+#      - ./certs:/greengrass/certs
+#      - ./config:/greengrass/config
+#      - ./deployment:/greengrass/ggc/deployment
+#      - ./log:/greengrass/ggc/var/log
 
 ```
 
