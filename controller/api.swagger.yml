@@ -815,12 +815,8 @@ paths:
       responses:
         '200':
           description: DNS configuration has been applied.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DNSDetail'
         '400':
-          description: Invalid DNS configuration ID
+          description: Invalid DNS configuration.
         '404':
           description: Node ID not found.
     delete:
