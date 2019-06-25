@@ -63,7 +63,7 @@ OpenNESS is access network agnostic, as it provides an architecture that interop
  
 Because it is an open source platform, OpenNESS enables operators, ISVs, and OSVs to innovate with new technologies and services. Field trials may be run with platforms implemented via OpenNESS, or functionality from the OpenNESS platform may be imported into existing third-party products. It is thus an attractive platform for investigating approaches to integration with a CUPS-based network. The reader is directed to [OpenNESS_2019] for additional information on the OpenNESS platform.
 
-Figure 2 represents the architecture of the OpenNESS platform. It consists of:
+Figure 1 represents the architecture of the OpenNESS platform. It consists of:
 
 - a Controller, through which external orchestrators act on the system, and which is used to manage edge platforms;
 - one or more Edge Nodes, which host edge applications.
@@ -76,7 +76,7 @@ The reader is directed to [OpenNESS_2019] for a more detailed description of the
 
 
 ![OpenNESS Architecture overview](epc-images/openness_highlevel.png)
-Figure 2 - Open Network Edge Services Software (OpenNESS) Architecture
+Figure 1 - Open Network Edge Services Software (OpenNESS) Architecture
 
 
 ### EPC Deployment Models and Integration with Edge Platforms
@@ -85,25 +85,25 @@ The 3GPP standards define many deployment scenarios for EPCs, which differ by th
 
 To explore these alternatives, we will consider three different deployment models. In these models, it is assumed that the access network control plane is not impacted, but that the user plane is distributed in different configurations.
 
-Figure 3 depicts the first, most decoupled, model, in which multiple SGW-Us are associated with a single PGW-U. The edge compute node is associated with the PGW-U, and the configurations of the multiple SGW-Us, the PGW-U, and the edge compute node must be coordinated so that the PGW-U is selected as a destination for traffic from a particular UE. In this model, a network orchestration function configures the EPC elements, and selects the edge node for deployment of an edge application. In this model, the edge Controller function does not have visibility to the network.
+Figure 2 depicts the first, most decoupled, model, in which multiple SGW-Us are associated with a single PGW-U. The edge compute node is associated with the PGW-U, and the configurations of the multiple SGW-Us, the PGW-U, and the edge compute node must be coordinated so that the PGW-U is selected as a destination for traffic from a particular UE. In this model, a network orchestration function configures the EPC elements, and selects the edge node for deployment of an edge application. In this model, the edge Controller function does not have visibility to the network.
 
 ![3GPP CUPS model 1](epc-images/openness_epc1.png)
-Figure 3 - Deployment Model 1: Separate S-GW, Co-located P-GW and Edge Platform
+Figure 2 - Deployment Model 1: Separate S-GW, Co-located P-GW and Edge Platform
 
-In the second deployment model, depicted in Figure 4, the PGW-U is integrated into an edge infrastructure. This model implies that the PGW-U function runs as a bare metal, virtual machine, or container implementation in the same host or rack as an edge node. The number of hops through the network for user plane traffic is reduced, as is the OAM cost, as it is now possible for the PGW-U function to be orchestrated by the same virtualization manager as the edge platform. However, in order to realize this economy, the control plane should expose an API by which the edge platform can configure it (e.g., by setting the forwarding, QoS, and DNS rules required by the SGW-U).
+In the second deployment model, depicted in Figure 3, the PGW-U is integrated into an edge infrastructure. This model implies that the PGW-U function runs as a bare metal, virtual machine, or container implementation in the same host or rack as an edge node. The number of hops through the network for user plane traffic is reduced, as is the OAM cost, as it is now possible for the PGW-U function to be orchestrated by the same virtualization manager as the edge platform. However, in order to realize this economy, the control plane should expose an API by which the edge platform can configure it (e.g., by setting the forwarding, QoS, and DNS rules required by the SGW-U).
 
 ![3GPP CUPS model 2](epc-images/openness_epc2.png)
-Figure 4 - Deployment Model 2: Combined S-GW, P-GW, Separate Edge Platform
+Figure 3 - Deployment Model 2: Combined S-GW, P-GW, Separate Edge Platform
 
-In the third deployment model, shown in Figure 5, the SGW-U and PGW-U functions are integrated into the same platform as the edge node. This model looks like a single user plane gateway that also executes edge applications, which reduces latency and operational costs. The user plane functions may run in bare metal, VM, or containers, managed by the edge platform virtualization manager. The control plane functions should expose an API by which the edge platform can configure it, as in the case of the second model.
+In the third deployment model, shown in Figure 4, the SGW-U and PGW-U functions are integrated into the same platform as the edge node. This model looks like a single user plane gateway that also executes edge applications, which reduces latency and operational costs. The user plane functions may run in bare metal, VM, or containers, managed by the edge platform virtualization manager. The control plane functions should expose an API by which the edge platform can configure it, as in the case of the second model.
 
 
 ![3GPP CUPS model 3](epc-images/openness_epc3.png)
-Figure 5 - Combined S-GW, P-GW, Co-located with Edge Platform
+Figure 4 - Combined S-GW, P-GW, Co-located with Edge Platform
 
 
 ### OpenNESS implementation 
-An implementation of the third deployment model was created to demonstrate the approach of integrating user gateways with an edge platform. Its high level architecture is depicted in Figure 6.
+An implementation of the third deployment model was created to demonstrate the approach of integrating userplane gateways with an edge platform. Its high level architecture is depicted in Figure 5.
 
 The interacting functions in this architecture are the EPC Control Plane and the OpenNESS Controller.
 
@@ -116,7 +116,7 @@ The combined user plane functions must still be subject to control by operators'
 
 ![LTE CUPS Configuration](epc-images/openness_epcconfig.png)
 
-Figure 6 - High-Level CUPS/EPC Configuration Flow
+Figure 5 - High-Level CUPS/EPC Configuration Flow
 
 
 ###	OpenNESS API flows for CUPS integration
@@ -125,17 +125,17 @@ Below is the detailed sequence diagrams showing the API communication between th
 
 ![LTE CUPS Configuration Sequence diagram 1](epc-images/openness_epcupf_add.png)
 
-Figure 7 - Adding a User Plane Configuration from Controller
+Figure 6 - Adding a User Plane Configuration from Controller
 
 
 ![LTE CUPS Configuration Sequence diagram 2](epc-images/openness_epcupf_get.png)
 
-Figure 8 - Getting  a User Plane Configuration from Controller
+Figure 7 - Getting  a User Plane Configuration from Controller
 
 
 ![LTE CUPS Configuration Sequence diagram 3](epc-images/openness_epcupf_del.png)
 
-Figure 9 - Deleting a User Plane Configuration from Controller
+Figure 8 - Deleting a User Plane Configuration from Controller
 
 In future work, the API endpoint specification will be further validated with one or more commercial EPC providers.
    
@@ -143,7 +143,7 @@ In future work, the API endpoint specification will be further validated with on
 ### API schema for the Core Network Configuration Agent (CNCA) Endpoint
 
  
-The API is exposed via an HTTP API endpoint, "/userplanes". In Figure 6, it is exposed at the EPC Control Plane, but could also be exposed at the EPC User Plane (or SGW-U/PGW-U/Edge Node function).
+The API is exposed via an HTTP REST API endpoint, "/userplanes". In Figure 6, it is exposed at the EPC Control Plane, but could also be exposed at the EPC User Plane (or SGW-U/PGW-U/Edge Node function).
 
 The endpoint currently defines:
 
@@ -155,7 +155,7 @@ The endpoint currently defines:
 
 ![LTE CUPS Configuration Sequence diagram 3](epc-images/openness_epc_cnca_1.png)
 
-Figure 10 - Parameters of Core Network Configuration Agent (CNCA) API
+Figure 9 - Parameters of Core Network Configuration Agent (CNCA) API
 
 
 The id, uuid, and function parameters are mandatory, and other parameters are optional and are used according to the semantics of the HTTP verbs that define the rest of the API invocation.
@@ -184,18 +184,18 @@ The reference implementation described in this white paper has been tested in a 
 
 ## UE to Application
 
-Figure 11 depicts this test. This flow is a basic session between an application front-end on a UE, and an application back-end on an edge node.
+Figure 10 depicts this test. This flow is a basic session between an application front-end on a UE, and an application back-end on an edge node.
 
 - The UE indicates it's desired APN which reflects in the right PGW-U being selected; based on current TAC the network assigns the correct SGW-U"
 - Subscriber’s application data is processed at the MEC application launched at the OpenNESS Edge compute node. 
 
 ![LTE CUPS Configuration test flow 1](epc-images/openness_epctest1.png)
 
-Figure 11 - User Plane Routing between UE and Edge Application
+Figure 10 - User Plane Routing between UE and Edge Application
 
 
 ### UE to Application to Internet
-Figure 12 depicts this test. An example of this flow is a media stream from a web camera to a computer vision application on an edge node, which computes metadata from the media stream and forwards the metadata to the cloud.
+Figure 11 depicts this test. An example of this flow is a media stream from a web camera to a computer vision application on an edge node, which computes metadata from the media stream and forwards the metadata to the cloud.
 
 - The UE indicates it's desired APN which reflects in the right PGW-U being selected; based on current TAC the network assigns the correct SGW-U". 
 - Subscriber’s application data is processed at Edge application launched at OpenNESS Edge compute node.
@@ -203,30 +203,30 @@ Figure 12 depicts this test. An example of this flow is a media stream from a we
 
 ![LTE CUPS Configuration test flow 2](epc-images/openness_epctest2.png)
 
-Figure 12 - User Plane Routing UE - Edge Application - Internet
+Figure 11 - User Plane Routing UE - Edge Application - Internet
 
 
 ### UE traffic forward to internet due to lack of Authentication
 
-Figure 13 depicts this test. An example of this flow is a UE that attempts to use an edge application, but is not authorized for it (e.g., the user may be authorized to use "best available service" QoS and run the application in the cloud, but not to run a higher-performance version running on the edge node).
+Figure 12 depicts this test. An example of this flow is a UE that attempts to use an edge application, but is not authorized for it (e.g., the user may be authorized to use "best available service" QoS and run the application in the cloud, but not to run a higher-performance version running on the edge node).
 
 - The UE indicates it's desired APN which reflects in the right PGW-U being selected; based on current TAC the network assigns the correct SGW-U"
 - Subscriber’s application data is not configured for Edge location processing thus forwarded to PDN/internet. 
 
 ![LTE CUPS Configuration test flow 3](epc-images/openness_epctest3.png)
 
-Figure 13 - User Plane Routing of Unauthenticated Traffic - UE to Internet
+Figure 12 - User Plane Routing of Unauthenticated Traffic - UE to Internet
 
 
 ### Non Edge Application Traffic
-Figure 14 depicts this test. This is another default case, where the UE matches no rules for an edge application, and is treated as a "vanilla" session that happens to be routed through the edge node EPC.
+Figure 13 depicts this test. This is another default case, where the UE matches no rules for an edge application, and is treated as a "vanilla" session that happens to be routed through the edge node EPC.
 
 - UE connects to a different User plane function, as its location and/or APN configurations are different and are not in Edge service location. 
 - Hence, subscriber’s application data uses a different UPF to reach PDN. 
 
 ![LTE CUPS Configuration test flow 4](epc-images/openness_epctest4.png)
 
-Figure 14 - User Plane Routing of non-Application Traffic - UE to Internet
+Figure 13 - User Plane Routing of non-Application Traffic - UE to Internet
 ## Summary
 This white paper describes an investigation of how an edge platform can be integrated with an LTE access network that supports CUPS. Such an integration is important for achieving performance goals for an edge platform. In a reference implementation illustrating this integration, an EPC was modified by exposing an additional Core Network Configuration Agent API, through which an edge node Controller can configure the EPC. By doing this, a central control point, the Edge Controller, is able to coordinate the deployment of an edge application and the traffic rules steering traffic from a UE to that application.
 
