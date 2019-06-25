@@ -36,7 +36,9 @@ This section describe how to setup and run AWS Greengrass on openNESS in a Docke
 #### Download Dockerfile from AWS
 
 AWS provides a Dockerfile and Docker image to enable running AWS IoT Greengrass in a Docker container.
-The procedures for downloading and using it are in the AWS IoT Greengrass Developer Guide <https://docs.aws.amazon.com/greengrass/latest/developerguide>. In the Downloads section of "What is AWS IoT Greengrass" <https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download>, find and download the Docker package.
+The procedures for downloading and using it are in the AWS IoT Greengrass Developer Guide [AWS IoT Greengrass Developer Guide] (https://docs.aws.amazon.com/greengrass/latest/developerguide). 
+
+In the Downloads section of "What is AWS IoT Greengrass" <https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download>, find and download the Docker package.
 
 #### AWS IoT Greengrass
 
