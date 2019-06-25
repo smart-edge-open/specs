@@ -35,46 +35,36 @@ This section describe how to setup and run AWS Greengrass on openNESS in a Docke
 
 #### Download Dockerfile from AWS
 
-AWS provides a Dockerfile and Docker image to enable running AWS IoT Greengrass in a Docker container.
-The procedures for downloading and using it are in the AWS IoT Greengrass Developer Guide <https://docs.aws.amazon.com/greengrass/latest/developerguide>. In the Downloads section of "What is AWS IoT Greengrass" <https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download>, find and download the Docker package.
+AWS provides a Dockerfile and Docker image that make it easier for you to run AWS IoT Greengrass in a Docker container.
+In order to get it go to AWS IoT Greengrass Developer Guide <https://docs.aws.amazon.com/greengrass/latest/developerguide>. In Downloads section of "What is AWS IoT Greengrass" <https://docs.aws.amazon.com/greengrass/latest/developerguide/what-is-gg.html#gg-docker-download> find Docker package. Download it and unzip it on your machine.
 
 #### AWS IoT Greengrass
 
-Go to the "Configure AWS IoT Greengrass on AWS IoT" section of AWS IoT Greengrass Developer Guide (<https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-config.html>) and follow it until you download and store your Core's security resources as a tar.gz.
+Go to "Configure AWS IoT Greengrass on AWS IoT" section of AWS IoT Greengrass Developer Guide (<https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-config.html>) and follow it until you download and store your Core's security resources as a tar.gz.
 
-Unzip its content into the same diectory where the Dockerfile is.
+Unzip its content into the same directory where the Dockerfile is.
 
 #### Modify Dockerfile and docker-compose file
 
-Modify the ```Dockerfile``` and ```docker-compose.yml``` file before taking next steps.
+You have to modify the ```Dockerfile``` and ```docker-compose.yml``` file before taking next steps.
 
 Add the following section in the Dockerfile:
 
 ```docker
-
-\# Copy certs files
-
+# Copy certs files
 COPY "./certs/*" /greengrass/certs/
-
 COPY "./config/*" /greengrass/config/
-
 RUN chmod 444 /greengrass/config/config.json
-
 ```
 
 In ```docker-compose.yml``` file comment out ```volumes``` section with ```#``` sign:
 
 ```docker
-\#    volumes:
-
-\#      - ./certs:/greengrass/certs
-
-\\#      - ./config:/greengrass/config
-
-\#      - ./deployment:/greengrass/ggc/deployment
-
-\#      - ./log:/greengrass/ggc/var/log
-
+#    volumes:
+#      - ./certs:/greengrass/certs
+#      - ./config:/greengrass/config
+#      - ./deployment:/greengrass/ggc/deployment
+#      - ./log:/greengrass/ggc/var/log
 ```
 
 #### Build a docker container image with credentials
@@ -91,8 +81,8 @@ Then save the modified container image into the file:
 
 ```docker save aws-iot-greengrass > aws-iot-greengrass.tar.gz```
 
-Now deploy ```aws-iot-greengrass.tar.gz``` file in OpenNESS according to the Controller User Guide.
+Now you can deploy ```aws-iot-greengrass.tar.gz``` file in OpenNESS according to controller User Guide.
 
 ### Greengrass Deployment on AWS IoT
 
-After Greengrass container is run by the OpenNESS Controller, follow the Greengrass setup and deployment steps in the AWS IoT Greengrass Developer Guide.
+After Greengrass container is run by the OpenNESS Controller, follow the Greengrass setup and deployment steps in AWS IoT Greengrass Developer Guide.
