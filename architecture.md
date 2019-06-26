@@ -30,6 +30,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 * [OpenNESS steps to get started](#openness-steps-to-get-started)
 * [OpenNESS Repository Structure](#openness-repository-structure)
 * [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
+* [List of Abbreviations](#list-of-abbreviations)    
 
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
@@ -390,3 +391,35 @@ Installation and configuration scripts will be provided to get the relevant vers
 - [ETSI_MEC 003]  ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture     
 - [ETSI_23501] 5G; System Architecture for the 5G System (3GPP TS 23.501 version 15.2.0 Release 15), ETSI TS 123 501.
 - [OPENVINO2019]	OpenVINO toolkit, https://software.intel.com/en-us/openvino-toolkit.
+
+## List of Abbreviations
+- 3GPP: Third Generation Partnership Project
+- CUPS: Control and User Plane Separation of EPC Nodes
+- AF: Application Function
+- API: Application Programming Interface
+- APN: Access Point Name
+- EPC: Evolved Packet Core
+- ETSI: European Telecommunications Standards Institute
+- FQDN: Fully Qualified Domain Name
+- HTTP: Hyper Text Transfer Protocol
+- IMSI: International Mobile Subscriber Identity
+- JSON:	JavaScript Object Notation
+- MEC: Multi-Access Edge Computing
+- OpenNESS: Open Network Edge Services Software
+- LTE: Long-Term Evolution
+- MCC: Mobile Country Code
+- MME: Mobility Management Entity
+- MNC: Mobile Network Code
+- NEF: Network Exposure Function
+- OAM: Operations, Administration and Maintenance
+- PDN: Packet Data Network
+- PFCP: Packet Forwarding Control Protocol- SGW: Serving Gateway- PGW: PDN Gateway
+- PGW-C: PDN Gateway - Control Plane Function
+- PGW-U: PDN Gatgeway - User Plane Function
+- REST: REpresentational State Transfer
+- SGW-C: Serving Gateway - Control Plane Function
+- SGW-U: Serving Gateway - User Plane Function
+- TAC: Tracking Area Code
+- UE: User Equipment (in the context of LTE)
+- VIM: Virtual Infrastructure Manager 
+- UUID: Universally Unique IDentifier 
