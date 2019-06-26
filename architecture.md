@@ -65,7 +65,7 @@ OpenNESS based edge compute reference stack consists of one or more OpenNESS Edg
 
 ![OpenNESS Architecture overview](arch-images/openness_overview.png)
 
-__Figure 1 - OpenNESS Architecture__**
+_Figure 1 - OpenNESS Architecture_
 
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with essential amount of Edge compute specific APIs and network abstraction on to provide a unique and one-stop-shop development solution for edge compute. 
 
@@ -103,7 +103,7 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
  
  ![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
  
- __Figure 2 - Edge Node Authentication and enrollment__**
+ _Figure 2 - Edge Node Authentication and enrollment_
 
 - **Edge node interface configuration**: During initial bootup, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
@@ -124,7 +124,7 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
 
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
-__Figure 3 - OpenNESS Edge Compute Application Authentication__** 
+_Figure 3 - OpenNESS Edge Compute Application Authentication_
 
 Edge Services are deployed as Applications on the Edge Node can be classified into:  
 - **Producer Application**: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
@@ -159,7 +159,7 @@ Figure 4 shows a possible deployment of LBP servers, in this case a rack of Ente
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
-__Figure 4 - OpenNESS Native and LBP Applications__**
+_Figure 4 - OpenNESS Native and LBP Applications_
 
 ### Multi Access Support
 OpenNESS supports traffic steering to applications already running on a customer IT infrastructure. The infrastructure is attached to the edge node via a Local Breakout Port (LBP), and traffic steering rules are defined to direct traffic to the LBP, rather than to an edge application running on the edge node.
@@ -172,7 +172,7 @@ Alternatively, the edge node may be attached to the SGi interface of an EPC. Tra
 
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
-__Figure 5 - Edge Node Deployment with Access Networks__**
+_Figure 5 - Edge Node Deployment with Access Networks_
 
 ## Deployment Scenarios
 The edge computing industry has devoted much effort to defining a taxonomy of edge computing deployment scenarios, based on physical location (e.g., street fixtures, central offices, data centers), logical location (e.g., on premises, far edge, near edge), and physical properties (e.g., end-to-end transmission latency). OpenNESS, as an open source platform, has taken the strategy of categorizing major characteristics of these deployment scenarios in terms of their impact on the design of a particular solution. Two primary deployment scenarios, On-Premise” and “Network Edge”, have been identified, and are described in the following sub-sections.
@@ -190,7 +190,7 @@ The OpenNESS Controller may be hosted locally, or be hosted in an enterprise or 
 
 ![On-Premise Edge compute](arch-images/openness_onprem.png)
 
-__Figure 6 - On-Premise Edge Deployment Scenario__**
+_Figure 6 - On-Premise Edge Deployment Scenario_
 
 ### Network Edge Deployment Scenario
 The network edge deployment scenario is depicted in Figure 7. In this scenario, edge nodes are located  in facilities owned by a network operator (e.g., a central office), and to be part of a data network including access network, core network, and edge computing infrastructure owned by a network operator. For economy of scale, this network is likely to be multi-tenant, and to be of very large scale (a national network operator may have thousands, or tens of thousands, of edge nodes). This network is likely to employ managed virtualization (e.g., OpenStack, Kubernetes) and be integrated with an operations and support system through which not only the edge computing infrastructure, but the network infrastructure, is managed.
@@ -199,7 +199,7 @@ In this environment, OpenNESS integrates with the virtualization infrastructure 
 
 ![Network Edge compute](arch-images/openness_networkedge.png)
 
-__Figure 7 - Network Edge Deployment Scenario__**
+_Figure 7 - Network Edge Deployment Scenario_
 
 ## OpenNESS Edge Node Applications
 OpenNESS Applications can onboarded and provisioned on the edge node only through OpenNESS Controller. The first step in Onboarding involves uploading the application image to the controller through the web interface. Both VM and Container images are supported. 
@@ -235,7 +235,7 @@ The OpenNESS release includes reference producer and consumer applications.
 
 ![OpenNESS Reference Application](arch-images/openness_apps.png)
 
-__Figure 8 - Example of Producer and Consumer Applications__**
+_Figure 8 - Example of Producer and Consumer Applications_
 
 The consumer application is based on OpenVINO [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
 
@@ -253,7 +253,7 @@ OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud
 
 ![OpenNESS Cloud Adapters](arch-images/openness_cloudadapter.png)
 
-__Figure 9 - Example of Cloud Adapter Edge Application in OpenNESS Platform__**
+_Figure 9 - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
 More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
 
@@ -283,7 +283,7 @@ More details about the APIs can be found here [Edge Application APIs](https://ww
 
 ![Edge Application APIs](arch-images/openness_eaa.png)
 
-__Figure 10 - Edge Application API Sequence Diagram__**
+_Figure 10 - Edge Application API Sequence Diagram_
 
 ### Edge Application Authentication APIs
 OpenNESS supports authentication of Edge compute apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two categories of Applications as discussed above and here is the implication for the authentication. 
@@ -318,13 +318,13 @@ As part of the OpenNESS reference edge stack the OpenNESS controller community e
 
 ![LTE end-to-end setup](arch-images/openness_epc.png)
 
-__Figure 11 - OpenNESS LTE end-to-end test setup for CUPS deployment__**
+_Figure 11 - OpenNESS LTE end-to-end test setup for CUPS deployment_
 
 OpenNESS Reference solution provides framework for managing multiple Edge nodes through centralized OpenNESS controller. In case of co-located EPC userplane and edge node deployment models, LTE user plane elements can be controlled through NFV infrastructure provided by OpenNESS reference solution. OpenNESS suggests HTTP based REST APIs to configure and manage the LTE userplane components through the centralized Edge controller. LTE network Operator’s Operation and Maintenance (OAM) elements can consume these APIs to open an interface for the Edge controllers to communicate for the management of userplane nodes launched at the Edge nodes. It is being implicitly understood that OAM agent communication with EPC core components is always an implementation dependent from vendor to vendor in different operator’s environments. 
 
 ![LTE EPC Configuration](arch-images/openness_epcconfig.png)     
 
-__Figure 12 - LTE EPC Configuration__**
+_Figure 12 - LTE EPC Configuration_
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
 
@@ -367,13 +367,13 @@ Installation and configuration scripts will be provided to get the relevant vers
 
 ## OpenNESS Repository Structure
 - **OpenNESS github root** [OpenNESS Github link](https://github.com/open-ness)
-  - **edgenode** [edgenode link](https://github.com/open-ness/edgenode): Repository containing OpenNESS Edge Node microservices, dataplane, build, installation scripts and test. 
-  - **edgecontroller** [edgecontroller link](https://github.com/open-ness/edgecontroller): Repository containing OpenNESS Controller Community Edition microservices, webui, build, installation scripts and test. 
-  - **edgeapps** [edgeapps link](https://github.com/open-ness/edgeapps): Repository containing Reference Edge compute applications built and tested using OpenNESS Solution APIs. This repo includes scripts for building and running IOT gateways based on Amazon AWS IoT Greengrass and Baidu OpenEdge as Edge compute Apps on OpenNESS. 
-  - **specs** [specs link](https://github.com/open-ness/specs): Repository containing architecture, usage and implementation documentation of key components in the OpenNESS Edge compute solution. 
-  - **test** [test link](https://github.com/open-ness/test): Repository containing integration tests of key components in the OpenNESS Edge compute solution. 
-  - **common** [common link](https://github.com/open-ness/common): Repository containing some of the common libraries, packages that are common to OpenNESS Edge Node and OpenNESS Controller Community Edition. 
-  - **epcforedge** [epcforedge link](https://github.com/open-ness/epcforedge): Repository containing reference implementations and reference APIs of some of the EPC components that enable Edge compute Solution. 
+  - **edgenode** [edgenode repo link](https://github.com/open-ness/edgenode): Repository containing OpenNESS Edge Node microservices, dataplane, build, installation scripts and test. 
+  - **edgecontroller** [edgecontroller repo link](https://github.com/open-ness/edgecontroller): Repository containing OpenNESS Controller Community Edition microservices, webui, build, installation scripts and test. 
+  - **edgeapps** [edgeapps repo link](https://github.com/open-ness/edgeapps): Repository containing Reference Edge compute applications built and tested using OpenNESS Solution APIs. This repo includes scripts for building and running IOT gateways based on Amazon AWS IoT Greengrass and Baidu OpenEdge as Edge compute Apps on OpenNESS. 
+  - **specs** [specs repo link](https://github.com/open-ness/specs): Repository containing architecture, usage and implementation documentation of key components in the OpenNESS Edge compute solution. 
+  - **test** [test repo link](https://github.com/open-ness/test): Repository containing integration tests of key components in the OpenNESS Edge compute solution. 
+  - **common** [common repo link](https://github.com/open-ness/common): Repository containing some of the common libraries, packages that are common to OpenNESS Edge Node and OpenNESS Controller Community Edition. 
+  - **epcforedge** [epcforedge repo link](https://github.com/open-ness/epcforedge): Repository containing reference implementations and reference APIs of some of the EPC components that enable Edge compute Solution. 
 
 ## Key OpenNESS solution documentation 
 - **OpenNESS Architecture and Solution overview** [OpenNESS Architecture and Solution overview link TBD](https://www.openness.org/resources): Current Document. 
@@ -382,7 +382,7 @@ Installation and configuration scripts will be provided to get the relevant vers
 - **OpenNESS Reference Application User guide** [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
 - **OpenNESS Amazon AWS IoT Greengrass application note** [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
 - **OpenNESS Baidu Cloud application note** [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
-- **OpenNESS How-to Guide**[OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
+- **OpenNESS How-to Guide** [OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
 
 ## Other References
 - [3GPP_23401]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
