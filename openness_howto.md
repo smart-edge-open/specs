@@ -73,7 +73,7 @@ TBA
 
 #### Displaying Edge Node's Interfaces
 Prerequisites:
-- Enrollment phase completed succesfully.
+- Enrollment phase completed successfully.
 - User is logged in to UI.
 
 To check the interfaces available on the Edge Node execute following steps:
@@ -90,7 +90,7 @@ To check the interfaces available on the Edge Node execute following steps:
 
 #### Creating Traffic Policy
 Prerequisites:
-- Enrollment phase completed succesfully.
+- Enrollment phase completed successfully.
 - User is logged in to UI.
 
 The steps to create a sample traffic policy are as follows:
@@ -120,7 +120,7 @@ After creating Traffic Policy it will be visible under 'List of Traffic Policies
 
 #### Adding Traffic Policy to Interface
 Prerequisites:
-- Enrollment phase completed succesfully.
+- Enrollment phase completed successfully.
 - User is logged in to UI.
 - Traffic Policy Created.
 
@@ -145,7 +145,7 @@ On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Tra
 
 #### Configuring Interface
 Prerequisites:
-- Enrollment phase completed succesfully.
+- Enrollment phase completed successfully.
 - User is logged in to UI.
 
 In order to configure interface available on the Edge Node for the NTS the following steps are to be taken:
@@ -157,7 +157,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 - A window will pop-up titled "Edit Interface". The following fields need to be set:
   - Driver: userspace
   - Type: upstream
-  - Fallback Interface: PCI address of another available interface ie. '0000:3d:00.1'
+  - Fall-back Interface: PCI address of another available interface ie. '0000:3d:00.1'
 - Click 'SAVE'.
 
 ![Configuring Interface 2](howto-images/AddingInterfaceToNTS1.png)
@@ -168,7 +168,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 
 #### Starting NTS
 Prerequisite:
-- Enrollment phase completed succesfully.
+- Enrollment phase completed successfully.
 - User is logged in to UI.
 - Interfaces to be used by NTS configured correctly.
 
