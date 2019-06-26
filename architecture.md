@@ -42,11 +42,11 @@ OpenNESS is access network agnostic, as it provides an architecture that interop
 Because it is an open source platform, OpenNESS enables operators, ISVs, and OSVs to innovate with new technologies and services. Field trials may be run with platforms implemented via OpenNESS, or functionality from the OpenNESS platform may be imported into existing third-party products.
 
 ### Key Terminologies defining OpenNESS 
-- `Orchestration`: Orchestration in the context of OpenNESS refers to exposing northbound APIs for Deploying, Managing, Automating the Edge compute cluster and Applications that run on the cluster. E.g. OpenNESS North bound APIs that can be used by Orchestrators like ONAP for managing the OpenNESS edge solution.  
-- Edge Services: Edge Services in the context of OpenNESS refers to the Applications that service end-user traffic and Applications that provide services to other Edge compute Applications. E.g. CDN is a Edge application that services end-user traffic and Transcoding services is a application that provides service to CDN application.  
-- Network platform: Network platform in the context of OpenNESS refers to nodes that are deployed in Network or On-Premise edge compute processing. These are typically COTS platforms which can host both Applications and VNFs. 
-- Access technologies: Access technologies in the context of OpenNESS refers to various types of traffic types that OpenNESS solution can be handle. They include LTE (GTP/IP), Wireline (IP) and Wifi (IP).  
-- Multi Cloud: Multi Cloud in the context of OpenNESS refers to support in OpenNESS to host multiple Public or Private cloud application on the same node or in the OpenNESS compute cluster. These cloud applicaitons can come from e.g. Amazon aws greengrass, Baidu cloud etc. 
+- **Orchestration**: Orchestration in the context of OpenNESS refers to exposing northbound APIs for Deploying, Managing, Automating the Edge compute cluster and Applications that run on the cluster. E.g. OpenNESS North bound APIs that can be used by Orchestrators like ONAP for managing the OpenNESS edge solution.  
+- **Edge Services**: Edge Services in the context of OpenNESS refers to the Applications that service end-user traffic and Applications that provide services to other Edge compute Applications. E.g. CDN is a Edge application that services end-user traffic and Transcoding services is a application that provides service to CDN application.  
+- **Network platform**: Network platform in the context of OpenNESS refers to nodes that are deployed in Network or On-Premise edge compute processing. These are typically COTS platforms which can host both Applications and VNFs. 
+- **Access technologies**: Access technologies in the context of OpenNESS refers to various types of traffic types that OpenNESS solution can be handle. They include LTE (GTP/IP), Wireline (IP) and Wifi (IP).  
+- **Multi Cloud**: Multi Cloud in the context of OpenNESS refers to support in OpenNESS to host multiple Public or Private cloud application on the same node or in the OpenNESS compute cluster. These cloud applications can come from e.g. Amazon aws greengrass, Baidu cloud etc. 
   
 ## Overview
 An OpenNESS subsystem consists of one or more OpenNESS Edge Nodes, and an OpenNESS Controller. 
@@ -77,20 +77,20 @@ Throughput the rest of this document, â€œOpenNESS Controller Community Editionâ€
 The OpenNESS Controller consists of a set of microservices that implement the following
 functionality:
  
-- Web UI front end: HTML5 based web front end for Administrator management of edge nodes.
-- User account management: Create administrator and user accounts for edge node management. 
-- Edge compute application image repository: Provide capability of uploading application images (in VM or container format) to the Controller. 
-- Core Network Configuration: Configure the access network (e.g., LTE/CUPS, 5G) control plane. 
-- Edge Node Lifecycle Management: support the Edge Node through its deployment lifecycle: 
+- **Web UI front end**: HTML5 based web front end for Administrator management of edge nodes.
+- **User account management**: Create administrator and user accounts for edge node management. 
+- **Edge compute application image repository**: Provide capability of uploading application images (in VM or container format) to the Controller. 
+- **Core Network Configuration**: Configure the access network (e.g., LTE/CUPS, 5G) control plane. 
+- **Edge Node Lifecycle Management**: support the Edge Node through its deployment lifecycle: 
   - Authentication and enrollment of Edge Nodes 
   - Configuration of interfaces and microservices on Edge Nodes 
   - Configuration of traffic policy for the interfaces including Local Breakout (LBO) interface 
-- Edge Application Lifecycle Management: Support applications through their lifecycle: 
+- **Edge Application Lifecycle Management**: Support applications through their lifecycle: 
   - Deploy edge compute applications from the image repository 
   - Configure the Edge compute application specific Traffic policy 
   - Configure the Edge compute application specific DNS policy 
-- Edge virtualization infrastructure management: Use underlying virtualization infrastructure, whether directly via libvirt or Docker, or indirectly via Kubernetes, to manage the Edge Node platform and applications. 
-- Telemetry: Get basic edge compute microservices telemetry from connected Edge Nodes.
+- **Edge virtualization infrastructure management**: Use underlying virtualization infrastructure, whether directly via libvirt or Docker, or indirectly via Kubernetes, to manage the Edge Node platform and applications. 
+- **Telemetry**: Get basic edge compute microservices telemetry from connected Edge Nodes.
  
 The Controller microservices make extensive use of the Go programming language and its runtime libraries.
 
@@ -105,11 +105,11 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
  
  Figure 2 - Edge Node Authentication and enrollment 
 
-- Edge node interface configuration: During initial bootup, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
-- DNS service: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
-- Edge Node Virtualization infrastructure: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
-- Edge application traffic policy: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
-- Dataplane Service: Steers traffic towards applications running on the Edge Node or the Local Break-out Port, utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO.
+- **Edge node interface configuration**: During initial bootup, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
+- **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
+- **Edge Node Virtualization infrastructure**: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
+- **Edge application traffic policy**: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
+- **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port, utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO.
   - Provide Reference ACL based Application specific packet tuple filtering 
   - Provide reference GTPU base packet learning for S1 deployment 
   - Provide reference Simultaneous IP and S1 deployment 
@@ -120,31 +120,31 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
   - Implement KNI based interface to Edge applications running as Containers/POD 
   - Implement DPDK vHost user based interface to Edge applications running as Virtual Machine 
   - Implement Scatter and Gather in upstream and downstream 
-- Application Authentication: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
+- **Application Authentication**: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
 Figure 3 - OpenNESS Edge Compute Application Authentication 
 
 Edge Services are deployed as Applications on the Edge Node can be classified into:  
-- Producer Application: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
-- Consumer Application: OpenNESS Consumer application are edge compute application that serve end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. 
+- **Producer Application**: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
+- **Consumer Application**: OpenNESS Consumer application are edge compute application that serve end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. 
 
 #### Edge Application API support
 Provide API endpoint for edge applications to avail edge services. This functionality is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
 
 | Edge Application API                     | Description                                                                                                                                                                                                                                                 | Example                                                                                                         |
 |------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Edge Service Activation/Deactivation     | This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node\. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node\.                                                    | Location Service Producer app will call this API first after being deployed from the controller\.               |
-| Edge Service Discovery                   | This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node\.                                                                                                                                          | A CDN App will be able to discover Location Service Application on the Edge Node\.                              |
-| Edge Service Subscription/Unsubscription | This API Endpoint enables Consumer application to subscribe to Producer application service and notification updates\.                                                                                                                                      | A CDN application can subscribe to the Location Service application and Notification update from the service\.  |
-| Edge Service Notification update         | This is a Web socket connection that needs to be created by a Consumer Application which intends to subscribe to services from Producer Applications\. This WebSocket will be used for push\-notification when there is update from Producer Application\.  | Location update is sent as Push Notification update to CDN Application\.                                        |
-| Edge Service data update                 | This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service\.                                                                                                                                   |  Location Service Producer App publishes Location update of a user to the Edge Node\.                           |
-| Edge Service list subscription           | This API endpoint allows Consumer Application to get the list of Producer Application services it has availed\.                                                                                                                                             | CDN Application can call this API to check if it has subscribed to Location and Transcoding services\.          |
+| **Edge Service Activation/Deactivation** | This API endpoint enables a Producer App on the Edge node to register and activate on the Edge Node\. After this API execution the Producer App will be discoverable to Consumer Apps on the Edge Node\.                                                    | Location Service Producer app will call this API first after being deployed from the controller\.               |
+| **Edge Service Discovery**               | This API Endpoint enables Consumer application to discover all the active Producer Applications on the Edge Node\.                                                                                                                                          | A CDN App will be able to discover Location Service Application on the Edge Node\.                              |
+| **Edge Service Subscription/Unsubscription** | This API Endpoint enables Consumer application to subscribe to Producer application service and notification updates\.                                                                                                                                      | A CDN application can subscribe to the Location Service application and Notification update from the service\.  |
+| **Edge Service Notification update**     | This is a Web socket connection that needs to be created by a Consumer Application which intends to subscribe to services from Producer Applications\. This WebSocket will be used for push\-notification when there is update from Producer Application\.  | Location update is sent as Push Notification update to CDN Application\.                                        |
+| **Edge Service data update**             | This API endpoint enables Producer Application to publish the data to the Edge Node when it has a update to its service\.                                                                                                                                   |  Location Service Producer App publishes Location update of a user to the Edge Node\.                           |
+| **Edge Service list subscription**       | This API endpoint allows Consumer Application to get the list of Producer Application services it has availed\.                                                                                                                                             | CDN Application can call this API to check if it has subscribed to Location and Transcoding services\.          |
 
-- Edge Node telemetry: Utilizing the rsyslog all the OpenNESS microservices send the telemetry update which includes the logging and packet forwarding statistics data from dataplane. This is also the mechanism that is encouraged for OpenNESS users for Debugging and Troubleshooting. 
+- **Edge Node telemetry**: Utilizing the rsyslog all the OpenNESS microservices send the telemetry update which includes the logging and packet forwarding statistics data from dataplane. This is also the mechanism that is encouraged for OpenNESS users for Debugging and Troubleshooting. 
 
-OpenNESS Edge Node Resource usage: 
+**OpenNESS Edge Node Resource usage**: 
 - All non-critical/non-realtime microservices OpenNESS Edge node execute OS core typically Core 0.
 - Dataplane NTS and DPDK PMD thread would need dedicated core/thread for high performance. 
   - DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
