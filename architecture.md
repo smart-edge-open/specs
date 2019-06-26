@@ -34,7 +34,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
  
-It leverages major industry edge orchestration frameworks such as Kubernetes and OpenStack to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that finds objects of interest, such as pedestrians and cars, and serves the metadata from those objects to other applications that perform hazard notifications and other higher-level operations.
+It leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to to downstream traffic safety applications.
  
 OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with regard to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
  
@@ -350,19 +350,19 @@ Go libraries
 Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
 ## OpenNESS steps to get started
-1. Review the OpenNESS Architecture and Solution overview of the OpenNESS solution (this document)
-2. Acquire the supported hardware components for OpenNESS solution stack (Refer to the OpenNESS Edge node and Controller User Guide)
-3. Clone the Controller, Edge Node, Application and Common github repos
-4. Follow the README to build and set up Edge node (Refer to the OpenNESS Edge node User guide)
-5. Follow the README to build and set up Controller (Refer to the OpenNESS Controller CE User guide)
-6. Follow the README to build the reference Application (Refer to the OpenNESS Reference Application User guide)
-7. Connect required Upstream, Downstream and Local breakout devices
-8. Start the Controller and create Administrator user 
-9. Start the Edge node and complete enrolment and Interface configuration 
+1. Review the OpenNESS Architecture and Solution overview of the OpenNESS solution (this document).
+2. Acquire the supported hardware components for the OpenNESS solution stack (Refer to the OpenNESS Edge node and Controller User Guide).
+3. Clone the Controller, Edge Node, Application and Common github repos.
+4. Follow the README to build and set up the Edge Node (Refer to the OpenNESS Edge node User guide).
+5. Follow the README to build and set up the Controller (Refer to the OpenNESS Controller CE User guide).
+6. Follow the README to build the reference applications (Refer to the OpenNESS Reference Application User guide).
+7. Connect the required Upstream, Downstream and Local breakout devices to the appropriate ports on the Edge Node and Controller ports.
+8. Start the Controller and create an Administrator user.
+9. Start the Edge node and complete (via the Controller GUI) the enrollment and Interface configuration.
 10. Upload the Reference application image to the controller 
-11. Provision the reference applications (Producer and Consumer) from the controller to the Edge node
-12. Configure the traffic and DNS policy for the reference application
-13. Check for traffic being served on the edge compute - monitor the telemetry for configured policy and packets in/out of the dataplane and application
+11. Provision the reference applications (Producer and Consumer) from the Controller to the Edge node
+12. Configure the traffic and DNS policy for the reference applications.
+13. Check for traffic being served on the Edge Node - monitor the telemetry for configured policy and packets in/out of the data plane and applications.
 
 ## OpenNESS Repository Structure
 - OpenNESS github root [OpenNESS Github link TBD](https://www.openness.org/resources)
@@ -375,16 +375,18 @@ Installation and configuration scripts will be provided to get the relevant vers
   - epcforedge [epcforedge link TBD](https://www.openness.org/resources): Repository containing reference implementations and reference APIs of some of the EPC components that enable Edge compute Solution. 
 
 ## Key OpenNESS solution documentation 
-- OpenNESS Architecture and Solution overview [OpenNESS Architecture and Solution overview link TBD](https://www.openness.org/resources): Current Document. 
-- OpenNESS Edge Node User guide [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
-- OpenNESS Controller Community Edition User guide [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
-- OpenNESS Reference Application User guide [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
-- OpenNESS Amazon AWS IoT Greengrass application note [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
-- OpenNESS Baidu Cloud application note [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
-- OpenNESS How-to Guide[OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
+- [Architecture] OpenNESS Architecture and Solution overview [OpenNESS Architecture and Solution overview link TBD](https://www.openness.org/resources): Current Document. 
+- [OpenNESS_Edge_UG] OpenNESS Edge Node User guide [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
+- [OpenNESS_Controller_UG]	OpenNESS Controller Community Edition User guide [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
+- [OpenNESS_App_UG]	OpenNESS Reference Application User guide [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
+- [OpenNESS_AWS]	OpenNESS Amazon AWS IoT Greengrass application note [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
+- [OpenNESS_Baidu]	OpenNESS Baidu Cloud application note [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
+- [OpenNESS_HowTo]	OpenNESS How-to Guide[OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
 
 ## Other References
-- [3GPP_23401]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
+- [3GPP_23401]	3rd Generation Partnership Pro
+- ject; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
 - [3GPP_23214]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; Architecture enhancements for control and user plane separation of EPC nodes; Stage 2.
 - [ETSI_MEC 003]  ETSI GS MEC 003 V2.1.1 Multi-access Edge Computing (MEC): Framework and Reference Architecture     
-- [ETSI_23501] 5G; System Architecture for the 5G System (3GPP TS 23.501 version 15.2.0 Release 15), ETSI TS 123 501    
+- [ETSI_23501] 5G; System Architecture for the 5G System (3GPP TS 23.501 version 15.2.0 Release 15), ETSI TS 123 501.
+- [OPENVINO2019]	OpenVINO toolkit, https://software.intel.com/en-us/openvino-toolkit.
