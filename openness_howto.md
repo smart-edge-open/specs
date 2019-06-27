@@ -238,12 +238,12 @@ To deploy an application on a specific node the following steps are required:
 - Navigate to 'NODES' tab and find the node application is destined to.
 - Click on 'EDIT'.
 
-![Deploying Application 1](howto-images/DeployApp1.png)
+![Deploying Application 1](howto-images/DeployingApp1.png)
 
 - From within the nodes tabs navigate to 'APPS' tab.
 - Click 'DEPLOY APP'.
 
-![Deploying Application 2](howto-images/DeployApp2.png)
+![Deploying Application 2](howto-images/DeployingApp2.png)
 
 - Under 'Choose an application to deploy' field, choose the application to be deployed from the drop down menu.
 - Click 'DEPLOY'
@@ -253,16 +253,16 @@ _NOTE: Depending on the size of the application image the timeout used for HTTPS
 - Edit controller-ce/ui/controller/src/api/ApiClient.js:9 on the controller.
 - Change timeout value: "timeout: <desired_timeout_in_mS >"_
 
-![Deploying Application 3](howto-images/DeployApp3.png)
+![Deploying Application 3](howto-images/DeployingApp3.png)
 
 - The application will be created on the Edge Node and added to application list for that node under 'APPS' tab, its status will be 'deployed'.
 
-![Deploying Application 4](howto-images/DeployApp4.png)
+![Deploying Application 4](howto-images/DeployingApp4.png)
 
 - To start the application on the Edge Node click 'START'.
 - Application will start, its 'status' will change to running (browser refresh might be needed).
 
-![Deploying Application 5](howto-images/DeployApp5.png)
+![Deploying Application 5](howto-images/DeployingApp5.png)
 
 ### Managing Traffic Rules
 TBD - note: highlight that traffic rule is to be added to app only after starting container
