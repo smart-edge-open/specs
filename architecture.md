@@ -6,7 +6,9 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
 * [Overview](#overview)
   * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
+    * [Edge Application Onboarding](#edge-application-onboarding)
   * [OpenNESS Edge Node](#openness-edge-node)
+    * [Edge Node Microservices](#edge-node-microservices)
     * [Edge Application API support](#edge-application-api-support)
     * [Edge Compute Applications: Native](#edge-compute-applications-native)
     * [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
@@ -65,17 +67,16 @@ OpenNESS based edge compute reference stack consists of one or more OpenNESS Edg
 
 ![OpenNESS Architecture overview](arch-images/openness_overview.png)
 
-_Figure 1 - OpenNESS Architecture_
+_Figure - OpenNESS Architecture_
 
 OpenNESS reference edge stack combines the NFV infrastructure optimizations for Virtual machine and Container cloud on COTS Architecture (CPU,Memory,IO and Acceleration) from various opensource projects with essential amount of Edge compute specific APIs and network abstraction on to provide a unique and one-stop-shop development solution for edge compute. 
 
 The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
 
 ### OpenNESS Controller Community Edition
-Throughput the rest of this document, “OpenNESS Controller Community Edition” will be referred to simply as “Controller” or “OpenNESS Controller”.
- 
-The OpenNESS Controller consists of a set of microservices that implement the following
-functionality:
+OpenNESS Controller Community Edition consists of microservices that enable Edge compute Cloud orchestration and application lifecycle management. These microservices are Web-UI and Controller API back-end. For the purposes of ease of bring up Web-UI and Controller API back-end are running in one container. 
+
+Details of Edge Controller Microservices functionality: 
  
 - **Web UI front end**: HTML5 based web front end for Administrator management of edge nodes.
 - **User account management**: Create administrator and user accounts for edge node management. 
@@ -94,16 +95,39 @@ functionality:
  
 The Controller microservices make extensive use of the Go programming language and its runtime libraries.
 
-The OpenNESS Controller addresses the essential functionalities of a multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. 
+The OpenNESS Controller addresses the essential functionalities of a multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. In the rest of this document, “OpenNESS Controller Community Edition” will be referred to as “Controller” or “OpenNESS Controller”.
+
+#### Edge Application Onboarding
+OpenNESS user need to use the Controller to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container or Virtual machine. Docker image tar.gz and VM image qcow2 are supported. The image source link needs to be over HTTPs. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
+
+ ![Edge Application Onboarding](arch-images/openness_apponboard.png)
+
+ _Figure - Edge Application Onboarding_
+
+1. User sets up the HTTPs based Application image server. The image source needs to support HTTPs download. Edge node trusts public CAs and the one from the controller. 
+2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPs. 
+3. User initiates the Application deploy step using the Controller UI. This step initiates the download of the image from the HTTPs server to the Edge node. After this step EVA registers the Application image. 
+4. User starts the Application. Which kick starts the Container/Pod/VM. 
 
 ### OpenNESS Edge Node
-OpenNESS Edge Node consists of set of microservices that implements the following functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
 
-- Edge Application Enrolling: During the initial boot, connect to the designated OpenNESS Controller and request to enroll. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice. As part of enrolling, the Edge node is provided a TLS based certificate, which is used for further API communication. Figure 2 depicts this behavior. ELA is implemented using Go lang.
+#### Edge Node Microservices
+
+OpenNESS edge node hosts a set of microservices to enable Edge compute deployment. These microservices include ELA, EVA, EAA, Syslog, DNS Server and NTS Dataplane. Although ELA, EVA and EAA can be deployed in separate containers. For the purposes of ease of bring up ELA, EVA, EAA are all running in one container. Syslog, DNS Server and NTS Dataplane run in separate containers. 
+
+ ![Edge Node Microservices](arch-images/openness_nodemicro.png)
+
+ _Figure - Edge Node microservices_
+
+OpenNESS Edge Node microservices implement functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
+
+Details of Edge Node Microservices functionality: 
+
+- **Edge Application Enrolling**: During the initial boot, connect to the designated OpenNESS Controller and request to enroll. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice. As part of enrolling, the Edge node is provided a TLS based certificate, which is used for further API communication. Figure below depicts this behavior. ELA is implemented using Go lang.
  
  ![OpenNESS Edge Node Authentication](arch-images/openness_nodeauth.png)
  
- _Figure 2 - Edge Node Authentication and enrollment_
+ _Figure - Edge Node Authentication and enrollment_
 
 - **Edge node interface configuration**: During initial bootup, the Edge Node sends a map of the existing Network interfaces to the Controller to be configured as Upstream, Downstream or local breakout. This functionality is implemented in the ELA microservice. 
 - **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
@@ -124,7 +148,7 @@ OpenNESS Edge Node consists of set of microservices that implements the followin
 
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
 
-_Figure 3 - OpenNESS Edge Compute Application Authentication_
+_Figure - OpenNESS Edge Compute Application Authentication_
 
 Edge Services are deployed as Applications on the Edge Node can be classified into:  
 - **Producer Application**: OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
@@ -155,24 +179,24 @@ OpenNESS supports execution of application on the Edge node as a VM/Container in
 #### Edge Compute Applications: Local Breakout
 OpenNESS supports steering traffic to the applications that are already running on the customer IT infrastructure. Such applications are referred to as Applications on LBP (Local Breakout Port). In the diagram below the Edge node data plane is connected to a Local Breakout which is terminated on a Switch. There are Enterprise Application server that are running enterprise apps connected to the TOR. Users can use OpenNESS Controller to configure certain users application traffic to be steered to the Enterprise Application servers. This deployment removes restriction of creating Edge Compute Apps from scratch and reuse the existing Enterprise Application software and Hardware infrastructure. 
 
-Figure 4 shows a possible deployment of LBP servers, in this case a rack of Enterprise App Servers routed through a Top-of-Rack (TOR) switch. 
+Figure below shows a possible deployment of LBP servers, in this case a rack of Enterprise App Servers routed through a Top-of-Rack (TOR) switch. 
 
 ![OpenNESS Native and LBP Applications](arch-images/openness_lbp.png)
 
-_Figure 4 - OpenNESS Native and LBP Applications_
+_Figure - OpenNESS Native and LBP Applications_
 
 ### Multi Access Support
 OpenNESS supports traffic steering to applications already running on a customer IT infrastructure. The infrastructure is attached to the edge node via a Local Breakout Port (LBP), and traffic steering rules are defined to direct traffic to the LBP, rather than to an edge application running on the edge node.
  
-OpenNESS may be deployed on LTE or IP (wireless or wireline) networks. The networking abstraction provided by the Edge Node Dataplane (See Figure 1 or Figure 4) abstracts the protocol differences of these technologies such that edge applications see only decapsulated IPv4 traffic. Microservices in the edge node provide the means of configuring the network and the edge platform dataplane to provide for traffic steering and any required encapsulation.
+OpenNESS may be deployed on LTE or IP (wireless or wireline) networks. The networking abstraction provided by the Edge Node Dataplane (See Figure - OpenNESS Native and LBP Applications) abstracts the protocol differences of these technologies such that edge applications see only decapsulated IPv4 traffic. Microservices in the edge node provide the means of configuring the network and the edge platform dataplane to provide for traffic steering and any required encapsulation.
  
-OpenNESS supports multiple deployment options on an LTE cellular network, as shown in Figure 5. Following [3GPP_23401], the edge node may be attached to the S1 interface from an eNB. In this mode, traffic is intercepted by the edge node dataplane, which either redirects the traffic to edge applications or passes it through an upstream EPC. In this option, arriving traffic is encapsulated in a GTP tunnel; the dataplane handles decapsulation/encapsulation as required.
+OpenNESS supports multiple deployment options on an LTE cellular network, as shown in Figure below. Following [3GPP_23401], the edge node may be attached to the S1 interface from an eNB. In this mode, traffic is intercepted by the edge node dataplane, which either redirects the traffic to edge applications or passes it through an upstream EPC. In this option, arriving traffic is encapsulated in a GTP tunnel; the dataplane handles decapsulation/encapsulation as required.
  
 Alternatively, the edge node may be attached to the SGi interface of an EPC. Traffic from the EPC arrives as IP traffic, and is steered as appropriate to edge applications. EPCs may combine the control or user plane, or they may follow the Control-User Plane Separation (CUPS) architecture of [3GPP_23214], which provides for greater flexibility in routing data plane traffic through the LTE network. 
 
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
-_Figure 5 - Edge Node Deployment with Access Networks_
+_Figure - Edge Node Deployment with Access Networks_
 
 ## Deployment Scenarios
 The edge computing industry has devoted much effort to defining a taxonomy of edge computing deployment scenarios, based on physical location (e.g., street fixtures, central offices, data centers), logical location (e.g., on premises, far edge, near edge), and physical properties (e.g., end-to-end transmission latency). OpenNESS, as an open source platform, has taken the strategy of categorizing major characteristics of these deployment scenarios in terms of their impact on the design of a particular solution. Two primary deployment scenarios, On-Premise” and “Network Edge”, have been identified, and are described in the following sub-sections.
@@ -180,9 +204,9 @@ The edge computing industry has devoted much effort to defining a taxonomy of ed
 These scenarios are not hard-and-fast; an enterprise customer may have a special case in which a network edge deployment is appropriate, and a carrier may have a special case in which an on-premises deployment is appropriate.
 
 ### On-Premise Edge Deployment Scenario
-The on-premise edge deployment scenario is depicted in Figure 6. In this scenario, edge nodes are located in a customer premise, which may be an office, factory, stadium, or other single-tenant facility.
+The on-premise edge deployment scenario is depicted in Figure below. In this scenario, edge nodes are located in a customer premise, which may be an office, factory, stadium, or other single-tenant facility.
  
-An on-premise deployment is likely to have a single tenant, and is likely to be subordinate to an enterprise-wide IT infrastructure (e.g., a virtualization infrastructure manager, based on OpenStack, Kubernetes, or other technology, through which subsystems are deployed, but which was not architected specifically for edge computing).  It is likely to have strict latency requirements or environmental requirements that require an edge node to be located very close to the endpoints that it serves.
+An on-premise deployment is likely to have a single tenant, and is likely to be subordinate to an enterprise-wide IT infrastructure (e.g., a virtualization infrastructure manager, based on OpenStack, Kubernetes, or other technology, through which subsystems are deployed, but which was not designed specifically for edge computing).  It is likely to have strict latency requirements or environmental requirements that require an edge node to be located very close to the endpoints that it serves.
  
 In this environment, it may not be necessary to add another level of infrastructure management; the OpenNESS Controller will have the capacity to directly manage its edge nodes directly, via libvirt or Docker.
  
@@ -190,10 +214,10 @@ The OpenNESS Controller may be hosted locally, or be hosted in an enterprise or 
 
 ![On-Premise Edge compute](arch-images/openness_onprem.png)
 
-_Figure 6 - On-Premise Edge Deployment Scenario_
+_Figure - On-Premise Edge Deployment Scenario_
 
 ### Network Edge Deployment Scenario
-The network edge deployment scenario is depicted in Figure 7. In this scenario, edge nodes are located  in facilities owned by a network operator (e.g., a central office), and to be part of a data network including access network, core network, and edge computing infrastructure owned by a network operator. For economy of scale, this network is likely to be multi-tenant, and to be of very large scale (a national network operator may have thousands, or tens of thousands, of edge nodes). This network is likely to employ managed virtualization (e.g., OpenStack, Kubernetes) and be integrated with an operations and support system through which not only the edge computing infrastructure, but the network infrastructure, is managed.
+The network edge deployment scenario is depicted in Figure below. In this scenario, edge nodes are located  in facilities owned by a network operator (e.g., a central office), and to be part of a data network including access network, core network, and edge computing infrastructure owned by a network operator. For economy of scale, this network is likely to be multi-tenant, and to be of very large scale (a national network operator may have thousands, or tens of thousands, of edge nodes). This network is likely to employ managed virtualization (e.g., OpenStack, Kubernetes) and be integrated with an operations and support system through which not only the edge computing infrastructure, but the network infrastructure, is managed.
  
 In this environment, OpenNESS integrates with the virtualization infrastructure in use in the operator network; the OpenNESS Controller manages the edge nodes in its domain via the virtualization infrastructure.
 
@@ -253,7 +277,7 @@ OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud
 
 ![OpenNESS Cloud Adapters](arch-images/openness_cloudadapter.png)
 
-_Figure 9 - Example of Cloud Adapter Edge Application in OpenNESS Platform_
+_Figure - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
 More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
 
@@ -261,7 +285,7 @@ More details about running Amazon AWS IoT Greengrass as OpenNESS application can
 
 ## OpenNESS Microservices and APIs
 
-The OpenNESS Edge Node and Controller are each composed of a set of microservices that interact with each other, with applications, and with other network functions (e.g., infrastructure managers, orchestrators) to accomplish their functions. The microservices expose APIs over reference points, as shown in Figure 7.
+The OpenNESS Edge Node and Controller are each composed of a set of microservices that interact with each other, with applications, and with other network functions (e.g., infrastructure managers, orchestrators) to accomplish their functions. The microservices expose APIs over reference points, as shown in Network Edge Deployment Scenario Figure.
  
 Interaction between the OpenNESS Controller and the Edge Node is mediated by two gateway services, via Google Remote Procedure Calls (gRPC), a technology that provides reliable, high-performance RPC communication between microservices. APIs between Controller and Edge Node, and internal APIs among Edge Node microservices, are implemented via gRPC. For messages to and from applications, as well as to and from the Controller and the access network, are exposed as OpenAPI (i.e., REST-ful) APIs.
 OpenNESS solution supports following APIs:
@@ -277,13 +301,13 @@ Edge Application APIs is implemented by the EAA. Edge Application APIs are impor
 1. **Porting of existing Public/Private Cloud application to the edge compute based on OpenNESS**: This is the scenario when customers just want to run the existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case the only requirement is Application image (VM/Container) should be uploaded to the controller and provisioned on the Edge node using OpenNESS Controller. In this case the Application can not call any EAA APIs and consume services on the edge compute. It just services the end-user traffic. 
 2. **Native Edge compute Application calling EAA APIs**: This is the scenario where customer want to develop Edge compute applications that take advantages of the Edge compute services resulting in more tactile application that responds to the changing user, network or resource scenarios. 
 
-OpenNESS supports deployment both types of applications mentioned above. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The Figure 10 provides the sequence diagram of the supported APIs for the application 
+OpenNESS supports deployment both types of applications mentioned above. The Edge Application Agent is a service that runs on the edge node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing edge node to discover one another as well as publish and subscribe to all notifications. The Figure below provides the sequence diagram of the supported APIs for the application 
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources) 
 
 ![Edge Application APIs](arch-images/openness_eaa.png)
 
-_Figure 10 - Edge Application API Sequence Diagram_
+_Figure - Edge Application API Sequence Diagram_
 
 ### Edge Application Authentication APIs
 OpenNESS supports authentication of Edge compute apps that intend to call EAA APIs. Applications are authenticated by Edge node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It is to be noted that in OpenNESS solution Application can only be provisioned by the OpenNESS controller. There are two categories of Applications as discussed above and here is the implication for the authentication. 
