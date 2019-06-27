@@ -29,7 +29,8 @@ TBD - Add description
 
 ### Prerequisites
 1. As part of the Application deployment a HTTPs based Application Image download server is required. 
-  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller. 
+  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
+   
   ![HTTPs Image Server setup](howto-images/openness_apponboard.png)
 
 #### Creating HTTPS server for image download
@@ -66,7 +67,7 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
-- Put the images into /var/www/html
+- Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
 `chmod a+r /var/www/html/*`    
 - Construct the URL (Source in Controller UI) as:    
