@@ -5,6 +5,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 
 * [Introduction](#introduction)
 * [Instructions](#Instructions)
+  * [Prerequisites](#prerequisites)
+    * [Creating HTTPS server for image download](#creating-https-server-for-image-download)
   * [First login](#first-login)
   * [Enrollment](#enrollment)
   * [NTS Configuration](#nts-configuration)
@@ -14,6 +16,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [Configuring Interface](#configuring-interface)
     * [Starting NTS](#starting-nts)
   * [Creating Applications](#creating-applications)
+  * [Deploying Applications](#deploying-applications)
   * [Managing Traffic Rules](#managing-traffic-rules)
   * [Managing DNS Rules](#managing-dns-rules)
 
@@ -22,7 +25,13 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
  
 ## Instructions
-TBA
+TBD - Add description
+
+### Prerequisites
+TBD - Add description
+
+#### Creating HTTPS server for image download
+TBD - Add steps to create https server
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
@@ -185,10 +194,43 @@ Once the interfaces are configured accordingly the following steps need to be do
 ![Starting NTS 2](howto-images/StartingNTS2.png)
 
 ### Creating Applications
-TBA
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+
+To add an application to list of applications managed by Controller following steps need to be taken:
+
+- From UI navigate to 'APPLICATIONS' tab.
+- Click on 'ADD APPLICATION' button.
+
+![Creating Application 1](howto-images/CreatingApplication1.png)
+
+- After 'Add an Application' window pops up add details as per following example:
+  - Name: SampleApp
+  - Type: Container
+  - Version: 1
+  - Vendor: vendor
+  - Description: description
+  - Cores: 2
+  - Memory: 100
+  - Source: https://<IP_address_of_https_server_storing_the_image>/image_file_name
+- Then memory unit used is MB. A sample path to image could be https://192.10.10.10/sample_docker_app.tar.gz.
+- Click 'UPLOAD APPLICATION'
+
+![Creating Application 2](howto-images/CreatingApplication2.png)
+
+- The appliaction will be displayed in Controller's 'List of Applications'.
+
+![Creating Application 3](howto-images/CreatingApplication3.png)
+
+
+### Deploying Applications
+TBD
 
 ### Managing Traffic Rules
-TBA
+TBD
 
 ### Managing DNS Rules
-TBA
+TBD
