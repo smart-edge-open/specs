@@ -28,10 +28,47 @@ The aim of this guide is to familiarize the user with OpenNESS controller's User
 TBD - Add description
 
 ### Prerequisites
-TBD - Add description
+1. As part of the Application deployment a HTTPs based Application Image download server is required. 
+  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller. 
 
 #### Creating HTTPS server for image download
-TBD - Add steps to create https server
+Instructions to setup HTTP server 
+- Install apache and mod_ssl: `yum install httpd mod_ssl`
+- Go into /etc/ssl/certs: `cd /etc/ssl/certs`
+- Acquire the controller root ca and key
+```
+docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/cert.pem .
+docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/key.pem .
+``` 
+- Generate the apache key and crt
+```
+openssl genrsa -out apache.key 2048
+openssl req -new -sha256 -key apache.key -subj "/C=IE/ST=Clare/O=ESIE/CN=$(hostname -f)" -out apache.csr
+openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -out apache.crt -days 500 -sha256
+```
+- Edit apache config and point it to the new certs
+```
+sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateFile /etc/ssl/certs/apache.key|g' ssl.conf
+```
+- Set the firewall to accept the traffic
+```
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 80 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 443 -j ACCEPT
+``` 
+- Enable and restart apache after the changes
+```
+systemctl enable httpd
+systemctl restart httpd
+```
+
+
+Instruction to upload and access images
+You have to put the images into /var/www/html
+cp test_image.tar.gz /var/www/html/
+chmod a+r /var/www/html/*
+You construct the URL (Source in Controller UI) as: https://controller_hostname/test_image.tar.gz
+
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
