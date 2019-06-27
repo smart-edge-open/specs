@@ -32,9 +32,11 @@ TBD - Add description
   - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller. 
 
 #### Creating HTTPS server for image download
-Instructions to setup HTTP server 
-- Install apache and mod_ssl: `yum install httpd mod_ssl`
-- Go into /etc/ssl/certs: `cd /etc/ssl/certs`
+##### Instructions to setup HTTP server 
+- Install apache and mod_ssl     
+`yum install httpd mod_ssl`    
+- Go into /etc/ssl/certs    
+ `cd /etc/ssl/certs`    
 - Acquire the controller root ca and key
 ```
 docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/cert.pem .
@@ -62,13 +64,11 @@ systemctl enable httpd
 systemctl restart httpd
 ```
 
-
-Instruction to upload and access images
-You have to put the images into /var/www/html
-cp test_image.tar.gz /var/www/html/
-chmod a+r /var/www/html/*
-You construct the URL (Source in Controller UI) as: https://controller_hostname/test_image.tar.gz
-
+##### Instruction to upload and access images
+- Put the images into /var/www/html
+`cp test_image.tar.gz /var/www/html/`
+`chmod a+r /var/www/html/*`
+- Construct the URL (Source in Controller UI) as: https://controller_hostname/test_image.tar.gz
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
@@ -264,45 +264,10 @@ To add an application to list of applications managed by Controller following st
 
 
 ### Deploying Applications
-Prerequisite:
-- Enrollment phase completed successfully.
-- User is logged in to UI.
-- Application is added to Controller's application list.
-- NTS is configured and started.
-
-To deploy an application on a specific node the following steps are required:
-
-- Navigate to 'NODES' tab and find the node application is destined to.
-- Click on 'EDIT'.
-
-![Deploying Application 1](howto-images/DeployingApp1.png)
-
-- From within the nodes tabs navigate to 'APPS' tab.
-- Click 'DEPLOY APP'.
-
-![Deploying Application 2](howto-images/DeployingApp2.png)
-
-- Under 'Choose an application to deploy' field, choose the application to be deployed from the drop down menu.
-- Click 'DEPLOY'
-
-_NOTE: Depending on the size of the application image the timeout used for HTTPS request download might be exceeded, image not downloaded, and application not deployed. In case where large image is to be used, requiring longer download time the following can be changed to overcome this issue (to be done before building Edge Controller).
-
-- Edit controller-ce/ui/controller/src/api/ApiClient.js:9 on the controller.
-- Change timeout value: "timeout: <desired_timeout_in_mS >"_
-
-![Deploying Application 3](howto-images/DeployingApp3.png)
-
-- The application will be created on the Edge Node and added to application list for that node under 'APPS' tab, its status will be 'deployed'.
-
-![Deploying Application 4](howto-images/DeployingApp4.png)
-
-- To start the application on the Edge Node click 'START'.
-- Application will start, its 'status' will change to running (browser refresh might be needed).
-
-![Deploying Application 5](howto-images/DeployingApp5.png)
+TBD
 
 ### Managing Traffic Rules
-TBD - note: highlight that traffic rule is to be added to app only after starting container
+TBD
 
 ### Managing DNS Rules
 TBD
