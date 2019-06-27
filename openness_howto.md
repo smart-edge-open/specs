@@ -30,6 +30,7 @@ TBD - Add description
 ### Prerequisites
 1. As part of the Application deployment a HTTPs based Application Image download server is required. 
   - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller. 
+  ![HTTPs Image Server setup](howto-images/openness_apponboard.png)
 
 #### Creating HTTPS server for image download
 ##### Instructions to setup HTTP server 
