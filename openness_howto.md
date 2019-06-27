@@ -27,7 +27,6 @@ The aim of this guide is to familiarize the user with OpenNESS controller's User
 ## Instructions
 TBD - Add description
 
-======================================================= 
 ### Prerequisites
 1. As part of the Application deployment a HTTPs based Application Image download server is required. 
   - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller. 
@@ -68,11 +67,10 @@ systemctl restart httpd
 
 ##### Instruction to upload and access images
 - Put the images into /var/www/html
-`cp test_image.tar.gz /var/www/html/`
-`chmod a+r /var/www/html/*`
-- Construct the URL (Source in Controller UI) as: https://controller_hostname/test_image.tar.gz
-
-=======================================================
+`cp test_image.tar.gz /var/www/html/`    
+`chmod a+r /var/www/html/*`    
+- Construct the URL (Source in Controller UI) as:    
+`https://controller_hostname/test_image.tar.gz`
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
