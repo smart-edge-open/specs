@@ -97,20 +97,21 @@ The Controller microservices make extensive use of the Go programming language a
 
 The OpenNESS Controller addresses the essential functionalities of a multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. In the rest of this document, “OpenNESS Controller Community Edition” will be referred to as “Controller” or “OpenNESS Controller”.
 
-####Edge Application Onboarding
+#### Edge Application Onboarding
 OpenNESS user need to use the Controller to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container or Virtual machine. Docker image tar.gz and VM image qcow2 are supported. The image source link needs to be over HTTPs. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
 
  ![Edge Application Onboarding](arch-images/openness_apponboard.png)
 
  _Figure - Edge Application Onboarding_
 
-1. The image source needs to support HTTPs. Edge node trusts public CAs and the one from the controller. 
+1. User sets up the HTTPs based Application image server. The image source needs to support HTTPs download. Edge node trusts public CAs and the one from the controller. 
 2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPs. 
-3. 
+3. User initiates the Application deploy step using the Controller UI. This step initiates the download of the image from the HTTPs server to the Edge node. After this step EVA registers the Application image. 
+4. User starts the Application. Which kick starts the Container/Pod/VM. 
 
 ### OpenNESS Edge Node
 
-####Edge Node Microservices
+#### Edge Node Microservices
 
 OpenNESS edge node hosts a set of microservices to enable Edge compute deployment. These microservices include ELA, EVA, EAA, Syslog, DNS Server and NTS Dataplane. Although ELA, EVA and EAA can be deployed in separate containers. For the purposes of ease of bring up ELA, EVA, EAA are all running in one container. Syslog, DNS Server and NTS Dataplane run in separate containers. 
 
