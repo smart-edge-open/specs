@@ -104,6 +104,9 @@ OpenNESS user need to use the Controller to onboard and application to the OpenN
 
  _Figure - Edge Application Onboarding_
 
+1. The image source needs to support HTTPs. Edge node trusts public CAs and the one from the controller. 
+2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPs. 
+3. 
 
 ### OpenNESS Edge Node
 
