@@ -1,0 +1,106 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Auth API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Smart Edge",
+      "url": "github.com/smartedgemec/auth",
+      "email": "support@smart-edge.com"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/smartedgemec/schema/blob/master/LICENSE"
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "description": "Request authentication credentials",
+        "operationId": "RequestCredentials",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authCredentials"
+            }
+          },
+          "201": {
+            "description": "Authentication credentials created",
+            "schema": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {}
+          },
+          "404": {
+            "description": "Requested identity not known/found",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authIdentity"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "authCredentials": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "An identifier for the set of credentials"
+        },
+        "certificate": {
+          "type": "string",
+          "title": "A PEM-encoded signed certificate for the CSR"
+        },
+        "ca_chain": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "A PEM-encoded certificate chain, starting with the issuing CA and\nending with the root CA (inclusive)"
+        },
+        "ca_pool": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "A PEM-encoded CAs to be added to the client's CA pool"
+        }
+      },
+      "description": "Credentials defines a response for a request to obtain authentication\ncredentials. These credentials may be used to further communicate with\nendpoint(s) that are protected by a form of authentication.\n\nAny strings that are annotated as \"PEM-encoded\" implies that encoding format\nis used, with any newlines indicated with `\\n` characters. Most languages\nprovide encoders that correctly marshal this out. For more information,\nsee the RFC here: https://tools.ietf.org/html/rfc7468"
+    },
+    "authIdentity": {
+      "type": "object",
+      "properties": {
+        "csr": {
+          "type": "string",
+          "title": "A PEM-encoded certificate signing request (CSR)"
+        }
+      },
+      "description": "Identity defines a request to obtain authentication credentials. These\ncredentials would be used to further communicate with endpoint(s) that are\nprotected by a form of authentication.\n\nAny strings that are annotated as \"PEM-encoded\" implies that encoding format\nis used, with any newlines indicated with `\\n` characters. Most languages\nprovide encoders that correctly marshal this out. For more information,\nsee the RFC here: https://tools.ietf.org/html/rfc7468"
+    }
+  }
+}
