@@ -1,3 +1,8 @@
+```text
+SPDX-License-Identifier: Apache-2.0
+Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
+```
+
 # Edge Lifecycle Agent - ELA
 
 The Edge Lifecycle Agent is a service that runs on the appliance and operates
