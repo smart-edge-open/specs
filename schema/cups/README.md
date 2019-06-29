@@ -1,3 +1,8 @@
+```text
+SPDX-License-Identifier: Apache-2.0
+Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
+```
+
 # 4G Control and User Plane Separation (CUPS) Management API
 
 The 4G CUPS Management API defines a common API to manage a 3GPP CUPS element.
