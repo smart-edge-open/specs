@@ -1,0 +1,1644 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Controller API",
+    "description": "Controller API Schema",
+    "version": "1.0.0",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://sample.api.org/"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Login",
+      "description": "Authenticate and receive a token to use with other endpoints."
+    },
+    {
+      "name": "Nodes",
+      "description": "Edge compute nodes which run apps, traffic policies and DNS configurations."
+    },
+    {
+      "name": "Apps",
+      "description": "Container or VM applications which may be deployed to nodes."
+    },
+    {
+      "name": "Traffic Policies",
+      "description": "Traffic policies which may be applied to apps or interfaces on a node."
+    },
+    {
+      "name": "Node Apps",
+      "description": "Applications which are deployed to a node."
+    },
+    {
+      "name": "Node Traffic Policies",
+      "description": "Traffic policies applied to apps or interfaces on a node."
+    },
+    {
+      "name": "Node Interfaces",
+      "description": "Network interfaces which are configured on a node."
+    },
+    {
+      "name": "Node DNS Configurations",
+      "description": "DNS configurations applied to a node."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "nodeID": {
+        "in": "path",
+        "name": "node_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "appID": {
+        "in": "path",
+        "name": "app_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "policyID": {
+        "in": "path",
+        "name": "policy_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "readOnly": true
+        }
+      },
+      "interfaceID": {
+        "in": "path",
+        "name": "interface_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
+    "schemas": {
+      "baseResourceID": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the node.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9"
+          }
+        }
+      },
+      "login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "example": "p@ssw0rd",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "authToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "readOnly": true,
+            "example": "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6ImlUcVhYSTB6YkFuSkNLRGFvYmZoa00xZi02ck1TcFRmeVpNUnBfMnRLSTgifQ.eyJzdWIiOiJVc2VyLk5hbWUiLCJuYW1lIjoiSm9obiBEb2UiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNTE2MjM5MDIyfQ.eeRoBH8rLcePqCdsbeDpkkQMgqqPK5RrkwAzaijzLxUhMKouYsaqmWwt3KoYvjKqZM87eoBeKn7ioXehxTcN7IPrxNqPNk-wXRjQxWLSQigo_C17FiaOndcbQD1MYkxE"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "NodeSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the node.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "example": "sample-name-us-west-2"
+          },
+          "location": {
+            "type": "string",
+            "example": "Irvine, CA"
+          },
+          "serial": {
+            "type": "string",
+            "description": "The serial number of the node.",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9"
+          }
+        },
+        "required": [
+          "name",
+          "location",
+          "serial"
+        ]
+      },
+      "NodeDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NodeSummary"
+          }
+        ]
+      },
+      "NodeList": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeSummary"
+            }
+          }
+        }
+      },
+      "AppSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the application.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "container",
+              "vm"
+            ],
+            "example": "container"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the application.",
+            "example": "Sample App"
+          },
+          "version": {
+            "type": "string",
+            "description": "The version of the application.",
+            "example": "1.2.3"
+          },
+          "vendor": {
+            "type": "string",
+            "description": "The vendor of the application.",
+            "example": "Sample Vendor"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the application.",
+            "example": "Sample description goes here."
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "version",
+          "vendor"
+        ]
+      },
+      "AppDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AppSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cores": {
+                "type": "integer",
+                "description": "The number of cores to allocate to the application.",
+                "example": 4
+              },
+              "memory": {
+                "type": "integer",
+                "description": "The memory in MB to allocate to the application.",
+                "example": 4096
+              },
+              "ports": {
+                "type": "array",
+                "description": "A list of port/protocol combinations to expose.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "port": {
+                      "type": "integer",
+                      "description": "Port of the endpoint.",
+                      "example": 8080
+                    },
+                    "protocol": {
+                      "type": "string",
+                      "description": "Protocol of the endpoint.",
+                      "enum": [
+                        "tcp",
+                        "udp",
+                        "icmp",
+                        "sctp",
+                        "all"
+                      ],
+                      "example": "tcp"
+                    }
+                  }
+                }
+              },
+              "source": {
+                "type": "string",
+                "description": "Source URI of the app",
+                "example": "https://s3.amazonaws.com/someurl/sampleapp.qcow2.gz"
+              }
+            },
+            "required": [
+              "cores",
+              "memory",
+              "source"
+            ]
+          }
+        ]
+      },
+      "AppList": {
+        "type": "object",
+        "properties": {
+          "apps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppSummary"
+            }
+          }
+        }
+      },
+      "PolicySummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the traffic policy.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the traffic policy.",
+            "example": "Sample Traffic Policy"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "PolicyDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PolicySummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "traffic_rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/trafficRule"
+                }
+              }
+            },
+            "required": [
+              "traffic_rules"
+            ]
+          }
+        ]
+      },
+      "PolicyList": {
+        "type": "object",
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicySummary"
+            }
+          }
+        }
+      },
+      "trafficRule": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the traffic rule."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority of the traffic rule.",
+            "format": "uint32"
+          },
+          "source": {
+            "$ref": "#/components/schemas/trafficSelector"
+          },
+          "destination": {
+            "$ref": "#/components/schemas/trafficSelector"
+          },
+          "target": {
+            "$ref": "#/components/schemas/trafficTarget"
+          }
+        }
+      },
+      "trafficSelector": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the traffic selector."
+          },
+          "mac_filter": {
+            "$ref": "#/components/schemas/macFilter"
+          },
+          "ip_filter": {
+            "$ref": "#/components/schemas/ipFilter"
+          },
+          "gtp_filter": {
+            "$ref": "#/components/schemas/gtpFilter"
+          }
+        }
+      },
+      "trafficTarget": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "The description of the traffic target."
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "reject",
+              "drop"
+            ],
+            "example": "accept"
+          },
+          "mac_modifier": {
+            "$ref": "#/components/schemas/macModifier"
+          },
+          "ip_modifier": {
+            "$ref": "#/components/schemas/ipModifier"
+          }
+        },
+        "required": [
+          "targetAction"
+        ]
+      },
+      "ipFilter": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ipv4Address"
+              },
+              {
+                "$ref": "#/components/schemas/ipv6Address"
+              }
+            ]
+          },
+          "mask": {
+            "type": "integer",
+            "description": "The subnet mask.",
+            "example": 24
+          },
+          "begin_port": {
+            "type": "integer",
+            "description": "Start of port range.",
+            "example": 3306
+          },
+          "end_port": {
+            "type": "integer",
+            "description": "End of port range.",
+            "example": 3306
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "tcp",
+              "udp",
+              "icmp",
+              "sctp",
+              "all"
+            ]
+          }
+        }
+      },
+      "macFilter": {
+        "type": "object",
+        "properties": {
+          "mac_addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/macAddress"
+            }
+          }
+        }
+      },
+      "gtpFilter": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ipv4Address"
+              },
+              {
+                "$ref": "#/components/schemas/ipv6Address"
+              }
+            ]
+          },
+          "mask": {
+            "type": "integer",
+            "description": "The subnet mask.",
+            "example": 32
+          },
+          "imsis": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "An IMSI.",
+              "example": 310150123456789
+            }
+          }
+        }
+      },
+      "macModifier": {
+        "type": "object",
+        "properties": {
+          "mac_address": {
+            "$ref": "#/components/schemas/macAddress"
+          }
+        }
+      },
+      "ipModifier": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ipv4Address"
+              },
+              {
+                "$ref": "#/components/schemas/ipv6Address"
+              }
+            ]
+          },
+          "port": {
+            "type": "integer",
+            "description": "Modifying port.",
+            "example": 3306
+          }
+        }
+      },
+      "macAddress": {
+        "type": "string",
+        "description": "MAC address.",
+        "example": "2B:A0:EB:99:4F:45",
+        "format": "MAC Address"
+      },
+      "ipv4Address": {
+        "type": "string",
+        "description": "An IPv4 address.",
+        "example": "192.168.1.5"
+      },
+      "ipv6Address": {
+        "type": "string",
+        "description": "An IPv6 address.",
+        "example": "2600:2600:2600:2600::5"
+      },
+      "DNSSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The DNS configuration ID.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "A name for the DNS configuration.",
+            "example": "Sample DNS configuration"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "DNSDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DNSSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "records": {
+                "type": "object",
+                "properties": {
+                  "a": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/dnsARecord"
+                    }
+                  }
+                }
+              },
+              "configurations": {
+                "type": "object",
+                "properties": {
+                  "forwarders": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/dnsForwarder"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DNSList": {
+        "type": "object",
+        "properties": {
+          "dns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DNSSummary"
+            }
+          }
+        }
+      },
+      "dnsARecord": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The fully qualified domain name (FQDN) for the record.",
+            "example": "sample-app.demosite.com"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the record.",
+            "example": "The domain for my sample app"
+          },
+          "alias": {
+            "type": "boolean",
+            "description": "Whether or not the record is an alias to a node resource.",
+            "example": false
+          },
+          "values": {
+            "type": "array",
+            "description": "The resolving value(s) associated with the fully qualified domain name (FQDN).",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ipv4Address"
+                },
+                {
+                  "$ref": "#/components/schemas/AppSummary/properties/id"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "dnsForwarder": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The fully qualified domain name (FQDN) for the record.",
+            "example": "sample-app.demosite.com"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the record.",
+            "example": "The domain for my sample app"
+          },
+          "value": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ipv4Address"
+              },
+              {
+                "$ref": "#/components/schemas/ipv6Address"
+              }
+            ]
+          }
+        }
+      },
+      "InterfaceSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identity of the interface.",
+            "example": "eth0"
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the interface.",
+            "example": "This is used for WAN"
+          },
+          "driver": {
+            "type": "string",
+            "description": "The driver used by the interface.",
+            "enum": [
+              "kernel",
+              "userspace"
+            ],
+            "example": "kernel"
+          },
+          "type": {
+            "type": "string",
+            "description": "The interface type (LEGACY - use a traffic policy).",
+            "enum": [
+              "none",
+              "upstream",
+              "downstream",
+              "bidirectional",
+              "breakout"
+            ],
+            "example": "none"
+          },
+          "mac_address": {
+            "type": "string",
+            "readOnly": true
+          },
+          "vlan": {
+            "type": "integer",
+            "description": "The VLAN of the interface.",
+            "example": 86,
+            "readOnly": true
+          },
+          "zones": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "private-traffic"
+            }
+          },
+          "fallback_interface": {
+            "type": "string",
+            "description": "A fallback for the interface (LEGACY - use with caution).",
+            "example": "eth1"
+          }
+        }
+      },
+      "InterfaceDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/InterfaceSummary"
+          }
+        ]
+      },
+      "InterfaceList": {
+        "type": "object",
+        "properties": {
+          "interfaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InterfaceSummary"
+            }
+          }
+        }
+      },
+      "NodeAppSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the application.",
+            "format": "uuidv4",
+            "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
+            "readOnly": true
+          }
+        }
+      },
+      "NodeAppDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NodeAppSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "The status of the application.",
+                "enum": [
+                  "unknown",
+                  "deploying",
+                  "ready",
+                  "starting",
+                  "running",
+                  "stopping",
+                  "stopped",
+                  "error"
+                ],
+                "example": "running",
+                "readOnly": true
+              },
+              "command": {
+                "type": "string",
+                "description": "The lifecycle command for the application.",
+                "enum": [
+                  "start",
+                  "stop",
+                  "restart"
+                ],
+                "example": "start",
+                "writeOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "NodeAppList": {
+        "type": "object",
+        "properties": {
+          "apps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeAppSummary"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login with a username and password.",
+        "description": "Provides authentication with a username and password. Returns a JSON Web Token (JWT) for use with authenticated endpoints.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A JSON Web Token (JWT).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Incorrect username or password."
+          }
+        }
+      }
+    },
+    "/nodes": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Get a list of nodes.",
+        "description": "Gets a list of nodes from the controller.",
+        "responses": {
+          "200": {
+            "description": "A list of nodes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Create a new node.",
+        "description": "Creates a new node on the controller by serial number.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NodeDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created a new node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/baseResourceID"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Get a node.",
+        "description": "Get a node from the controller.",
+        "responses": {
+          "200": {
+            "description": "The specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Update an existing node.",
+        "description": "Updates an existing node from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NodeDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Node was updated."
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Delete an existing node.",
+        "description": "Deletes an existing node from the controller.",
+        "responses": {
+          "204": {
+            "description": "Node was deleted."
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      }
+    },
+    "/apps": {
+      "get": {
+        "tags": [
+          "Apps"
+        ],
+        "summary": "Get a list of applications.",
+        "description": "Gets a list of applications from the controller.",
+        "responses": {
+          "200": {
+            "description": "A list of applications.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Apps"
+        ],
+        "summary": "Create a new application.",
+        "description": "Creates a new application on the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created a new application.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/baseResourceID"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apps/{app_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/appID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Apps"
+        ],
+        "summary": "Get an application.",
+        "description": "Gets an application from the controller.",
+        "responses": {
+          "200": {
+            "description": "The specified application.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "App ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Apps"
+        ],
+        "summary": "Update an existing application.",
+        "description": "Updates an existing application from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Application was updated."
+          },
+          "404": {
+            "description": "App ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Apps"
+        ],
+        "summary": "Delete an existing application.",
+        "description": "Deletes an existing application from the controller.",
+        "responses": {
+          "204": {
+            "description": "Application was deleted."
+          },
+          "404": {
+            "description": "App ID not found."
+          }
+        }
+      }
+    },
+    "/policies": {
+      "get": {
+        "tags": [
+          "Traffic Policies"
+        ],
+        "summary": "Get a list of traffic policies.",
+        "description": "Gets a list of traffic policies from the controller.",
+        "responses": {
+          "200": {
+            "description": "A list of traffic policies.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Traffic Policies"
+        ],
+        "summary": "Create a new traffic policy.",
+        "description": "Creates a new traffic policy on the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicyDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created a new traffic policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/baseResourceID"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policies/{policy_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/policyID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Traffic Policies"
+        ],
+        "summary": "Get a traffic policy.",
+        "description": "Gets a traffic policy from the controller.",
+        "responses": {
+          "200": {
+            "description": "The specified traffic policy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Policy ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Traffic Policies"
+        ],
+        "summary": "Update an existing traffic policy.",
+        "description": "Updates an existing traffic policy from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicyDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Traffic policy was updated."
+          },
+          "404": {
+            "description": "Policy ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Traffic Policies"
+        ],
+        "summary": "Delete an existing traffic policy.",
+        "description": "Deletes an existing traffic policy from the controller.",
+        "responses": {
+          "204": {
+            "description": "Traffic policy was deleted."
+          },
+          "404": {
+            "description": "Policy ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/dns": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node DNS Configurations"
+        ],
+        "summary": "Get a DNS configuration associated with a node.",
+        "description": "Gets a DNS configuration associated with a node from the controller.",
+        "responses": {
+          "200": {
+            "description": "The DNS configuration associated with the specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DNSDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Node DNS Configurations"
+        ],
+        "summary": "Apply a DNS configuration to a node.",
+        "description": "Applies a DNS configuration to a node from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DNSDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "DNS configuration has been applied."
+          },
+          "400": {
+            "description": "Invalid DNS configuration."
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Node DNS Configurations"
+        ],
+        "summary": "Disassociate a DNS configuration from a node.",
+        "description": "Disassociates a DNS configuration from a node through the controller.",
+        "responses": {
+          "204": {
+            "description": "Removed the DNS configuration."
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/interfaces": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Interfaces"
+        ],
+        "summary": "Get a list of network interfaces on a node.",
+        "description": "Gets a list of node network interfaces from the controller.",
+        "responses": {
+          "200": {
+            "description": "A list of network interfaces for the specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterfaceList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Node Interfaces"
+        ],
+        "summary": "Update one or more network interfaces on a node.",
+        "description": "Updates one or more node network interfaces on a controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterfaceList"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated node network interface(s)."
+          },
+          "404": {
+            "description": "Node ID or interface ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/interfaces/{interface_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        },
+        {
+          "$ref": "#/components/parameters/interfaceID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Interfaces"
+        ],
+        "summary": "Get a network interface on a node.",
+        "description": "Gets a node network interface from the controller.",
+        "responses": {
+          "200": {
+            "description": "The network interface for the specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterfaceDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID or interface ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/interfaces/{interface_id}/policy": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        },
+        {
+          "$ref": "#/components/parameters/interfaceID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Get the traffic policy ID associated with a node network interface.",
+        "description": "Gets the traffic policy ID associated with a node network interface from the controller.",
+        "responses": {
+          "200": {
+            "description": "The traffic policy ID for the specified node and network interface.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/baseResourceID"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID or interface ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Apply a traffic policy to a node network interface.",
+        "description": "Applies a traffic policy to a node network interface from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/baseResourceID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Traffic policy has been applied"
+          },
+          "400": {
+            "description": "Invalid traffic policy ID"
+          },
+          "404": {
+            "description": "Node ID or interface ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Disassociate a traffic policy with a node network interface.",
+        "description": "Disassociates a traffic policy with a node network interface from the controller.",
+        "responses": {
+          "204": {
+            "description": "The traffic policy association has been removed."
+          },
+          "404": {
+            "description": "Node ID, interface ID or traffic policy association not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/apps": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Apps"
+        ],
+        "summary": "Get a list of applications on a node.",
+        "description": "Gets a list of applications on a node from the controller.",
+        "responses": {
+          "200": {
+            "description": "A list of applications on the specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAppList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID not found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Node Apps"
+        ],
+        "summary": "Deploy an application to a node.",
+        "description": "Deploys an application to a node from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/baseResourceID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deployed the application to the specified node."
+          },
+          "404": {
+            "description": "Node ID or app ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/apps/{app_id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        },
+        {
+          "$ref": "#/components/parameters/appID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Apps"
+        ],
+        "summary": "Get an application on a node.",
+        "description": "Gets an application on a node from the controller.",
+        "responses": {
+          "200": {
+            "description": "The application on the specified node.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAppDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID or app ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Node Apps"
+        ],
+        "summary": "Update an application on a node.",
+        "description": "Updates an application on a node from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NodeAppDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated application for the specified node and application."
+          },
+          "404": {
+            "description": "Node ID or app ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Node Apps"
+        ],
+        "summary": "Delete an application on a node.",
+        "description": "Deletes an application on a node from the controller.",
+        "responses": {
+          "204": {
+            "description": "Deleted the application for the specified node and application."
+          },
+          "404": {
+            "description": "Node ID or app ID not found."
+          }
+        }
+      }
+    },
+    "/nodes/{node_id}/apps/{app_id}/policy": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/nodeID"
+        },
+        {
+          "$ref": "#/components/parameters/appID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Get the traffic policy ID associated with a node application.",
+        "description": "Gets the traffic policy ID associated with a node application from the controller.",
+        "responses": {
+          "200": {
+            "description": "The traffic policy ID for the specified node and application.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/baseResourceID"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Node ID or app ID not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Apply a traffic policy to a node application.",
+        "description": "Applies a traffic policy to a node application from the controller.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/baseResourceID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Traffic policy has been applied"
+          },
+          "400": {
+            "description": "Invalid traffic policy ID"
+          },
+          "404": {
+            "description": "Node ID, app ID or policy ID not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Node Traffic Policies"
+        ],
+        "summary": "Disassociate a traffic policy from a node application.",
+        "description": "Disassociates a traffic policy from a node application through the controller.",
+        "responses": {
+          "204": {
+            "description": "The traffic policy association has been removed."
+          },
+          "404": {
+            "description": "Node ID, app ID or traffic policy association not found."
+          }
+        }
+      }
+    }
+  }
+}

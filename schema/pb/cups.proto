@@ -1,0 +1,291 @@
+// Copyright 2019 Intel Corporation and Smart-Edge.com, Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package openness.cups;
+option go_package = "github.com/smartedgemec/cups;cups";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+    info: {
+        title: "4G Control and User Plane Separation (CUPS) Management API";
+        version: "1.0.0";
+        contact: {
+            name: "Smart Edge";
+            url: "github.com/smartedgemec/cups";
+            email: "support@smart-edge.com";
+        };
+        license: {
+            name: "Apache 2.0 License";
+            url: "https://github.com/smartedgemec/cups/blob/master/LICENSE";
+        };
+    };
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+    responses: {
+        key: "403";
+        value: {
+            description: "Unauthorized";
+        }
+    }
+};
+
+service CUPSUserplane {
+    // Add adds the userplane to the registry of userplanes
+    rpc Add (Userplane) returns (UserplaneID) {
+        option (google.api.http) = {
+            post: "/userplanes"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Add a userplane";
+            responses: {
+                key: "201";
+                value: {
+                    description: "Added userplane";
+                }
+            }
+            responses: {
+                key: "400";
+                value: {
+                    description: "Invalid userplane properties provided";
+                }
+            }
+        };
+    }
+    // GetAll gets a list of all userplanes
+    rpc GetAll (google.protobuf.Empty) returns (Userplanes) {
+        option (google.api.http) = {
+            get: "/userplanes"
+            response_body: "userplanes"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve all userplanes";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Userplane list";
+                }
+            }
+        };
+    }
+    // Get gets a userplane by ID
+    rpc Get (UserplaneID) returns (Userplane) {
+        option (google.api.http) = {
+            get: "/userplanes/{id}"
+            response_body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Retrieve userplane by ID";
+            responses: {
+                key: "200";
+                value: {
+                    description: "Userplane";
+                }
+            }
+        };
+    }
+    // Update updates a userplane by ID
+    rpc Update (Userplane) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/userplanes/{id}",
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Update a userplane";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Updated userplane";
+                }
+            }
+            responses: {
+                key: "400";
+                value: {
+                    description: "Invalid userplane properties provided";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Userplane not found";
+                }
+            }
+        };
+    }
+    // Delete deletes a userplane by ID
+    rpc Delete (UserplaneID) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/userplanes/{id}",
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Delete a userplane";
+            responses: {
+                key: "204";
+                value: {
+                    description: "Deleted userplane";
+                }
+            }
+            responses: {
+                key: "404";
+                value: {
+                    description: "Userplane not found";
+                }
+            }
+        };
+    }
+}
+
+// The 3GPP control and userplane separation (CUPS) userplane
+message Userplane {
+    // The identifier of the userplane (read-only)
+    string id = 1;
+    // The UUID of the userplane (optional, can be user-defined)
+    string uuid = 2;
+    // The function of the userplane
+    Function function = 3;
+    // The configuration of the userplane, used to configure
+    // things such as networking on the userplane (optional)
+    Config config = 4;
+    // The radios that should be directed towards the userplane.
+    // This is used to assist with userplane selection during
+    // an attach (i.e. a create session request) to the control
+    // plane. (optional)
+    repeated Selector selectors = 5;
+    // The UEs that should be entitled to access privileged networks
+    // via this userplane.
+    //
+    // Note: UEs not in this list will still be able to get a bearer
+    // via the userplane. The UEs in this list are just for entitlement
+    // purposes. (optional)
+    repeated Entitlement entitlements = 6;
+
+    // Function of the userplane
+    enum Function {
+        // No function
+        NONE = 0;
+        // 4G serving gateway userplane (SGW-U)
+        SGWU = 1;
+        // 4G packet data network (PDN) gateway userplane (PGW-U)
+        PGWU = 2;
+        // 4G combination SGW-U and PGW-U
+        SAEGWU = 3;
+    }
+
+    // Configuration of the userplane
+    message Config {
+        InfoCPUP sxa = 1;
+        InfoCPUP sxb = 2;
+        InfoUP s1u = 3;
+        InfoUP s5u_sgw = 4;
+        InfoUP s5u_pgw = 5;
+        InfoUP sgi = 6;
+        repeated InfoUP breakout = 7;
+        repeated InfoUP dns = 8;
+
+        // Information that the userplane should configure, which relates to
+        // the control plane (CP) side and the user plane (UP) side.
+        message InfoCPUP {
+            string cp_ip_address = 1;
+            string up_ip_address = 2;
+        }
+
+        // Information that the userplane should configure, which relates to
+        // the user plane (UP) side only.
+        message InfoUP {
+            string up_ip_address = 1;
+        }
+    }
+
+    // Selectors for a radio that is establishing a bearer
+    message Selector {
+        // The identifier of the selector (read-only)
+        string id = 1;
+        // The network parameters to match
+        Network network = 2;
+        // The user location information (ULI) to match
+        ULI uli = 3;
+        // The packet data network (PDN) info to match
+        PDN pdn = 4;
+
+        // Network describes the public mobile land network (PLMN)
+        message Network {
+            // Mobile country code (leading zeroes allowed)
+            string mcc = 1;
+            // Mobile network code (leading zeroes allowed)
+            string mnc = 2;
+        }
+
+        // User location information related to the radio (ULI)
+        message ULI {
+            // Tracking area information (TAI)
+            TAI tai = 1;
+            // E-UTRAN cell global identifier (ECGI)
+            ECGI ecgi = 2;
+
+            // Tracking area information (TAI)
+            message TAI {
+                // Tracking area code (TAC), which is typically an
+                // unsigned integer from 1 to 2^16, inclusive.
+                uint32 tac = 1;
+            }
+
+            // E-UTRAN cell global identifier (ECGI)
+            message ECGI {
+                // E-UTRAN cell identifier (ECI), which is typically an
+                // unsigned integer from 1 to 2^32, inclusive.
+                uint32 eci = 1;
+            }
+        }
+
+        // Packet data network information related to the UE (PDN)
+        message PDN {
+            // The access point names (APNs)
+            repeated string apns = 1;
+        }
+    }
+
+    // Entitlement for user equipment (UEs)
+    message Entitlement {
+        // The identifier for the entitlement (read-only)
+        string id = 1;
+        // The access point names (APNs)
+        repeated string apns = 2;
+        // The list of IMSIs
+        repeated IMSIList imsis = 3;
+
+        // List of international mobile subscriber identities (IMSIs)
+        message IMSIList {
+            // The begin IMSI
+            string begin = 1;
+            // The end IMSI
+            string end = 2;
+        }
+    }
+}
+
+// Multiple userplanes
+message Userplanes {
+    repeated Userplane userplanes = 1;
+}
+
+// Identifier of a single userplane
+message UserplaneID {
+    string id = 1;
+}

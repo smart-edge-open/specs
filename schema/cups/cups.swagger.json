@@ -1,0 +1,449 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "4G Control and User Plane Separation (CUPS) Management API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Smart Edge",
+      "url": "github.com/smartedgemec/cups",
+      "email": "support@smart-edge.com"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/smartedgemec/cups/blob/master/LICENSE"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/userplanes": {
+      "get": {
+        "summary": "GetAll gets a list of all userplanes",
+        "description": "Retrieve all userplanes",
+        "operationId": "GetAll",
+        "responses": {
+          "200": {
+            "description": "Userplane list",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "CUPSUserplane"
+        ]
+      },
+      "post": {
+        "summary": "Add adds the userplane to the registry of userplanes",
+        "description": "Add a userplane",
+        "operationId": "Add",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cupsUserplaneID"
+            }
+          },
+          "201": {
+            "description": "Added userplane",
+            "schema": {}
+          },
+          "400": {
+            "description": "Invalid userplane properties provided",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cupsUserplane"
+            }
+          }
+        ],
+        "tags": [
+          "CUPSUserplane"
+        ]
+      }
+    },
+    "/userplanes/{id}": {
+      "get": {
+        "summary": "Get gets a userplane by ID",
+        "description": "Retrieve userplane by ID",
+        "operationId": "Get",
+        "responses": {
+          "200": {
+            "description": "Userplane",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CUPSUserplane"
+        ]
+      },
+      "delete": {
+        "summary": "Delete deletes a userplane by ID",
+        "description": "Delete a userplane",
+        "operationId": "Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "204": {
+            "description": "Deleted userplane",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          },
+          "404": {
+            "description": "Userplane not found",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CUPSUserplane"
+        ]
+      },
+      "patch": {
+        "summary": "Update updates a userplane by ID",
+        "description": "Update a userplane",
+        "operationId": "Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "204": {
+            "description": "Updated userplane",
+            "schema": {}
+          },
+          "400": {
+            "description": "Invalid userplane properties provided",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          },
+          "404": {
+            "description": "Userplane not found",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The identifier of the userplane (read-only)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cupsUserplane"
+            }
+          }
+        ],
+        "tags": [
+          "CUPSUserplane"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ConfigInfoCPUP": {
+      "type": "object",
+      "properties": {
+        "cp_ip_address": {
+          "type": "string"
+        },
+        "up_ip_address": {
+          "type": "string"
+        }
+      },
+      "description": "Information that the userplane should configure, which relates to\nthe control plane (CP) side and the user plane (UP) side."
+    },
+    "ConfigInfoUP": {
+      "type": "object",
+      "properties": {
+        "up_ip_address": {
+          "type": "string"
+        }
+      },
+      "description": "Information that the userplane should configure, which relates to\nthe user plane (UP) side only."
+    },
+    "EntitlementIMSIList": {
+      "type": "object",
+      "properties": {
+        "begin": {
+          "type": "string",
+          "title": "The begin IMSI"
+        },
+        "end": {
+          "type": "string",
+          "title": "The end IMSI"
+        }
+      },
+      "title": "List of international mobile subscriber identities (IMSIs)"
+    },
+    "SelectorNetwork": {
+      "type": "object",
+      "properties": {
+        "mcc": {
+          "type": "string",
+          "title": "Mobile country code (leading zeroes allowed)"
+        },
+        "mnc": {
+          "type": "string",
+          "title": "Mobile network code (leading zeroes allowed)"
+        }
+      },
+      "title": "Network describes the public mobile land network (PLMN)"
+    },
+    "SelectorPDN": {
+      "type": "object",
+      "properties": {
+        "apns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The access point names (APNs)"
+        }
+      },
+      "title": "Packet data network information related to the UE (PDN)"
+    },
+    "SelectorULI": {
+      "type": "object",
+      "properties": {
+        "tai": {
+          "$ref": "#/definitions/ULITAI",
+          "title": "Tracking area information (TAI)"
+        },
+        "ecgi": {
+          "$ref": "#/definitions/ULIECGI",
+          "title": "E-UTRAN cell global identifier (ECGI)"
+        }
+      },
+      "title": "User location information related to the radio (ULI)"
+    },
+    "ULIECGI": {
+      "type": "object",
+      "properties": {
+        "eci": {
+          "type": "integer",
+          "format": "int64",
+          "description": "E-UTRAN cell identifier (ECI), which is typically an\nunsigned integer from 1 to 2^32, inclusive."
+        }
+      },
+      "title": "E-UTRAN cell global identifier (ECGI)"
+    },
+    "ULITAI": {
+      "type": "object",
+      "properties": {
+        "tac": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Tracking area code (TAC), which is typically an\nunsigned integer from 1 to 2^16, inclusive."
+        }
+      },
+      "title": "Tracking area information (TAI)"
+    },
+    "UserplaneConfig": {
+      "type": "object",
+      "properties": {
+        "sxa": {
+          "$ref": "#/definitions/ConfigInfoCPUP"
+        },
+        "sxb": {
+          "$ref": "#/definitions/ConfigInfoCPUP"
+        },
+        "s1u": {
+          "$ref": "#/definitions/ConfigInfoUP"
+        },
+        "s5u_sgw": {
+          "$ref": "#/definitions/ConfigInfoUP"
+        },
+        "s5u_pgw": {
+          "$ref": "#/definitions/ConfigInfoUP"
+        },
+        "sgi": {
+          "$ref": "#/definitions/ConfigInfoUP"
+        },
+        "breakout": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConfigInfoUP"
+          }
+        },
+        "dns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConfigInfoUP"
+          }
+        }
+      },
+      "title": "Configuration of the userplane"
+    },
+    "UserplaneEntitlement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The identifier for the entitlement (read-only)"
+        },
+        "apns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The access point names (APNs)"
+        },
+        "imsis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementIMSIList"
+          },
+          "title": "The list of IMSIs"
+        }
+      },
+      "title": "Entitlement for user equipment (UEs)"
+    },
+    "UserplaneFunction": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "SGWU",
+        "PGWU",
+        "SAEGWU"
+      ],
+      "default": "NONE",
+      "description": "- NONE: No function\n - SGWU: 4G serving gateway userplane (SGW-U)\n - PGWU: 4G packet data network (PDN) gateway userplane (PGW-U)\n - SAEGWU: 4G combination SGW-U and PGW-U",
+      "title": "Function of the userplane"
+    },
+    "UserplaneSelector": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The identifier of the selector (read-only)"
+        },
+        "network": {
+          "$ref": "#/definitions/SelectorNetwork",
+          "title": "The network parameters to match"
+        },
+        "uli": {
+          "$ref": "#/definitions/SelectorULI",
+          "title": "The user location information (ULI) to match"
+        },
+        "pdn": {
+          "$ref": "#/definitions/SelectorPDN",
+          "title": "The packet data network (PDN) info to match"
+        }
+      },
+      "title": "Selectors for a radio that is establishing a bearer"
+    },
+    "cupsUserplane": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The identifier of the userplane (read-only)"
+        },
+        "uuid": {
+          "type": "string",
+          "title": "The UUID of the userplane (optional, can be user-defined)"
+        },
+        "function": {
+          "$ref": "#/definitions/UserplaneFunction",
+          "title": "The function of the userplane"
+        },
+        "config": {
+          "$ref": "#/definitions/UserplaneConfig",
+          "title": "The configuration of the userplane, used to configure\nthings such as networking on the userplane (optional)"
+        },
+        "selectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserplaneSelector"
+          },
+          "title": "The radios that should be directed towards the userplane.\nThis is used to assist with userplane selection during\nan attach (i.e. a create session request) to the control\nplane. (optional)"
+        },
+        "entitlements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserplaneEntitlement"
+          },
+          "description": "The UEs that should be entitled to access privileged networks\nvia this userplane.\n\nNote: UEs not in this list will still be able to get a bearer\nvia the userplane. The UEs in this list are just for entitlement\npurposes. (optional)"
+        }
+      },
+      "title": "The 3GPP control and userplane separation (CUPS) userplane"
+    },
+    "cupsUserplaneID": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "Identifier of a single userplane"
+    },
+    "cupsUserplanes": {
+      "type": "object",
+      "properties": {
+        "userplanes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cupsUserplane"
+          }
+        }
+      },
+      "title": "Multiple userplanes"
+    }
+  }
+}

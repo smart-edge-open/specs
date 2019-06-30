@@ -1,0 +1,511 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Edge Application Agent Interface",
+    "version": "1.0",
+    "contact": {
+      "name": "Smart Edge",
+      "url": "github.com/smartedgemec/eaa",
+      "email": "support@smart-edge.com"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/smartedgemec/eaa/blob/master/LICENSE"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/notifications": {
+      "get": {
+        "summary": "Connection Establishment",
+        "description": "Connect to a secure WebSocket to receive streaming notifications (see reference for notification to consumer for schema of messages received on websocket).",
+        "operationId": "GetNotifications",
+        "responses": {
+          "101": {
+            "description": "Upgrade to Websockets",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "post": {
+        "summary": "Publish Notification",
+        "description": "Push a single notification to all subscribed applications.",
+        "operationId": "PushNotificationToSubscribers",
+        "responses": {
+          "202": {
+            "description": "Notification was received and will be forwarded",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/eaaNotificationFromProducer"
+            }
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      }
+    },
+    "/services": {
+      "get": {
+        "summary": "Service Discovery",
+        "description": "List all currently activated producers on the local appliance and get their status, subscribable notification types, and address (for services with their own exposed API).",
+        "operationId": "GetServices",
+        "responses": {
+          "200": {
+            "description": "Services currently activated by a producer",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/eaaService"
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "delete": {
+        "summary": "Service Deactivation",
+        "description": "Unregisters a producer for all of its notification types in the local MEC environment. Once a producer has been unregistered, it will need to be registered and consumers will need to subscribe using the new service ID for notifications to be delivered.",
+        "operationId": "DeregisterApplication",
+        "responses": {
+          "204": {
+            "description": "Service registration removed",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "post": {
+        "summary": "Service Activation",
+        "description": "Registers a producer to begin publishing notifications in the local MEC environment.",
+        "operationId": "RegisterApplication",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "400": {
+            "description": "Invalid content, a required property is missing",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/eaaService"
+            }
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "summary": "List Subscriptions",
+        "description": "List all producers currently subscribed to and their registered notification types.",
+        "operationId": "GetSubscriptions",
+        "responses": {
+          "200": {
+            "description": "Subscriptions currently active",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/eaaSubscription"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content, a required property is missing",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "delete": {
+        "summary": "Mass Unsubscription",
+        "description": "Unsubscribe from all producers except the platform defaults (reset to default).",
+        "operationId": "UnsubscribeAllNotifications",
+        "responses": {
+          "204": {
+            "description": "Non-default subscriptions removed",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "Eaa"
+        ]
+      }
+    },
+    "/subscriptions/{urn.namespace}": {
+      "delete": {
+        "summary": "Service Unsubscription",
+        "description": "Unsubscribe from a particular or entire namespace of producers.",
+        "operationId": "UnsubscribeNotifications",
+        "responses": {
+          "204": {
+            "description": "Subscription removed",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "urn.namespace",
+            "description": "The non-unique portion of the URN that identifies the class excluding a\ntrailing separator.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "urn.id",
+            "description": "The per-namespace unique portion of the URN that when appended to the\nnamespace with a separator forms the complete URN.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "post": {
+        "summary": "Service Subscription",
+        "description": "Subscribe to a set of notification types, optionally specifying the exact producer by URN.",
+        "operationId": "SubscribeNotifications",
+        "responses": {
+          "201": {
+            "description": "Subscription added",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "urn.namespace",
+            "description": "The non-unique portion of the URN that identifies the class excluding a\ntrailing separator.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "The list of all notification types registered by all producers in this\nnamespace.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/eaaNotificationDescriptor"
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      }
+    },
+    "/subscriptions/{urn.namespace}/{urn.id}": {
+      "delete": {
+        "summary": "Service Unsubscription",
+        "description": "Unsubscribe from a particular or entire namespace of producers.",
+        "operationId": "UnsubscribeNotifications2",
+        "responses": {
+          "204": {
+            "description": "Subscription removed",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "urn.namespace",
+            "description": "The non-unique portion of the URN that identifies the class excluding a\ntrailing separator.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "urn.id",
+            "description": "The per-namespace unique portion of the URN that when appended to the\nnamespace with a separator forms the complete URN.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      },
+      "post": {
+        "summary": "Service Subscription",
+        "description": "Subscribe to a set of notification types, optionally specifying the exact producer by URN.",
+        "operationId": "SubscribeNotifications2",
+        "responses": {
+          "201": {
+            "description": "Subscription added",
+            "schema": {}
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "urn.namespace",
+            "description": "The non-unique portion of the URN that identifies the class excluding a\ntrailing separator.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "urn.id",
+            "description": "The per-namespace unique portion of the URN that when appended to the\nnamespace with a separator forms the complete URN.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "The list of all notification types registered by all producers in this\nnamespace.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/eaaNotificationDescriptor"
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Eaa"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "eaaNotificationDescriptor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of notification message type"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version of notification message type",
+          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
+        },
+        "description": {
+          "type": "string",
+          "title": "Human readable description of message type"
+        }
+      },
+      "title": "Notification descriptor"
+    },
+    "eaaNotificationFromProducer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of notification type"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version of notification type",
+          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
+        },
+        "payload": {
+          "$ref": "#/definitions/eaaRawJSONObject",
+          "description": "The payload can be any JSON object with a name and version-specific schema."
+        }
+      },
+      "title": "Notification payload (from producer)"
+    },
+    "eaaNotificationToConsumer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of notification type"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version of notification type",
+          "pattern": "^((([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)$"
+        },
+        "payload": {
+          "$ref": "#/definitions/eaaRawJSONObject",
+          "description": "The payload can be any JSON object with a name and version-specific schema."
+        },
+        "urn": {
+          "$ref": "#/definitions/eaaURN",
+          "description": "Namespace and id of the producer that notification comes from. Used only\nwhen sending notification from EAA to consumer. Producer do not have to\nfill this field."
+        }
+      },
+      "title": "Notification payload (to subscriber)"
+    },
+    "eaaRawJSONObject": {
+      "type": "object",
+      "title": "Any object"
+    },
+    "eaaService": {
+      "type": "object",
+      "properties": {
+        "urn": {
+          "$ref": "#/definitions/eaaURN",
+          "title": "Name of the producer app",
+          "readOnly": true
+        },
+        "description": {
+          "type": "string",
+          "title": "Human readable description provided by producer"
+        },
+        "endpoint_uri": {
+          "type": "string",
+          "title": "URI for API of external app"
+        },
+        "status": {
+          "type": "string",
+          "title": "Health status",
+          "readOnly": true
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/eaaNotificationDescriptor"
+          },
+          "title": "Notitication types that will be produced"
+        }
+      },
+      "title": "Service"
+    },
+    "eaaServiceList": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/eaaService"
+          },
+          "title": "Services currently activated by a producer"
+        }
+      },
+      "title": "Service List"
+    },
+    "eaaSubscription": {
+      "type": "object",
+      "properties": {
+        "urn": {
+          "$ref": "#/definitions/eaaURN",
+          "description": "The name of the producer app. The unique ID is optional for subscribing\nand if not given will subscribe to any producer in the namespace."
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/eaaNotificationDescriptor"
+          },
+          "description": "The list of all notification types registered by all producers in this\nnamespace."
+        }
+      },
+      "title": "Subscription"
+    },
+    "eaaSubscriptionList": {
+      "type": "object",
+      "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/eaaSubscription"
+          },
+          "title": "Subscriptions currently active"
+        }
+      },
+      "title": "Subscription List"
+    },
+    "eaaURN": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The per-namespace unique portion of the URN that when appended to the\nnamespace with a separator forms the complete URN."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "The non-unique portion of the URN that identifies the class excluding a\ntrailing separator."
+        }
+      },
+      "title": "Uniform Resource Name"
+    }
+  }
+}
