@@ -38,6 +38,7 @@ This document provides high level system features, issues and limitations inform
       - Support for running Baidu Cloud as an OpenNESS application 
     - Documentation 
       - User Guide Enterprise and Operator Edge 
+      - OpenNESS Architecture
       - Swagger/Proto buff  External API Guide 
       - 4G/CUPS API whitepaper 
       - Cloud Connector App note
