@@ -22,10 +22,10 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 
 
 ## Introduction
-The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
+The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI. 
  
 ## Instructions
-TBD - Add description
+Following sections describes typical steps involved in running common OpenNESS tasks. 
 
 ### Prerequisites
 1. As part of the Application deployment a HTTPs based Application Image download server is required. 
