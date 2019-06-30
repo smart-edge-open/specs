@@ -5,6 +5,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 
 * [Introduction](#introduction)
 * [Instructions](#Instructions)
+  * [Prerequisites](#prerequisites)
+    * [Creating HTTPS server for image download](#creating-https-server-for-image-download)
   * [First login](#first-login)
   * [Enrollment](#enrollment)
   * [NTS Configuration](#nts-configuration)
@@ -14,6 +16,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [Configuring Interface](#configuring-interface)
     * [Starting NTS](#starting-nts)
   * [Creating Applications](#creating-applications)
+  * [Deploying Applications](#deploying-applications)
   * [Managing Traffic Rules](#managing-traffic-rules)
   * [Managing DNS Rules](#managing-dns-rules)
 
@@ -22,7 +25,53 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
  
 ## Instructions
-TBA
+TBD - Add description
+
+### Prerequisites
+1. As part of the Application deployment a HTTPs based Application Image download server is required. 
+  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
+   
+  ![HTTPs Image Server setup](howto-images/openness_apponboard.png)
+
+#### Creating HTTPS server for image download
+##### Instructions to setup HTTP server 
+- Install apache and mod_ssl     
+`yum install httpd mod_ssl`    
+- Go into /etc/ssl/certs    
+ `cd /etc/ssl/certs`    
+- Acquire the controller root ca and key
+```
+docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/cert.pem .
+docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/key.pem .
+``` 
+- Generate the apache key and crt
+```
+openssl genrsa -out apache.key 2048
+openssl req -new -sha256 -key apache.key -subj "/C=IE/ST=Clare/O=ESIE/CN=$(hostname -f)" -out apache.csr
+openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -out apache.crt -days 500 -sha256
+```
+- Edit apache config and point it to the new certs
+```
+sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateFile /etc/ssl/certs/apache.key|g' ssl.conf
+```
+- Set the firewall to accept the traffic
+```
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 80 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 443 -j ACCEPT
+``` 
+- Enable and restart apache after the changes
+```
+systemctl enable httpd
+systemctl restart httpd
+```
+
+##### Instruction to upload and access images
+- Put the images into /var/www/html    
+`cp test_image.tar.gz /var/www/html/`    
+`chmod a+r /var/www/html/*`    
+- Construct the URL (Source in Controller UI) as:    
+`https://controller_hostname/test_image.tar.gz`
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
@@ -185,10 +234,43 @@ Once the interfaces are configured accordingly the following steps need to be do
 ![Starting NTS 2](howto-images/StartingNTS2.png)
 
 ### Creating Applications
-TBA
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+
+To add an application to list of applications managed by Controller following steps need to be taken:
+
+- From UI navigate to 'APPLICATIONS' tab.
+- Click on 'ADD APPLICATION' button.
+
+![Creating Application 1](howto-images/CreatingApplication1.png)
+
+- After 'Add an Application' window pops up add details as per following example:
+  - Name: SampleApp
+  - Type: Container
+  - Version: 1
+  - Vendor: vendor
+  - Description: description
+  - Cores: 2
+  - Memory: 100
+  - Source: https://<IP_address_of_https_server_storing_the_image>/image_file_name
+- Then memory unit used is MB. A sample path to image could be https://192.10.10.10/sample_docker_app.tar.gz.
+- Click 'UPLOAD APPLICATION'
+
+![Creating Application 2](howto-images/CreatingApplication2.png)
+
+- The appliaction will be displayed in Controller's 'List of Applications'.
+
+![Creating Application 3](howto-images/CreatingApplication3.png)
+
+
+### Deploying Applications
+TBD
 
 ### Managing Traffic Rules
-TBA
+TBD
 
 ### Managing DNS Rules
-TBA
+TBD
