@@ -53,7 +53,7 @@ openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -ou
 - Edit apache config and point it to the new certs
 ```
 sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' /etc/httpd/conf.d/ssl.conf 
-sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateFile /etc/ssl/certs/apache.key|g' /etc/httpd/conf.d/ssl.conf 
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' /etc/httpd/conf.d/ssl.conf 
 ```
 - Set the firewall to accept the traffic
 ```
