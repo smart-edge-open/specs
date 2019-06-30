@@ -25,7 +25,7 @@ This document provides high level system features, issues and limitations inform
     - Platform Features 
       - Microservices based Appliance and Controller agent deployment 
       - Support for DNS for the edge 
-      - CentOS 7.6 + RT kernel 
+      - CentOS 7.6 / CentOS 7.6 + RT kernel
       - Basic telemetry support
     - Sample Reference Applications 
       - OpenVino based Consumer Application 
@@ -61,6 +61,7 @@ OpenNESS Edge Node product has been tested using the following hardware specific
    - Intel® Xeon® Processor D-2183IT
 
 - Skylake SP
+
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | SKX-SP           | Compute Node based on SKX-SP                                  |
