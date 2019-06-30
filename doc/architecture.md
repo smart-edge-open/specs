@@ -447,3 +447,4 @@ Installation and configuration scripts will be provided to get the relevant vers
 - UE: User Equipment (in the context of LTE)
 - VIM: Virtual Infrastructure Manager 
 - UUID: Universally Unique IDentifier 
+
