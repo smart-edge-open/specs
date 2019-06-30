@@ -279,9 +279,9 @@ OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud
 
 _Figure - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
-More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
+More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md). 
 
-More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://www.openness.org/resources). 
+More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md). 
 
 ## OpenNESS Microservices and APIs
 
@@ -352,7 +352,7 @@ _Figure 12 - LTE EPC Configuration_
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
 
-Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://www.openness.org/resources).
+Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://github.com/open-ness/specs/blob/master/doc/openness_epc.md).
 
 ### OpenNESS Controller APIs
 OpenNESS Controller APIs are important APIs for those managing one or many OpenNESS edge nodes. OpenNESS Controller APIs are called by the UI frontend and can be called by external orchestrators. These APIs allow centralized management of OpenNESS Edge nodes. The API enables a developer to maintain a list of OpenNESS Edge nodes, configure apps, manage policies and DNS, and more. The OpenNESS Controller API represents an abstraction layer for an operations administrator. While individual OpenNESS edge nodes may be managed singularly, the OpenNESS Controller API allows for management in a scalable way. Furthermore, it allows for secure communication to the many edge nodes.
