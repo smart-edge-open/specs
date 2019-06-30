@@ -55,11 +55,12 @@ This document provides high level system features, issues and limitations inform
 # Hardware and Software Compatibility
 OpenNESS Edge Node product has been tested using the following hardware specification:
 
--  Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
-- Motherboard type: X11SDV-16C-TP8F
-  https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm
-- Intel® Xeon® Processor D-2183IT
+- Skylake D
+   - Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
+   - Motherboard type: X11SDV-16C-TP8F https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm
+   - Intel® Xeon® Processor D-2183IT
 
+- Skylake SP
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | SKX-SP           | Compute Node based on SKX-SP                                  |

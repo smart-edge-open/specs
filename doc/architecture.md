@@ -370,7 +370,9 @@ OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNE
 - Ansible    
 - MySQL Community Server    
 - Amazon Web Services   
-- Go libraries          
+- Go libraries     
+
+Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
 Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
