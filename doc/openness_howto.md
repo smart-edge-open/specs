@@ -17,9 +17,16 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [Starting NTS](#starting-nts)
   * [Creating Applications](#creating-applications)
   * [Deploying Applications](#deploying-applications)
-  * [Managing Traffic Rules](#managing-traffic-rules)
+  * [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications)
   * [Managing DNS Rules](#managing-dns-rules)
-
+* [Deploying OpenVINO application](#openvino-deploying-openvino-application)
+ * [OpenVINO Creating Applications](#openvino-creating-applications)
+ * [OpenVINO Creating Traffic Rules](#openvino-nts-configuration)
+ * [OpenVINO NTS Configuration](#openvino-nts-configuration)
+ * [OpenVINO Deploying Applications](#openvino-deploying-applications)
+ * [OpenVINO Managing Traffic Rules for Applications](#openvino-managing-traffic-rules-for-applications)
+ * [OpenVINO Managing DNS Rules](#openvino-managing-dns-rules)
+ * [OpenVINO Manual Configuration steps](#openvino-manual-configuration-steps)
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
@@ -261,16 +268,109 @@ To add an application to list of applications managed by Controller following st
 
 ![Creating Application 2](howto-images/CreatingApplication2.png)
 
-- The appliaction will be displayed in Controller's 'List of Applications'.
+- The application will be displayed in Controller's 'List of Applications'.
 
 ![Creating Application 3](howto-images/CreatingApplication3.png)
 
-
 ### Deploying Applications
-TBD
 
-### Managing Traffic Rules
-TBD
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- NTS must be started 
+- User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+- Application is added to the Controller application list 
+
+The following steps need to be done: 
+- From UI go to "NODE" tab 
+- Navigate to "APPS" tab 
+- Click on "DEPLOY APP"
+
+- Window titled "DEPLOY APPLICATION TO NODE" will appear 
+- Select the Application you want to deploy from drop down menu 
+- Click "DEPLOY"
+
+- Your applications will be listed under "APPS" tab - the status of this app will be "DEPLOYED"
+- From here to start the Application click "START" (Refresh the browser window to see the change in the status)
+
+### Managing Traffic Rules for Applications 
+
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- NTS must be started 
+- User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+- Application is added to the Controller application list 
+- Application is deployed and started 
+- Traffic rule is created 
+
+Following steps needs to be done:
+- From UI navigate to "NODES" tab click "EDIT" on the edge node and navigate to "APPS" tab
+
+- To Add traffic policy to this application click "ADD", Pick the policy from the drop down menu and click assign under traffic policy column 
+- You can "DELETE/RESTART" an App from this tab 
 
 ### Managing DNS Rules
-TBD
+
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- NTS must be started 
+
+Following steps needs to be done:
+- From UI navigate to "NODES" tab click "EDIT" on the edge node and navigate to "DNS" tab
+- Add a Name for your DNS rule 
+- Click "ADD" beside rerecords field 
+- Add a Name to "A Record" field and provide description 
+- Click on Add near the values field 
+- Provide IP address for DNS entry 
+- Click Save 
+
+## Deploying OpenVINO application 
+
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+
+The following steps need to be done to deploy the OpenVinoConsumer application: 
+- From UI go to "APPLICATIONS" tab 
+- Click on Add "APPLICATION
+
+- Fill in the following fields 
+ - Name: OpenVinoConsumer  
+ - Type: Container 
+ - Version: 1
+ - Vendor: Sample 
+ - Description: Sample 
+ - Cores: 2 (OpenVINO consumer application needs atleast 2 cores)
+ - Memory: 4096 (OpenVINO consumer application needs atleast 4GB memory)
+ - Source (format https://192.10.10.10/openvino-cons-app.tar.gz.)
+ - Port and Protocol (these fields are not used but needs to filled)
+- Click 'UPLOAD' application
+
+- OpenVinoConsumer application will show up on the "APPLICATION LIST" under the "APPLICATION" tab. 
+
+The following steps need to be done to deploy the OpenVinoProducer application: 
+- From UI go to "APPLICATIONS" tab 
+- Click on Add "APPLICATION
+
+- Fill in the following fields 
+ - Name: OpenVinoProducer  
+ - Type: Container 
+ - Version: 1
+ - Vendor: Sample 
+ - Description: Sample 
+ - Cores: 2
+ - Memory: 4096
+ - Source (format https://192.10.10.10/openvino-prod-app.tar.gz.)
+ - Port and Protocol (these fields are not used but needs to filled)
+- Click 'UPLOAD' application
+
+- OpenVinoProducer application will show up on the "APPLICATION LIST" under the "APPLICATION" tab. 
+
+
+
