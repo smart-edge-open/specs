@@ -41,8 +41,8 @@ TBD - Add description
  `cd /etc/ssl/certs`    
 - Acquire the controller root ca and key
 ```
-docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/cert.pem .
-docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/key.pem .
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem .
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/key.pem .
 ``` 
 - Generate the apache key and crt
 ```
