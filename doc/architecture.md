@@ -279,9 +279,9 @@ OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud
 
 _Figure - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
-More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://www.openness.org/resources). 
+More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md). 
 
-More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://www.openness.org/resources). 
+More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md). 
 
 ## OpenNESS Microservices and APIs
 
@@ -352,7 +352,7 @@ _Figure 12 - LTE EPC Configuration_
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources). 
 
-Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://www.openness.org/resources).
+Whitepaper describing the details of the CUPS support in EPC can be found here [Edge Application APIs](https://github.com/open-ness/specs/blob/master/doc/openness_epc.md).
 
 ### OpenNESS Controller APIs
 OpenNESS Controller APIs are important APIs for those managing one or many OpenNESS edge nodes. OpenNESS Controller APIs are called by the UI frontend and can be called by external orchestrators. These APIs allow centralized management of OpenNESS Edge nodes. The API enables a developer to maintain a list of OpenNESS Edge nodes, configure apps, manage policies and DNS, and more. The OpenNESS Controller API represents an abstraction layer for an operations administrator. While individual OpenNESS edge nodes may be managed singularly, the OpenNESS Controller API allows for management in a scalable way. Furthermore, it allows for secure communication to the many edge nodes.
@@ -370,7 +370,9 @@ OpenNESS Controller and Edge Node are developed and tested on CentOS 7.6. OpenNE
 - Ansible    
 - MySQL Community Server    
 - Amazon Web Services   
-- Go libraries          
+- Go libraries     
+
+Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
 Installation and configuration scripts will be provided to get the relevant version of the components to be installed on edge node and controller. 
 
@@ -400,13 +402,14 @@ Installation and configuration scripts will be provided to get the relevant vers
   - **epcforedge** [epcforedge repo link](https://github.com/open-ness/epcforedge): Repository containing reference implementations and reference APIs of some of the EPC components that enable Edge compute Solution. 
 
 ## Key OpenNESS solution documentation 
-- **OpenNESS Architecture and Solution overview** [OpenNESS Architecture and Solution overview link TBD](https://www.openness.org/resources): Current Document. 
+- **OpenNESS Architecture and Solution overview** [OpenNESS Architecture and Solution overview link](https://github.com/open-ness/specs/blob/master/doc/architecture.md): Current Document. 
 - **OpenNESS Edge Node User guide** [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
 - **OpenNESS Controller Community Edition User guide** [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
 - **OpenNESS Reference Application User guide** [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
-- **OpenNESS Amazon AWS IoT Greengrass application note** [OpenNESS Amazon AWS IoT Greengrass application note link TBD](https://www.openness.org/resources): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
-- **OpenNESS Baidu Cloud application note** [OpenNESS Baidu Cloud application note link TBD](https://www.openness.org/resources): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
-- **OpenNESS How-to Guide** [OpenNESS How-to Guide TBD](https://www.openness.org/resources): Document that describes typical steps involved in running common OpenNESS tasks. 
+- **OpenNESS Amazon AWS IoT Greengrass application note** [OpenNESS Amazon AWS IoT Greengrass application note link](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
+- **OpenNESS Baidu Cloud application note** [OpenNESS Baidu Cloud application note link](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
+- **OpenNESS How-to Guide** [OpenNESS How-to Guide](https://github.com/open-ness/specs/blob/master/doc/openness_howto.md): Document that describes typical steps involved in running common OpenNESS tasks. 
+- **OpenNESS Release Notes**[OpenNESS Release Notes](https://github.com/open-ness/specs/blob/master/openness_releasenotes.md): Document that provides high level system features, issues and limitations information for OpenNESS.
 
 ## Other References
 - [3GPP_23401]	3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; General Packet Radio Service (GPRS) enhancements for Evolved Universal Terrestrial Radio Access Network  (E-UTRAN) access.     
@@ -446,3 +449,4 @@ Installation and configuration scripts will be provided to get the relevant vers
 - UE: User Equipment (in the context of LTE)
 - VIM: Virtual Infrastructure Manager 
 - UUID: Universally Unique IDentifier 
+
