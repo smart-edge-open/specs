@@ -48,8 +48,8 @@ TBD - Add description
  `cd /etc/ssl/certs`    
 - Acquire the controller root ca and key
 ```
-docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/cert.pem .
-docker cp controller-ce_cce_1:/go/src/github.com/smartedgemec/controller-ce/certificates/ca/key.pem .
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . 
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/key.pem .
 ``` 
 - Generate the apache key and crt
 ```
@@ -60,7 +60,7 @@ openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -ou
 - Edit apache config and point it to the new certs
 ```
 sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' ssl.conf
-sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateFile /etc/ssl/certs/apache.key|g' ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' ssl.conf
 ```
 - Set the firewall to accept the traffic
 ```
