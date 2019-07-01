@@ -80,7 +80,5 @@ OpenNESS Edge Node product has been tested using the following hardware specific
 # Supported Operating Systems
    - OpenNESS was tested on CentOS 7.6 : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
-
-
-
+   
 
