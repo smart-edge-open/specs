@@ -372,5 +372,44 @@ The following steps need to be done to deploy the OpenVinoProducer application:
 
 - OpenVinoProducer application will show up on the "APPLICATION LIST" under the "APPLICATION" tab. 
 
+## Client Simulator Setup
 
+The following prerequisites must be installed on the platform where the client
+simulator will be set up:
+
+* Docker
+* OS with graphical support
+* VNC server or a physically attached monitor
+
+1. Update `/etc/hosts` file with a record for `openvino.openness` hostname
+
+    ```shell
+    echo "192.168.200.20 openvino.openness" >> /etc/hosts
+    ```
+
+2. Set the IP address of the ethernet interface which is connected to the
+OpenNESS Edge Node with an IP address in the same subnet as for
+`openvino.openness` hostname
+
+    ```shell
+    ifconfig enp1s0f0 192.168.200.10 up
+    ```
+
+3. Update ARP tables for the configured interface
+
+    ```shell
+    arp -s openvino.openness deadbeef
+    ```
+
+4. Build the `client-sim` docker image that as described in
+   **OpenVINO Sample Application in OpenNESS** section
+   **Build & Deployment of OpenVINO Applications**.
+   
+5. From a VNC window or on the attached monitor, run the docker image using
+   the provided script to get the traffic flowing and visualized:
+
+    ```shell
+    cd <appliance-ce-directory>/build/openvino/clientsim
+    ./run-docker.sh
+    ```
 
