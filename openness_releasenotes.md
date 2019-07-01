@@ -25,7 +25,7 @@ This document provides high level system features, issues and limitations inform
     - Platform Features 
       - Microservices based Appliance and Controller agent deployment 
       - Support for DNS for the edge 
-      - CentOS 7.6 + RT kernel 
+      - CentOS 7.6 / CentOS 7.6 + RT kernel
       - Basic telemetry support
     - Sample Reference Applications 
       - OpenVino based Consumer Application 
@@ -55,10 +55,12 @@ This document provides high level system features, issues and limitations inform
 # Hardware and Software Compatibility
 OpenNESS Edge Node product has been tested using the following hardware specification:
 
--  Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
-- Motherboard type: X11SDV-16C-TP8F
-  https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm
-- Intel® Xeon® Processor D-2183IT
+- Skylake D
+   - Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
+   - Motherboard type: X11SDV-16C-TP8F https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm
+   - Intel® Xeon® Processor D-2183IT
+
+- Skylake SP
 
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
@@ -76,7 +78,7 @@ OpenNESS Edge Node product has been tested using the following hardware specific
 | Other card       | 2x PCIe Riser cards                                           |
 
 # Supported Operating Systems
-   - OpenNESS was tested on CentOS 7.6 
+   - OpenNESS was tested on CentOS 7.6 : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
 
 
