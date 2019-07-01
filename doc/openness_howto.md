@@ -19,14 +19,16 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [Deploying Applications](#deploying-applications)
   * [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications)
   * [Managing DNS Rules](#managing-dns-rules)
-* [Deploying OpenVINO application](#openvino-deploying-openvino-application)
- * [OpenVINO Creating Applications](#openvino-creating-applications)
- * [OpenVINO Creating Traffic Rules](#openvino-nts-configuration)
- * [OpenVINO NTS Configuration](#openvino-nts-configuration)
- * [OpenVINO Deploying Applications](#openvino-deploying-applications)
- * [OpenVINO Managing Traffic Rules for Applications](#openvino-managing-traffic-rules-for-applications)
- * [OpenVINO Managing DNS Rules](#openvino-managing-dns-rules)
- * [OpenVINO Manual Configuration steps](#openvino-manual-configuration-steps)
+* [Deploying OpenVINO application](#deploying-openvino-application)
+  * [1 OpenVINO Creating Applications](#1-openvino-creating-applications)
+  * [2 OpenVINO Creating Traffic Rules](#2-openvino-creating-traffic-rules)
+  * [3 OpenVINO NTS Configuration and start](#3-openvino-nts-configuration-and-start)
+  * [4 OpenVINO Deploying Applications](#4-openvino-deploying-applications)
+  * [5 OpenVINO Managing Traffic Rules for Applications](#5-openvino-managing-traffic-rules-for-applications)
+  * [6 OpenVINO Managing DNS Rules](#6-openvino-managing-dns-rules)
+  * [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
+  * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
+  * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
@@ -353,7 +355,7 @@ Following steps needs to be done:
 ## Deploying OpenVINO application 
 In this section the steps involved in deploying sample OpenVino consumer and producer applications on EdgeNode will be provided. For more information on OpenVino sample applications click here: [OpenNESS Application](https://github.com/open-ness/specs/blob/master/doc/architecture.md#openness-edge-node-applications). It is assumed that the user has already configured their Edge Node and Edge controller platforms and has completed the enrollment phase.
 
-### OpenVINO Creating Applications
+### 1 OpenVINO Creating Applications
 
 Prerequisite:
 - Enrollment phase completed successfully.
@@ -405,7 +407,7 @@ The following steps need to be done to deploy the OpenVinoProducer application:
 
 ![OpenVino Add App 4](howto-images/OpenVinoAddApp4.png)
 
- ### OpenVINO Creating Traffic Rules
+ ### 2 OpenVINO Creating Traffic Rules
 
 Prerequisites:
 - Enrollment phase completed successfully.
@@ -433,7 +435,7 @@ The steps to create a sample traffic policy are as follows:
 
 After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
 
- ### OpenVINO NTS Configuration and start
+ ### 3 OpenVINO NTS Configuration and start
 In this scenario two interfaces are to be configured for NTS "UPSTREAM" (to be connected to eNodeB\upstream IP source), "DOWNSTREAM" (to be connected to EPC\downstream IP source).
 The eNodeB and EPC set up is outside scope of this document. Instructions for sample client server for video traffic simulation will be provided (in place of eNodeB), as well as instructions how to make a 'dummy' EPC connection.
 
@@ -471,7 +473,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 
 - NTS will start and "COMMIT CHANGES" button will disappear.
 
- ### OpenVINO Deploying Applications
+ ### 4 OpenVINO Deploying Applications
 
 Prerequisite:
 - Enrollment phase completed successfully.
@@ -514,7 +516,7 @@ Deploy OpenVino Consumer appliaction.
 - You can "DELETE/RESTART" an application from this tab. Please note the traffic policy if any must be removed before deleting the application.
 
 
- ### OpenVINO Managing Traffic Rules for Applications
+ ### 5 OpenVINO Managing Traffic Rules for Applications
 
 Prerequisite:
 - Enrollment phase completed successfully.
@@ -539,7 +541,7 @@ Following steps needs to be done:
 - You can "DELETE/RESTART" an application from this tab.
 - Please note that the application must be in a 'running' state in order to delete traffic policy.
 
- ### OpenVINO Managing DNS Rules
+ ### 6 OpenVINO Managing DNS Rules
 
  Prerequisite:
 - Enrollment phase completed successfully.
@@ -557,7 +559,7 @@ Following steps needs to be done:
 
 ![DNS](howto-images/DNS.png)
 
- ### OpenVINO Manual Configuration steps
+ ### 7 OpenVINO Manual Configuration steps
 
 The following manual steps need to be done to fully configure the OpenVino pipeline on the EdgeNode. These steps need to be run from terminal on the EdgeNode.
 
@@ -565,26 +567,45 @@ Run 'docker ps' to find running containers on EdgeNode.
 OpenVino consumer container can be distinguished by "./start.sh" text in its 'COMMAND' field under 'docker ps'.
 
 Configure DNS container's KNI interface:
-- docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 arp off
-- docker exec -it <Container_ID_of_mec-app-edgednssvr> ip a a 53.53.53.53/24 dev vEth0
-- docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 up
-- docker exec -it <Container_ID_of_mec-app-edgednssvr> ip route add 192.168.200.0/24 dev vEth0
+ 
+```
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 arp off
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip a a 53.53.53.53/24 dev vEth0
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 up
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip route add 192.168.200.0/24 dev vEth0
+```
 
 Make a request on the DNS interface subnet to register the KNI interface with NTS client (press CTRL + C buttons as soon as a request is made (no expectation for hostname to resolve)):
-- docker exec -it <Container_ID_of_mec-app-edgednssvr> wget 192.168.200.123 -Y off
+
+```
+docker exec -it <Container_ID_of_mec-app-edgednssvr> wget 192.168.200.123 -Y off
+```
 
 Configure OpenVino Consumer container's KNI interface:
 Find the name of KNI interface inside the container (interface name vEthX):
-- docker exec -it <Container_ID_of_openVino-consumer-app>  ip addr
+```
+docker exec -it <Container_ID_of_openVino-consumer-app>  ip addr
+```
 Using the found interface name run following:
-- docker exec -it <Container_ID_of_openVino-consumer-app>  ip link set dev vEth2 arp off
-- docker exec -it <Container_ID_of_openVino-consumer-app>  ip a a 192.168.200.20/24 dev vEth2
-- docker exec -it <Container_ID_of_openVino-consumer-app>  ip link set dev vEth2 up
+
+```
+docker exec -it <Container_ID_of_openVino-consumer-app>  ip link set dev vEth2 arp off
+docker exec -it <Container_ID_of_openVino-consumer-app>  ip a a 192.168.200.20/24 dev vEth2
+docker exec -it <Container_ID_of_openVino-consumer-app>  ip link set dev vEth2 up
+```
 
 Make a request on the OpenVino Consumer interface subnet to register the KNI interface with NTS client (press CTRL + C buttons as soon as a request is made (no expectation for hostname to resolve)):
-- docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y off
+```
+docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y off
+```
 
-### Client Simulator Setup
+### 8 OpenVINO Downstream setup 
+
+This is a sample setup for Downstream setup (EPC/IP Downstream). This is downstream node in this example will behave like Application connected to the PDN gateway or IP gateway. For the purpose of testing OpenVINO App in the IP domain. You need to connect a server and assign an IP to an interface connected to the Edge Node Downstream. The IP assigned IP address must be as follows - 192.168.200.2. 
+
+Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
+
+### 9 OpenVINO Client Simulator Setup
 
 The following prerequisites must be installed on the platform where the client
 simulator will be set up:
@@ -607,6 +628,12 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
+3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
+  
+   ```shell
+    ping 192.168.200.2
+   ```
+
 3. Update ARP tables for the configured interface
 
     ```shell
@@ -624,3 +651,4 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     cd <appliance-ce-directory>/build/openvino/clientsim
     ./run-docker.sh
     ```
+![OpenVino Output](howto-images/OpenVinoOutput.png)
