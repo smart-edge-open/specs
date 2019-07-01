@@ -30,6 +30,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
   * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
 
+
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
  
@@ -287,6 +288,7 @@ Prerequisite:
 - Application is added to the Controller application list 
 
 The following steps need to be done: 
+
 - From UI go to "NODE" tab and click on "EDIT" button for the desired node.
 - Navigate to "APPS" tab.
 - Click on "DEPLOY APP".
@@ -318,6 +320,7 @@ Prerequisite:
 - NTS must be started 
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+
 - Application is added to the Controller application list.
 - Application is deployed and started.
 - Traffic rule is created.
@@ -334,11 +337,13 @@ Following steps needs to be done:
 
 - Please note that the application must be in a 'running' state in order to delete traffic policy.
 
+
 ### Managing DNS Rules
 
 Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
+
 - NTS must be started\configured.
 
 Following steps needs to be done:
@@ -361,6 +366,7 @@ Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
@@ -628,11 +634,13 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
+
 3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
   
    ```shell
     ping 192.168.200.2
    ```
+
 
 3. Update ARP tables for the configured interface
 
@@ -644,6 +652,8 @@ OpenNESS Edge Node with an IP address in the same subnet as for
    **OpenVINO Sample Application in OpenNESS** section
    **Build & Deployment of OpenVINO Applications**.
 
+
+
 5. From a VNC window or on the attached monitor, run the docker image using
    the provided script to get the traffic flowing and visualized:
 
@@ -651,4 +661,6 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     cd <appliance-ce-directory>/build/openvino/clientsim
     ./run-docker.sh
     ```
+
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
+
