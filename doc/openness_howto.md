@@ -29,21 +29,26 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
   * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
   * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
+* [Troubleshooting](#troubleshooting)
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
- 
+
 ## Instructions
-TBD - Add description
 
 ### Prerequisites
-1. As part of the Application deployment a HTTPs based Application Image download server is required. 
-  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
+1. Controller and Edge node installation and configuration is assumed to be run as `root`. 
+2. Controller Web UI only supports only one user and its `admin` user.   
+3. As part of the Application deployment a HTTPs based Application Image download server is required. 
+    - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
    
   ![HTTPs Image Server setup](howto-images/openness_apponboard.png)
 
 #### Creating HTTPS server for image download
 ##### Instructions to setup HTTP server 
+Prerequisites:
+- Controller should be up and running in order to access root CA. 
+
 - Install apache and mod_ssl     
 `yum install -y httpd mod_ssl`    
 - Go into /etc/ssl/certs    
@@ -84,6 +89,8 @@ systemctl restart httpd
 `chmod a+r /var/www/html/*`    
 - Construct the URL (Source in Controller UI) as:    
 `https://<controller_hostname>/test_image.tar.gz`
+
+>Note: Controller host name to be used for the URL can be acquired by running ```hostname -f``` in the controller node shell. 
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
@@ -268,9 +275,9 @@ To add an application to list of applications managed by Controller following st
   - Cores: 2
   - Memory: 100
   - Source: https://controller_hostname/image_file_name 
-- Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running 'hostname -f' from terminal of that machine.
+- Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running ```hostname -f``` from terminal of that machine.
 - Then memory unit used is MB. A sample path to image could be https://controller_hostname/sample_docker_app.tar.gz
-- The hostname of the controller or server serving HTTPS can be checked by running: "hostname -f" command from servers terminal.
+- The hostname of the controller or server serving HTTPS can be checked by running: ```hostname -f``` command from servers terminal.
 - Click 'UPLOAD APPLICATION'
 
 ![Creating Application 2](howto-images/CreatingApplication2.png)
@@ -657,3 +664,6 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ./run-docker.sh
     ```
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
+
+## Troubleshooting 
+- Controller UI: if you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis. 
