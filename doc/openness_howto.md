@@ -97,14 +97,14 @@ In order to access the UI the user needs to provide credentials during login.
 
 Prerequisites:
 - An internet browser to access the login page.
-- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/controller-ce/ui/controller/.env.production" file.
+- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/edgecontroller/ui/controller/.env" file.
 - If working behind proxy or firewall appropriate ports open.
 - Controller set up (including the UI application) and running.
 
 The following steps need to be done for successful login:
 - Open internet browser.
-- Type in http://10.237.223.158:3000/login in address bar.
-- Enter you username and password (default username: admin) (the password to be used is the same that which was provided during Controller bring-up with the "-adminPass <pass>" parameter).
+- Type in http://<Controller_ip_address>:3000/login in address bar.
+- Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the CCE_ADMIN_PASSWORD in "~/edgecontroller/ui/controller/.env").
 - Click on "SIGN IN" button.
 
 ![Login screen](howto-images/login.png)
@@ -115,7 +115,7 @@ In order for the Controller and Edge Node to work together the Edge Node needs t
 
 Prerequisites:
 - Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The Controller's ROOT CA is printed out to the terminal during Controller bring up.
+- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be aquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
 - The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
 - User has logged in to UI.
