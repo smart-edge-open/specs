@@ -116,7 +116,7 @@ In order for the Controller and Edge Node to work together the Edge Node needs t
 Prerequisites:
 - Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
 - Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The Controller's ROOT CA is printed out to the terminal during Controller bring up.
-- The Edge Node's deployment script has been started.
+- The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
 - User has logged in to UI.
 
