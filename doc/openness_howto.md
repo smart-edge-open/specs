@@ -30,7 +30,6 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
   * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
 
-
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
  
@@ -46,7 +45,7 @@ TBD - Add description
 #### Creating HTTPS server for image download
 ##### Instructions to setup HTTP server 
 - Install apache and mod_ssl     
-`yum install httpd mod_ssl`    
+`yum install -y httpd mod_ssl`    
 - Go into /etc/ssl/certs    
  `cd /etc/ssl/certs`    
 - Acquire the controller root ca and key
@@ -62,13 +61,14 @@ openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -ou
 ```
 - Edit apache config and point it to the new certs
 ```
-sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' ssl.conf
-sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' ssl.conf
+sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' /etc/httpd/conf.d/ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' /etc/httpd/conf.d/ssl.conf
 ```
 - Set the firewall to accept the traffic
 ```
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 80 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 443 -j ACCEPT
+firewall-cmd --reload    
 ``` 
 - Enable and restart apache after the changes
 ```
@@ -77,11 +77,13 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edge_node>/build/openvino. 
+
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
 `chmod a+r /var/www/html/*`    
 - Construct the URL (Source in Controller UI) as:    
-`https://controller_hostname/test_image.tar.gz`
+`https://<controller_hostname>/test_image.tar.gz`
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
@@ -231,7 +233,7 @@ Prerequisite:
 - User is logged in to UI.
 - Interfaces to be used by NTS configured correctly.
 
-Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
+> Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
 
 Once the interfaces are configured accordingly the following steps need to be done:
 - From UI navigate to 'INTERFACES' tab of the Edge Node.
@@ -288,7 +290,6 @@ Prerequisite:
 - Application is added to the Controller application list 
 
 The following steps need to be done: 
-
 - From UI go to "NODE" tab and click on "EDIT" button for the desired node.
 - Navigate to "APPS" tab.
 - Click on "DEPLOY APP".
@@ -310,7 +311,8 @@ The following steps need to be done:
 
 ![Deploying App 3](howto-images/DeployingApp3.png)
 
-- You can "DELETE/RESTART" an application from this tab. Please note the traffic policy if any must be removed before deleting the application.
+- You can "DELETE/RESTART" an application from this tab. 
+> Note the traffic policy if any must be removed before deleting the application.
 
 ### Managing Traffic Rules for Applications 
 
@@ -320,7 +322,6 @@ Prerequisite:
 - NTS must be started 
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
-
 - Application is added to the Controller application list.
 - Application is deployed and started.
 - Traffic rule is created.
@@ -335,15 +336,13 @@ Following steps needs to be done:
 
 ![Managing Traffic Rule For Application 2](howto-images/ManagingTrafficRuleForApplication2.png)
 
-- Please note that the application must be in a 'running' state in order to delete traffic policy.
-
+> Note: The application must be in a 'running' state in order to delete traffic policy.
 
 ### Managing DNS Rules
 
 Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
-
 - NTS must be started\configured.
 
 Following steps needs to be done:
@@ -366,7 +365,6 @@ Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
-
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
@@ -519,7 +517,8 @@ Deploy OpenVino Consumer appliaction.
 
 ![OpenVino Deploying App 3](howto-images/OpenVinoDeployApp3.png)
 
-- You can "DELETE/RESTART" an application from this tab. Please note the traffic policy if any must be removed before deleting the application.
+- You can "DELETE/RESTART" an application from this tab. 
+> Note: The traffic policy if any must be removed before deleting the application.
 
 
  ### 5 OpenVINO Managing Traffic Rules for Applications
@@ -545,7 +544,7 @@ Following steps needs to be done:
 ![OpenVino Managing Traffic Rule For Application 1](howto-images/OpenVinoAddRuleToApp2.png)
 
 - You can "DELETE/RESTART" an application from this tab.
-- Please note that the application must be in a 'running' state in order to delete traffic policy.
+> Note: The application must be in a 'running' state in order to delete traffic policy.
 
  ### 6 OpenVINO Managing DNS Rules
 
@@ -609,7 +608,7 @@ docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y
 
 This is a sample setup for Downstream setup (EPC/IP Downstream). This is downstream node in this example will behave like Application connected to the PDN gateway or IP gateway. For the purpose of testing OpenVINO App in the IP domain. You need to connect a server and assign an IP to an interface connected to the Edge Node Downstream. The IP assigned IP address must be as follows - 192.168.200.2. 
 
-Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
+> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
 
 ### 9 OpenVINO Client Simulator Setup
 
@@ -634,13 +633,11 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
-
 3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
   
    ```shell
     ping 192.168.200.2
    ```
-
 
 3. Update ARP tables for the configured interface
 
@@ -652,8 +649,6 @@ OpenNESS Edge Node with an IP address in the same subnet as for
    **OpenVINO Sample Application in OpenNESS** section
    **Build & Deployment of OpenVINO Applications**.
 
-
-
 5. From a VNC window or on the attached monitor, run the docker image using
    the provided script to get the traffic flowing and visualized:
 
@@ -661,6 +656,4 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     cd <appliance-ce-directory>/build/openvino/clientsim
     ./run-docker.sh
     ```
-
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
-
