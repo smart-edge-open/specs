@@ -86,7 +86,7 @@ systemctl restart httpd
 
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
-`chmod a+r /var/www/html/*`    
+`chmod a+r /var/www/html/*tar.gz`    
 - Construct the URL (Source in Controller UI) as:    
 `https://<controller_hostname>/test_image.tar.gz`
 
