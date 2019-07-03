@@ -666,4 +666,10 @@ OpenNESS Edge Node with an IP address in the same subnet as for
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
 
 ## Troubleshooting 
-- Controller UI: if you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis. 
+  - Controller UI: if you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis. 
+  - Edge node enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by docker logs `<cce_container_id>`, and see whether there is similar error print:
+    ```
+    cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
+    ```
+    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
+
