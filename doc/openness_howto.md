@@ -29,24 +29,28 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
   * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
   * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
-
+* [Troubleshooting](#troubleshooting)
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
- 
+
 ## Instructions
-TBD - Add description
 
 ### Prerequisites
-1. As part of the Application deployment a HTTPs based Application Image download server is required. 
-  - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
+1. Controller and Edge node installation and configuration is assumed to be run as `root`. 
+2. Controller Web UI only supports only one user and its `admin` user.   
+3. As part of the Application deployment a HTTPs based Application Image download server is required. 
+    - An example is provided in the "Creating HTTPS server for image download" section to deploy HTTPs image server on Controller.    
    
   ![HTTPs Image Server setup](howto-images/openness_apponboard.png)
 
 #### Creating HTTPS server for image download
 ##### Instructions to setup HTTP server 
+Prerequisites:
+- Controller should be up and running in order to access root CA. 
+
 - Install apache and mod_ssl     
-`yum install httpd mod_ssl`    
+`yum install -y httpd mod_ssl`    
 - Go into /etc/ssl/certs    
  `cd /etc/ssl/certs`    
 - Acquire the controller root ca and key
@@ -62,13 +66,14 @@ openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -ou
 ```
 - Edit apache config and point it to the new certs
 ```
-sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' ssl.conf
-sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' ssl.conf
+sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' /etc/httpd/conf.d/ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' /etc/httpd/conf.d/ssl.conf
 ```
 - Set the firewall to accept the traffic
 ```
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 80 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 443 -j ACCEPT
+firewall-cmd --reload    
 ``` 
 - Enable and restart apache after the changes
 ```
@@ -77,25 +82,29 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edge_node>/build/openvino. 
+
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
-`chmod a+r /var/www/html/*`    
+`chmod a+r /var/www/html/*tar.gz`    
 - Construct the URL (Source in Controller UI) as:    
-`https://controller_hostname/test_image.tar.gz`
+`https://<controller_hostname>/test_image.tar.gz`
+
+>Note: Controller host name to be used for the URL can be acquired by running ```hostname -f``` in the controller node shell. 
 
 ### First login
 In order to access the UI the user needs to provide credentials during login.
 
 Prerequisites:
 - An internet browser to access the login page.
-- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/controller-ce/ui/controller/.env.production" file.
+- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/edgecontroller/ui/controller/.env" file.
 - If working behind proxy or firewall appropriate ports open.
 - Controller set up (including the UI application) and running.
 
 The following steps need to be done for successful login:
 - Open internet browser.
-- Type in http://10.237.223.158:3000/login in address bar.
-- Enter you username and password (default username: admin) (the password to be used is the same that which was provided during Controller bring-up with the "-adminPass <pass>" parameter).
+- Type in http://<Controller_ip_address>:3000/login in address bar.
+- Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the CCE_ADMIN_PASSWORD in "~/edgecontroller/ui/controller/.env").
 - Click on "SIGN IN" button.
 
 ![Login screen](howto-images/login.png)
@@ -106,8 +115,8 @@ In order for the Controller and Edge Node to work together the Edge Node needs t
 
 Prerequisites:
 - Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The Controller's ROOT CA is printed out to the terminal during Controller bring up.
-- The Edge Node's deployment script has been started.
+- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be aquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
+- The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
 - User has logged in to UI.
 
@@ -231,7 +240,7 @@ Prerequisite:
 - User is logged in to UI.
 - Interfaces to be used by NTS configured correctly.
 
-Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
+> Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
 
 Once the interfaces are configured accordingly the following steps need to be done:
 - From UI navigate to 'INTERFACES' tab of the Edge Node.
@@ -266,9 +275,9 @@ To add an application to list of applications managed by Controller following st
   - Cores: 2
   - Memory: 100
   - Source: https://controller_hostname/image_file_name 
-- Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running 'hostname -f' from terminal of that machine.
+- Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running ```hostname -f``` from terminal of that machine.
 - Then memory unit used is MB. A sample path to image could be https://controller_hostname/sample_docker_app.tar.gz
-- The hostname of the controller or server serving HTTPS can be checked by running: "hostname -f" command from servers terminal.
+- The hostname of the controller or server serving HTTPS can be checked by running: ```hostname -f``` command from servers terminal.
 - Click 'UPLOAD APPLICATION'
 
 ![Creating Application 2](howto-images/CreatingApplication2.png)
@@ -288,7 +297,6 @@ Prerequisite:
 - Application is added to the Controller application list 
 
 The following steps need to be done: 
-
 - From UI go to "NODE" tab and click on "EDIT" button for the desired node.
 - Navigate to "APPS" tab.
 - Click on "DEPLOY APP".
@@ -310,7 +318,8 @@ The following steps need to be done:
 
 ![Deploying App 3](howto-images/DeployingApp3.png)
 
-- You can "DELETE/RESTART" an application from this tab. Please note the traffic policy if any must be removed before deleting the application.
+- You can "DELETE/RESTART" an application from this tab. 
+> Note the traffic policy if any must be removed before deleting the application.
 
 ### Managing Traffic Rules for Applications 
 
@@ -320,7 +329,6 @@ Prerequisite:
 - NTS must be started 
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
-
 - Application is added to the Controller application list.
 - Application is deployed and started.
 - Traffic rule is created.
@@ -335,15 +343,13 @@ Following steps needs to be done:
 
 ![Managing Traffic Rule For Application 2](howto-images/ManagingTrafficRuleForApplication2.png)
 
-- Please note that the application must be in a 'running' state in order to delete traffic policy.
-
+> Note: The application must be in a 'running' state in order to delete traffic policy.
 
 ### Managing DNS Rules
 
 Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
-
 - NTS must be started\configured.
 
 Following steps needs to be done:
@@ -366,7 +372,6 @@ Prerequisite:
 - Enrollment phase completed successfully.
 - User is logged in to UI.
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
-
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
@@ -519,7 +524,8 @@ Deploy OpenVino Consumer appliaction.
 
 ![OpenVino Deploying App 3](howto-images/OpenVinoDeployApp3.png)
 
-- You can "DELETE/RESTART" an application from this tab. Please note the traffic policy if any must be removed before deleting the application.
+- You can "DELETE/RESTART" an application from this tab. 
+> Note: The traffic policy if any must be removed before deleting the application.
 
 
  ### 5 OpenVINO Managing Traffic Rules for Applications
@@ -545,7 +551,7 @@ Following steps needs to be done:
 ![OpenVino Managing Traffic Rule For Application 1](howto-images/OpenVinoAddRuleToApp2.png)
 
 - You can "DELETE/RESTART" an application from this tab.
-- Please note that the application must be in a 'running' state in order to delete traffic policy.
+> Note: The application must be in a 'running' state in order to delete traffic policy.
 
  ### 6 OpenVINO Managing DNS Rules
 
@@ -609,7 +615,7 @@ docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y
 
 This is a sample setup for Downstream setup (EPC/IP Downstream). This is downstream node in this example will behave like Application connected to the PDN gateway or IP gateway. For the purpose of testing OpenVINO App in the IP domain. You need to connect a server and assign an IP to an interface connected to the Edge Node Downstream. The IP assigned IP address must be as follows - 192.168.200.2. 
 
-Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
+> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
 
 ### 9 OpenVINO Client Simulator Setup
 
@@ -634,13 +640,11 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
-
 3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
   
    ```shell
     ping 192.168.200.2
    ```
-
 
 3. Update ARP tables for the configured interface
 
@@ -652,8 +656,6 @@ OpenNESS Edge Node with an IP address in the same subnet as for
    **OpenVINO Sample Application in OpenNESS** section
    **Build & Deployment of OpenVINO Applications**.
 
-
-
 5. From a VNC window or on the attached monitor, run the docker image using
    the provided script to get the traffic flowing and visualized:
 
@@ -661,6 +663,13 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     cd <appliance-ce-directory>/build/openvino/clientsim
     ./run-docker.sh
     ```
-
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
+
+## Troubleshooting 
+  - Controller UI: if you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis. 
+  - Edge node enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by docker logs `<cce_container_id>`, and see whether there is similar error print:
+    ```
+    cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
+    ```
+    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
 
