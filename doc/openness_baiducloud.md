@@ -46,7 +46,7 @@ Figure 1. Integration Architecture for OpenEdge on OpenNESS.
   OpenNESS NTS will send/receive data traffic to/from the apps according to traffic routing configuration.
 
 - OpenEdge can play as two types of Apps
-  - Producer: provides a service to other apps on the Edge Platform (need control path between OpenEdge and OpenNESS for Mp1 interaction).
+  - Producer: provides a service to other apps on the Edge Platform (need control path between OpenEdge and OpenNESS for EAA interaction).
   - Consumer: consumes end user traffic and optionally can get services from producer apps on the same edge platform. (If need to get services from other edge apps, it need to use control path to authenticate and register with OpenNESS).
   - NOTE: in the application note, OpenEdge is treated as pure consumer application and need not get service from other edge apps. So in the integration architecture diagram, there is not control path.
 
@@ -303,8 +303,8 @@ It consists of the following elements and related IOT data processing:
 - OpenNESS Controller: OpenNESS controller performs management and policy configuration. 
   For this example, controller will configure traffic rule for routing MQTT IOT traffic to Baidu OpenEdge via OpenNESS.
 
-- Baidu OpenEdge: It plays a pure consumer app without invoking services from other producer application, so need not Mp1 interface
-  interaction with OpenNESS platform. It will handle data traffic from/to MQTT devices via OpenNESS Platform.
+- Baidu OpenEdge: In the example provided as part of OpenNESS Baidu OpenEdge app is deployed as a pure consumer app without consuming any services from other producer application on the edge node. Hence the Baidu OpenEdge app need not call EAA APIs. The app will handle data traffic from/to MQTT devices via OpenNESS dataplane.
+> Note: Implementing EAA APIs in the Baidu OpenEdge application will further enhance the capability of the Baidu OpenEdge based application as they can consume services like location, Radio network information etc. from the Edge Node. 
 
 - IOT MQTT Data plane processing:
   (1) Device #1 publishes its status data by using MQTT protocol.
