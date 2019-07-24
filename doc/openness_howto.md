@@ -987,8 +987,8 @@ kubectl get nodes
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
     if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
-## Log files 
-There are few types of logs for each network element that are obtained in a specific way. Either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
+### Log files 
+Below are list of log files on Edge Node and controller. They can highlight any issues on the system. Log files can be accessed either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
 - Controller and Controller UI
   - `/var/log/messages` - general Operating system log file, but also contains logs from Controller UI component. 
   - `docker compose logs -f` - ran from `<controller>` source root directory. Use this file to check for errors related to UI (like HTTP errors `400`, `500` or `404`). Add `-t` parameter to follow the log output
