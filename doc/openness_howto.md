@@ -889,19 +889,74 @@ enrollment_endpoint: "1.2.3.4:8081" => "10.103.104.156:8081"
 kubernetesMode": false => true
 ```
 
-### Perform enrollment
-Set up k8s worker - Use the instruction above
+### Perform node's enrollment
 
-After restarting docker daemon, edge node container must be started
-```
-docker container ls -a | grep appliance
-docker container restart <ID>
-``` 
+### Set up k8s worker - use the instruction above
+
 Join the cluster using command from kubeadm init's output    
 example: 
 ```
 kubeadm join 10.103.104.156:6443 --token <token> \
     --discovery-token-ca-cert-hash sha256:<token>
+```
+
+### Set up dnsmasq
+First - disable libvirt's DNS. In file /usr/share/libvirt/networks/default.xml replace:
+```
+<dns>
+  <host ip="192.168.122.1">
+    <hostname>eaa.community.appliance.mec</hostname>
+  </host>
+  <host ip="192.168.122.1">
+    <hostname>syslog.community.appliance.mec</hostname>
+  </host>
+</dns>
+```
+with
+```
+<dns enable="no"/>
+```
+
+Run commands in order to redefine network:
+
+```
+virsh net-destroy default
+virsh net-undefine default
+virsh net-define /usr/share/libvirt/networks/default.xml
+virsh net-start default
+virsh net-autostart default
+```
+
+Change dnsmasq config (/etc/dnsmasq.conf):
+
+```
+strict-order
+except-interface=lo
+address=/eaa.community.appliance.mec/syslog.community.appliance.mec/192.168.122.1
+```
+
+Start dnsmasq service:
+```systemctl enable dnsmasq --now```
+
+Provide kubelet with new DNS address
+Edit `/var/lib/kubelet/config.yaml` and change IP under 'clusterDNS' to 192.168.122.1, i.e.:
+```
+clusterDNS:
+- 192.168.122.1
+```
+
+Add rules to firewall
+```
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
+firewall-cmd --reload
+```
+Reboot edge node
+After reboot, edge node container must be started
+
+```
+docker container ls -a | grep appliance
+docker container start <ID>
 ```
 
 ### (master) Label worker and check status    
