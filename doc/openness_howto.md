@@ -29,6 +29,9 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   * [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
   * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
   * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
+* [Kubernetes Install hints](#kubernetes-install-hints)
+* [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
+* [Edge Node Configuration hints](#edge-node-configuration-hints)
 * [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -665,11 +668,333 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ```
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
 
-## Troubleshooting 
-  - Controller UI: if you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis. 
-  - Edge node enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by docker logs `<cce_container_id>`, and see whether there is similar error print:
+## Kubernetes Install hints
+For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master. 
+
+### Disable SE Linux & swap
+Depending on the deployment setup you might have to disable selinux and swap. 
+```
+swapoff -a
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+```
+
+### Install Kubernetes
+Typical commands and steps for installing Kubernetes packages 
+
+```
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+exclude=kube*
+EOF
+ 
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+```
+
+### Firewall: iptables configuration for ipv6
+Depending on the deployment setup below are some of the steps to consider for iptables configuration for ipv6. 
+```
+cat <<EOF >  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+ 
+sysctl --system
+```
+### lan variable configuration 
+/etc/rc.d/rc.local
+Add following lines, customize lan variable. Update the IP address according your deployment 
+```
+swapoff -a
+setenforce 0
+ 
+printf -v pool '%s,' 10.244.0.{1..253}
+printf -v service '%s,' 10.96.0.{1..253}
+printf -v lan '%s,' 10.103.104.{1..253}
+export no_proxy="${lan%,},${service%,},${pool%,},127.0.0.1"
+```
+Enable rc-local
+```
+chmod +x /etc/rc.d/rc.local
+systemctl enable rc-local.service
+```
+
+### Proxy setting 
+Depending on the deployment setup below are some of the steps to consider for proxy configuration in `/etc/profile.d/proxy.sh`. Update the IP address according your deployment 
+
+```
+#!/bin/bash
+ 
+printf -v lan '%s,' 10.103.104.{1..253}
+ 
+http_proxy=http://<proxy>:<port>
+https_proxy=http://<proxy>:<port>
+ftp_proxy=http://<proxy>:<port>
+no_proxy="localhost,127.0.0.1,${lan%,}"
+ 
+HTTP_PROXY=http://<proxy>:<port>
+HTTPS_PROXY=http://<proxy>:<port>
+FTP_PROXY=http://<proxy>:<port>
+NO_PROXY="localhost,127.0.0.1,${lan%,}"
+```
+
+### Kubernetes master: Install docker & docker-compose
+Steps applicable only for controller node. Docker on edge node is installed by ansible. 
+```
+yum install -y yum-utils device-mapper-persistent-data lvm2 python-pip
+yum-config-manager  --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum install -y docker-ce docker-ce-cli containerd.io
+pip install docker-compose
+systemctl enable docker --now
+```
+
+Run k8s' kubelet
+```
+systemctl enable kubelet --now
+```
+
+Proxy setup
+Customize HTTP(S)_PROXY and local-network/mask in `/etc/systemd/system/docker.service.d/http-proxy.conf`. Update the IP address according your deployment 
+```
+[Service]
+Environment="HTTP_PROXY=http://<proxy>:<port>/" "HTTPS_PROXY=http://<proxy>:<port>/" "NO_PROXY=localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/24,local-network/mask"
+```
+
+Add Environment lines under `[Service]` in `/usr/lib/systemd/system/kubelet.service`. Update the IP address according your deployment.
+```
+[Service]
+Environment="HTTP_PROXY=http://<proxy>:<port>"
+Environment="HTTPS_PROXY=http://<proxy>:<port>"
+Environment="NO_PROXY=localhost,10.244.0.0/16,10.96.0.0/24,local-network/mask"
+```
+and in `/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf` 
+```
+[Service]
+Environment="KUBELET_EXTRA_ARGS=--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice --feature-gates=\"HugePages=true\""     
+```
+and in  `~/.docker/config.json`
+```
+{
+  "proxies":
+  {
+    "default":
+    {
+      "httpProxy": "http://<proxy>:<port>",
+      "httpsProxy": "http://<proxy>:<port>",
+      "noProxy": "localhost,<HOST_IP>"
+    }
+  }
+}
+``` 
+### Restart services
+```
+systemctl daemon-reload && systemctl restart docker && systemctl restart kubelet
+```
+### Firewall configuration on Kubernetes master 
+
+```
+firewall-cmd --permanent --add-port=6443/tcp
+firewall-cmd --permanent --add-port=2379-2380/tcp
+firewall-cmd --permanent --add-port=10250-10252/tcp
+firewall-cmd  --reload
+``` 
+
+### Firewall configuration on the Edge node 
+```
+firewall-cmd --permanent --add-port=10250/tcp
+firewall-cmd --permanent --add-port=30000-32767/tcp
+firewall-cmd --permanent --add-port=8285/udp
+firewall-cmd --permanent --add-port=8472/udp
+firewall-cmd  --reload
+```
+### Logout & Login to reload proxy
+
+## Edge Controller K8s master Configuration hints]
+
+### K8s master - Initialize master
+Update the IP address according your deployment 
+```
+kubeadm init --pod-network-cidr=10.244.0.0/16
+```
+Note the output - the "kubeadm join" command
+
+Copy config
+```
+mkdir -p $HOME/.kube
+cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+``` 
+Enable flannel network plugin
+```
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/62e44c867a2846fefb68bd5f178daf4da3095ccb/Documentation/kube-flannel.yml
+```
+Wait couple minutes & check if k8s master works - should be STATUS=Ready.
+```
+kubectl get nodes
+```
+
+### Controller
+Set up according to OpenNESS controller README.
+
+Edit controller-ce/.env file
+```
+REACT_APP_CONTROLLER_API=http://<HOST_IP>:8080
+CCE_ORCHESTRATION_MODE=kubernetes
+CCE_K8S_MASTER_HOST=localhost:6443
+CCE_K8S_MASTER_USER=root
+CCE_K8S_API_PATH=/api/v1
+CCE_K8S_CLIENT_CA_PATH=...
+CCE_K8S_CLIENT_CERT_PATH=...
+CCE_K8S_CLIENT_KEY_PATH=...
+GITHUB_TOKEN=...
+``` 
+> Note: Github token is not needed if you are using offline installer. 
+Or run cce directly:
+```
+go build -o dist/cce ./cmd/cce
+ 
+http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
+    -dsn "root:changeme@tcp(:8083)/controller_ce" \
+    -adminPass changeme \
+    -httpPort 8080 -grpcPort 8081 \
+    -elaPort 42101 -evaPort 42102 \
+    -orchestration-mode kubernetes \
+    -k8s-client-ca-path /PATH/TO/CA.CRT \
+    -k8s-client-cert-path /PATH/TO/CLIENT-CERT.CRT \
+    -k8s-client-key-path /PATH/TO/CLIENT-KEY.KEY \
+    -k8s-master-host localhost:6443 \
+    -k8s-api-path /api/v1 \
+    -k8s-master-user root
+``` 
+
+## Edge Node Configuration hints
+
+### Edge Node set up
+Set up according to OpenNESS Edge node README 
+
+Before `./03_build_and_deploy.sh`    
+- Edit `/etc/pki/tls/certs/controller-root-ca.pem`    
+- Edit `/root/appliance-ce/scripts/ansible/deploy_server/vars/defaults.yml`    
+```
+enrollment_endpoint: "1.2.3.4:8081" => "10.103.104.156:8081"
+``` 
+- Edit `/root/appliance-ce/configs/eva.json`
+```
+kubernetesMode": false => true
+```
+
+### Perform node's enrollment
+
+### Set up k8s worker - use the instruction above
+
+Join the cluster using command from kubeadm init's output    
+example: 
+```
+kubeadm join 10.103.104.156:6443 --token <token> \
+    --discovery-token-ca-cert-hash sha256:<token>
+```
+
+### Set up dnsmasq
+First - disable libvirt's DNS. In file /usr/share/libvirt/networks/default.xml replace:
+```
+<dns>
+  <host ip="192.168.122.1">
+    <hostname>eaa.community.appliance.mec</hostname>
+  </host>
+  <host ip="192.168.122.1">
+    <hostname>syslog.community.appliance.mec</hostname>
+  </host>
+</dns>
+```
+with
+```
+<dns enable="no"/>
+```
+
+Run commands in order to redefine network:
+
+```
+virsh net-destroy default
+virsh net-undefine default
+virsh net-define /usr/share/libvirt/networks/default.xml
+virsh net-start default
+virsh net-autostart default
+```
+
+Change dnsmasq config (/etc/dnsmasq.conf):
+
+```
+strict-order
+except-interface=lo
+address=/eaa.community.appliance.mec/syslog.community.appliance.mec/192.168.122.1
+```
+
+Start dnsmasq service:
+```systemctl enable dnsmasq --now```
+
+Provide kubelet with new DNS address
+Edit `/var/lib/kubelet/config.yaml` and change IP under 'clusterDNS' to 192.168.122.1, i.e.:
+```
+clusterDNS:
+- 192.168.122.1
+```
+
+Add rules to firewall
+```
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
+firewall-cmd --reload
+```
+Reboot edge node
+After reboot, edge node container must be started
+
+```
+docker container ls -a | grep appliance
+docker container start <ID>
+```
+
+### (master) Label worker and check status    
+Label worker    
+
+After joining worker to cluster, worker needs to be labeled.
+
+k8s_worker_node is a name of node
+
+edge_node_uuid is a UUID of node generated by Controller during enrollment
+```
+kubectl label node <k8s_worker_node> node-role.kubernetes.io/worker=worker
+kubectl label nodes <k8s_worker_node> node-id=<edge_node_uuid>
+``` 
+### Check status of nodes
+
+Getting worker node ready can take couple of minutes
+```
+kubectl get nodes
+``` 
+## Troubleshooting
+- Controller UI:
+  - If you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis.
+  - Additionally, check log files listed below for more details
+- Edge node:
+  - Enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by running `docker logs <cce_container_id>`, and see whether there is similar error print:
     ```
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
     if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
-
+### Log files 
+Below are list of log files on Edge Node and controller. They can highlight any issues on the system. Log files can be accessed either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
+- Controller and Controller UI
+  - `/var/log/messages` - general Operating system log file, but also contains logs from Controller UI component. 
+  - `docker compose logs -f` - ran from `<controller>` source root directory. Use this file to check for errors related to UI (like HTTP errors `400`, `500` or `404`). Add `-t` parameter to follow the log output
+- EdgeNode
+  - `/var/log/messages` - general Operating system log file. Contains general information about server issues 
+  - `docker-compose logs -f` - ran from `<edgenode>` source root directory. Contains information on virtual containers running.
+  - `docker logs -f nts` - as above, but for nts component
+  - `/var/log/appliance/messages` - appliance log file
+  - folder `<edge_node_source>`/scripts/ansible/logs/ - contains logs from from build and deploy steps of EdgeNode
