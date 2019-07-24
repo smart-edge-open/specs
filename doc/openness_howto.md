@@ -922,14 +922,24 @@ Getting worker node ready can take couple of minutes
 ```
 kubectl get nodes
 ``` 
-## Troubleshooting (+log files)
+## Troubleshooting
 - Controller UI:
   - If you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis.
-  - Additionally, some logs are sent to operating system log file: `/var/log/messages`
+  - Additionally, check log files listed below for more details
 - Edge node:
-  - Logs from build and deploy steps of EdgeNode can be found in `<edge node>` source subfolder, like `edge_node_repository>`/scripts/ansible/logs/
-  - Enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by docker logs `<cce_container_id>`, and see whether there is similar error print:
+  - Enrolment is unsuccesful: One of the things to check is if there are duplicate entries for the edge node. You can check by running `docker logs <cce_container_id>`, and see whether there is similar error print:
     ```
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
     if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
+## Log files 
+There are few types of logs for each network element that are obtained in a specific way. Either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
+- Controller and Controller UI
+  - `/var/log/messages` - general Operating system log file, but also contains logs from Controller UI component. 
+  - `docker compose logs -f` - ran from `<controller>` source root directory. Use this file to check for errors related to UI (like HTTP errors `400`, `500` or `404`). Add `-t` parameter to follow the log output
+- EdgeNode
+  - `/var/log/messages` - general Operating system log file. Contains general information about server issues 
+  - `docker-compose logs -f` - ran from `<edgenode>` source root directory. Contains information on virtual containers running.
+  - `docker logs -f nts` - as above, but for nts component
+  - `/var/log/appliance/messages` - appliance log file
+  - folder `<edge_node_source>`/scripts/ansible/logs/ - contains logs from from build and deploy steps of EdgeNode
