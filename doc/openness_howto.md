@@ -32,6 +32,12 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 * [Kubernetes Install hints](#kubernetes-install-hints)
 * [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
 * [Edge Node Configuration hints](#edge-node-configuration-hints)
+* [CUPS UI usage](#cups-ui-usage)
+  * [CUPS UI Prerequisites](#cupsui-prerequisites)
+  * [First access for CUPS UI](#first-access-for-CUPS-UI)
+  * [Display specific user planes information and update it](#display-specific-userplanesinformation-and-updateit)
+  * [Create a new user plane](#create-new-userplane)
+  * [Delete a user plane](#delete-userplane)
 * [Troubleshooting](#troubleshooting)
 
 ## Introduction
@@ -976,7 +982,100 @@ kubectl label nodes <k8s_worker_node> node-id=<edge_node_uuid>
 Getting worker node ready can take couple of minutes
 ```
 kubectl get nodes
-``` 
+```
+
+## CUPS UI usage
+### CUPS UI Prerequisites
+- Controller installation, configuration and run as root. Before build, need to setup controller env file for CUPS as below:
+  
+  ```
+  REACT_APP_CONTROLLER_API=http://<controller_ip_address>>:8080
+  REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080
+  ```
+  - Build the full controller stack including CUPS:
+    
+    `make build`
+  - Start the full controller stack and CUPS UI:
+    
+    `make all-up`
+    
+    `make cups-ui-up`
+  - Check whether controller CUPS UI already bring up by: 
+    
+    ```
+    Docker ps 
+    CONTAINER ID   IMAGE        COMMAND                  CREATED     STATUS      PORTS                                                                              
+    0eaaafc01013   cups:latest  "docker-entrypoint.s…"   8 days ago  Up 8 days   0.0.0.0:3010->80/tcp                                                               
+    d732e5b93326   ui:latest    "docker-entrypoint.s…"   9 days ago  Up 9 days   0.0.0.0:3000->80/tcp                                                               
+    8f055896c767   cce:latest   "/cce -adminPass cha…"   9 days ago  Up 9 days   0.0.0.0:6514->6514/tcp, 0.0.0.0:8080-8081->8080-8081/tcp, 0.0.0.0:8125->8125/tcp   
+    d02b5179990c   mysql:8.0    "docker-entrypoint.s…"   13 days ago Up 9 days   33060/tcp, 0.0.0.0:8083->3306/tcp  
+    ```
+- OAMAgent(EPC-OAM as called) and EPC Control plane installation, configuration and run as `root`.
+  - OAMAgent plays as epc agent between OpenNESS controller and EPC. It will process CUPS API message (HTTP based) from controller, parse JSON payload in the HTTP request, and then convert it to message format that can be used by EPC. The reverse as similar. The architecture and more details can refer to README in epc-oam repo.
+  - OAMAgent Installation and configuration can refer to README in epc-oam repo.
+  - EPC installation and configuration.
+
+### First access for CUPS UI
+
+Prerequisites:
+
+- REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080 added to Controller's "~/controller/.env" file.
+- Controller full stack including CUPS UI are running.
+- Oamagent and EPC are running.
+- Confirm connection between controller and oamagent (EPC). 
+
+Steps for the access:
+
+- Open internet browser.
+- Type in "http://<Controller_ip_address>:3010/userplanes" in address bar.
+- Thus display all the existing EPC user planes list as below example:
+  
+  ![FirstAccess screen](cups-howto-images/first_access.png)
+
+### Display specific user planes information and update it
+
+- After type in "http://<Controller_ip_address>:3010/userplanes", find the user plane from the list.
+
+- Click on "EDIT" button as below:
+  
+  ![Edit screen](cups-howto-images/edit.png)
+
+- The user plane information is displayed as example below:
+  
+  ![Userplane5 screen](cups-howto-images/userplane5.png)
+
+- Update parameters: S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC and APN. And click on “Save” and pop up with “successfully update userplane” as below: 
+  
+  ![Userplane5Update screen](cups-howto-images/userplane5_update.png)
+
+- Then web page will automatically return back to the updated user plane list as below:
+  
+  ![Userplane5UpdateList screen](cups-howto-images/userplane5_update_thenlist.png)
+
+### Create a new user plane
+
+- Click on “CREATE” button.
+
+- Filling uuid with 36 char string , select Function as “SAEGWU” and set values for parmaters: S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC and APN. And click on “Save” and pop up with “successfully created userplane” as below: 
+  
+  ![UserplaneCreate screen](cups-howto-images/userplane_create.png)
+
+- Then web page will automatically return back to the updated user plane list as below:
+  
+  ![UserplaneCreateList screen](cups-howto-images/userplane_create_thenlist.png)
+
+### Delete a user plane
+
+- Find the user plane to delete and click on “EDIT” 
+
+- Then web page will list the user plane information, and click on “DELETE USERPLANE” with popup message with “successfully delete userplane” as below:
+  
+  ![UserplaneDelete screen](cups-howto-images/userplane_delete.png)
+
+- Then web page will automatically return back to the updated user plane list as below:
+  
+  ![UserplaneDeleteList screen](cups-howto-images/userplane_delete_thenlist.png)
+ 
 ## Troubleshooting
 - Controller UI:
   - If you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis.
@@ -986,7 +1085,26 @@ kubectl get nodes
     ```
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
-    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment. 
+    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment.
+- CUPS UI:
+  - If you encounter GET userplanes list failure with Error: "Network Error",  please check oamagent nginx configuration whether enable CORS configuration. README in the epc-oam folder gives a reference nginx configuration.
+    - Another possibility is SELinux. Use commmand `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
+    - Additionally, check log files listed below for more details.
+  - If EDIT userplane failure with Error: "Request failed with status code 404"
+    - Need to check oamagent log that contains more details about the failure, for example:
+      
+      ```
+      Func:execute(Line:347)UserplaneGetByID(3) Executing.
+      Func:cpfCurlGet(Line:322)Starting HTTP GET for url: http://192.168.120.219:10000/api/v1/pgwprofile?action=list&entity-type=pgw-dpf&id=3
+      Func:cpfCurlGet(Line:322)Starting HTTP GET for url: http://192.168.120.220:10000/api/v1/sgwprofile?action=list&entity-type=sgw-dpf&id=3
+      Func:cpfCurlGetTotalCount(Line:168)Response: totalCount 1
+      Func:cpfCurlGetTotalCount(Line:168)Response: totalCount 1
+      Func:cpfCurlGetIdByItemIndex(Line:116)Userplanes id 5
+      Func:cpfCurlGetIdByItemIndex(Line:116)Userplanes id 5
+      Func:execute(Line:402)PGW id(5) or SGW Id (5) for GetID (3).
+      Func:execute(Line:407)Not valid PGW id(5) or SGW Id (5) for GetID (3).
+      Func:execute(Line:444)UserplanesGet For (3) Failed (404 Userplane not found).
+      ```
 ### Log files 
 Below are list of log files on Edge Node and controller. They can highlight any issues on the system. Log files can be accessed either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
 - Controller and Controller UI
@@ -998,3 +1116,16 @@ Below are list of log files on Edge Node and controller. They can highlight any 
   - `docker logs -f nts` - as above, but for nts component
   - `/var/log/appliance/messages` - appliance log file
   - folder `<edge_node_source>`/scripts/ansible/logs/ - contains logs from from build and deploy steps of EdgeNode
+- EPC-OAM
+  - EPC-OAM(OAMAgent) can print output to the stdio with more details.
+  - Tcpdump can capture HTTP message between Controller CUPS and OAMAgent. 
+    - The exmaple is as below:
+      
+      ```
+      tcpdump –i eth1 –w test.pcap. 
+      (NOTE: eth1 assumed to be Ethernet Interface used by OAMAgent) 
+      ```
+    - Then can use wireshark to open it and check HTTP request/response and JSON body content as below:
+      
+      ![WiresharkExample screen](cups-howto-images/wireshark_example.png)
+
