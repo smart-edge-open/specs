@@ -87,7 +87,8 @@ When the consumer application commences execution, it handshakes with EAA in a p
 - Authentication
 - Websocket connection establishment 
 - Service discovery
-- Service subscription 
+- Service subscription     
+ 
 Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the websocket.
 
 This sample OpenVINO consumer application represents a real world application depending on the input object model can detect objects in the input video stream and annotate (count if needed). 
