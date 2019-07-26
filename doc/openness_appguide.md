@@ -69,11 +69,20 @@ OpenVINO producer application is responsible for activating a service in OpenNES
 
 The producer application commences publishing notifications after it handshakes with the Edge Application Agent (EAA) over HTTPS REST API. This handshaking involves authentication and service activation.
 
+This sample OpenVINO producer application represents a real world application where city traffic behavior can is monitored by detecting humans and automobiles at different times of the day.  
+
 #### OpenVINO Consumer Application
 
 OpenVINO consumer application executes object detection on the received video stream (from the client simulator) using an OpenVINO pre-trained model. The model of use is designated by the model name received in the `openvino-model` notification. The corresponding model file is provided to the integrated OpenVINO C++ application.
 
-When the consumer application commences execution, it handshakes with EAA in a proces that involves (a) authentication, (b) websocket connection establishment, (c) service discovery, and (d) service subscription. Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the websocket.
+When the consumer application commences execution, it handshakes with EAA in a proces that involves 
+- Authentication
+- Websocket connection establishment 
+- Service discovery
+- Service subscription 
+Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the websocket.
+
+This sample OpenVINO consumer application represents a real world application depending on the input object model can detect objects in the input video stream and annotate (count if needed). 
 
 #### Execution Flow Between EAA, Producer & Consumer
 
@@ -346,6 +355,3 @@ if err != nil {
     log.Fatal("Failed to execute program:", err)
 }
 ```
-
-### Traffic Policies Setting
-<todo: add details on setting traffic policies for OpenNESS-agnostic app>
