@@ -4,8 +4,16 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 # OpenNESS Application development and porting guide
 * [Introduction](#introduction)     
 * [OpenNESS Edge Node Applications](#openness-edge-node-applications)
-* [Developing Producer Application](#developing-producer-application) 
-* [Developing Consumer Application](#developing-consumer-application)    
+* [Developing Producer Application](#developing-producer-application)
+* [Developing Consumer Application](#developing-consumer-application)
+* [Application On-boarding](#application-on-boarding)
+  * [OpenNESS-aware Applications](#openness-aware-applications)
+    * [Authentication](#authentication)
+    * [Service Activation](#service-activation)
+    * [Service Discovery and Subscription](#service-discovery-and-subscription)
+    * [Service Notifications](#service-notifications)
+  * [OpenNESS-agnostic Applications](#openness-agnostic-applications)
+  * [Make Legacy Applications OpenNESS-aware](#make-legacy-applications-openness-aware)
 
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
@@ -73,7 +81,7 @@ The producer application commences publishing notifications after it handshakes 
 
 OpenVINO consumer application executes object detection on the received video stream (from the client simulator) using an OpenVINO pre-trained model. The model of use is designated by the model name received in the `openvino-model` notification. The corresponding model file is provided to the integrated OpenVINO C++ application.
 
-When the consumer application commences execution, it handshakes with EAA in a proces that involves (a) authentication, (b) websocket connection establishment, (c) service discovery, and (d) service subscription. Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the websocket.
+When the consumer application commences execution, it handshakes with EAA in a proces that involves (a) authentication, (b) Websocket connection establishment, (c) service discovery, and (d) service subscription. Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the Websocket.
 
 #### Execution Flow Between EAA, Producer & Consumer
 
@@ -100,32 +108,30 @@ More details about running Amazon AWS IoT Greengrass as OpenNESS application can
 
 ## Application On-boarding
 
-OpenNESS toolkit allows application developers and content providers to onboard their own applications on-premise or on the network edge, closer to the source of action. The edge computing development model imposes applications' business logic to be split into: (a) _terminal component(s)_, (b) _edge component(s)_, and (c) _remote component(s)_.
+OpenNESS toolkit allows application developers and content providers to onboard their own applications on-premise or on the network edge, closer to the source of action. The edge computing development model imposes the business logic to be split and distributed across 3 sides: (a) _client side_, (b) _edge side_, and (c) _cloud side_. OpenNESS enables landing applications on the _edge side_.
 
-Applications to be onboarded on OpenNESS framework must be self-contained in a container or a virtual machine (VM). The applications has the option to be landed with or without awareness of the hosting edge evironment. Below sections will explore the two options and how they can be useful.
+Applications to be onboarded on OpenNESS framework must be self-contained in a container or a virtual machine (VM). The applications have the option to be landed with or without awareness of the hosting edge environment. Below sections will explore the two options and how they can be useful.
 
 > **NOTE:** Code snippets given in this guide are written in Go language, this is purely for the ease of demonstration. All other programming languages should suffice for the same purposes.
 
 ### OpenNESS-aware Applications
-Edge applications that are onboarded must introduce themselves to OpenNESS framework and identify if they would like to activate new edge services or consume from the existing services. Edge Application Agent (EAA) component is the handler of all the edge applications hosted by the OpenNESS edge node and their main point-of-contact. All interactions with EAA are over REST APIs that are defined in [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth) and [Edge Application API](https://www.openness.org/api-documentation/?api=eaa).
+Edge applications must introduce themselves to OpenNESS framework and identify if they would like to activate new edge services or consume an existing service. Edge Application Agent (EAA) component is the handler of all the edge applications hosted by the OpenNESS edge node and acts as their point-of-contact. All interactions with EAA are through REST APIs which are defined in [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth) and [Edge Application API](https://www.openness.org/api-documentation/?api=eaa).
 
-OpenNESS-awareness involves (a) authentication, (b) service activation/deactivation, (c) service discovery, (d) service subscription, and (e) websocket connection establishment. The websocket connection retains a channel for EAA to push notifications onto the consumer applications which are on the subscribers list to particular events. Notifications are generated by "producer" edge applications and absorbed by "consumer" edge applications.
+OpenNESS-awareness involves (a) authentication, (b) service activation/deactivation, (c) service discovery, (d) service subscription, and (e) Websocket connection establishment. The Websocket connection retains a channel for EAA for notification forwarding to pre-subscribed consumer applications. Notifications are generated by "producer" edge applications and absorbed by "consumer" edge applications.
 
-Sequence of operations for the producer application:
-1. Authenticate with edge node
+The sequence of operations for the producer application:
+1. Authenticate with OpenNESS edge node
 2. Activate new service and include the list of notifications involved
-3. Send notifications to edge node according to business logic
+3. Send notifications to OpenNESS edge node according to business logic
 
-Sequence of operations for the consumer application:
-1. Authenticate with edge node
-2. Discover the available services on the edge platform
+The sequence of operations for the consumer application:
+1. Authenticate with OpenNESS edge node
+2. Discover the available services on OpenNESS edge platform
 3. Subscribe to services of interest and listen for notifications
 
 #### Authentication
 
-All communications over EAA REST APIs are secured with HTTPS and TLS (Transport Layer Security), therefore, the wrapper program must authenticate itself and the legacy program with EAA before real interactions.
-
-The wrapper program sends Certificate Signing Request (CSR) to EAA in order to authenticate for a digital identity certificate through the [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth).
+All communications over EAA REST APIs are secured with HTTPS and TLS (Transport Layer Security). Therefore, the wrapper program must authenticate itself by sending a Certificate Signing Request (CSR) to EAA in order to receive a digital identity certificate that is used in signing all the forthcoming HTTPS and Websocket communications. CSR is performed through the [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth).
 
 Example of the authentication procedure with EAA is given below:
 
@@ -133,7 +139,7 @@ Example of the authentication procedure with EAA is given below:
 certTemplate := x509.CertificateRequest{
     Subject: pkix.Name{
         CommonName:   "namespace:app-id",
-        Organization: []string{"Intel Corporation"},
+        Organization: []string{"OpenNESS Organization"},
     },
     SignatureAlgorithm: x509.ECDSAWithSHA256,
     EmailAddresses:     []string{"hello@openness.org"},
@@ -170,9 +176,9 @@ for _, cert := range conCreds.CaPool {
 }
 ```
 
-### Service Activation
+#### Service Activation
 
-The producer application activates a new service by calling `POST` [`/services`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/RegisterApplication) providing information about this service and the list of notifications to be provided as part of this service.
+The producer application activates a new service by calling `POST `[`/services`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/RegisterApplication) providing information about this service and the list of notifications to be provided as part of this service.
 
 Example service activation procedure is shown below:
 
@@ -215,9 +221,9 @@ resp, _ := client.Do(req)
 resp.Body.Close()
 ```
 
-### Service Discovery and Subscription
+#### Service Discovery and Subscription
 
-The consumer application must establish a websocket befor subscribing to services. The example code below shows how websocket connection can be established with OpenNESS edge node:
+The consumer application must establish a Websocket befor subscribing to services. The example code below shows how Websocket connection can be established with OpenNESS edge node:
 
 ```golang
 var socket = websocket.Dialer{
@@ -242,7 +248,7 @@ log.Println("WebSocket establishment successful")
 resp.Body.Close()
 ```
 
-Discovering the available services is performed by calling `GET` [`/services`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/GetServices) that returns the list of available services in the edge node.
+Discovering the available services is performed by calling `GET `[`/services`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/GetServices) that returns the list of available services in the edge node.
 
 Example of service discovery is shown in the code snippet below:
 
@@ -257,7 +263,7 @@ json.NewDecoder(resp.Body).Decode(&servList)
 resp.Body.Close()
 ```
 
-When the consumer application decides on a particular service that it would liketo subscribe to, it should call `POST` [`/subscriptions/{urn.namespace}`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/SubscribeNotifications) to subscribe to all services available in a namespace, or call `POST` [`/subscriptions/{urn.namespace}/{urn.id}`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/SubscribeNotifications2) to subscribe to notifications related to the exact producer.
+When the consumer application decides on a particular service that it would like to subscribe to, it should call `POST `[`/subscriptions/{urn.namespace}`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/SubscribeNotifications) to subscribe to all services available in a namespace or call `POST `[`/subscriptions/{urn.namespace}/{urn.id}`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/SubscribeNotifications2) to subscribe to notifications related to the exact producer.
 
 Example for subscribing to all services in a namespace is given below:
 
@@ -270,18 +276,19 @@ resp, _ := client.Do(req)
 resp.Body.Close()
 ```
 
-#### Event Notifications
+#### Service Notifications
 
-OpenNESS framework notifies service subscribers in the event of a producer pushing notification(s) over `POST` [`/notifications`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/PushNotificationToSubscribers). This notification goes to EAA which looks up all the service subscribers in its local database and pushes this notification forward over the websocket connection to the subscribers along with extra information about the notification producer.
+The producer application sends notifications through `POST `[`/notifications`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/PushNotificationToSubscribers) which is picked up by EAA. EAA looks up all the service subscribers in its local database and pushes this notification forward over the Websocket connection to them along with some extra information about the notification producer.
 
-The websocket connection should have been established by the consumer using `GET` [`/notifications`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/GetNotifications) before subscribing to any edge service.
+The Websocket connection should have been previously established by the consumer using `GET `[`/notifications`](https://www.openness.org/api-documentation/?api=eaa#/Eaa/GetNotifications) before subscribing to any edge service.
 
-The consumer should create a thread that keeps listening on the websocket for incoming notifications.
+The consumer should create a thread that keeps listening on the Websocket for incoming notifications.
 
 Example:
+
 ```golang
 import "github.com/gorilla/websocket"
-conn *websocket.Conn
+var conn *websocket.Conn
 
 for keepListen {
     _, message, err := conn.ReadMessage()
@@ -312,15 +319,15 @@ for keepListen {
 
 ### OpenNESS-agnostic Applications
 
-In a situation where the developer has a legacy, pre-compiled or binary applications which are not easy to edit or modify, and are not looking for consuming edge services, they can be onboarded without the awareness of underlying hosting framework. In such case, the OpenNESS edge framework will also be unaware of the existance of these applications. Therefore, the life-cycle management of these applications becomes the responsibility of the user to configure, upload, deploy, un-deploy, start & stop. When an application requires ingress and/or egress traffic, the corresponding traffic policies must be configured manually in order to allow the the concerning traffic to be steered in and out to the application. More details on traffic policing is provided in section [Manual Traffic Policing for OpenNESS-agnostic Applications](#manual_traffic_policing).
+In a situation where the developer has a legacy, pre-compiled or binary applications which are not easy to edit or modify and are not looking for consuming edge services, they can be onboarded without the awareness of underlying hosting framework. In such a case, the OpenNESS edge framework will also be unaware of the existence of these applications. Therefore, the life-cycle management of these applications becomes the responsibility of the user to configure, upload, deploy, un-deploy, start & stop. When an application requires ingress and/or egress traffic, the corresponding traffic policies must be configured manually in order to allow the concerning traffic to be steered in and out to the application.
 
 ### Make Legacy Applications OpenNESS-aware
 
-Legacy, pre-compiled or binary applications can be made OpenNESS-aware by following few steps without editing their code. This can be done by wrapping these applications with a seperate program that is written purposefully to: (a) communicate with OpenNESS Edge Node, and (b) execute the legacy application.
+Legacy, pre-compiled or binary applications can be made OpenNESS-aware by following few steps without editing their code. This can be done by wrapping these applications with a separate program that is written purposefully to (a) communicate with OpenNESS Edge Node and (b) execute the legacy application.
 
-The wrapper program interacts with EAA for (a) authentication, (b) websocket connection establishment, (c) service discovery, and (d) service subscription. And call the legacy application with the proper arguments based on the received notifications. Or, if the legacy application is intended to work as a producer application, then the wrapper programmer should activate the edge service with EAA and send the notifications based on the outcomes of the legacy application.
+The wrapper program interacts with EAA for (a) authentication, (b) Websocket connection establishment, (c) service discovery, and (d) service subscription. And call the legacy application with the proper arguments based on the received notifications. Or, if the legacy application is intended to work as a producer application, then the wrapper programmer should activate the edge service with EAA and send the notifications based on the outcomes of the legacy application.
 
-The code below gives an example of an executable application being called at the operating system level when a notification is received from EAA. The executable application is seperately compiled and exists on the file system. Asimilar approach has been followed with the OpenVINO sample application wich was originally written in C++ but is called from a wrapper Go-lang program.
+The code below gives an example of an executable application being called at the operating system level when a notification is received from EAA. The executable application is separately compiled and exists on the file system. A similar approach has been followed with the OpenVINO sample application which was originally written in C++ but is called from a wrapper Go-lang program.
 
 ```golang
 cmd = exec.Command("program-executable",  // legacy executable call goes here
@@ -346,6 +353,3 @@ if err != nil {
     log.Fatal("Failed to execute program:", err)
 }
 ```
-
-### Traffic Policies Setting
-<todo: add details on setting traffic policies for OpenNESS-agnostic app>
