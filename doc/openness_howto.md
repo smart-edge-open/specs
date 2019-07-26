@@ -1117,7 +1117,7 @@ Below are list of log files on Edge Node and controller. They can highlight any 
   - `/var/log/appliance/messages` - appliance log file
   - folder `<edge_node_source>`/scripts/ansible/logs/ - contains logs from from build and deploy steps of EdgeNode
 - EPC-OAM
-  - EPC-OAM(OAMAgent) can print output to the stdio with more details.
+  - `/var/log/messages` - Contains EPC-OAM(OAMAgent) debug information.
   - Tcpdump can capture HTTP message between Controller CUPS and OAMAgent. 
     - The exmaple is as below:
       
