@@ -955,6 +955,7 @@ Add rules to firewall
 ```
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.0/16 -d 192.168.122.0/24 -j ACCEPT
 firewall-cmd --reload
 ```
 Reboot edge node
