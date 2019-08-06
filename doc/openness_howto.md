@@ -53,6 +53,10 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Display specific user planes information and update it](#display-specific-user-planes-information-and-update-it)
     - [Create a new user plane](#create-a-new-user-plane)
     - [Delete a user plane](#delete-a-user-plane)
+  - [S1-U traffic handling](#s1-u-traffic-handling)
+    - [Data plane configuration](#data-plane-configuration)
+    - [Traffic rules for applications](#traffic-rules-for-applications)
+    - [MTU](#mtu)
   - [Preparing set-up for Local Break Point (LBP)](#preparing-set-up-for-local-break-point-lbp)
     - [Controller and Edge Node deployment](#controller-and-edge-node-deployment)
     - [Network configuration](#network-configuration)
@@ -147,7 +151,7 @@ In order for the Controller and Edge Node to work together the Edge Node needs t
 
 Prerequisites:
 - Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be aquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
+- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be acquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
 - The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
 - User has logged in to UI.
@@ -416,10 +420,10 @@ The following steps need to be done to deploy the OpenVinoConsumer application:
  - Name: OpenVinoConsumer  
  - Type: Container
  - Version: 1
- - Vendor: SampleVemdor
+ - Vendor: SampleVendor
  - Description: SampleVendor
- - Cores: 2 (OpenVINO consumer application needs atleast 2 cores)
- - Memory: 4096 (OpenVINO consumer application needs atleast 4GB memory)
+ - Cores: 2 (OpenVINO consumer application needs at least 2 cores)
+ - Memory: 4096 (OpenVINO consumer application needs at least 4GB memory)
  - Source (format https://controller_hostname/openvino-cons-app.tar.gz)
  - Port and Protocol (these fields are not used but need to filled)
 - Click 'UPLOAD APPLICATION'
@@ -533,12 +537,12 @@ The following steps need to be done:
 
 ![OpenVino Deploying App ](howto-images/DeployingApp1.png)
 
-Deploy OpenVino Producer appliaction.
+Deploy OpenVino Producer application.
 - Window titled "DEPLOY APPLICATION TO NODE" will appear.
 - Select OpenVino Producer Application from drop down menu.
 - Click "DEPLOY".
 
-Deploy OpenVino Consumer appliaction.
+Deploy OpenVino Consumer application.
 - Once again click on "DEPLOY APP".
 - Window titled "DEPLOY APPLICATION TO NODE" will appear.
 - Select OpenVino Consumer Application from drop down menu.
@@ -647,7 +651,7 @@ docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y
 
 This is a sample setup for Downstream setup (EPC/IP Downstream). This is downstream node in this example will behave like Application connected to the PDN gateway or IP gateway. For the purpose of testing OpenVINO App in the IP domain. You need to connect a server and assign an IP to an interface connected to the Edge Node Downstream. The IP assigned IP address must be as follows - 192.168.200.2. 
 
-> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
+> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS data plane. If this is done by mistake then NTS Data plane has to be restarted and the Traffic policy needs to be re-configured.
 
 ### 9 OpenVINO Client Simulator Setup
 
@@ -672,7 +676,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
-3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
+3. In order for the NTS Data plane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.
   
    ```shell
     ping 192.168.200.2
@@ -1099,6 +1103,30 @@ Steps for the access:
   
   ![UserplaneDeleteList screen](cups-howto-images/userplane_delete_thenlist.png)
 
+## S1-U traffic handling
+
+NTS data plane running in Edge Node can be configured to support GTP-U encapsulated traffic. The following diagram shows an example deployment scenario with EPC divided into control and data plane servers:
+
+![S1-U example environment ](howto-images/S1.png)
+> Note: There is no direct connection between Edge Node and Controller. They are connected to the same network.
+
+### Data plane configuration
+
+To leverage S1-U capabilities NTS has to be configured accordingly to [NTS Configuration](#nts-configuration).
+Each S1-U capable interface has to have a traffic rule configured allowing it to send GTP-U encapsulated traffic.
+The following traffic rule shows that the traffic destined to `192.168.10.10` is supposed to be send through a port that this rule is attached to:
+
+![Traffic policy data plane port S1](howto-images/CreateTrafficPolicyS1.png)
+
+
+### Traffic rules for applications
+
+Traffic rules for applications have to be configured according to [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications).
+> Note: It is required that at least one of GTP filter fields is set to enforce GTP-U type rule.
+
+### MTU
+It might be required to modify UEs MTU to a lower value to avoid IP fragmentation.
+
 ## Preparing set-up for Local Break Point (LBP)
 
 LBP set-up requirements: five machines are used for set-up elements: Controller, Edge Node, UE, LBP, EPC.  Edge Node is connected via 10GB cards to UE, LBP, EPC.
@@ -1237,10 +1265,10 @@ listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
     ```
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
-    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment.
+    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrollment.
 - CUPS UI:
   - If you encounter GET userplanes list failure with Error: "Network Error",  please check oamagent nginx configuration whether enable CORS configuration. README in the epc-oam folder gives a reference nginx configuration.
-    - Another possibility is SELinux. Use commmand `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
+    - Another possibility is SELinux. Use command `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
     - Additionally, check log files listed below for more details.
   - If EDIT userplane failure with Error: "Request failed with status code 404"
     - Need to check oamagent log that contains more details about the failure, for example:
