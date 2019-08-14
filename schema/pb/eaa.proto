@@ -15,7 +15,7 @@
 syntax = "proto3";
 
 package openness.eaa;
-option go_package = "github.com/smartedgemec/eaa;eaa";
+option go_package = "github.com/otcshare/eaa;eaa";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
