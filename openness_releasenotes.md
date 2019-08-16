@@ -5,7 +5,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 This document provides high level system features, issues and limitations information for OpenNESS. 
 
 # Release history 
-1. OpenNESS - 19.06 
+1. OpenNESS - 19.06
+2. OpenNESS -19.06.01 
 
 # Features for Release 
 1. OpenNESS - 19.06 
@@ -46,13 +47,20 @@ This document provides high level system features, issues and limitations inform
 
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
+ - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
+- **OpenNESS 19.06.01** There are no non-Intel issues relevant to this release.
 
+# Known Issues
+- **OpenNESS 19.06** There are no issues relevant to this release.
+- **OpenNESS 19.06.01** There is one issue relevant to this release: it is not possible to remove application from Edge Node in case of error during application deployment. The issue concerns application in Virtual Machine.
+  
 # Release Content
   - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
-
+  - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
+  
 # Hardware and Software Compatibility
 OpenNESS Edge Node product has been tested using the following hardware specification:
 

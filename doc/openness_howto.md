@@ -3,42 +3,69 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 
 # OpenNESS How to guide 
 
-* [Introduction](#introduction)
-* [Instructions](#Instructions)
-  * [Prerequisites](#prerequisites)
-    * [Creating HTTPS server for image download](#creating-https-server-for-image-download)
-  * [First login](#first-login)
-  * [Enrollment](#enrollment)
-  * [NTS Configuration](#nts-configuration)
-    * [Displaying Edge Node Interfaces](#displaying-Edge-Node-interfaces)
-    * [Creating Traffic Policy](#creating-traffic-policy)
-    * [Adding Traffic Policy to Interface](#adding-traffic-policy-to-interface)
-    * [Configuring Interface](#configuring-interface)
-    * [Starting NTS](#starting-nts)
-  * [Creating Applications](#creating-applications)
-  * [Deploying Applications](#deploying-applications)
-  * [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications)
-  * [Managing DNS Rules](#managing-dns-rules)
-* [Deploying OpenVINO application](#deploying-openvino-application)
-  * [1 OpenVINO Creating Applications](#1-openvino-creating-applications)
-  * [2 OpenVINO Creating Traffic Rules](#2-openvino-creating-traffic-rules)
-  * [3 OpenVINO NTS Configuration and start](#3-openvino-nts-configuration-and-start)
-  * [4 OpenVINO Deploying Applications](#4-openvino-deploying-applications)
-  * [5 OpenVINO Managing Traffic Rules for Applications](#5-openvino-managing-traffic-rules-for-applications)
-  * [6 OpenVINO Managing DNS Rules](#6-openvino-managing-dns-rules)
-  * [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
-  * [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
-  * [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
-* [Kubernetes Install hints](#kubernetes-install-hints)
-* [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
-* [Edge Node Configuration hints](#edge-node-configuration-hints)
-* [CUPS UI usage](#cups-ui-usage)
-  * [CUPS UI Prerequisites](#cupsui-prerequisites)
-  * [First access for CUPS UI](#first-access-for-CUPS-UI)
-  * [Display specific user planes information and update it](#display-specific-userplanesinformation-and-updateit)
-  * [Create a new user plane](#create-new-userplane)
-  * [Delete a user plane](#delete-userplane)
-* [Troubleshooting](#troubleshooting)
+- [OpenNESS How to guide](#openness-how-to-guide)
+  - [Introduction](#introduction)
+  - [Instructions](#instructions)
+    - [Prerequisites](#prerequisites)
+      - [Creating HTTPS server for image download](#creating-https-server-for-image-download)
+        - [Instructions to setup HTTP server](#instructions-to-setup-http-server)
+        - [Instruction to upload and access images](#instruction-to-upload-and-access-images)
+    - [First login](#first-login)
+    - [Enrollment](#enrollment)
+    - [NTS Configuration](#nts-configuration)
+      - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
+      - [Creating Traffic Policy](#creating-traffic-policy)
+      - [Adding Traffic Policy to Interface](#adding-traffic-policy-to-interface)
+      - [Configuring Interface](#configuring-interface)
+      - [Starting NTS](#starting-nts)
+    - [Creating Applications](#creating-applications)
+    - [Deploying Applications](#deploying-applications)
+    - [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications)
+    - [Managing DNS Rules](#managing-dns-rules)
+  - [Deploying OpenVINO application](#deploying-openvino-application)
+    - [1 OpenVINO Creating Applications](#1-openvino-creating-applications)
+    - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
+    - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
+  - [Kubernetes Install hints](#kubernetes-install-hints)
+    - [Disable SE Linux & swap](#disable-se-linux--swap)
+    - [Install Kubernetes](#install-kubernetes)
+    - [Firewall: iptables configuration for ipv6](#firewall-iptables-configuration-for-ipv6)
+    - [lan variable configuration](#lan-variable-configuration)
+    - [Proxy setting](#proxy-setting)
+    - [Kubernetes master: Install docker & docker-compose](#kubernetes-master-install-docker--docker-compose)
+    - [Restart services](#restart-services)
+    - [Firewall configuration on Kubernetes master](#firewall-configuration-on-kubernetes-master)
+    - [Firewall configuration on the Edge node](#firewall-configuration-on-the-edge-node)
+    - [Logout & Login to reload proxy](#logout--login-to-reload-proxy)
+  - [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
+    - [K8s master - Initialize master](#k8s-master---initialize-master)
+    - [Controller](#controller)
+  - [Edge Node Configuration hints](#edge-node-configuration-hints)
+    - [Edge Node set up](#edge-node-set-up)
+    - [Perform node's enrollment](#perform-nodes-enrollment)
+    - [Set up k8s worker - use the instruction above](#set-up-k8s-worker---use-the-instruction-above)
+    - [Set up dnsmasq](#set-up-dnsmasq)
+    - [(master) Label worker and check status](#master-label-worker-and-check-status)
+    - [Check status of nodes](#check-status-of-nodes)
+  - [CUPS UI usage](#cups-ui-usage)
+    - [CUPS UI Prerequisites](#cups-ui-prerequisites)
+    - [First access for CUPS UI](#first-access-for-cups-ui)
+    - [Display specific user planes information and update it](#display-specific-user-planes-information-and-update-it)
+    - [Create a new user plane](#create-a-new-user-plane)
+    - [Delete a user plane](#delete-a-user-plane)
+  - [S1-U traffic handling](#s1-u-traffic-handling)
+    - [Data plane configuration](#data-plane-configuration)
+    - [Traffic rules for applications](#traffic-rules-for-applications)
+    - [MTU](#mtu)
+  - [Preparing set-up for Local Break Point (LBP)](#preparing-set-up-for-local-break-point-lbp)
+    - [Controller and Edge Node deployment](#controller-and-edge-node-deployment)
+    - [Network configuration](#network-configuration)
+    - [Configuration in Controller](#configuration-in-controller)
+    - [Verification](#verification)
+      - [NES client](#nes-client)
+      - [Tcpdump](#tcpdump)
+  - [Troubleshooting](#troubleshooting)
+    - [Log files](#log-files)
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
@@ -124,7 +151,7 @@ In order for the Controller and Edge Node to work together the Edge Node needs t
 
 Prerequisites:
 - Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be aquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
+- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be acquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
 - The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
 - User has logged in to UI.
@@ -393,10 +420,10 @@ The following steps need to be done to deploy the OpenVinoConsumer application:
  - Name: OpenVinoConsumer  
  - Type: Container
  - Version: 1
- - Vendor: SampleVemdor
+ - Vendor: SampleVendor
  - Description: SampleVendor
- - Cores: 2 (OpenVINO consumer application needs atleast 2 cores)
- - Memory: 4096 (OpenVINO consumer application needs atleast 4GB memory)
+ - Cores: 2 (OpenVINO consumer application needs at least 2 cores)
+ - Memory: 4096 (OpenVINO consumer application needs at least 4GB memory)
  - Source (format https://controller_hostname/openvino-cons-app.tar.gz)
  - Port and Protocol (these fields are not used but need to filled)
 - Click 'UPLOAD APPLICATION'
@@ -510,12 +537,12 @@ The following steps need to be done:
 
 ![OpenVino Deploying App ](howto-images/DeployingApp1.png)
 
-Deploy OpenVino Producer appliaction.
+Deploy OpenVino Producer application.
 - Window titled "DEPLOY APPLICATION TO NODE" will appear.
 - Select OpenVino Producer Application from drop down menu.
 - Click "DEPLOY".
 
-Deploy OpenVino Consumer appliaction.
+Deploy OpenVino Consumer application.
 - Once again click on "DEPLOY APP".
 - Window titled "DEPLOY APPLICATION TO NODE" will appear.
 - Select OpenVino Consumer Application from drop down menu.
@@ -624,7 +651,7 @@ docker exec -it <Container_ID_of_openVino-consumer-app>  wget 192.168.200.123 -Y
 
 This is a sample setup for Downstream setup (EPC/IP Downstream). This is downstream node in this example will behave like Application connected to the PDN gateway or IP gateway. For the purpose of testing OpenVINO App in the IP domain. You need to connect a server and assign an IP to an interface connected to the Edge Node Downstream. The IP assigned IP address must be as follows - 192.168.200.2. 
 
-> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS dataplane. If this is done by mistake then NTS Dataplane has to be restarted and the Traffic policy needs to be re-configured. 
+> Note: Do not Ping/send traffic from downstream to the Application on the edge node. This is because ping/sending traffic will add a learning entry into the NTS data plane. If this is done by mistake then NTS Data plane has to be restarted and the Traffic policy needs to be re-configured.
 
 ### 9 OpenVINO Client Simulator Setup
 
@@ -649,7 +676,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ifconfig enp1s0f0 192.168.200.10 up
     ```
 
-3. In order for the NTS Dataplane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.    
+3. In order for the NTS Data plane to have learnt both upstream and downstream traffic flow we need to send traffic (Ping/iperf) from Upstream IP to the downstream server.
   
    ```shell
     ping 192.168.200.2
@@ -821,7 +848,7 @@ firewall-cmd  --reload
 ```
 ### Logout & Login to reload proxy
 
-## Edge Controller K8s master Configuration hints]
+## Edge Controller K8s master Configuration hints
 
 ### K8s master - Initialize master
 Update the IP address according your deployment 
@@ -942,7 +969,7 @@ address=/eaa.community.appliance.mec/syslog.community.appliance.mec/192.168.122.
 ```
 
 Start dnsmasq service:
-```systemctl enable dnsmasq --now```
+`systemctl enable dnsmasq --now`
 
 Provide kubelet with new DNS address
 Edit `/var/lib/kubelet/config.yaml` and change IP under 'clusterDNS' to 192.168.122.1, i.e.:
@@ -950,11 +977,11 @@ Edit `/var/lib/kubelet/config.yaml` and change IP under 'clusterDNS' to 192.168.
 clusterDNS:
 - 192.168.122.1
 ```
-
 Add rules to firewall
 ```
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.0/16 -d 192.168.122.0/24 -j ACCEPT
 firewall-cmd --reload
 ```
 Reboot edge node
@@ -1075,7 +1102,160 @@ Steps for the access:
 - Then web page will automatically return back to the updated user plane list as below:
   
   ![UserplaneDeleteList screen](cups-howto-images/userplane_delete_thenlist.png)
- 
+
+## S1-U traffic handling
+
+NTS data plane running in Edge Node can be configured to support GTP-U encapsulated traffic. The following diagram shows an example deployment scenario with EPC divided into control and data plane servers:
+
+![S1-U example environment ](howto-images/S1.png)
+> Note: There is no direct connection between Edge Node and Controller. They are connected to the same network.
+
+### Data plane configuration
+
+To leverage S1-U capabilities NTS has to be configured accordingly to [NTS Configuration](#nts-configuration).
+Each S1-U capable interface has to have a traffic rule configured allowing it to send GTP-U encapsulated traffic.
+The following traffic rule shows that the traffic destined to `192.168.10.10` is supposed to be send through a port that this rule is attached to:
+
+![Traffic policy data plane port S1](howto-images/CreateTrafficPolicyS1.png)
+
+
+### Traffic rules for applications
+
+Traffic rules for applications have to be configured according to [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications).
+> Note: It is required that at least one of GTP filter fields is set to enforce GTP-U type rule.
+
+### MTU
+It might be required to modify UEs MTU to a lower value to avoid IP fragmentation.
+
+## Preparing set-up for Local Break Point (LBP)
+
+LBP set-up requirements: five machines are used for set-up elements: Controller, Edge Node, UE, LBP, EPC.  Edge Node is connected via 10GB cards to UE, LBP, EPC.
+Network configuration of all elements is given on the diagram:
+
+![LBP set-up ](howto-images/LBP_set_up.png)
+
+Configuration of interfaces for each server is done in Controller. ARP configuration is done on servers.
+IP addresses 10.103.104.X are addresses of machines from local subnet used for building set-up. IP addresses 192.168.100.X are addresses given for LBP test purpose.
+
+### Controller and Edge Node deployment
+
+Build and deploy Controller and Edge Node using ansible scripts and instructions in user guides (readme files).
+
+### Network configuration
+
+Find interface with `ifconfig` command or `ip a` alternative.
+
+With command `ethtool -p interface` port will start to blink so it can be verified as correct one.
+
+- UE
+  - `ifconfig interface 192.168.100.1/24 up`
+  - `apr -s 192.168.100.2 3c:fd:fe:a7:c0:eb`
+- LBP
+  - `ifconfig interface 192.168.100.2/24 up`
+  - `apr -s 192.168.100.1 90:e2:ba:ac:6a:d5`
+- EPC
+  - `ifconfig interface 192.168.100.3/24 up`
+- Appliance
+
+Alternative setting with `ip` command:
+`ip address add 192.168.100.1/24 dev interface`
+
+### Configuration in Controller
+
+Add traffic policy with rule for LBP:
+
+- Name: LBP rule
+- Priority: 99
+- IP filter:
+  - IP address: 192.168.100.2
+  - Mask: 32
+  - Protocol: all
+- Target:
+  - Action: accept
+- MAC Modifier
+  - MAC address: 3c:fd:fe:a7:c0:eb
+  
+![LBP rule adding](howto-images/LBP_rule.png)
+
+Update interfaces: edit interfaces to UE, LBP, EPC as shown on diagram (Interface set-up), add Traffic policy (LBP rule) to LBP interface (0000:88.00.2).
+
+After configuring NTS send PING (it is needed by NTS) on UE to EPC (`ping 192.168.100.3`).
+
+### Verification
+
+#### NES client
+
+SSH to UE machine and ping LBP (`ping 192.168.100.2`).
+
+SSH to Edge Node server.
+
+- Set following environment variable: `export NES_SERVER_CONF=/var/lib/appliance/nts/nts.cfg`
+- Run NES client: `<path_to_appliance>/internal/nts/client/build/nes_client` and connect to NTS using command `connect`
+  - use command `route list` to verify traffic rule for LBP;
+  - use command `show all` to verify packet flow (received and sent packet should increase);
+  - use command `quit` to exit (use `help` for information on available commands).
+
+```
+ # connect
+Connection is established.
+ # route list
++-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+| ID    | PRIO       | ENB IP             | EPC IP             | UE IP              | SRV IP             | UE PORT     | SRV PORT    | ENCAP  | Destination          |
++-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+| 0     | 99         | n/a                | n/a                | 192.168.100.2/32   | *                  | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+| 1     | 99         | n/a                | n/a                | *                  | 192.168.100.2/32   | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+| 2     | 5          | n/a                | n/a                | *                  | 53.53.53.53/32     | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+| 3     | 5          | n/a                | n/a                | 53.53.53.53/32     | *                  | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+| 4     | 5          | *                  | *                  | *                  | 53.53.53.53/32     | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
+| 5     | 5          | *                  | *                  | 53.53.53.53/32     | *                  | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
++-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+ # show all
+ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+ 0  0000:88:00.1                          1303 pkts                    776 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b1)                127432 bytes                 75820 bytes                     0 bytes
+ 1  0000:88:00.2                          1261 pkts                   1261 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b2)                123578 bytes                123578 bytes                     0 bytes
+ 2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+ 3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+      (not registered)                       0 bytes                     0 bytes                     0 bytes
+ # show all
+ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+ 0  0000:88:00.1                          1304 pkts                    777 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b1)                127530 bytes                 75918 bytes                     0 bytes
+ 1  0000:88:00.2                          1262 pkts                   1262 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b2)                123676 bytes                123676 bytes                     0 bytes
+ 2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+     (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+ 3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+      (not registered)                       0 bytes                     0 bytes                     0 bytes
+```
+
+#### Tcpdump
+
+SSH to UE machine and ping LBP (`ping 192.168.100.2`).
+SSH to LBP server. Run tcpdump with name of interface connected to Appliance, verify data flow, use Ctrl+c to stop.
+
+```
+ # tcpdump -i enp23s0f3
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
+10:29:14.678250 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 320, length 64
+10:29:14.678296 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 320, length 64
+10:29:15.678240 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 321, length 64
+10:29:15.678283 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 321, length 64
+10:29:16.678269 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 322, length 64
+10:29:16.678312 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 322, length 64
+10:29:17.678241 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 323, length 64
+10:29:17.678285 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 323, length 64
+10:29:18.678215 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 324, length 64
+10:29:18.678258 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 324, length 64
+^C
+10 packets captured
+10 packets received by filter
+0 packets dropped by kernel
+```
+
 ## Troubleshooting
 - Controller UI:
   - If you encounter HTTP errors like `500`,`400` and `404` please run `docker-compose logs -f ` from the `<controller>` or `<edge node>` source root directory.  This command will generate the log which can be used for further analysis.
@@ -1085,10 +1265,10 @@ Steps for the access:
     ```
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
-    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrolment.
+    if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrollment.
 - CUPS UI:
   - If you encounter GET userplanes list failure with Error: "Network Error",  please check oamagent nginx configuration whether enable CORS configuration. README in the epc-oam folder gives a reference nginx configuration.
-    - Another possibility is SELinux. Use commmand `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
+    - Another possibility is SELinux. Use command `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
     - Additionally, check log files listed below for more details.
   - If EDIT userplane failure with Error: "Request failed with status code 404"
     - Need to check oamagent log that contains more details about the failure, for example:
