@@ -15,7 +15,7 @@
 syntax = "proto3";
 
 package openness.eva;
-option go_package = "github.com/smartedgemec/eva";
+option go_package = "github.com/open-ness/eva";
 
 import "google/protobuf/empty.proto";
 
