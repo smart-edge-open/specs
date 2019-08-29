@@ -24,29 +24,42 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Managing DNS Rules](#managing-dns-rules)
   - [Deploying OpenVINO application](#deploying-openvino-application)
     - [1 OpenVINO Creating Applications](#1-openvino-creating-applications)
+    - [2 OpenVINO Creating Traffic Rules](#2-openvino-creating-traffic-rules)
+    - [3 OpenVINO NTS Configuration and start](#3-openvino-nts-configuration-and-start)
+    - [4 OpenVINO Deploying Applications](#4-openvino-deploying-applications)
+    - [5 OpenVINO Managing Traffic Rules for Applications](#5-openvino-managing-traffic-rules-for-applications)
+    - [6 OpenVINO Managing DNS Rules](#6-openvino-managing-dns-rules)
+    - [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
     - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
   - [Kubernetes Install hints](#kubernetes-install-hints)
-    - [Disable SE Linux & swap](#disable-se-linux--swap)
-    - [Install Kubernetes](#install-kubernetes)
-    - [Firewall: iptables configuration for ipv6](#firewall-iptables-configuration-for-ipv6)
-    - [lan variable configuration](#lan-variable-configuration)
-    - [Proxy setting](#proxy-setting)
-    - [Kubernetes master: Install docker & docker-compose](#kubernetes-master-install-docker--docker-compose)
-    - [Restart services](#restart-services)
-    - [Firewall configuration on Kubernetes master](#firewall-configuration-on-kubernetes-master)
-    - [Firewall configuration on the Edge node](#firewall-configuration-on-the-edge-node)
-    - [Logout & Login to reload proxy](#logout--login-to-reload-proxy)
+    - [1. Disable SE Linux & swap](#1-disable-se-linux--swap)
+    - [2. Install Kubernetes](#2-install-kubernetes)
+    - [3. Firewall: iptables configuration for ipv6](#3-firewall-iptables-configuration-for-ipv6)
+    - [4. Proxy, SELinux and swap setting](#4-proxy-selinux-and-swap-setting)
+    - [5. Kubernetes master: Install docker & docker-compose](#5-kubernetes-master-install-docker--docker-compose)
+    - [6. Run k8s' kubelet](#6-run-k8s-kubelet)
+    - [7. Proxy setting for docker and k8s](#7-proxy-setting-for-docker-and-k8s)
+    - [8. Restart services](#8-restart-services)
+    - [9. Firewall configuration on Kubernetes master (the Controller platform)](#9-firewall-configuration-on-kubernetes-master-the-controller-platform)
+    - [10. Firewall configuration on Kubernetes worker (the Edge Node platform)](#10-firewall-configuration-on-kubernetes-worker-the-edge-node-platform)
+    - [11. Logout & Login to reload proxy](#11-logout--login-to-reload-proxy)
   - [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
-    - [K8s master - Initialize master](#k8s-master---initialize-master)
-    - [Controller](#controller)
+    - [1. K8s master - Initialize master](#1-k8s-master---initialize-master)
+    - [2. Obtaining K8s certificates](#2-obtaining-k8s-certificates)
+    - [3. Controller set up](#3-controller-set-up)
   - [Edge Node Configuration hints](#edge-node-configuration-hints)
-    - [Edge Node set up](#edge-node-set-up)
-    - [Perform node's enrollment](#perform-nodes-enrollment)
-    - [Set up k8s worker - use the instruction above](#set-up-k8s-worker---use-the-instruction-above)
-    - [Set up dnsmasq](#set-up-dnsmasq)
-    - [(master) Label worker and check status](#master-label-worker-and-check-status)
-    - [Check status of nodes](#check-status-of-nodes)
+    - [1. Edge Node set up](#1-edge-node-set-up)
+    - [2. Perform node's enrollment](#2-perform-nodes-enrollment)
+    - [3. Set up k8s worker - use the instruction above (Kubernetes Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-install-hints)
+    - [4. Set up dnsmasq](#4-set-up-dnsmasq)
+      - [Disable libvirt's DNS](#disable-libvirts-dns)
+      - [Run commands in order to redefine network](#run-commands-in-order-to-redefine-network)
+      - [Set up custom dnsmasq](#set-up-custom-dnsmasq)
+      - [Reboot Edge Node](#reboot-edge-node)
+    - [5. (master) Label worker and check status](#5-master-label-worker-and-check-status)
+      - [Label worker](#label-worker)
+      - [Check status of nodes](#check-status-of-nodes)
   - [CUPS UI usage](#cups-ui-usage)
     - [CUPS UI Prerequisites](#cups-ui-prerequisites)
     - [First access for CUPS UI](#first-access-for-cups-ui)
@@ -456,7 +469,7 @@ The following steps need to be done to deploy the OpenVinoProducer application:
 
 ![OpenVino Add App 4](howto-images/OpenVinoAddApp4.png)
 
- ### 2 OpenVINO Creating Traffic Rules
+### 2 OpenVINO Creating Traffic Rules
 
 Prerequisites:
 - Enrollment phase completed successfully.
@@ -484,7 +497,7 @@ The steps to create a sample traffic policy are as follows:
 
 After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
 
- ### 3 OpenVINO NTS Configuration and start
+### 3 OpenVINO NTS Configuration and start
 In this scenario two interfaces are to be configured for NTS "UPSTREAM" (to be connected to eNodeB\upstream IP source), "DOWNSTREAM" (to be connected to EPC\downstream IP source).
 The eNodeB and EPC set up is outside scope of this document. Instructions for sample client server for video traffic simulation will be provided (in place of eNodeB), as well as instructions how to make a 'dummy' EPC connection.
 
@@ -522,7 +535,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 
 - NTS will start and "COMMIT CHANGES" button will disappear.
 
- ### 4 OpenVINO Deploying Applications
+### 4 OpenVINO Deploying Applications
 
 Prerequisite:
 - Enrollment phase completed successfully.
@@ -566,7 +579,7 @@ Deploy OpenVino Consumer application.
 > Note: The traffic policy if any must be removed before deleting the application.
 
 
- ### 5 OpenVINO Managing Traffic Rules for Applications
+### 5 OpenVINO Managing Traffic Rules for Applications
 
 Prerequisite:
 - Enrollment phase completed successfully.
@@ -591,7 +604,7 @@ Following steps needs to be done:
 - You can "DELETE/RESTART" an application from this tab.
 > Note: The application must be in a 'running' state in order to delete traffic policy.
 
- ### 6 OpenVINO Managing DNS Rules
+### 6 OpenVINO Managing DNS Rules
 
  Prerequisite:
 - Enrollment phase completed successfully.
@@ -609,7 +622,7 @@ Following steps needs to be done:
 
 ![DNS](howto-images/DNS.png)
 
- ### 7 OpenVINO Manual Configuration steps
+### 7 OpenVINO Manual Configuration steps
 
 The following manual steps need to be done to fully configure the OpenVino pipeline on the EdgeNode. These steps need to be run from terminal on the EdgeNode.
 
@@ -704,18 +717,24 @@ OpenNESS Edge Node with an IP address in the same subnet as for
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
 
 ## Kubernetes Install hints
-For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master. 
 
-### Disable SE Linux & swap
-Depending on the deployment setup you might have to disable selinux and swap. 
+For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master nad Edge Node is assumed to be running on the same platform as Kubernetes worker.
+Following Kubernetes set up and installation steps concerns Kubernetes master and worker platform.
+For worker platform go through the installation after Edge Node set up.
+
+### 1. Disable SE Linux & swap
+
+Depending on the deployment setup you might have to disable selinux and swap.
+
 ```
 swapoff -a
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 ```
 
-### Install Kubernetes
-Typical commands and steps for installing Kubernetes packages 
+### 2. Install Kubernetes
+
+Typical commands and steps for installing Kubernetes packages
 
 ```
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -732,8 +751,10 @@ EOF
 yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 ```
 
-### Firewall: iptables configuration for ipv6
-Depending on the deployment setup below are some of the steps to consider for iptables configuration for ipv6. 
+### 3. Firewall: iptables configuration for ipv6
+
+Depending on the deployment setup below are some of the steps to consider for iptables configuration for ipv6.
+
 ```
 cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -742,45 +763,39 @@ EOF
  
 sysctl --system
 ```
-### lan variable configuration 
-/etc/rc.d/rc.local
-Add following lines, customize lan variable. Update the IP address according your deployment 
-```
-swapoff -a
-setenforce 0
- 
-printf -v pool '%s,' 10.244.0.{1..253}
-printf -v service '%s,' 10.96.0.{1..253}
-printf -v lan '%s,' 10.103.104.{1..253}
-export no_proxy="${lan%,},${service%,},${pool%,},127.0.0.1"
-```
-Enable rc-local
-```
-chmod +x /etc/rc.d/rc.local
-systemctl enable rc-local.service
-```
 
-### Proxy setting 
-Depending on the deployment setup below are some of the steps to consider for proxy configuration in `/etc/profile.d/proxy.sh`. Update the IP address according your deployment 
+### 4. Proxy, SELinux and swap setting
+
+Depending on the deployment setup below are some of the steps to consider for proxy, SELinux and swap configuration in `/etc/profile.d/proxy.sh`. Update the IP addresses according your deployment
 
 ```
 #!/bin/bash
+
+swapoff -a
+setenforce 0
  
-printf -v lan '%s,' 10.103.104.{1..253}
+printf -v lan '%s,' <lan_address>.{1..254}
  
-http_proxy=http://<proxy>:<port>
-https_proxy=http://<proxy>:<port>
-ftp_proxy=http://<proxy>:<port>
-no_proxy="localhost,127.0.0.1,${lan%,}"
+export http_proxy=http://<proxy>:<port>
+export https_proxy=http://<proxy>:<port>
+export ftp_proxy=http://<proxy>:<port>
+export no_proxy="localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/12,${lan%,}"
  
-HTTP_PROXY=http://<proxy>:<port>
-HTTPS_PROXY=http://<proxy>:<port>
-FTP_PROXY=http://<proxy>:<port>
-NO_PROXY="localhost,127.0.0.1,${lan%,}"
+export HTTP_PROXY=http://<proxy>:<port>
+export HTTPS_PROXY=http://<proxy>:<port>
+export FTP_PROXY=http://<proxy>:<port>
+export NO_PROXY="localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/12,${lan%,}"
 ```
 
-### Kubernetes master: Install docker & docker-compose
-Steps applicable only for controller node. Docker on edge node is installed by ansible. 
+Please remember to open new terminal after defining the `/etc/profile.d/proxy.sh` or to update the current terminal's enviromental variables with 
+
+```
+. /etc/profile.d/proxy.sh
+```
+
+### 5. Kubernetes master: Install docker & docker-compose
+
+Steps applicable only for controller node. Docker on edge node is installed by ansible.
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2 python-pip
 yum-config-manager  --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -789,31 +804,39 @@ pip install docker-compose
 systemctl enable docker --now
 ```
 
-Run k8s' kubelet
+### 6. Run k8s' kubelet
+
 ```
 systemctl enable kubelet --now
 ```
 
-Proxy setup
-Customize HTTP(S)_PROXY and local-network/mask in `/etc/systemd/system/docker.service.d/http-proxy.conf`. Update the IP address according your deployment 
+### 7. Proxy setting for docker and k8s
+
+Customize HTTP(S)_PROXY and local-network/mask in `/etc/systemd/system/docker.service.d/http-proxy.conf`. Update the IP address according your deployment
+
 ```
 [Service]
 Environment="HTTP_PROXY=http://<proxy>:<port>/" "HTTPS_PROXY=http://<proxy>:<port>/" "NO_PROXY=localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/24,local-network/mask"
 ```
 
 Add Environment lines under `[Service]` in `/usr/lib/systemd/system/kubelet.service`. Update the IP address according your deployment.
+
 ```
 [Service]
 Environment="HTTP_PROXY=http://<proxy>:<port>"
 Environment="HTTPS_PROXY=http://<proxy>:<port>"
 Environment="NO_PROXY=localhost,10.244.0.0/16,10.96.0.0/24,local-network/mask"
 ```
-and in `/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf` 
+
+and in `/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf`
+
 ```
 [Service]
-Environment="KUBELET_EXTRA_ARGS=--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice --feature-gates=\"HugePages=true\""     
+Environment="KUBELET_EXTRA_ARGS=--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice --feature-gates=\"HugePages=true\""
 ```
+
 and in  `~/.docker/config.json`
+
 ```
 {
   "proxies":
@@ -826,21 +849,25 @@ and in  `~/.docker/config.json`
     }
   }
 }
-``` 
-### Restart services
+```
+
+### 8. Restart services
+
 ```
 systemctl daemon-reload && systemctl restart docker && systemctl restart kubelet
 ```
-### Firewall configuration on Kubernetes master 
+
+### 9. Firewall configuration on Kubernetes master (the Controller platform)
 
 ```
 firewall-cmd --permanent --add-port=6443/tcp
 firewall-cmd --permanent --add-port=2379-2380/tcp
 firewall-cmd --permanent --add-port=10250-10252/tcp
 firewall-cmd  --reload
-``` 
+```
 
-### Firewall configuration on the Edge node 
+### 10. Firewall configuration on Kubernetes worker (the Edge Node platform)
+
 ```
 firewall-cmd --permanent --add-port=10250/tcp
 firewall-cmd --permanent --add-port=30000-32767/tcp
@@ -848,40 +875,84 @@ firewall-cmd --permanent --add-port=8285/udp
 firewall-cmd --permanent --add-port=8472/udp
 firewall-cmd  --reload
 ```
-### Logout & Login to reload proxy
+
+### 11. Logout & Login to reload proxy
 
 ## Edge Controller K8s master Configuration hints
 
-### K8s master - Initialize master
-Update the IP address according your deployment 
+### 1. K8s master - Initialize master
+
+Update the IP address according your deployment
+
 ```
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
+
 Note the output - the "kubeadm join" command
 
 Copy config
+
 ```
 mkdir -p $HOME/.kube
 cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
-``` 
+```
+
 Enable flannel network plugin
+
 ```
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/62e44c867a2846fefb68bd5f178daf4da3095ccb/Documentation/kube-flannel.yml
 ```
-Wait couple minutes & check if k8s master works - should be STATUS=Ready.
+
+Wait couple minutes & check if k8s master works - should be `STATUS=Ready`.
+
 ```
 kubectl get nodes
 ```
 
-### Controller
+Please remember that whenever you reset your setup with 'kubeadm reset' it is possible that you may encounter an error:
+
+```
+[pkg=main] Error configuring kubernetes client: forbidden: User "openness-controller" cannot get path "/"
+```
+
+In such case please execute
+
+```
+kubectl create clusterrolebinding openness-controller-admin --clusterrole=cluster-admin --user=openness-controller
+```
+
+which will grant the 'openness-controller' user 'cluster-admin' rights
+
+
+### 2. Obtaining K8s certificates
+
+To install Controller with Kubernetes support you will need to obtain and save the Kubernetes security certificates. You can get the certificates with:
+
+```
+kubeadm alpha kubeconfig user --client-name=openness-controller
+```
+
+The certificates will be printed out as base64 encoded strings with proper 'tag' for each one.
+
+```
+certificate-authority-data
+client-certificate-data
+client-key-data
+```
+
+You have to decode the base64 string for each certificate and then save them to suitable location.
+
+### 3. Controller set up
+
 Set up according to OpenNESS controller README.
 
 Edit controller-ce/.env file
+
 ```
 REACT_APP_CONTROLLER_API=http://<HOST_IP>:8080
 CCE_ORCHESTRATION_MODE=kubernetes
-CCE_K8S_MASTER_HOST=localhost:6443
+CCE_K8S_MASTER_HOST=<HOST_IP>:6443
 CCE_K8S_MASTER_USER=root
 CCE_K8S_API_PATH=/api/v1
 CCE_K8S_CLIENT_CA_PATH=...
@@ -889,8 +960,11 @@ CCE_K8S_CLIENT_CERT_PATH=...
 CCE_K8S_CLIENT_KEY_PATH=...
 GITHUB_TOKEN=...
 ``` 
-> Note: Github token is not needed if you are using offline installer. 
-Or run cce directly:
+
+> Note: Github token is not needed if you are using offline installer.
+
+Build controller using `make build` and run using `make all-up` or run cce directly:
+
 ```
 go build -o dist/cce ./cmd/cce
  
@@ -906,37 +980,54 @@ http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
     -k8s-master-host localhost:6443 \
     -k8s-api-path /api/v1 \
     -k8s-master-user root
-``` 
+```
 
 ## Edge Node Configuration hints
 
-### Edge Node set up
-Set up according to OpenNESS Edge node README 
+### 1. Edge Node set up
 
-Before `./03_build_and_deploy.sh`    
-- Edit `/etc/pki/tls/certs/controller-root-ca.pem`    
-- Edit `/root/appliance-ce/scripts/ansible/deploy_server/vars/defaults.yml`    
+Set up according to OpenNESS Edge node README.
+
+Before `./03_build_and_deploy.sh`:
+
+- Edit `/etc/pki/tls/certs/controller-root-ca.pem` (check Edge Node README.md for instruction how to copy Controller's certificate to Edge Node)
+
+- Edit `/root/appliance-ce/scripts/ansible/deploy_server/vars/defaults.yml`:
+
 ```
-enrollment_endpoint: "1.2.3.4:8081" => "10.103.104.156:8081"
-``` 
+enrollment_endpoint: "1.2.3.4:8081" => "<CONTROLLER_IP>:8081"
+```
+
 - Edit `/root/appliance-ce/configs/eva.json`
+
 ```
-kubernetesMode": false => true
+"KubernetesMode": false => true
+"ControllerEndpoint": "1.2.3.4:8081" => "<CONTROLLER_IP>:8081"
+
 ```
 
-### Perform node's enrollment
+Then run script `./03_build_and_deploy.sh`.
 
-### Set up k8s worker - use the instruction above
+### 2. Perform node's enrollment
 
-Join the cluster using command from kubeadm init's output    
-example: 
+Use Controller UI to initiate enrollment.
+
+### 3. Set up k8s worker - use the instruction above ([Kubernetes Install hints](#kubernetes-install-hints))
+
+Join the cluster using command from kubeadm init's output
+example:
+
 ```
 kubeadm join 10.103.104.156:6443 --token <token> \
     --discovery-token-ca-cert-hash sha256:<token>
 ```
 
-### Set up dnsmasq
-First - disable libvirt's DNS. In file /usr/share/libvirt/networks/default.xml replace:
+### 4. Set up dnsmasq
+
+#### Disable libvirt's DNS
+
+In file `/usr/share/libvirt/networks/default.xml` replace:
+
 ```
 <dns>
   <host ip="192.168.122.1">
@@ -947,12 +1038,14 @@ First - disable libvirt's DNS. In file /usr/share/libvirt/networks/default.xml r
   </host>
 </dns>
 ```
+
 with
+
 ```
 <dns enable="no"/>
 ```
 
-Run commands in order to redefine network:
+#### Run commands in order to redefine network
 
 ```
 virsh net-destroy default
@@ -962,7 +1055,9 @@ virsh net-start default
 virsh net-autostart default
 ```
 
-Change dnsmasq config (/etc/dnsmasq.conf):
+#### Set up custom dnsmasq
+
+Change dnsmasq config (`/etc/dnsmasq.conf`):
 
 ```
 strict-order
@@ -974,41 +1069,49 @@ Start dnsmasq service:
 `systemctl enable dnsmasq --now`
 
 Provide kubelet with new DNS address
-Edit `/var/lib/kubelet/config.yaml` and change IP under 'clusterDNS' to 192.168.122.1, i.e.:
+Edit `/var/lib/kubelet/config.yaml` and change IP under `clusterDNS` to `192.168.122.1`, i.e.:
+
 ```
 clusterDNS:
 - 192.168.122.1
 ```
+
 Add rules to firewall
+
 ```
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.0/16 -d 192.168.122.0/24 -j ACCEPT
 firewall-cmd --reload
 ```
-Reboot edge node
-After reboot, edge node container must be started
+
+#### Reboot Edge Node
+After reboot, Edge Node containers (edgenode_appliance_1, edgenode_syslog-ng_1) must be started manually:
 
 ```
-docker container ls -a | grep appliance
+docker container ls -a | grep edgenode
 docker container start <ID>
 ```
 
-### (master) Label worker and check status    
-Label worker    
+### 5. (master) Label worker and check status
+
+#### Label worker
 
 After joining worker to cluster, worker needs to be labeled.
 
-k8s_worker_node is a name of node
+- `k8s_worker_node` is a name of node 
 
-edge_node_uuid is a UUID of node generated by Controller during enrollment
+- `edge_node_uuid` is a UUID of node generated by Controller during enrollment
+
 ```
 kubectl label node <k8s_worker_node> node-role.kubernetes.io/worker=worker
 kubectl label nodes <k8s_worker_node> node-id=<edge_node_uuid>
-``` 
-### Check status of nodes
+```
+
+#### Check status of nodes
 
 Getting worker node ready can take couple of minutes
+
 ```
 kubectl get nodes
 ```
