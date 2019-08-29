@@ -65,6 +65,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [NES client](#nes-client)
       - [Tcpdump](#tcpdump)
   - [Troubleshooting](#troubleshooting)
+    - [Additional port to VM](#additional-port-to-vm)
+    - [Minimum Hugepages](#minimum-hugepages)
     - [Log files](#log-files)
 
 ## Introduction
@@ -1285,6 +1287,31 @@ listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
       Func:execute(Line:407)Not valid PGW id(5) or SGW Id (5) for GetID (3).
       Func:execute(Line:444)UserplanesGet For (3) Failed (404 Userplane not found).
       ```
+### Additional port to VM
+
+1. Deploy a VM from the Controller UI without starting it.
+2. Log in to the EdgeNode and configure the additional kernel bridge on the host:
+```
+brctl addbr <br_name>
+brctl addif <br_name> <interface_name>
+brctl show
+```
+3.Edit the VM virsh edit <app_id> and add the following to <devices> block:
+```
+<interface type='bridge'>
+<source bridge='<br_name>'/>
+<model type='virtio'/>
+</interface>
+```
+4.Start the VM from the controller UI
+5. On the EdgeNode run the following to verify that the additional interface was added:
+```
+virsh domiflist <app_id>
+```
+### Minimum Hugepages 
+
+When using NTS as the Dataplane microservice it uses 2GB of hugepages from the first numa socket (on dual socket platform). Any addition hugepages that will be allocated can be used for Apps running as VMs(VM memory is HugePage based) or docker containers. Hugepages usage in the docker container depends on the application. 
+
 ### Log files 
 Below are list of log files on Edge Node and controller. They can highlight any issues on the system. Log files can be accessed either looking info file on physical server (files stored in /var/log/ folder) or by running `docker-compose` or `docker logs` command in terminal with required parameters.
 - Controller and Controller UI
