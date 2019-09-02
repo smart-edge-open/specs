@@ -564,9 +564,13 @@
           "except": {
             "type": "array",
             "items": {
-              "type": "string",
-              "example": "192.168.1.1"
-            }
+              "type": "string"
+            },
+            "example": [
+              "192.168.1.1",
+              "192.168.1.2",
+              "192.168.1.3"
+            ]
           }
         }
       },
@@ -575,23 +579,28 @@
         "properties": {
           "port": {
             "type": "integer",
-            "description": "Port of ingress rule.",
+            "description": "Port of ingress or egress rule.",
             "example": 50000
           },
           "protocol": {
             "type": "string",
             "enum": [
-              "TCP",
-              "UDP",
-              "SCTP"
+              "tcp",
+              "udp",
+              "sctp"
             ],
-            "description": "Protocol of ingress rule."
+            "description": "Protocol of ingress or egress rule."
           }
         }
       },
       "IngressRule": {
         "type": "object",
         "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of ingress rule.",
+            "example": "Sample ingress rule."
+          },
           "from": {
             "type": "array",
             "items": {
@@ -609,6 +618,11 @@
       "EgressRule": {
         "type": "object",
         "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of egress rule.",
+            "example": "Sample egress rule."
+          },
           "to": {
             "type": "array",
             "items": {
@@ -623,7 +637,7 @@
           }
         }
       },
-      "TrafficPolicy": {
+      "TrafficPolicyKubeOVN": {
         "type": "object",
         "properties": {
           "id": {
@@ -632,6 +646,11 @@
             "format": "uuidv4",
             "example": "CB0D7DA8-0B97-4668-9024-81415063A5C9",
             "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of KubeOVN Traffic Policy.",
+            "example": "Sample KubeOVN Traffic Policy"
           },
           "ingress": {
             "type": "array",
@@ -645,15 +664,18 @@
               "$ref": "#/components/schemas/EgressRule"
             }
           }
-        }
+        },
+        "required": [
+          "name"
+        ]
       },
-      "TrafficPolicyList": {
+      "TrafficPolicyKubeOVNList": {
         "type": "object",
         "properties": {
           "policies": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TrafficPolicy"
+              "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
             }
           }
         }
@@ -1328,7 +1350,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrafficPolicyList"
+                  "$ref": "#/components/schemas/TrafficPolicyKubeOVNList"
                 }
               }
             }
@@ -1346,7 +1368,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TrafficPolicy"
+                "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
               }
             }
           }
@@ -1383,13 +1405,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrafficPolicy"
+                  "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
                 }
               }
             }
           },
           "404": {
-            "description": "KubeOVN policy ID not found."
+            "description": "KubeOVN traffic policy ID not found."
           }
         }
       },
@@ -1404,7 +1426,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TrafficPolicy"
+                "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
               }
             }
           }
@@ -1414,7 +1436,7 @@
             "description": "KubeOVN traffic policy was updated."
           },
           "404": {
-            "description": "KubeOVN Policy ID not found."
+            "description": "KubeOVN traffic policy ID not found."
           }
         }
       },
@@ -1429,7 +1451,7 @@
             "description": "KubeOVN traffic policy was deleted."
           },
           "404": {
-            "description": "KubeOVN policy ID not found."
+            "description": "KubeOVN traffic policy ID not found."
           }
         }
       }
