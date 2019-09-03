@@ -388,13 +388,14 @@ components:
       properties:
         cidr:
           type: string
-          description: CIDR.
+          description: CIDR representing the IP Block.
           example: 192.168.1.1/24
         except:
           type: array
           items:
             type: string
-          example: [192.168.1.2/24]
+          description: An array of CIDRs that will not be included within IP Block. Values must be in range of CIDR block.
+          example: [192.168.1.1/26]
     Port:
       type: object
       properties:

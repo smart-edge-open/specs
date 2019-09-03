@@ -558,7 +558,7 @@
         "properties": {
           "cidr": {
             "type": "string",
-            "description": "CIDR.",
+            "description": "CIDR representing the IP Block.",
             "example": "192.168.1.1/24"
           },
           "except": {
@@ -566,8 +566,9 @@
             "items": {
               "type": "string"
             },
+            "description": "An array of CIDRs that will not be included within IP Block. Values must be in range of CIDR block.",
             "example": [
-              "192.168.1.2/24"
+              "192.168.1.1/26"
             ]
           }
         }
