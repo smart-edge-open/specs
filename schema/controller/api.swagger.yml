@@ -389,12 +389,12 @@ components:
         cidr:
           type: string
           description: CIDR.
-          example: 192.30.250.0/18
+          example: 192.168.1.1/24
         except:
           type: array
           items:
             type: string
-          example: [192.168.1.1/24]
+          example: [192.168.1.2/24]
     Port:
       type: object
       properties:
