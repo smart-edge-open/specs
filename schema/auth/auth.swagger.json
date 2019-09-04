@@ -28,15 +28,11 @@
         "description": "Request authentication credentials",
         "operationId": "RequestCredentials",
         "responses": {
-          "200": {
-            "description": "A successful response.",
+          "201": {
+            "description": "Authentication credentials created",
             "schema": {
               "$ref": "#/definitions/authCredentials"
             }
-          },
-          "201": {
-            "description": "Authentication credentials created",
-            "schema": {}
           },
           "401": {
             "description": "Unauthorized",
