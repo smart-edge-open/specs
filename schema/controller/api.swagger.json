@@ -553,6 +553,35 @@
         "description": "An IPv6 address.",
         "example": "2600:2600:2600:2600::5"
       },
+      "PolicyDetailKubeOVN": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PolicySummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "ingress_rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IngressRule"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "egress_rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/EgressRule"
+                }
+              }
+            }
+          }
+        ]
+      },
       "IPBlock": {
         "type": "object",
         "properties": {
@@ -1367,7 +1396,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
+                "$ref": "#/components/schemas/PolicyDetailKubeOVN"
               }
             }
           }
@@ -1404,7 +1433,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
+                  "$ref": "#/components/schemas/PolicyDetailKubeOVN"
                 }
               }
             }

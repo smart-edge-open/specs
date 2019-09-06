@@ -383,6 +383,21 @@ components:
       example: 2600:2600:2600:2600::5
 
     # OVN Policy Schema
+    PolicyDetailKubeOVN:
+      allOf:
+        - $ref: '#/components/schemas/PolicySummary'
+        - type: object
+          properties:
+            ingress_rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/IngressRule'
+        - type: object
+          properties:
+            egress_rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EgressRule'
     IPBlock:
       type: object
       properties:
@@ -909,7 +924,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TrafficPolicyKubeOVN'
+              $ref: '#/components/schemas/PolicyDetailKubeOVN'
       responses:
         '201':
           description: Created a new KubeOVN traffic policy.
@@ -931,7 +946,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TrafficPolicyKubeOVN'
+                $ref: '#/components/schemas/PolicyDetailKubeOVN'
         '404':
           description: KubeOVN traffic policy ID not found.
     patch:
