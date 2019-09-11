@@ -930,18 +930,14 @@ which will grant the 'openness-controller' user 'cluster-admin' rights
 To install Controller with Kubernetes support you will need to obtain and save the Kubernetes security certificates. You can get the certificates with:
 
 ```
-kubeadm alpha kubeconfig user --client-name=openness-controller
+kubeadm alpha kubeconfig user --client-name=openness-controller > certs.tmp
+cat certs.tmp | grep 'certificate-authority-data: ' | sed 's/.*certificate-authority-data: //' | base64 -d > client-ca.pem
+cat certs.tmp | grep 'client-certificate-data: ' | sed 's/.*client-certificate-data: //' | base64 -d > client-cert.pem
+cat certs.tmp | grep 'client-key-data: ' | sed 's/.*client-key-data: //' | base64 -d > client-key.pem
+rm -f certs.tmp
 ```
 
-The certificates will be printed out as base64 encoded strings with proper 'tag' for each one.
-
-```
-certificate-authority-data
-client-certificate-data
-client-key-data
-```
-
-You have to decode the base64 string for each certificate and then save them to suitable location.
+Then you can move the files to location that suits you best.
 
 ### 3. Controller set up
 
