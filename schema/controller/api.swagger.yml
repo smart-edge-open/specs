@@ -39,6 +39,8 @@ tags:
     description: Applications which are deployed to a node.
   - name: Node Traffic Policies
     description: Traffic policies applied to apps or interfaces on a node.
+  - name: KubeOVN Node Traffic Policies
+    description: Traffic policies applied to apps or interfaces on a node. Used only in KubeOVN mode.
   - name: Node Interfaces
     description: Network interfaces which are configured on a node.
   - name: Node DNS Configurations
@@ -1232,6 +1234,52 @@ paths:
     delete:
       tags:
         - Node Traffic Policies
+      summary: Disassociate a traffic policy from a node application.
+      description: Disassociates a traffic policy from a node application through the controller.
+      responses:
+        '204':
+          description: The traffic policy association has been removed.
+        '404':
+          description: Node ID, app ID or traffic policy association not found.
+  /nodes/{node_id}/apps/{app_id}/kube_ovn/policy:
+    parameters:
+      - $ref: '#/components/parameters/nodeID'
+      - $ref: '#/components/parameters/appID'
+    get:
+      tags:
+        - KubeOVN Node Traffic Policies
+      summary: Get the traffic policy ID associated with a node application.
+      description: Gets the traffic policy ID associated with a node application from the controller.
+      responses:
+        '200':
+          description: The traffic policy ID for the specified node and application.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/baseResourceID'
+        '404':
+          description: Node ID or app ID not found.
+    patch:
+      tags:
+        - KubeOVN Node Traffic Policies
+      summary: Apply a traffic policy to a node application.
+      description: Applies a traffic policy to a node application from the controller.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/baseResourceID'
+      responses:
+        '200':
+          description: Traffic policy has been applied
+        '400':
+          description: Invalid traffic policy ID
+        '404':
+          description: Node ID, app ID or policy ID not found.
+    delete:
+      tags:
+        - KubeOVN Node Traffic Policies
       summary: Disassociate a traffic policy from a node application.
       description: Disassociates a traffic policy from a node application through the controller.
       responses:
