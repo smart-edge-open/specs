@@ -475,13 +475,6 @@ components:
             $ref: '#/components/schemas/EgressRule'
       required:
         - name
-    TrafficPolicyKubeOVNList:
-      type: object
-      properties:
-        policies:
-          type: array
-          items:
-            $ref: '#/components/schemas/TrafficPolicyKubeOVN'
 
     # DNS related schemas
     DNSSummary:
@@ -913,7 +906,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TrafficPolicyKubeOVNList'
+                $ref: '#/components/schemas/PolicyList'
     post:
       tags:
         - KubeOVN Traffic Policies

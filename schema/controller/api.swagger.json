@@ -697,17 +697,6 @@
           "name"
         ]
       },
-      "TrafficPolicyKubeOVNList": {
-        "type": "object",
-        "properties": {
-          "policies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TrafficPolicyKubeOVN"
-            }
-          }
-        }
-      },
       "DNSSummary": {
         "type": "object",
         "properties": {
@@ -1378,7 +1367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TrafficPolicyKubeOVNList"
+                  "$ref": "#/components/schemas/PolicyList"
                 }
               }
             }
