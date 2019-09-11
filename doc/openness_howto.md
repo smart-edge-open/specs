@@ -495,7 +495,8 @@ The steps to create a sample traffic policy are as follows:
 
 ![OpenVino Creating Traffic Policy 2](howto-images/OpenVinoCreatingTrafficPolicy1.png)
 
-After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
+After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab. 
+NOTE: The traffic rule specify the desitination traffic selector configuration with only the IP filter (192.168.200.20 is the service IP of openvino consumer application).
 
 ### 3 OpenVINO NTS Configuration and start
 In this scenario two interfaces are to be configured for NTS "UPSTREAM" (to be connected to eNodeB\upstream IP source), "DOWNSTREAM" (to be connected to EPC\downstream IP source).
@@ -1367,6 +1368,7 @@ listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
     cce[1]: [pkg=grpc] Failed to store Node credentials: error inserting record: Error 1062: Duplicate entry 'ef54af02-351d-4b3d-a758-559e395f1bc5' for key 'id'
     ```
     if it exists, delete the duplicate entry edge node on the controller and re-run edge node enrollment.
+  - Hugepages not set correctly after run 01_setup_server.sh and reboot server: You can check by running `cat /proc/meminfo | grep Huge`, and see whether there is hugepages setting. If not hugepages setting, need to check whether server's boot mode is using UEFI or BIOS legacy. You should use legacy boot mode. Suggest your change the boot mode as legacy, reinstall centos and run edgenode ansible script.
 - CUPS UI:
   - If you encounter GET userplanes list failure with Error: "Network Error",  please check oamagent nginx configuration whether enable CORS configuration. README in the epc-oam folder gives a reference nginx configuration.
     - Another possibility is SELinux. Use command `getenforce` on the server where oamagent is running. If not zero, can use command `setenforce=0`.
