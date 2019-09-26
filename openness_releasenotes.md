@@ -6,10 +6,11 @@ This document provides high level system features, issues and limitations inform
 
 # Release history 
 1. OpenNESS - 19.06
-2. OpenNESS -19.06.01 
+2. OpenNESS - 19.06.01 
+3. OpenNESS - 19.09 
 
 # Features for Release 
-1. OpenNESS - 19.06 
+1. <b>OpenNESS - 19.06 </b>
    - Edge Cloud Deployment options  
       - Controller based deployment of Applications in Docker Containers/VM–using-Libvirt
       - Controller + Kubernetes based deployment of Applications in Docker Containers
@@ -44,32 +45,71 @@ This document provides high level system features, issues and limitations inform
       - 4G/CUPS API whitepaper 
       - Cloud Connector App note
       - Openvino on OpenNESS App note
+2. <b>OpenNESS - 19.09</b>
+    - Edge Cloud Deployment options  
+      - Asyn method for image download to avoid timeout. 
+    - Dataplane 
+      - Support for OVN/OVS based Dataplane and network overlay for Network Edge (based on Kubernetes) 
+    - Cloud Adapters 
+      - Support for running Amazon Green grass cores as an OpenNESS application with OVN/OVS as Dataplane and network overlay
+    - Support for Inter-App comms 
+      - Support for OVS-DPDK or Linux bridge or Default interface for inter-Apps communication for OnPrem deployment
+    - Accelerator support 
+      - Support for HDDL-R acclerator for interference in container environment for OnPrem deployment   
+    - Edge Applications 
+      - Early Access Support for Open Visual Cloud (OVC) based Smart City App on OpenNESS OnPrem 
+      - Support for Dynamic use of VPU or CPU for Inference
+    - Gateway
+      - Support for Edge node and OpenNESS Controller gate way to support route-ability   
+    - Documentation 
+      - OpenNESS Architecture (update)
+      - OpenNESS Support for OVS as dataplane with OVN
+      - Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
+      - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
+      - OpenNESS How-to Guide (update)
 
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
+ - **OpenNESS 19.09** There are no unsupported or discontinued features relevant to this release.
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
 - **OpenNESS 19.06.01** There are no non-Intel issues relevant to this release.
+- **OpenNESS 19.06.01** 
+   - VHOST HugePages dependency
+   - Bug in getting appId by IP address for container
+   - Wrong value of appliance verification key printed by ansible script
+   - NTS is in hanging state when trying to add same traffic policy to multiple interfaces
+   - Application in VM cannot be started
+   - Bug in libvirt deployment
+   - Invalid status after app undeployment
+   - Application memory field is in MB
 
 # Known Issues
 - **OpenNESS 19.06** There are no issues relevant to this release.
 - **OpenNESS 19.06.01** There is one issue relevant to this release: it is not possible to remove application from Edge Node in case of error during application deployment. The issue concerns application in Virtual Machine.
+- **OpenNESS 19.09** 
+  - Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+  - Ansible in K8s can cause problems when rerun on a machine: 
+    - If after running all 3 scripts 
+    - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
+    - We would recommend cleaning up the installation on the node
   
 # Release Content
-  - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
-  - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
+- **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
+- **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
+- **OpenNESS 19.09** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
   
 # Hardware and Software Compatibility
-OpenNESS Edge Node product has been tested using the following hardware specification:
+OpenNESS Edge Node has been tested using the following hardware specification:
 
-- Skylake D
+## Skylake D
    - Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
-   - Motherboard type: X11SDV-16C-TP8F https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm
+   - Motherboard type: [X11SDV-16C-TP8F](https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm)
    - Intel® Xeon® Processor D-2183IT
 
-- Skylake SP
+## Skylake SP
 
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
@@ -85,18 +125,20 @@ OpenNESS Edge Node product has been tested using the following hardware specific
 |                  | (Symmetrical design) LBG integrated                           |
 | NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
 | Other card       | 2x PCIe Riser cards                                           |
+| HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 
 # Supported Operating Systems
 > OpenNESS was tested on CentOS 7.6 : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
 # Key OpenNESS solution documentation 
-- **OpenNESS Architecture and Solution overview** [OpenNESS Architecture and Solution overview link](https://github.com/open-ness/specs/blob/master/doc/architecture.md): Current Document. 
-- **OpenNESS Edge Node User guide** [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
-- **OpenNESS Controller Community Edition User guide** [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
-- **OpenNESS Reference Application User guide** [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
-- **OpenNESS Amazon AWS IoT Greengrass application note** [OpenNESS Amazon AWS IoT Greengrass application note link](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
-- **OpenNESS Baidu Cloud application note** [OpenNESS Baidu Cloud application note link](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
-- **OpenNESS How-to Guide** [OpenNESS How-to Guide](https://github.com/open-ness/specs/blob/master/doc/openness_howto.md): Document that describes typical steps involved in running common OpenNESS tasks. 
-- **OpenNESS Release Notes**[OpenNESS Release Notes](https://github.com/open-ness/specs/blob/master/openness_releasenotes.md): Document that provides high level system features, issues and limitations information for OpenNESS.
-
-
+- [OpenNESS Architecture and Solution overview link](https://github.com/open-ness/specs/blob/master/doc/architecture.md): Current Document. 
+- [OpenNESS Edge Node User guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Edge Node with installation and getting started  instructions. 
+- [OpenNESS Controller Community Edition User Guide link TBD](https://www.openness.org/resources): User guide for OpenNESS Controller Community Edition with installation and getting started instructions. 
+- [OpenNESS Reference Application User guide link TBD](https://www.openness.org/resources): User guide for running Reference OpenNESS application based on OpenVINO as OpenNESS Edge compute application. 
+- [OpenNESS Amazon AWS IoT Greengrass application note link](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md): User guide for running Amazon AWS IoT Greengrass as Edge compute Apps on OpenNESS. 
+- [OpenNESS Baidu Cloud application note link](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md): User guide for running Baidu OpenEdge as Edge compute Apps on OpenNESS. 
+- [OpenNESS How-to Guide](https://github.com/open-ness/specs/blob/master/doc/openness_howto.md): Document that describes typical steps involved in running common OpenNESS tasks. 
+- [OpenNESS Support for OVS as dataplane with OVN](https://github.com/open-ness/specs/blob/master/openness_ovn.md): Document that provides high level overview of OVN/OVS support in OpenNESS.
+- [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/openness_hddl.md): Document that provides high level overview of how HDDL-R is supported in OpenNESS.
+- [Open Visual Cloud Smart City Application on OpenNESS - Solution Overview](https://github.com/open-ness/specs/blob/master/openness_ovc.md): Document that provides high level overview of Open Visual Cloud based Smart city application in OpenNESS.
+- [OpenNESS Release Notes](https://github.com/open-ness/specs/blob/master/openness_releasenotes.md): Document that provides high level system features, issues and limitations information for OpenNESS.
