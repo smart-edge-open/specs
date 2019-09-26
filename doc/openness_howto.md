@@ -33,7 +33,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
   - [OVS inter-app communication in Native mode](#[ovs-inter-app-communication-in-native-mode)
-  - [Kubernetes Install hints](#kubernetes-install-hints)
+  - [Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints)
     - [1. Disable SE Linux & swap](#1-disable-se-linux--swap)
     - [2. Install Kubernetes](#2-install-kubernetes)
     - [3. Firewall: iptables configuration for ipv6](#3-firewall-iptables-configuration-for-ipv6)
@@ -43,14 +43,22 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [7. Proxy setting for docker and k8s](#7-proxy-setting-for-docker-and-k8s)
     - [8. Restart services](#8-restart-services)
     - [9. Firewall configuration on Kubernetes master (the Controller platform)](#9-firewall-configuration-on-kubernetes-master-the-controller-platform)
+      - [9.1. Flannel mode](#91-flannel-mode)
+      - [9.2. Kube-OVN mode](#92-kube-ovn-mode)
     - [10. Firewall configuration on Kubernetes worker (the Edge Node platform)](#10-firewall-configuration-on-kubernetes-worker-the-edge-node-platform)
     - [11. Logout & Login to reload proxy](#11-logout--login-to-reload-proxy)
   - [Edge Controller K8s master Configuration hints](#edge-controller-k8s-master-configuration-hints)
     - [1. K8s master - Initialize master](#1-k8s-master---initialize-master)
+      - [1.1. Flannel mode](#11-flannel-mode)
+      - [1.2. Kube-OVN mode](#12-kube-ovn-mode)
     - [2. Obtaining K8s certificates](#2-obtaining-k8s-certificates)
     - [3. Controller set up](#3-controller-set-up)
+      - [3.1. Flannel mode](#31-flannel-mode)
+      - [3.2. Kube-OVN mode](#32-kube-ovn-mode)
   - [Edge Node Configuration hints](#edge-node-configuration-hints)
     - [1. Edge Node set up](#1-edge-node-set-up)
+      - [1.1. Flannel mode setup](#11-flannel-mode-setup)
+      - [1.2. Kube-OVN mode setup](#12-kube-ovn-mode-setup)
     - [2. Perform node's enrollment](#2-perform-nodes-enrollment)
     - [3. Set up k8s worker - use the instruction above (Kubernetes Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-install-hints)
     - [4. Set up dnsmasq](#4-set-up-dnsmasq)
@@ -728,10 +736,11 @@ OpenNESS Edge Node with an IP address in the same subnet as for
    the provided script to get the traffic flowing and visualized:
 
     ```shell
-    cd <appliance-ce-directory>/build/openvino/clientsim
+    cd <edgenode-directory>/build/openvino/clientsim
     ./run-docker.sh
     ```
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
+
 
 ## OVS inter-app communication in Native mode
 
@@ -794,11 +803,14 @@ The following steps need to be done:
      ip link set ve1-<docker-name> up
 ```
 
-## Kubernetes Install hints
+## Kubernetes and Kube-OVN Install hints
 
-For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master nad Edge Node is assumed to be running on the same platform as Kubernetes worker.
+For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master and Edge Node is assumed to be running on the same platform as Kubernetes worker.
 Following Kubernetes set up and installation steps concerns Kubernetes master and worker platform.
 For worker platform go through the installation after Edge Node set up.
+
+OpenNESS can use Flannel or Kube-OVN as Kubernetes Network Fabric. You can find detailed installation instructions further down this document.
+In this instruction **it will be clearly stated whenever the instructions for Flannel and Kube-OVN mode differs**.
 
 ### 1. Disable SE Linux & swap
 
@@ -937,10 +949,24 @@ systemctl daemon-reload && systemctl restart docker && systemctl restart kubelet
 
 ### 9. Firewall configuration on Kubernetes master (the Controller platform)
 
+#### 9.1. Flannel mode
+
 ```
 firewall-cmd --permanent --add-port=6443/tcp
 firewall-cmd --permanent --add-port=2379-2380/tcp
 firewall-cmd --permanent --add-port=10250-10252/tcp
+firewall-cmd  --reload
+```
+
+#### 9.2. Kube-OVN mode
+
+```
+firewall-cmd --permanent --add-port=6641/tcp
+firewall-cmd --permanent --add-port=6642/tcp
+firewall-cmd --permanent --add-port=6443/tcp
+firewall-cmd --permanent --add-port=2379-2380/tcp
+firewall-cmd --permanent --add-port=10250-10252/tcp
+firewall-cmd --permanent --add-port=6081/udp
 firewall-cmd  --reload
 ```
 
@@ -960,13 +986,15 @@ firewall-cmd  --reload
 
 ### 1. K8s master - Initialize master
 
+#### 1.1. Flannel mode
+
 Update the IP address according your deployment
 
 ```
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-Note the output - the "kubeadm join" command
+**Note the output - the "kubeadm join" command** - you will need this to pair worker with Kubernetes master.
 
 Copy config
 
@@ -980,6 +1008,94 @@ Enable flannel network plugin
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/62e44c867a2846fefb68bd5f178daf4da3095ccb/Documentation/kube-flannel.yml
+```
+
+Wait couple minutes & check if k8s master works - should be `STATUS=Ready`.
+
+```
+kubectl get nodes
+```
+
+Please remember that whenever you reset your setup with 'kubeadm reset' it is possible that you may encounter an error:
+
+```
+[pkg=main] Error configuring kubernetes client: forbidden: User "openness-controller" cannot get path "/"
+```
+
+In such case please execute
+
+```
+kubectl create clusterrolebinding openness-controller-admin --clusterrole=cluster-admin --user=openness-controller
+```
+
+which will grant the 'openness-controller' user 'cluster-admin' rights
+
+#### 1.2. Kube-OVN mode
+
+Initialize kubernetes network
+
+```
+kubeadm init
+```
+
+**Note the output - the "kubeadm join" command** - you will need this to pair worker with Kubernetes master.
+
+Copy config
+
+```
+mkdir -p $HOME/.kube
+cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+Add label to master Node (replace <HOST> with your hostname)
+```
+kubectl label node <HOST> kube-ovn/role=master
+```
+
+Install Kube-OVN related CRDs
+```
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/crd.yaml
+```
+
+Install native OVS and OVN components
+```
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/ovn.yaml
+```
+
+Install the Kube-OVN Controller and CNI plugins
+```
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/kube-ovn.yaml
+```
+
+Install OpenNess daemons (please change file path according to your setup)
+```
+kubectl apply -f edgecontroller/kube-ovn/openness.yaml
+```
+
+Install default network policy (please change file path according to your setup)
+```
+kubectl apply -f edgecontroller/kube-ovn/default_network_policy.yaml
+```
+
+Install OVN tools
+```
+yum install -y unbound
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/openvswitch-2.11.1-1.el7.x86_64.rpm
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/ovn-2.11.1-1.el7.x86_64.rpm
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/ovn-common-2.11.1-1.el7.x86_64.rpm
+```
+
+After this steps please checke if `/var/run/openvswitch/ovnnb_db.sock` is present. Wait till it's available.
+
+
+Configure OVN
+
+```
+ovn-nbctl lsp-add ovn-default local-net-port
+ovn-nbctl lsp-set-addresses local-net-port unknown
+ovn-nbctl lsp-set-type local-net-port localnet
+ovn-nbctl lsp-set-options local-net-port network_name=local-network
 ```
 
 Wait couple minutes & check if k8s master works - should be `STATUS=Ready`.
@@ -1019,6 +1135,8 @@ Then you can move the files to location that suits you best.
 
 ### 3. Controller set up
 
+#### 3.1. Flannel mode
+
 Set up according to OpenNESS controller README.
 
 Edit controller-ce/.env file
@@ -1048,9 +1166,49 @@ http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
     -httpPort 8080 -grpcPort 8081 \
     -elaPort 42101 -evaPort 42102 \
     -orchestration-mode kubernetes \
-    -k8s-client-ca-path /PATH/TO/CA.CRT \
-    -k8s-client-cert-path /PATH/TO/CLIENT-CERT.CRT \
-    -k8s-client-key-path /PATH/TO/CLIENT-KEY.KEY \
+    -k8s-client-ca-path /PATH/TO/client-ca.pem \
+    -k8s-client-cert-path /PATH/TO/client-cert.pem \
+    -k8s-client-key-path /PATH/TO/client-key.pem \
+    -k8s-master-host localhost:6443 \
+    -k8s-api-path /api/v1 \
+    -k8s-master-user root
+```
+
+#### 3.2. Kube-OVN mode
+
+Set up according to OpenNESS controller README.
+
+Edit controller-ce/.env file
+
+```
+REACT_APP_CONTROLLER_API=http://<HOST_IP>:8080
+REACT_APP_ORCHESTRATION_MODE=kubernetes-ovn
+CCE_ORCHESTRATION_MODE=kubernetes-ovn
+CCE_K8S_MASTER_HOST=<HOST_IP>:6443
+CCE_K8S_MASTER_USER=root
+CCE_K8S_API_PATH=/api/v1
+CCE_K8S_CLIENT_CA_PATH=...
+CCE_K8S_CLIENT_CERT_PATH=...
+CCE_K8S_CLIENT_KEY_PATH=...
+GITHUB_TOKEN=...
+``` 
+
+> Note: Github token is not needed if you are using offline installer.
+
+Build controller using `make build` and run using `make all-up` or run cce directly:
+
+```
+go build -o dist/cce ./cmd/cce
+ 
+http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
+    -dsn "root:changeme@tcp(:8083)/controller_ce" \
+    -adminPass changeme \
+    -httpPort 8080 -grpcPort 8081 \
+    -elaPort 42101 -evaPort 42102 \
+    -orchestration-mode kubernetes-ovn \
+    -k8s-client-ca-path /PATH/TO/client-ca.pem \
+    -k8s-client-cert-path /PATH/TO/client-cert.pem \
+    -k8s-client-key-path /PATH/TO/client-key.pem \
     -k8s-master-host localhost:6443 \
     -k8s-api-path /api/v1 \
     -k8s-master-user root
@@ -1060,33 +1218,106 @@ http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
 
 ### 1. Edge Node set up
 
+#### 1.1. Flannel mode setup
+
 Set up according to OpenNESS Edge node README.
+
+Before ou run automation scripts please set the variables in `/root/edgenode/scripts/ansible/common/vars/defaults.yml`. Remember to paste join command obtained on Kubernetese master to "kubernetes_join.
+Here is the example of variable set:
+```
+kubernetes:
+  enabled: true
+kubernetes_join: "kubeadm join 10.103.104.161:6443 --token beda4a.2dr613qxnbeom0r3 --discovery-token-ca-cert-hash sha256:1594c93c6a9c4b041ad078098b3e542fa60ed166e484166715e50bccfdace08e"
+```
+
+**Please remember that this is only an example and you have to change the value ov `kubernetes_join` variable.**
+
+Now you can run script `01_setup_server.sh`, reboot the machine, then run `02_install_tools.sh` and wait till it finish successfully.
 
 Before `./03_build_and_deploy.sh`:
 
 - Edit `/etc/pki/tls/certs/controller-root-ca.pem` (check Edge Node README.md for instruction how to copy Controller's certificate to Edge Node)
 
-- Edit `/root/appliance-ce/scripts/ansible/deploy_server/vars/defaults.yml`:
+- Edit `/root/edgenode/scripts/ansible/deploy_server/vars/defaults.yml`:
 
 ```
-enrollment_endpoint: "1.2.3.4:8081" => "<CONTROLLER_IP>:8081"
+enrollment_endpoint: "<CONTROLLER_IP>:8081"
 ```
 
-- Edit `/root/appliance-ce/configs/eva.json`
+- Edit `/root/edgenode/configs/eva.json`
 
 ```
-"KubernetesMode": false => true
-"ControllerEndpoint": "1.2.3.4:8081" => "<CONTROLLER_IP>:8081"
+"KubernetesMode": true
+"ControllerEndpoint": "<CONTROLLER_IP>:8081"
+```
 
+- Edit `/root/edgenode/configs/ela.json`
+
+```
+"ControllerEndpoint": "<CONTROLLER_IP>:8081"
+```
+
+**Change <CONTROLLER_IP> to your controller's IP address** e.g
+```
+"ControllerEndpoint": "11.12.13.14:8081"
 ```
 
 Then run script `./03_build_and_deploy.sh`.
+
+#### 1.2. Kube-OVN mode setup
+
+Set up according to OpenNESS Edge node README.
+
+Before ou run automation scripts please set the variables in `/root/edgenode/scripts/ansible/common/vars/defaults.yml`. Remember to paste join command obtained on Kubernetese master to "kubernetes_join.
+Here is the example of variable set:
+```
+kubernetes:
+  enabled: true
+kubernetes_join: "kubeadm join 10.103.104.161:6443 --token beda4a.2dr613qxnbeom0r3 --discovery-token-ca-cert-hash sha256:1594c93c6a9c4b041ad078098b3e542fa60ed166e484166715e50bccfdace08e"
+kube_ovn:
+  enabled: true
+```
+**Please remember that this is only an example and you have to change the value ov `kubernetes_join` variable.**
+
+Now you can run script `01_setup_server.sh`, reboot the machine, then run `02_install_tools.sh` and wait till it finish successfully.
+
+Before `./03_build_and_deploy.sh`:
+
+- Edit `/etc/pki/tls/certs/controller-root-ca.pem` (check Edge Node README.md for instruction how to copy Controller's certificate to Edge Node)
+
+- Edit `/root/edgenode/scripts/ansible/deploy_server/vars/defaults.yml`:
+
+```
+enrollment_endpoint: "<CONTROLLER_IP>:8081"
+```
+
+- Edit `/root/edgenode/configs/eva.json`
+
+```
+"KubernetesMode": true
+"ControllerEndpoint": "<CONTROLLER_IP>:8081"
+```
+
+- Edit `/root/edgenode/configs/ela.json`
+
+```
+"KubeOVNMode": true
+"ControllerEndpoint": "<CONTROLLER_IP>:8081"
+```
+
+**Change <CONTROLLER_IP> to your controller's IP address** e.g
+```
+"ControllerEndpoint": "11.12.13.14:8081"
+```
+
+Then run script `./03_build_and_deploy.sh`.
+
 
 ### 2. Perform node's enrollment
 
 Use Controller UI to initiate enrollment.
 
-### 3. Set up k8s worker - use the instruction above ([Kubernetes Install hints](#kubernetes-install-hints))
+### 3. Set up k8s worker - use the instruction above ([Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints))
 
 Join the cluster using command from kubeadm init's output
 example:
@@ -1096,7 +1327,9 @@ kubeadm join 10.103.104.156:6443 --token <token> \
     --discovery-token-ca-cert-hash sha256:<token>
 ```
 
-### 4. Set up dnsmasq
+### 4. Set up dnsmasq - only in Flannel Mode
+
+**Please do the steps in point 4. only if you want to use Kubernetes with Flannel.** If you are performing the Kube-OVN setup please go to step [5. Reboot Edge Node](#5-reboot-edge-node])
 
 #### Disable libvirt's DNS
 
@@ -1159,7 +1392,7 @@ firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.
 firewall-cmd --reload
 ```
 
-#### Reboot Edge Node
+### 5. Reboot Edge Node
 After reboot, Edge Node containers (edgenode_appliance_1, edgenode_syslog-ng_1) must be started manually:
 
 ```
@@ -1167,7 +1400,7 @@ docker container ls -a | grep edgenode
 docker container start <ID>
 ```
 
-### 5. (master) Label worker and check status
+### 6. (master) Label worker and check status
 
 #### Label worker
 
@@ -1474,14 +1707,14 @@ brctl addbr <br_name>
 brctl addif <br_name> <interface_name>
 brctl show
 ```
-3.Edit the VM virsh edit <app_id> and add the following to <devices> block:
+3. Edit the VM virsh edit <app_id> and add the following to <devices> block:
 ```
 <interface type='bridge'>
 <source bridge='<br_name>'/>
 <model type='virtio'/>
 </interface>
 ```
-4.Start the VM from the controller UI
+4. Start the VM from the controller UI
 5. On the EdgeNode run the following to verify that the additional interface was added:
 ```
 virsh domiflist <app_id>
@@ -1507,10 +1740,9 @@ Below are list of log files on Edge Node and controller. They can highlight any 
     - The exmaple is as below:
       
       ```
-      tcpdump –i eth1 –w test.pcap. 
+      tcpdump -i eth1 -w test.pcap
       (NOTE: eth1 assumed to be Ethernet Interface used by OAMAgent) 
       ```
     - Then can use wireshark to open it and check HTTP request/response and JSON body content as below:
       
       ![WiresharkExample screen](cups-howto-images/wireshark_example.png)
-
