@@ -20,6 +20,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     * [Producer Application](#producer-application)
     * [Consumer Application](#consumer-application)
     * [Example of Producer and Consumer Applications](#example-of-producer-consumer-app)
+    * [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
     * [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
 * [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
     * [Edge Application APIs](#edge-application-apis)
@@ -74,7 +75,13 @@ OpenNESS reference edge stack combines the NFV infrastructure optimizations for 
 The architecture of the OpenNESS Edge compute reference stack is described in greater detail in following subsections of this document.
 
 ### OpenNESS Controller Community Edition
-OpenNESS Controller Community Edition consists of microservices that enable Edge compute Cloud orchestration and application lifecycle management. These microservices are Web-UI and Controller API back-end. For the purposes of ease of bring up Web-UI and Controller API back-end are running in one container. 
+OpenNESS Controller Community Edition consist a set of microservices that enable an existing Edge compute Cloud orchestration and application lifecycle management. These microservices are Web-UI, Controller API back-end and Database. 
+
+```
+edgecontroller_ui_1    - UI
+edgecontroller_cce_1   - backend
+edgecontroller_mysql_1 - database
+```
 
 Details of Edge Controller Microservices functionality: 
  
@@ -96,6 +103,8 @@ Details of Edge Controller Microservices functionality:
 The Controller microservices make extensive use of the Go programming language and its runtime libraries.
 
 The OpenNESS Controller addresses the essential functionalities of a multi-access edge orchestrator and MEC Platform manger as defined in the ETSI MEC Multi-access Edge Computing (MEC): Framework and Reference Architecture. In the rest of this document, “OpenNESS Controller Community Edition” will be referred to as “Controller” or “OpenNESS Controller”.
+
+When OpenNESS Controller interfaces an existing orchastrator like Kubernetes it does not duplicate the implementation of lifecycle management and traffic policy APIs of the Containers but it uses the existing Kubernetes APIs to execute lifecycle management and traffic policy tasks. 
 
 #### Edge Application Onboarding
 OpenNESS user need to use the Controller to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container or Virtual machine. Docker image tar.gz and VM image qcow2 are supported. The image source link needs to be over HTTPs. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
@@ -121,6 +130,13 @@ OpenNESS edge node hosts a set of microservices to enable Edge compute deploymen
 
 OpenNESS Edge Node microservices implement functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
 
+For the ease of deployment the Edge node microservices are deployed in four containers 
+```
+edgenode_appliance_1 - ELA, EVA, EDA and EAA
+nts                  - Dataplane NTS (not present when OVS is used as dataplane)
+mec-app-edgednssvr   - Edge DNS Server
+edgenode_syslog-ng_1 - Syslog
+```
 Details of Edge Node Microservices functionality: 
 
 - **Edge Application Enrolling**: During the initial boot, connect to the designated OpenNESS Controller and request to enroll. This functionality is implemented in the ELA (Edge Lifecycle Agent) microservice. As part of enrolling, the Edge node is provided a TLS based certificate, which is used for further API communication. Figure below depicts this behavior. ELA is implemented using Go lang.
@@ -133,17 +149,26 @@ Details of Edge Node Microservices functionality:
 - **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. 
 - **Edge Node Virtualization infrastructure**: Receive commands from the controller/NFV infrastructure mangers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
 - **Edge application traffic policy**: Interface to set traffic policy for application deployed on the edge node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
-- **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port, utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO.
-  - Provide Reference ACL based Application specific packet tuple filtering 
-  - Provide reference GTPU base packet learning for S1 deployment 
-  - Provide reference Simultaneous IP and S1 deployment 
-  - Provide Reference API for REST/grpc to C API 
-  - Future enhancement of UE based traffic steering for authentication (not there now)
-  - Reference implementation which does not depend on EPC implementation 
-  - Reference Packet forwarding decision independent of IO
-  - Implement KNI based interface to Edge applications running as Containers/POD 
-  - Implement DPDK vHost user based interface to Edge applications running as Virtual Machine 
-  - Implement Scatter and Gather in upstream and downstream 
+- **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port. There are 2 options for dataplane when using Kubenetests. 
+  - Option 1: Using OVN/OVS as Dataplane - recommended dataplane when incoming and outgoing flows are based on pure IP. 
+    - Implemented using [kube-ovn](https://github.com/alauda/kube-ovn)
+    - Provides IP based Five tuple based flow filtering and forwarding
+    - Same Interface can be used for Inter-App, management, Internet and Dataplane interface
+  - Option 2: Utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO. This is the recommended dataplane when incoming and outgoing flows is mix of pure IP + S1u (GTPu). 
+    - Provide Reference ACL based Application specific packet tuple filtering 
+    - Provide reference GTPU base packet learning for S1 deployment 
+    - Provide reference Simultaneous IP and S1 deployment 
+    - Provide Reference API for REST/grpc to C API 
+    - Future enhancement of UE based traffic steering for authentication (not there now)
+    - Reference implementation which does not depend on EPC implementation 
+    - Reference Packet forwarding decision independent of IO
+    - Implement KNI based interface to Edge applications running as Containers/POD 
+    - Implement DPDK vHost user based interface to Edge applications running as Virtual Machine 
+    - Implement Scatter and Gather in upstream and downstream 
+    - Dedicated interface created for datapalne based on vhost-user for VM, dpdk-kni for Containers
+    - Container or VM default Interface can be used for Inter-App, management and Internet access from application 
+    - Dedicated OVS-DPDK interface for inter-apps communication can be created in case of On-Premise deployment. 
+
 - **Application Authentication**: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only application that intends to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
@@ -212,18 +237,36 @@ In this environment, it may not be necessary to add another level of infrastruct
  
 The OpenNESS Controller may be hosted locally, or be hosted in an enterprise or public cloud to manage edge nodes in multiple physical locations.
 
+ In some cases On-Premise Edge will not have a dedicated infrastructure manager (Kubernetes, Openstack, docker swarm etc.) in such cases OpenNESS Controller Community Edition provides some basic lifecycle management of Application and services using ELA and EVA microservices (for docker and libvirt) as reference. 
+ 
+ > Note: Support for complex and complete lifecycle management of Applications/Services and VNFs/CNFs in the absence of a dedicated orchastrator is out of the scope of OpenNESS Controller Community Edition. 
+  
 ![On-Premise Edge compute](arch-images/openness_onprem.png)
 
-_Figure - On-Premise Edge Deployment Scenario_
+_Figure - On-Premise Edge Deployment Scenario without external Orchastrator_
 
 ### Network Edge Deployment Scenario
-The network edge deployment scenario is depicted in Figure below. In this scenario, edge nodes are located  in facilities owned by a network operator (e.g., a central office), and to be part of a data network including access network, core network, and edge computing infrastructure owned by a network operator. For economy of scale, this network is likely to be multi-tenant, and to be of very large scale (a national network operator may have thousands, or tens of thousands, of edge nodes). This network is likely to employ managed virtualization (e.g., OpenStack, Kubernetes) and be integrated with an operations and support system through which not only the edge computing infrastructure, but the network infrastructure, is managed.
+The network edge deployment scenario is depicted in Figure below. In this scenario, edge nodes are located  in facilities owned by a network operator (e.g., a central office, Regional Data Center), and to be part of a data network including access network (4G, 5GNR), core network (EPC, NGC), and edge computing infrastructure owned by a network operator. For economy of scale, this network is likely to be multi-tenant, and to be of very large scale (a national network operator may have thousands, or tens of thousands, of edge nodes). This network is likely to employ managed virtualization (e.g., OpenStack, Kubernetes) and be integrated with an operations and support system through which not only the edge computing infrastructure, but the network infrastructure, is managed.
  
 In this environment, OpenNESS integrates with the virtualization infrastructure in use in the operator network; the OpenNESS Controller manages the edge nodes in its domain via the virtualization infrastructure.
 
+> Note: When OpenNESS Controller interfaces an existing orchastrator like Kubernetes it does not duplicate the implementation of lifecycle management and traffic policy APIs of the Containers but it uses the existing Kubernetes APIs to execute lifecycle management and traffic policy tasks. 
+
+The diagram below shows a deployment Option utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO. This is the recommended dataplane when incoming and outgoing flows is mix of pure IP + S1u (GTPu). 
+
 ![Network Edge compute](arch-images/openness_networkedge.png)
 
-_Figure 7 - Network Edge Deployment Scenario_
+_Figure - Network Edge Deployment Scenario_
+
+OpenNESS also supports using OVN/OVS as Dataplane. This is the recommended dataplane when incoming and outgoing flows are based on pure IP. This is implemented using [kube-ovn](https://github.com/alauda/kube-ovn)
+
+In this mode OVN/OVS can support: 
+ - IP based Five tuple based flow filtering and forwarding
+ - Same Interface used for Inter-App, management, Internet and Dataplane interface
+
+![Network Edge compute](arch-images/openness_networkedge_ovs.png)
+
+_Figure - Network Edge Deployment Scenario with OVS as dataplane_
 
 ## OpenNESS Edge Node Applications
 OpenNESS Applications can onboarded and provisioned on the edge node only through OpenNESS Controller. The first step in Onboarding involves uploading the application image to the controller through the web interface. Both VM and Container images are supported. 
@@ -261,12 +304,19 @@ The OpenNESS release includes reference producer and consumer applications.
 
 _Figure 8 - Example of Producer and Consumer Applications_
 
-The consumer application is based on OpenVINO [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
+The consumer application is based on [OpenVINO](https://software.intel.com/en-us/openvino-toolkit)
 
 - OpenVINO consumer app executes inference on input video stream
 - OpenVINO producer app generates notifications to the consumer app for changing the inference model
 - Video input stream is captured from a webcam installed on an Embedded Linux client device
 - The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
+
+### Dynamic CPU and VPU usage 
+OpenNESS demonstrates one more great applicability Edge compute and efficient resource utilization in the Edge cloud. OpenVINO sample application supports dynamic use of VPU or CPU for Object detection depending on the input from Producer application. The producer application can behave as a load balancer. It also demonstrates the Application portability with OpenVINO so that it can run on CPU or VPU. 
+
+![OpenNESS Reference Application](arch-images/openness_hddlr.png)
+
+More details about HDDL-R support in OpenNESS for Applications using OpenVINO SDK can be found here [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/openness_hddl.md). 
 
 ### Cloud Adapter Edge compute Application
 All the major Cloud Service providers are implementing frameworks to deploy edge applications that link back to their cloud via connectors. For example, Amazon Greengrass enables lambda functions to be deployed on the edge and connecting to the AWS cloud using the GreenGrass service. While it was originally intended to host this type of edge software on IoT gateways, the same framework can be utilized by Service Providers and Enterprises, to implement a multi-cloud strategy for their Edge Nodes.  
