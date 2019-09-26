@@ -134,7 +134,7 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
-> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edge_apps>/build/openvino. 
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino. 
 
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
@@ -217,7 +217,7 @@ The steps to create a sample traffic policy are as follows:
 - From UI navigate to 'TRAFFIC POLICIES' tab.
 - Click 'ADD POLICY'.
 
-> Note: This traffic specific traffic policy is only an example.
+> Note: This specific traffic policy is only an example.
 
 ![Creating Traffic Policy 1](howto-images/CreatingTrafficPolicy.png)
 - Give policy a name.
@@ -282,7 +282,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
   - Driver: userspace
   - Type: upstream
   - Fall-back Interface: PCI address of another available interface ie. '0000:86:00.1'
-  - In case of two interfaces being configured one for 'Upstream' other for 'Downstream' the fallback interface for 'Upstream' is the 'Downstream' interface and vice versa.
+  - In case of two interfaces being configured, one for 'Upstream' another for 'Downstream', the fallback interface for 'Upstream' is the 'Downstream' interface and vice versa.
 - Click 'SAVE'.
 
 ![Configuring Interface 2](howto-images/AddingInterfaceToNTS1.png)
@@ -426,6 +426,8 @@ Following steps needs to be done:
 ## Deploying OpenVINO application 
 In this section the steps involved in deploying sample OpenVino consumer and producer applications on EdgeNode will be provided. For more information on OpenVino sample applications click here: [OpenNESS Application](https://github.com/open-ness/specs/blob/master/doc/architecture.md#openness-edge-node-applications). It is assumed that the user has already configured their Edge Node and Edge controller platforms and has completed the enrollment phase.
 
+![OpenVino High Level Diagram](howto-images/setup.png)
+
 ### 1 OpenVINO Creating Applications
 
 Prerequisite:
@@ -434,7 +436,7 @@ Prerequisite:
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
 
-> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edge_apps>/build/openvino for instructions on how to build the image for the application and how to enable different modes of execution for Producer application (ie. CPU or HDDL support). For instructions on how to configure Edge Node for deployment of OpenVINO sample application with support for HDDL devices refer to section '7.3.6' of README.md file in <edge_node> repository.
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino for instructions on how to build the image for the application and how to enable different modes of execution for Producer application (ie. CPU or HDDL support). For instructions on how to configure Edge Node for deployment of OpenVINO sample application with support for HDDL devices refer to section '7.3.6' of README.md file in <edgenode> repository.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
 - From UI go to "APPLICATIONS" tab.
@@ -733,7 +735,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
 
 ## OVS inter-app communication in Native mode
 
-Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section '7.3.2. Native IAC mode' of README.md file inside EdgeNode repository.
+Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section ['7.3.2. Native IAC mode'](##https://github.com/otcshare/edgenode/blob/master/README.md#732-native-iac-mode ) of README.md file inside EdgeNode repository.
 
 ### Setting up IAC
 
@@ -753,7 +755,7 @@ The following steps need to be done:
 
 - Additionally to view all the application interfaces on OVS bridge from same terminal run:
 
-```
+```shell
     ovs-vsctl list-ports br0
 ```
 - For each application an interface called ```ve1-<docker-name>``` will be present, ie. ``` ve1-fd6d483e- ```.
@@ -762,33 +764,33 @@ The following steps need to be done:
 
 - For first application.
 
-```
+```shell
     docker exec -it <docker-ID> ip addr add 192.168.120.17 dev <iac-interface-name>
     docker exec -it <docker-ID> ip link set <iac-interface-name> up
 ```
 
 - For second application.
 
-```
+```shell
     docker exec -it <docker-ID> ip addr add 192.168.120.18 dev <iac-interface-name>
     docker exec -it <docker-ID> ip link set <iac-interface-name> up
 ```
 
 - With both applications/interfaces configured communicate from  container one to container two using 'ping'.
 
-```
+```shell
     docker exec -it <docker-ID-app1> ping 192.168.120.18
 ```
 - Response ping message is expected.
 - In an event when an image without ping utility has beed used, execute into pinging container ie.
 
-```
+```shell
     docker exec -it <container-ID> /bin/bash
 ```
 - Install ping utility ``` iputils-ping ```
 
 - Troubleshooting: In an event of no response from 'ping'. Check if the corresponding ``` ve1-<docker-name> ``` interfaces are up. If not bring them up from host's terminal.
-```
+```shell
      ip link set ve1-<docker-name> up
 ```
 
