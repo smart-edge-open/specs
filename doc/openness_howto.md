@@ -88,8 +88,10 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [Tcpdump](#tcpdump)
   - [Troubleshooting](#troubleshooting)
     - [Additional port to VM](#additional-port-to-vm)
+    - [How Apps can resolve EAA domain name](#how-apps-can-resolve-eaa-domain-name)
     - [Minimum Hugepages](#minimum-hugepages)
     - [Log files](#log-files)
+    
 
 ## Introduction
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
@@ -1719,6 +1721,12 @@ brctl show
 ```
 virsh domiflist <app_id>
 ```
+### How Apps can resolve EAA domain name
+
+EAA domain name is Configured at `edgenode/scripts/ansible/deploy_server/tasks/os/virsh_recreate_network_config.yml` file (line #38). 
+You can modify `virsh_recreate_network_config.yml` before `run 03_build_and_deploy.sh`
+If you want to modify it for already deployed system, you can do it with `virsh net-edit default` and `restart libvirtd`.
+
 ### Minimum Hugepages 
 
 When using NTS as the Dataplane microservice it uses 2GB of hugepages from the first numa socket (on dual socket platform). Any addition hugepages that will be allocated can be used for Apps running as VMs(VM memory is HugePage based) or docker containers. Hugepages usage in the docker container depends on the application. 
