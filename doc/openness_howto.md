@@ -774,14 +774,14 @@ The following steps need to be done:
 - For first application.
 
 ```shell
-    docker exec -it <docker-ID> ip addr add 192.168.120.17 dev <iac-interface-name>
+    docker exec -it <docker-ID> ip addr add 192.168.120.17/24 dev <iac-interface-name>
     docker exec -it <docker-ID> ip link set <iac-interface-name> up
 ```
 
 - For second application.
 
 ```shell
-    docker exec -it <docker-ID> ip addr add 192.168.120.18 dev <iac-interface-name>
+    docker exec -it <docker-ID> ip addr add 192.168.120.18/24 dev <iac-interface-name>
     docker exec -it <docker-ID> ip link set <iac-interface-name> up
 ```
 
