@@ -809,7 +809,7 @@ The following steps need to be done:
 
 For the Kubernetes setup OpenNESS controller is assumed to be running on the same platform as Kubernetes master and Edge Node is assumed to be running on the same platform as Kubernetes worker.
 Following Kubernetes set up and installation steps concerns Kubernetes master and worker platform.
-For worker platform go through the installation after Edge Node set up.
+For worker platform the installation is done by ansible scripts during Edge Node set up.
 
 OpenNESS can use Flannel or Kube-OVN as Kubernetes Network Fabric. You can find detailed installation instructions further down this document.
 In this instruction **it will be clearly stated whenever the instructions for Flannel and Kube-OVN mode differs**.
@@ -1219,6 +1219,8 @@ http_proxy= https_proxy= HTTP_PROXY= HTTPS_PROXY= ./dist/cce \
 ## Edge Node Configuration hints
 
 ### 1. Edge Node set up
+
+Steps 3. and 4. are now included in ansible Edge Node set up scripts. Step 5. (reboot) is required. 
 
 #### 1.1. Flannel mode setup
 
