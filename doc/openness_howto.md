@@ -32,6 +32,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
     - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
+  - [OVS inter-app communication in Native mode](#[ovs-inter-app-communication-in-native-mode)
   - [Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints)
     - [1. Disable SE Linux & swap](#1-disable-se-linux--swap)
     - [2. Install Kubernetes](#2-install-kubernetes)
@@ -94,7 +95,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 The aim of this guide is to familiarize the user with OpenNESS controller's User Interface. This "How to" guide will provide instructions on how to create a sample configuration via UI.
 
 ## Instructions
-
+Following are general purpose sample instructions allowing the user to get familiarized with the Edge Controller Web UI. Additional instruction for specific deployment with sample OpenVINO applications is provided under [Deploying OpenVINO application](##deploying-openvino-application).
 ### Prerequisites
 1. Controller and Edge node installation and configuration is assumed to be run as `root`. 
 2. Controller Web UI only supports only one user and its `admin` user.   
@@ -141,7 +142,7 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
-> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edge_node>/build/openvino. 
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino. 
 
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
@@ -156,14 +157,14 @@ In order to access the UI the user needs to provide credentials during login.
 
 Prerequisites:
 - An internet browser to access the login page.
-- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/edgecontroller/ui/controller/.env" file.
+- REACT_APP_CONTROLLER_API='http://<Controller_IP_address>:8080' added to Controller's "~/edgecontroller/.env" (manual Controller installation) or "/opt/controller/.env" (Ansible Controller installation) file.
 - If working behind proxy or firewall appropriate ports open.
 - Controller set up (including the UI application) and running.
 
 The following steps need to be done for successful login:
 - Open internet browser.
 - Type in http://<Controller_ip_address>:3000/login in address bar.
-- Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the CCE_ADMIN_PASSWORD in "~/edgecontroller/ui/controller/.env").
+- Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the CCE_ADMIN_PASSWORD in "~/edgecontroller/.env" (Manual installation) or "/opt/controller/.env" (Ansible installation)) .
 - Click on "SIGN IN" button.
 
 ![Login screen](howto-images/login.png)
@@ -196,7 +197,7 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 ![Add Edge Node 3](howto-images/Enroll3.png)
 
 ### NTS Configuration
-TBA
+OpenNESS data-plane interface configuration.
 
 #### Displaying Edge Node's Interfaces
 Prerequisites:
@@ -223,6 +224,8 @@ Prerequisites:
 The steps to create a sample traffic policy are as follows:
 - From UI navigate to 'TRAFFIC POLICIES' tab.
 - Click 'ADD POLICY'.
+
+> Note: This specific traffic policy is only an example.
 
 ![Creating Traffic Policy 1](howto-images/CreatingTrafficPolicy.png)
 - Give policy a name.
@@ -256,6 +259,8 @@ To add a previously created traffic policy to an interface available on Edge Nod
 - Find Edge Node on the 'List Of Edge Nodes'.
 - Click "EDIT".
 
+> Note: This step is instructional only, users can decide if they need/want a traffic policy designated for their interface, or if they desire traffic policy designated per application instead.
+
 ![Adding Traffic Policy To Interface 1](howto-images/AddingTrafficPolicyToInterface1.png)
 
 - Navigate to "INTERFACES" tab.
@@ -285,6 +290,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
   - Driver: userspace
   - Type: upstream
   - Fall-back Interface: PCI address of another available interface ie. '0000:86:00.1'
+  - In case of two interfaces being configured, one for 'Upstream' another for 'Downstream', the fallback interface for 'Upstream' is the 'Downstream' interface and vice versa.
 - Click 'SAVE'.
 
 ![Configuring Interface 2](howto-images/AddingInterfaceToNTS1.png)
@@ -300,6 +306,9 @@ Prerequisite:
 - Interfaces to be used by NTS configured correctly.
 
 > Note: In this example 2 interfaces are used by NTS. One interface of 'Type: upstream' and a second interface of 'Type: downstream'.
+
+> Note: <br />  UPSTREAM = Data-plane communication from eNodeB/traffic generator -> OpenNESS EdgeNode and vice versa. <br />
+DOWNSTREAM = Data-plane communication from OpenNESS EdgeNode -> EPC/PDN and vice versa.
 
 Once the interfaces are configured accordingly the following steps need to be done:
 - From UI navigate to 'INTERFACES' tab of the Edge Node.
@@ -425,6 +434,8 @@ Following steps needs to be done:
 ## Deploying OpenVINO application 
 In this section the steps involved in deploying sample OpenVino consumer and producer applications on EdgeNode will be provided. For more information on OpenVino sample applications click here: [OpenNESS Application](https://github.com/open-ness/specs/blob/master/doc/architecture.md#openness-edge-node-applications). It is assumed that the user has already configured their Edge Node and Edge controller platforms and has completed the enrollment phase.
 
+![OpenVino High Level Diagram](howto-images/setup.png)
+
 ### 1 OpenVINO Creating Applications
 
 Prerequisite:
@@ -432,6 +443,8 @@ Prerequisite:
 - User is logged in to UI.
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
+
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino for instructions on how to build the image for the application and how to enable different modes of execution for Producer application (ie. CPU or HDDL support). For instructions on how to configure Edge Node for deployment of OpenVINO sample application with support for HDDL devices refer to section '7.3.6' of README.md file in <edgenode> repository.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
 - From UI go to "APPLICATIONS" tab.
@@ -509,6 +522,9 @@ NOTE: The traffic rule specify the desitination traffic selector configuration w
 ### 3 OpenVINO NTS Configuration and start
 In this scenario two interfaces are to be configured for NTS "UPSTREAM" (to be connected to eNodeB\upstream IP source), "DOWNSTREAM" (to be connected to EPC\downstream IP source).
 The eNodeB and EPC set up is outside scope of this document. Instructions for sample client server for video traffic simulation will be provided (in place of eNodeB), as well as instructions how to make a 'dummy' EPC connection.
+
+> Note: <br />  UPSTREAM = Data-plane communication from eNodeB/traffic generator -> OpenNESS EdgeNode  and vice versa. <br />
+DOWNSTREAM = Data-plane communication from OpenNESS EdgeNode -> EPC/PDN and vice versa.
 
 Prerequisites:
 - Enrollment phase completed successfully.
@@ -724,6 +740,68 @@ OpenNESS Edge Node with an IP address in the same subnet as for
     ./run-docker.sh
     ```
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
+
+
+## OVS inter-app communication in Native mode
+
+Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section ['7.3.2. Native IAC mode'](##https://github.com/otcshare/edgenode/blob/master/README.md#732-native-iac-mode ) of README.md file inside EdgeNode repository.
+
+### Setting up IAC
+
+Prerequisite:
+- Edge Node configured with 'Native IAC' mode.
+- Enrollment phase completed successfully.
+- Two edge applications with support for 'ping' utility are deployed.
+  (Refer to section [Deploying Applications](##deploying-applications) for information on how to deploy application and the necessary prerequisites)
+
+The following steps need to be done:
+- To verify that you application container has additional virtual interface for IAC run following command for each of the two application containers from EdgeNode host's terminal.
+
+```shell
+    docker exec -it <container-ID> ip addr
+```
+- From the output of the command verify that an interface called ```ve2-<docker-name>``` is present i.e ``` ve2-fd6d483e-```.
+
+- Additionally to view all the application interfaces on OVS bridge from same terminal run:
+
+```shell
+    ovs-vsctl list-ports br0
+```
+- For each application an interface called ```ve1-<docker-name>``` will be present, ie. ``` ve1-fd6d483e- ```.
+
+- To communicate between the two interfaces. Assign IP addresses for interfaces of the two applications.
+
+- For first application.
+
+```shell
+    docker exec -it <docker-ID> ip addr add 192.168.120.17 dev <iac-interface-name>
+    docker exec -it <docker-ID> ip link set <iac-interface-name> up
+```
+
+- For second application.
+
+```shell
+    docker exec -it <docker-ID> ip addr add 192.168.120.18 dev <iac-interface-name>
+    docker exec -it <docker-ID> ip link set <iac-interface-name> up
+```
+
+- With both applications/interfaces configured communicate from  container one to container two using 'ping'.
+
+```shell
+    docker exec -it <docker-ID-app1> ping 192.168.120.18
+```
+- Response ping message is expected.
+- In an event when an image without ping utility has beed used, execute into pinging container ie.
+
+```shell
+    docker exec -it <container-ID> /bin/bash
+```
+- Install ping utility ``` iputils-ping ```
+
+- Troubleshooting: In an event of no response from 'ping'. Check if the corresponding ``` ve1-<docker-name> ``` interfaces are up. If not bring them up from host's terminal.
+```shell
+     ip link set ve1-<docker-name> up
+```
 
 ## Kubernetes and Kube-OVN Install hints
 
