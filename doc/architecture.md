@@ -38,7 +38,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
  
-It leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to to downstream traffic safety applications.
+It leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to downstream traffic safety applications.
  
 OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with regard to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
  
@@ -46,9 +46,9 @@ Because it is an open source platform, OpenNESS enables operators, ISVs, and OSV
 
 ### Key Terminologies defining OpenNESS 
 - **Orchestration**: Orchestration in the context of OpenNESS refers to exposing northbound APIs for Deploying, Managing, Automating the Edge compute cluster and Applications that run on the cluster. E.g. OpenNESS North bound APIs that can be used by Orchestrators like ONAP for managing the OpenNESS edge solution.  
-- **Edge Services**: Edge Services in the context of OpenNESS refers to the Applications that service end-user traffic and Applications that provide services to other Edge compute Applications. E.g. CDN is a Edge application that services end-user traffic and Transcoding services is a application that provides service to CDN application.  
+- **Edge Services**: Edge Services in the context of OpenNESS refers to the Applications that service end-user traffic and Applications that provide services to other Edge compute Applications. E.g. CDN is an Edge application that services end-user traffic whereas Transcoding services is an application that provides service to CDN application.  
 - **Network platform**: Network platform in the context of OpenNESS refers to nodes that are deployed in Network or On-Premise edge compute processing. These are typically COTS platforms which can host both Applications and VNFs. 
-- **Access technologies**: Access technologies in the context of OpenNESS refers to various types of traffic types that OpenNESS solution can be handle. They include LTE (GTP/IP), Wireline (IP) and Wifi (IP).  
+- **Access technologies**: Access technologies in the context of OpenNESS refers to various types of traffic that OpenNESS solution can be handle. They include LTE (GTP/IP), Wireline (IP) and Wifi (IP).  
 - **Multi Cloud**: Multi Cloud in the context of OpenNESS refers to support in OpenNESS to host multiple Public or Private cloud application on the same node or in the OpenNESS compute cluster. These cloud applications can come from e.g. Amazon aws greengrass, Baidu cloud etc. 
   
 ## Overview
@@ -64,7 +64,7 @@ The Controller operates the Edge Nodes by invoking the Edge Node APIs, and in tu
 
 OpenNESS is intended for customers like Operators to conduct lab/field trials of edge compute in Network edge and On-Premise Edge, ISVs or OSVs to develop edge compute infrastructure solutions that take advantage of the goodness of COTS Architecture and Application developers who intend to develop applications for the edge, port the applications from public cloud to edge to take advantage of being closer to user. OpenNESS components could also be used as a middleware layer for enabling any NFVi platform hosting edge services.
 
-OpenNESS based edge compute reference stack consists of one or more OpenNESS Edge node that hosts edge compute applications or serve as a local breakout servers and an edge compute OpenNESS controller (Community edition) that manages the OpenNESS edge compute nodes. 
+OpenNESS based edge compute reference stack consists of one or more OpenNESS Edge nodes that host edge compute applications or serve as a local breakout servers and an edge compute OpenNESS controller (Community edition) that manages the OpenNESS edge compute nodes. 
 
 ![OpenNESS Architecture overview](arch-images/openness_overview.png)
 
@@ -107,15 +107,15 @@ The OpenNESS Controller addresses the essential functionalities of a multi-acces
 When OpenNESS Controller interfaces an existing orchastrator like Kubernetes it does not duplicate the implementation of lifecycle management and traffic policy APIs of the Containers but it uses the existing Kubernetes APIs to execute lifecycle management and traffic policy tasks. 
 
 #### Edge Application Onboarding
-OpenNESS user need to use the Controller to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container or Virtual machine. Docker image tar.gz and VM image qcow2 are supported. The image source link needs to be over HTTPs. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
+OpenNESS user need to use the Controller to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container or Virtual machine. Docker image tar.gz and VM image qcow2 are supported. The image source link needs to be over HTTPS. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
 
  ![Edge Application Onboarding](arch-images/openness_apponboard.png)
 
  _Figure - Edge Application Onboarding_
 
-1. User sets up the HTTPs based Application image server. The image source needs to support HTTPs download. Edge node trusts public CAs and the one from the controller. 
-2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPs. 
-3. User initiates the Application deploy step using the Controller UI. This step initiates the download of the image from the HTTPs server to the Edge node. After this step EVA registers the Application image. 
+1. User sets up the HTTPS based Application image server. The image source needs to support HTTPS download. Edge node trusts public CAs and the one from the controller. 
+2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPS.
+3. User initiates the Application deploy step using the Controller UI. This step initiates the download of the image from the HTTPS server to the Edge node. After this step EVA registers the Application image. 
 4. User starts the Application. Which kick starts the Container/Pod/VM. 
 
 ### OpenNESS Edge Node
@@ -152,14 +152,14 @@ Details of Edge Node Microservices functionality:
 - **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port. There are 2 options for dataplane when using Kubenetests. 
   - Option 1: Using OVN/OVS as Dataplane - recommended dataplane when incoming and outgoing flows are based on pure IP. 
     - Implemented using [kube-ovn](https://github.com/alauda/kube-ovn)
-    - Provides IP based Five tuple based flow filtering and forwarding
+    - Provides IP 5-tuple based flow filtering and forwarding
     - Same Interface can be used for Inter-App, management, Internet and Dataplane interface
   - Option 2: Utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO. This is the recommended dataplane when incoming and outgoing flows is mix of pure IP + S1u (GTPu). 
     - Provide Reference ACL based Application specific packet tuple filtering 
     - Provide reference GTPU base packet learning for S1 deployment 
     - Provide reference Simultaneous IP and S1 deployment 
     - Provide Reference API for REST/grpc to C API 
-    - Future enhancement of UE based traffic steering for authentication (not there now)
+    - Future enhancement of UE based traffic steering for authentication
     - Reference implementation which does not depend on EPC implementation 
     - Reference Packet forwarding decision independent of IO
     - Implement KNI based interface to Edge applications running as Containers/POD 
