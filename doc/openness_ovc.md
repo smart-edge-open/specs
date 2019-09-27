@@ -9,8 +9,8 @@ Copyright (c) 2019 Intel Corporation
 * [OVC Processing pipeline](#ovc-processing-pipeline)  
 * [OpenNESS integration with OVC Application](#openness-integration-with-ovc-application)
 * [Data and Control flow](#data-and-control-flow)
-* [Porting Lessons learnt](#porting-lessons-learnt)
-* [Summary](#summary)
+* [Open Visual Cloud & OpenNESS Integration](#open-visual-cloud-openness-integration)
+* [Conclusion](#conclusion)
 
 ## OpenNESS Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
@@ -33,19 +33,19 @@ OpenNESS provides the underpinning network edge infrastructure which comprises o
 
 ![Smart City Architecure Deployed with OpenNESS](ovc-images/smart-city-architecture.png)
 
-The Open Visual Cloud website is located at [https://01.org/openvisualcloud](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available at [https://github.com/OpenVisualCloud/Smart-City-Sample](https://github.com/OpenVisualCloud/Smart-City-Sample) and the integration branch at [https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness).
+The Open Visual Cloud website is located at [Open Visual Cloud project](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available on [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample) and its integration with OpenNESS is available at this [branch](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness).
 
 ## The Smart City Building Blocks
 The Smart City sample consists of the following major building blocks:
 
 ![Smart City Building Blocks](ovc-images/scope.png)
 
-- **Camera Provisioning**: Tag and calibrate cameras for installation locations, calibration parameters and other usage pattern information.
+- **Camera Provisioning**: Tag and calibrate cameras for installation locations, calibration parameters and other usage pattern information. *Not fully implemented*.
 - **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See Sensor README for additional details.
 - **Recording**: Record and manage segmented camera footage for preview or review (at a later time) purpose.
 - **Analytics**: Perform analytics on the live/recorded camera streams. Latency-sensitive analytics are performed on Edge while others are on cloud.
 - **Triggers and Alerts**: Manage triggers on analytics data. Respond with actions on triggered alerts.
-- **Smart Upload and Archive**: Transcode and upload only critical data to cloud for archival or further offline analysis.
+- **Smart Upload and Archive**: Transcode and upload only critical data to cloud for archival or further offline analysis. *Not fully implemented*.
 - **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.
 - **UI**: Present above data to users/administrators/city planners.
 
@@ -84,9 +84,9 @@ The **Cloud** and **Camera** parts of the Smart City Application are not part of
 
 ![Smart City Application UI](ovc-images/screenshot.gif)
 
-## Porting Lessons learnt 
+## Open Visual Cloud & OpenNESS Integration
 
-The integration of the Smart City application with the OpenNESS infrastructure presents unique challenges on both the application and the infrastructure:
+The integration of the Smart City application with the OpenNESS infrastructure presents unique challenges on both the application and the infrastructure.
 
 ### The Infrastructure Challenges
 
@@ -102,6 +102,6 @@ OpenNESS limits service requests initiated from the cloud to the Edge nodes. The
 
 The deployment script is also rewritten to separate the launch of the services into three networks: cloud, edge and camera. Using VM as a launch vehicle, we also have to develop automation scripts to bring up the containers within VM and to establish secure connections to the cloud for registration and service redirection.
 
-## Summary
+## Conclusion
 
 The Smart City sample when deployed on the Edge nodes based on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS, Open Visual Cloud and OpenVINO. The integration shows that the three can run together to show scalable Edge deployment and low-latency analytics processing on Edge nodes.
