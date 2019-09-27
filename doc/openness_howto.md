@@ -60,13 +60,13 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [1.1. Flannel mode setup](#11-flannel-mode-setup)
       - [1.2. Kube-OVN mode setup](#12-kube-ovn-mode-setup)
     - [2. Perform node's enrollment](#2-perform-nodes-enrollment)
-    - [3. Set up k8s worker - use the instruction above (Kubernetes Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-install-hints)
-    - [4. Set up dnsmasq](#4-set-up-dnsmasq)
+    - [3. Set up k8s worker - use the instruction above (Kubernetes and Kube-OVN Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-and-kube-ovn-install-hints)
+    - [4. Set up dnsmasq - only in Flannel mode](#4-set-up-dnsmasq---only-in-flannel-mode)
       - [Disable libvirt's DNS](#disable-libvirts-dns)
       - [Run commands in order to redefine network](#run-commands-in-order-to-redefine-network)
       - [Set up custom dnsmasq](#set-up-custom-dnsmasq)
-      - [Reboot Edge Node](#reboot-edge-node)
-    - [5. (master) Label worker and check status](#5-master-label-worker-and-check-status)
+    - [5. Reboot Edge Node](#5-reboot-edge-node---only-in-flannel-mode)
+    - [6. (master) Label worker and check status](#6-master-label-worker-and-check-status)
       - [Label worker](#label-worker)
       - [Check status of nodes](#check-status-of-nodes)
   - [CUPS UI usage](#cups-ui-usage)
@@ -86,6 +86,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Verification](#verification)
       - [NES client](#nes-client)
       - [Tcpdump](#tcpdump)
+  - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Additional port to VM](#additional-port-to-vm)
     - [How Apps can resolve EAA domain name](#how-apps-can-resolve-eaa-domain-name)
@@ -840,7 +841,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kube*
 EOF
  
-yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+yum install -y kubelet-1.15.3 kubeadm-1.15.3 kubectl-1.15.3 --disableexcludes=kubernetes
 ```
 
 ### 3. Firewall: iptables configuration for ipv6
@@ -1321,7 +1322,7 @@ Then run script `./03_build_and_deploy.sh`.
 
 Use Controller UI to initiate enrollment.
 
-### 3. Set up k8s worker - use the instruction above ([Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints))
+### 3. Set up k8s worker - use the instruction above (Kubernetes and Kube-OVN Install hints)
 
 Join the cluster using command from kubeadm init's output
 example:
@@ -1333,7 +1334,7 @@ kubeadm join 10.103.104.156:6443 --token <token> \
 
 ### 4. Set up dnsmasq - only in Flannel Mode
 
-**Please do the steps in point 4. only if you want to use Kubernetes with Flannel.** If you are performing the Kube-OVN setup please go to step [5. Reboot Edge Node](#5-reboot-edge-node])
+**Please do the steps in point 4. only if you want to use Kubernetes with Flannel.**
 
 #### Disable libvirt's DNS
 
@@ -1396,10 +1397,14 @@ firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.
 firewall-cmd --reload
 ```
 
-### 5. Reboot Edge Node
-After reboot, Edge Node containers (edgenode_appliance_1, edgenode_syslog-ng_1) must be started manually:
+### 5. Reboot Edge Node - only in Flannel Mode
+
+**Please do the steps in point 5. only if you want to use Kubernetes with Flannel.**
+
+After reboot add virbr0, Edge Node containers (edgenode_appliance_1, edgenode_syslog-ng_1) must be started manually:
 
 ```
+brctl addbr virbr0
 docker container ls -a | grep edgenode
 docker container start <ID>
 ```
@@ -1671,6 +1676,10 @@ listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
 10 packets received by filter
 0 packets dropped by kernel
 ```
+
+## Platform upgrade
+
+Currently platform upgrade is not supported. Due to the numerous changes in OpenNESS we strongly advise you to create new setup for each new release. We are sorry for the inconvenience.
 
 ## Troubleshooting
 - Controller UI:
