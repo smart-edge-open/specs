@@ -1714,7 +1714,7 @@ Currently platform upgrade is not supported. Due to the numerous changes in Open
       ```
 
 ### Modify OVN gateway port 
-If the user wants to modify a locally connected OVN gateway port(MAC/IP) they can modify the Ansible script `ansible/roles/kubernetes/tasks/subtasks/enable_kubeovn.yml` at line 43
+If the user wants to modify a locally connected OVN gateway port(MAC/IP) they can modify the Ansible script `ansible/roles/kubernetes/tasks/subtasks/enable_kubeovn.yml` "Configure OVN" section
  
 ### Additional port to VM
 
