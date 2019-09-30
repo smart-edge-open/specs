@@ -88,6 +88,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [Tcpdump](#tcpdump)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
+    - [Modify OVN gateway port](#modify-ovn-gateway-port)
     - [Additional port to VM](#additional-port-to-vm)
     - [How Apps can resolve EAA domain name](#how-apps-can-resolve-eaa-domain-name)
     - [Minimum Hugepages](#minimum-hugepages)
@@ -1711,6 +1712,10 @@ Currently platform upgrade is not supported. Due to the numerous changes in Open
       Func:execute(Line:407)Not valid PGW id(5) or SGW Id (5) for GetID (3).
       Func:execute(Line:444)UserplanesGet For (3) Failed (404 Userplane not found).
       ```
+
+### Modify OVN gateway port 
+If the user wants to modify a locally connected OVN gateway port(MAC/IP) they can modify the Ansible script `ansible/roles/kubernetes/tasks/subtasks/enable_kubeovn.yml` at line 43
+ 
 ### Additional port to VM
 
 1. Deploy a VM from the Controller UI without starting it.
