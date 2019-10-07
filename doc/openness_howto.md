@@ -178,7 +178,7 @@ The following steps need to be done for successful login:
 In order for the Controller and Edge Node to work together the Edge Node needs to enroll with the Controller. The Edge Node will continuously try to connect to the controller until its serial key is recognized by the Controller.
 
 Prerequisites:
-- Controller's IP address must be provided in Edge Node's "scripts/ansible/deploy_server/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
+- Controller's IP address must be provided in Edge Node's "scripts/ansible/common/vars/defaults.yml" file. This IP needs to be added/edited in the file in following format: enrollment_endpoint: "<Controller_IP_address>:8081"
 - Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be acquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . `.
 - The Edge Node's deployment script has been started ('./03_build_and_deploy.sh' script on Edge Node is printing out "Waiting for certificates").
 - Upon Edge Node's deployment a Serial Key has been printed out to the terminal and retrieved to be used during enrollment.
@@ -1244,7 +1244,7 @@ Before `./03_build_and_deploy.sh`:
 
 - Edit `/etc/pki/tls/certs/controller-root-ca.pem` (check Edge Node README.md for instruction how to copy Controller's certificate to Edge Node)
 
-- Edit `/root/edgenode/scripts/ansible/deploy_server/vars/defaults.yml`:
+- Edit `/root/edgenode/scripts/ansible/common/vars/defaults.yml`:
 
 ```
 enrollment_endpoint: "<CONTROLLER_IP>:8081"
@@ -1291,7 +1291,7 @@ Before `./03_build_and_deploy.sh`:
 
 - Edit `/etc/pki/tls/certs/controller-root-ca.pem` (check Edge Node README.md for instruction how to copy Controller's certificate to Edge Node)
 
-- Edit `/root/edgenode/scripts/ansible/deploy_server/vars/defaults.yml`:
+- Edit `/root/edgenode/scripts/ansible/common/vars/defaults.yml`:
 
 ```
 enrollment_endpoint: "<CONTROLLER_IP>:8081"
