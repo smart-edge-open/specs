@@ -1321,7 +1321,27 @@ Then run script `./03_build_and_deploy.sh`.
 
 ### 2. Perform node's enrollment
 
-Use Controller UI to initiate enrollment.
+Use Controller UI to initiate enrollment. As OpenNESS applications are started as k8s DaemonSet Pods,
+serial required for enrollment has to be retreived from logs. Use (from master node):
+```
+#  kubectl get pods -n=openness
+NAME                       READY   STATUS    RESTARTS   AGE
+appliance-mjlz2            1/1     Running   1          45h
+```
+to get appliance Pod name and if it's already running:
+
+```
+# kubectl logs appliance-mjlz2 -n=openness
+<133>Oct 17 10:25:41 appliance[1]: [auth] Creating new key
+<134>Oct 17 10:25:53 appliance[1]: [auth] Requesting credentials from 192.168.1.5:8081
+<131>Oct 17 10:25:53 appliance[1]: [main] Enrollment failed rpc error: code = Unauthenticated desc = node OIC06JQzB5wK7nV74HIR9Q not approved
+<134>Oct 17 10:25:54 appliance[1]: [main] Retrying enrollment in 10s...
+```
+where 
+```
+OIC06JQzB5wK7nV74HIR9Q 
+```
+is serial.
 
 ### 3. Set up k8s worker - use the instruction above (Kubernetes and Kube-OVN Install hints)
 
