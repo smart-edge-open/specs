@@ -1096,10 +1096,16 @@ After this steps please checke if `/var/run/openvswitch/ovnnb_db.sock` is presen
 Configure OVN
 
 ```
-ovn-nbctl lsp-add ovn-default local-net-port
-ovn-nbctl lsp-set-addresses local-net-port unknown
-ovn-nbctl lsp-set-type local-net-port localnet
-ovn-nbctl lsp-set-options local-net-port network_name=local-network
+ovn-nbctl lrp-add ovn-cluster ovn-cluster-local 02:0a:0a:0a:0a:01 192.168.1.1/24
+ovn-nbctl ls-add local
+ovn-nbctl lsp-add local local-ovn-cluster
+ovn-nbctl lsp-set-type local-ovn-cluster router
+ovn-nbctl lsp-set-addresses local-ovn-cluster 02:0a:0a:0a:0a:01
+ovn-nbctl lsp-set-options local-ovn-cluster router-port=ovn-cluster-local
+ovn-nbctl lsp-add local local-ovs-phy
+ovn-nbctl lsp-set-addresses local-ovs-phy unknown
+ovn-nbctl lsp-set-type local-ovs-phy localnet
+ovn-nbctl lsp-set-options local-ovs-phy network_name=local-network
 ```
 
 Wait couple minutes & check if k8s master works - should be `STATUS=Ready`.
