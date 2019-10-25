@@ -22,6 +22,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Deploying Applications](#deploying-applications)
     - [Managing Traffic Rules for Applications](#managing-traffic-rules-for-applications)
     - [Managing DNS Rules](#managing-dns-rules)
+      - [EdgeDNS for applications deployed in On-Premise mode](#edgedns-for-applications-deployed-in-on-premise-mode)
   - [Deploying OpenVINO application](#deploying-openvino-application)
     - [1 OpenVINO Creating Applications](#1-openvino-creating-applications)
     - [2 OpenVINO Creating Traffic Rules](#2-openvino-creating-traffic-rules)
@@ -32,7 +33,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
     - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
-  - [OVS inter-app communication in Native mode](#[ovs-inter-app-communication-in-native-mode)
+  - [OVS inter-app communication in Native mode](#ovs-inter-app-communication-in-native-mode)
+    - [Setting up IAC](#setting-up-iac)
   - [Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints)
     - [1. Disable SE Linux & swap](#1-disable-se-linux--swap)
     - [2. Install Kubernetes](#2-install-kubernetes)
@@ -61,11 +63,11 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [1.2. Kube-OVN mode setup](#12-kube-ovn-mode-setup)
     - [2. Perform node's enrollment](#2-perform-nodes-enrollment)
     - [3. Set up k8s worker - use the instruction above (Kubernetes and Kube-OVN Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-and-kube-ovn-install-hints)
-    - [4. Set up dnsmasq - only in Flannel mode](#4-set-up-dnsmasq---only-in-flannel-mode)
+    - [4. Set up dnsmasq - only in Flannel Mode](#4-set-up-dnsmasq---only-in-flannel-mode)
       - [Disable libvirt's DNS](#disable-libvirts-dns)
       - [Run commands in order to redefine network](#run-commands-in-order-to-redefine-network)
       - [Set up custom dnsmasq](#set-up-custom-dnsmasq)
-    - [5. Reboot Edge Node](#5-reboot-edge-node---only-in-flannel-mode)
+    - [5. Reboot Edge Node - only in Flannel Mode](#5-reboot-edge-node---only-in-flannel-mode)
     - [6. (master) Label worker and check status](#6-master-label-worker-and-check-status)
       - [Label worker](#label-worker)
       - [Check status of nodes](#check-status-of-nodes)
@@ -434,6 +436,12 @@ Following steps needs to be done:
 - Click "SAVE" in the bottom right corner.
 
 ![DNS](howto-images/DNS.png)
+
+#### EdgeDNS for applications deployed in On-Premise mode
+
+All applications(VMs and containers) deployed in On-Premise mode can leverage DNS resolution of EdgeDNS service configured through the Controller.
+Only entries that match the `mec` domain(e.g `service.local.mec`) can be resolved by deployed applications.
+All entries that are provided to EdgeDNS service can be resolved by data plane clients.
 
 ## Deploying OpenVINO application 
 In this section the steps involved in deploying sample OpenVino consumer and producer applications on EdgeNode will be provided. For more information on OpenVino sample applications click here: [OpenNESS Application](https://github.com/open-ness/specs/blob/master/doc/architecture.md#openness-edge-node-applications). It is assumed that the user has already configured their Edge Node and Edge controller platforms and has completed the enrollment phase.
