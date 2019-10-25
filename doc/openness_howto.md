@@ -88,6 +88,9 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Verification](#verification)
       - [NES client](#nes-client)
       - [Tcpdump](#tcpdump)
+  - [BIOSFW feature](#biosfw-feature)
+    - [Setup](#setup)
+    - [Usage](#usage)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1710,6 +1713,50 @@ listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
 10 packets received by filter
 0 packets dropped by kernel
 ```
+
+## BIOSFW feature
+
+BIOSFW is a kubectl plugin that enables the remote execution of [Intel (R) System Configuration Utility (syscfg)](https://downloadcenter.intel.com/download/28713/Save-and-Restore-System-Configuration-Utility-SYSCFG-) in kubernetes cluster.
+The user has to manually download the syscfg package on the edge node as described [here](#edgenode_biosfw).
+
+User guide is available on [Intel's page](https://www.intel.com/content/dam/support/us/en/documents/server-products/server-boards/intel-syscfg-userguide-v1-03.pdf).
+
+### Setup
+> NOTE: These steps should be executed before running automated deploy scripts
+
+**Edge controller / Kubernetes master**
+
+1. Set up Edge Controller for Kubernetes-OVN mode:  
+Set `CCE_ORCHESTRATION_MODE` to `kubernetes-ovn` in ansible/vars/defaults.yml
+2. Run automation scripts
+3. Copy file edgecontroller/kube-ovn/kubectl-biosfw to one of the paths from `$PATH`, e.g.  
+   `cp edgecontroller/kube-ovn/kubectl-biosfw /usr/bin`
+4. Run `kubectl biosfw --help` to make sure plugin is working
+
+<a name="edgenode_biosfw"></a>**Edge node**
+
+1. Set up Edge Node for Kubernetes-OVN mode:  
+Enable `kubernetes` and `kube_ovn` in `scripts/ansible/common/vars/defaults.yml`
+2. Enable BIOSFW  
+Enable `biosfw` in `scripts/ansible/common/vars/defaults.yml`:
+```yaml
+biosfw:
+  enabled: true
+```
+3. Download syscfg package from https://downloadcenter.intel.com/download/28713/Save-and-Restore-System-Configuration-Utility-SYSCFG-
+4. Move the syscfg package (`Syscfg_V14_1_Build26_V14_0_Build17_AllOS.zip`) to `edgenode/build/biosfw` and rename it to `syscfg_package.zip`
+5. Run Ansible automation scripts
+6. After script finishes successfully, `docker image ls | grep openness-biosfw` should print out non empty line
+
+### Usage
+> NOTE: BIOSFW does not verify if motherboard is compliant with syscfg tool. It is assumed that syscfg verifies the motherboard and requirements.
+
+- `kubectl biosfw --help` to learn about usage
+- `kubectl biosfw save <node_name> saved_bios.ini` to get BIOS setting of the `<node_name>` node to `saved_bios.ini`.
+- `kubectl biosfw restore <node_name> bios_to_restore.ini` to restore BIOS settings on `<node_name>` node from file `bios_to_restore.ini`
+- `kubectl biosfw restore <node_name> bios_to_restore.ini admin_password` to restore BIOS settings on `<node_name>` node using BIOS Admin Password (last argument)
+- `kubectl biosfw direct <node_name> /i` to run `syscfg /i` on `<node_name>` node
+- `kubectl biosfw direct <node_name> /d BIOSSETTINGS "Quiet Boot"` to run `syscfg /d BIOSSETTINGS "Quiet Boot"` on `<node_name>` node
 
 ## Platform upgrade
 
