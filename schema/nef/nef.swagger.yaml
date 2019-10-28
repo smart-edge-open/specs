@@ -4,6 +4,9 @@ info:
   title: NEF Northbound API
   description: NEF Northbound API schema
   contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 host: sampleapi.com
 basePath: /3gpp-traffic-influence/1.0.1
 schemes:
