@@ -1087,6 +1087,7 @@ Install OpenNess daemons (please change file path according to your setup)
 ```
 kubectl apply -f edgecontroller/kube-ovn/openness.yaml
 ```
+>Note: In kube-ovn mode, OpenNess applications are run as k8s pods in "openness" namespace and are exposed by k8s services. To access them from user applications, use eaa.openness, edgedns.openness etc. which will be resolved by k8s DNS. To list available services for openness namespace, execute (on k8s master): "kubectl get endpoints -n=openness"
 
 Install default network policy (please change file path according to your setup)
 ```
