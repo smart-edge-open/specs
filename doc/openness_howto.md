@@ -748,7 +748,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
 
 ## OVS inter-app communication in Native mode
 
-Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section ['7.3.2. Native IAC mode'](##https://github.com/otcshare/edgenode/blob/master/README.md#732-native-iac-mode ) of README.md file inside EdgeNode repository.
+Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section ['7.3.2. Native IAC mode'](##https://github.com/open-ness/edgenode/blob/master/README.md#732-native-iac-mode ) of README.md file inside EdgeNode repository.
 
 ### Setting up IAC
 
