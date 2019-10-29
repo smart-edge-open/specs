@@ -91,6 +91,10 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   - [BIOSFW feature](#biosfw-feature)
     - [Setup](#setup)
     - [Usage](#usage)
+  - [NFD feature](#nfd-feature)
+    - [Setup](#setup-1)
+    - [Usage](#usage-1)
+    - [Check the features that nodes support](#check-the-features-that-nodes-support)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1758,6 +1762,52 @@ biosfw:
 - `kubectl biosfw restore <node_name> bios_to_restore.ini admin_password` to restore BIOS settings on `<node_name>` node using BIOS Admin Password (last argument)
 - `kubectl biosfw direct <node_name> /i` to run `syscfg /i` on `<node_name>` node
 - `kubectl biosfw direct <node_name> /d BIOSSETTINGS "Quiet Boot"` to run `syscfg /d BIOSSETTINGS "Quiet Boot"` on `<node_name>` node
+
+## NFD feature
+
+NFD (Node Feature Discovery) is Kubernetes plugin that allows to collect a list of features supported by nodes in cluster. These lists are sent to the master node and then they can be used in decision process where to run particular pod. They are stored as labels for each nodes. Using `nodeSelector` field administrator can decide which of these features are manatory on the node to deploy the application. A complete list of features supported by NFD is available on its [Github site](https://github.com/kubernetes-sigs/node-feature-discovery).
+
+### Setup
+> NOTE: These steps should be executed before running automated deploy scripts
+
+1. Set up Edge Controller for Kubernetes-OVN mode:  
+Set `CCE_ORCHESTRATION_MODE` to `kubernetes-ovn` in `ansible/vars/defaults.yml`
+2. Enable NFD  
+Enable `nfd_enabled` in `ansible/vars/defaults.yml`:
+```yaml
+nfd_enabled: true
+```
+3. Run automation script
+4. After script completes `kubectl get pods -n default` should show `nfd_master` pod in `'Running'` state.
+5. Each time when new worker node joins the cluster `nfd_worker` pod should appear for it.
+
+### Usage
+
+To specify which node feature should be mandatory for pod a `nodeSelector` field needs to be defined in yaml file. See the example yaml file for a pod:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    env: test
+  name: golang-test
+spec:
+  containers:
+    - image: golang
+      name: go1
+  nodeSelector:
+    feature.node.kubernetes.io/cpu-pstate.turbo: 'true'
+```
+
+This means that the pod requires a feature cpu-pstate.turbo to be enabled on the node platform.
+
+### Check the features that nodes support
+
+All the features supported by particular nodes can be checked using `kubectl` command. It lists all the labeles attached to each node, including the ones collected and sent by `nfd_worker` pods.
+
+```bash
+kubectl get no -o json | jq '.items[].metadata.labels'
+```
 
 ## Platform upgrade
 
