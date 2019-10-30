@@ -1,0 +1,71 @@
+// Copyright 2019 Intel Corporation. All rights reserved.
+//  
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//  
+//     http://www.apache.org/licenses/LICENSE-2.0
+//  
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package openness.kubeovn;
+option go_package = "openness.org/kubeovn";
+
+import "google/protobuf/empty.proto";
+
+// ApplicationPolicyService manages application policies.
+service ApplicationPolicyService {
+    rpc Set (TrafficPolicy) returns (google.protobuf.Empty) {}
+}
+
+// InterfacePolicyService manages interface policies.
+service InterfacePolicyService {
+    rpc Set (TrafficPolicy) returns (google.protobuf.Empty) {}
+}
+
+// TrafficPolicy message contains set of ingress and egress rules
+// applied to specific application or interface.
+message TrafficPolicy {
+    string id = 1; // ID of application or interface
+    repeated IngressRule ingress = 2; // Ingress rules
+    repeated EgressRule egress = 3; // Egress rules
+}
+
+// IngressRule message contains list of CIDRs and Ports
+// that are allowed ingress traffic into application/interface.
+message IngressRule {
+    repeated IPBlock from = 1;
+    repeated Port ports = 2;
+}
+
+// EgressRule message contains list of CIDRs and Ports
+// that are allowed egress traffic out of application/interface.
+message EgressRule {
+    repeated IPBlock to = 1;
+    repeated Port ports = 2;
+}
+
+// IPBlock message contains whitelisted CIDR and list of
+// exceptions to that CIDR.
+message IPBlock {
+    string cidr = 1;
+    repeated string except = 2; // Array of CIDRs
+}
+
+// Port message contains whitelisted pair of port and protocol.
+message Port {
+    enum Protocol {
+        TCP = 0;
+        UDP = 1;
+        SCTP = 2;
+    }
+
+    uint32 port = 1;
+    Protocol protocol = 2;
+}

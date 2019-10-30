@@ -33,10 +33,14 @@ tags:
     description: Container or VM applications which may be deployed to nodes.
   - name: Traffic Policies
     description: Traffic policies which may be applied to apps or interfaces on a node.
+  - name: KubeOVN Traffic Policies
+    description: Traffic policies that have Kubernetes Network Policies shape. They are used in KubeOVN mode only.
   - name: Node Apps
     description: Applications which are deployed to a node.
   - name: Node Traffic Policies
     description: Traffic policies applied to apps or interfaces on a node.
+  - name: KubeOVN Node Traffic Policies
+    description: Traffic policies applied to apps or interfaces on a node. Used only in KubeOVN mode.
   - name: Node Interfaces
     description: Network interfaces which are configured on a node.
   - name: Node DNS Configurations
@@ -379,6 +383,100 @@ components:
       type: string
       description: An IPv6 address.
       example: 2600:2600:2600:2600::5
+
+    # OVN Policy Schema
+    PolicyDetailKubeOVN:
+      allOf:
+        - $ref: '#/components/schemas/PolicySummary'
+        - type: object
+          properties:
+            ingress_rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/IngressRule'
+        - type: object
+          properties:
+            egress_rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/EgressRule'
+    IPBlock:
+      type: object
+      properties:
+        cidr:
+          type: string
+          description: CIDR representing the IP Block.
+          example: 192.168.1.1/24
+        except:
+          type: array
+          items:
+            type: string
+          description: An array of CIDRs that will not be included within IP Block. Values must be in range of CIDR block.
+          example: [192.168.1.1/26]
+    Port:
+      type: object
+      properties:
+        port:
+          type: integer
+          description: Port of ingress or egress rule.
+          example: 50000
+        protocol:
+          type: string
+          enum: [tcp, udp, sctp]
+          description: Protocol of ingress or egress rule.
+    IngressRule:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of ingress rule.
+          example: Sample ingress rule.
+        from:
+          type: array
+          items:
+            $ref: '#/components/schemas/IPBlock'
+        ports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Port'
+    EgressRule:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of egress rule.
+          example: Sample egress rule.
+        to:
+          type: array
+          items:
+            $ref: '#/components/schemas/IPBlock'
+        ports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Port'
+    TrafficPolicyKubeOVN:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The KubeOVN Traffic Policy ID.
+          format: uuidv4
+          example: CB0D7DA8-0B97-4668-9024-81415063A5C9
+          readOnly: true
+        name:
+          type: string
+          description: The name of KubeOVN Traffic Policy.
+          example: Sample KubeOVN Traffic Policy
+        ingress:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngressRule'
+        egress:
+          type: array
+          items:
+            $ref: '#/components/schemas/EgressRule'
+      required:
+        - name
 
     # DNS related schemas
     DNSSummary:
@@ -797,6 +895,82 @@ paths:
         '404':
           description: Policy ID not found.
 
+  # KubeOVN Policies related endpoints
+  /kube_ovn/policies:
+    get:
+      tags:
+        - KubeOVN Traffic Policies
+      summary: Get a list of KubeOVN traffic policies.
+      description: Gets a list of KubeOVN traffic policies from the controller.
+      responses:
+        '200':
+          description: A list of traffic policies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyList'
+    post:
+      tags:
+        - KubeOVN Traffic Policies
+      summary: Create a new KubeOVN traffic policy
+      description: Sets KubeOVN traffic policy on the controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyDetailKubeOVN'
+      responses:
+        '201':
+          description: Created a new KubeOVN traffic policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/baseResourceID'
+  /kube_ovn/policies/{policy_id}:
+    parameters:
+      - $ref: '#/components/parameters/policyID'
+    get:
+      tags:
+        - KubeOVN Traffic Policies
+      summary: Get a KubeOVN traffic policy.
+      description: Gets a KubeOVN traffic policy from the controller.
+      responses:
+        '200':
+          description: The specified KubeOVN traffic policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDetailKubeOVN'
+        '404':
+          description: KubeOVN traffic policy ID not found.
+    patch:
+      tags:
+        - KubeOVN Traffic Policies
+      summary: Update an existing KubeOVN traffic policy.
+      description: Updates an existing KubeOVN traffic policy from the controller.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrafficPolicyKubeOVN'
+      responses:
+        '200':
+          description: KubeOVN traffic policy was updated.
+        '404':
+          description: KubeOVN traffic policy ID not found.
+    delete:
+      tags:
+        - KubeOVN Traffic Policies
+      summary: Delete an existing KubeOVN traffic policy.
+      description: Deletes an existing KubeOVN traffic policy from the controller.
+      responses:
+        '204':
+          description: KubeOVN traffic policy was deleted.
+        '404':
+          description: KubeOVN traffic policy ID not found.
+
   # DNS related endpoints
   /nodes/{node_id}/dns:
     parameters:
@@ -1060,6 +1234,52 @@ paths:
     delete:
       tags:
         - Node Traffic Policies
+      summary: Disassociate a traffic policy from a node application.
+      description: Disassociates a traffic policy from a node application through the controller.
+      responses:
+        '204':
+          description: The traffic policy association has been removed.
+        '404':
+          description: Node ID, app ID or traffic policy association not found.
+  /nodes/{node_id}/apps/{app_id}/kube_ovn/policy:
+    parameters:
+      - $ref: '#/components/parameters/nodeID'
+      - $ref: '#/components/parameters/appID'
+    get:
+      tags:
+        - KubeOVN Node Traffic Policies
+      summary: Get the traffic policy ID associated with a node application.
+      description: Gets the traffic policy ID associated with a node application from the controller.
+      responses:
+        '200':
+          description: The traffic policy ID for the specified node and application.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/baseResourceID'
+        '404':
+          description: Node ID or app ID not found.
+    patch:
+      tags:
+        - KubeOVN Node Traffic Policies
+      summary: Apply a traffic policy to a node application.
+      description: Applies a traffic policy to a node application from the controller.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/baseResourceID'
+      responses:
+        '200':
+          description: Traffic policy has been applied
+        '400':
+          description: Invalid traffic policy ID
+        '404':
+          description: Node ID, app ID or policy ID not found.
+    delete:
+      tags:
+        - KubeOVN Node Traffic Policies
       summary: Disassociate a traffic policy from a node application.
       description: Disassociates a traffic policy from a node application through the controller.
       responses:
