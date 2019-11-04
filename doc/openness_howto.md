@@ -95,6 +95,9 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Setup](#setup-1)
     - [Usage](#usage-1)
     - [Check the features that nodes support](#check-the-features-that-nodes-support)
+  - [Multus plugin](#multus-plugin)
+    - [Setup](#setup-2)
+    - [Usage](#usage-2)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1807,6 +1810,75 @@ All the features supported by particular nodes can be checked using `kubectl` co
 
 ```bash
 kubectl get no -o json | jq '.items[].metadata.labels'
+```
+
+## Multus plugin
+
+[Multus](https://github.com/intel/multus-cni) is a [container network interface](https://github.com/containernetworking/cni/blob/spec-v0.4.0/SPEC.md) plugin  for Kubernetes that enables using multiple network interfaces in deployed pods. By default all pods have one kube-ovn interface attached.
+
+### Setup
+
+Multus is enabled by default in `ansible/vars/defaults.yml`:
+```yaml
+# Multus CNI plugin
+multus_enabled: true
+
+```
+> NOTE: Multus is installed only when CCE_ORCHESTRATION_MODE is set to kubernetes-ovn or kubernetes
+
+### Usage
+
+[Custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-resources) is used to define additional network that can be used by Multus.
+
+1. The following example creates a `NetworkAttachmentDefinition` that can be used to provide an additional macvlan interface to a POD:
+```bash
+  cat <<EOF | kubectl create -f -
+  apiVersion: "k8s.cni.cncf.io/v1"
+  kind: NetworkAttachmentDefinition
+  metadata:
+  name: macvlan
+  spec:
+  config: '{
+    "name": "mynet",
+    "type": "macvlan",
+    "master": "virbr0",
+    "ipam": {
+      "type": "host-local",
+      "subnet": "192.168.1.0/24",
+      "rangeStart": "192.168.1.200",
+      "rangeEnd": "192.168.1.216"
+    }
+  }'
+  EOF
+```
+2. To list defined configurations use:
+```bash
+  kubectl get network-attachment-definitions
+```
+3. To create a pod that uses the previously created interface add an annotaton to pod definition:
+```yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: samplepod
+    annotations:
+      k8s.v1.cni.cncf.io/networks: macvlan
+```
+> NOTE: More networks can be added after a coma in the same annonation
+4. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similiar to the following:
+```bash
+  1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+  2: net1@if178: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state LOWERLAYERDOWN
+    link/ether 06:3d:10:e3:34:a4 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.200/24 scope global net1
+       valid_lft forever preferred_lft forever
+  308: eth0@if309: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP
+    link/ether 0a:00:00:10:00:12 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.16.0.17/16 brd 10.16.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
 ```
 
 ## Platform upgrade
