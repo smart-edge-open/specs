@@ -450,7 +450,7 @@ Following steps needs to be done:
 #### EdgeDNS for applications deployed in On-Premise mode
 
 All applications(VMs and containers) deployed in On-Premise mode can leverage DNS resolution of EdgeDNS service configured through the Controller.
-Only entries that match the `mec` domain(e.g `service.local.mec`) can be resolved by deployed applications.
+Only entries that match the `local.mec` domain(e.g `service.local.mec`) can be resolved by deployed applications.
 All entries that are provided to EdgeDNS service can be resolved by data plane clients.
 
 ## Deploying OpenVINO application 
