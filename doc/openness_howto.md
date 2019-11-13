@@ -1832,12 +1832,12 @@ multus_enabled: true
 
 1. The following example creates a `NetworkAttachmentDefinition` that can be used to provide an additional macvlan interface to a POD:
 ```bash
-  cat <<EOF | kubectl create -f -
-  apiVersion: "k8s.cni.cncf.io/v1"
-  kind: NetworkAttachmentDefinition
-  metadata:
+cat <<EOF | kubectl create -f -
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
   name: macvlan
-  spec:
+spec:
   config: '{
     "name": "mynet",
     "type": "macvlan",
@@ -1849,7 +1849,7 @@ multus_enabled: true
       "rangeEnd": "192.168.1.216"
     }
   }'
-  EOF
+EOF
 ```
 2. To list defined configurations use:
 ```bash
