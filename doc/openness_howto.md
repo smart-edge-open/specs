@@ -92,6 +92,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [Setup](#setup)
     - [Usage](#usage)
   - [NFD feature](#nfd-feature)
+    - [Certificates for nfd-worker to nfd-master connection](#certificates-for-nfd-worker-to-nfd-master-connection)
     - [Setup](#setup-1)
     - [Usage](#usage-1)
     - [Check the features that nodes support](#check-the-features-that-nodes-support)
@@ -1769,6 +1770,10 @@ biosfw:
 ## NFD feature
 
 NFD (Node Feature Discovery) is Kubernetes plugin that allows to collect a list of features supported by nodes in cluster. These lists are sent to the master node and then they can be used in decision process where to run particular pod. They are stored as labels for each nodes. Using `nodeSelector` field administrator can decide which of these features are manatory on the node to deploy the application. A complete list of features supported by NFD is available on its [Github site](https://github.com/kubernetes-sigs/node-feature-discovery).
+
+### Certificates for nfd-worker to nfd-master connection
+
+NFD plugin supports the usage of certificates for connection security between nfd-worker and nfd-master pods. This feature is enabled and used by default. Its configuration is fully automated - no user input required. Ansible scripts create trusted CA certificate that will be used by all services as root certificate. All services pods will create a certificate - key pair signed by root CA. Nfd-master and nfd-worker pods authorize themselves using these certificates when sending labels with detected features.
 
 ### Setup
 > NOTE: These steps should be executed before running automated deploy scripts
