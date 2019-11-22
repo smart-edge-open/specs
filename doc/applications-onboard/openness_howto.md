@@ -99,6 +99,11 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   - [Multus plugin](#multus-plugin)
     - [Setup](#setup-2)
     - [Usage](#usage-2)
+  - [SR-IOV support](#sr-iov-support)
+    - [Setup](#setup-3)
+      - [Edgecontroller](#edgecontroller)
+      - [Edgenode](#edgenode)
+    - [Usage](#usage-3)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1884,6 +1889,105 @@ EOF
     link/ether 0a:00:00:10:00:12 brd ff:ff:ff:ff:ff:ff link-netnsid 0
     inet 10.16.0.17/16 brd 10.16.255.255 scope global eth0
        valid_lft forever preferred_lft forever
+```
+
+## SR-IOV support
+
+SR-IOV (Single Root Input/Output Virtualization) is a virtualization specification that allows the isolation of PCI Express resources. With this technique, user can create up to 256 Virtual Functions (VF) for each Physical Function (PF). Each VF gets it's own PCI bus address. VF configurations are applied through the PF used by the host. Each VF can be treated as a separate physical NIC, assigned to container or virtual machine and configured with it's own MAC, VLAN, IP, etc.
+
+To simplify the use of SR-IOV capable devices with Kubernetes PODs Intel® created [SR-IOV CNI](https://github.com/intel/sriov-cni) and [SR-IOV Network Device Plugin](https://github.com/intel/sriov-network-device-plugin). The main goal of SR-IOV Network Device Plugin is to discover and manage SR-IOV VFs. The SR-IOV CNI (in combination with compatible CNI meta plugin like Multus or DANM) is used to create Kubernetes network to which VFs requested by PODs will be attached.
+
+### Setup
+
+#### Edgecontroller
+To install OpenNESS node with SR-IOV support please uncomment `role: sriov/master` in `ne_controller.yml` of Ansible scripts. Please also remember, that `role: multus` has to be enabled as well.
+
+```yaml
+- role: sriov/master
+```
+
+#### Edgenode
+To install OpenNESS node with SR-IOV support please uncomment `role: sriov/worker` in `ne_node.yml` of Ansible scripts.
+
+```yaml
+- role: sriov/worker
+```
+
+If you want the installer to turn on the specified number of SR-IOV VFs for selected network interface of node, please provide that information in format `{interface_name: VF_NUM, ...}` in `sriov.network_interfaces` variable inside config files in `host_vars` ansible directory. Due to the technical reasons, each node has to be configured separately. You can copy example file `host_vars/node1.yml` and then you will have to create similar one for each node being deployed.
+
+Please also remember, that each node must be added to Ansible inventory file `inventory.ini`.
+
+For example providing `host_vars/node1.yml` with:
+
+```yaml
+sriov:
+  network_interfaces: {ens787f0: 4, ens787f1: 8}
+```
+
+will enable 4 VFs for network interface (PF) `ens787f0` and 8 VFs for network interface `ens787f1` of `node1`.
+
+Please remember, that `multus` and `SR-IOV` have to be also enabled on [controller](#edgecontroller).
+
+### Usage
+
+As SR-IOV plugins use [Multus](#multus-plugin) the usage is very similar to the one described above. By default OpenNESS will create network `sriov-openness` which can be used to attach VFs. You can find the `sriov-openness` network's CRD below:
+
+```yaml
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: sriov-openness
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_netdevice
+spec:
+  config: '{
+  "type": "sriov",
+  "cniVersion": "0.3.1",
+  "name": "sriov-openness-network",
+  "ipam": {
+    "type": "host-local",
+    "subnet": "192.168.2.0/24",
+    "routes": [{
+      "dst": "0.0.0.0/0"
+    }],
+    "gateway": "192.168.2.1"
+  }
+}'
+```
+
+> Note: User can create network with different CRD if they need to.
+
+1. To create a POD with attached SR-IOV device, you need to add network annotation to the POD definition and `request` access to the SR-IOV capable device (`intel.com/intel_sriov_netdevice`):
+```yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: samplepod
+    annotations:
+      k8s.v1.cni.cncf.io/networks: sriov-openness
+  spec:
+    containers:
+    - name: samplecnt
+      image: centos/tools 
+      resources:
+        requests:
+          intel.com/intel_sriov_netdevice: "1"
+```
+
+2. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similiar to the following:
+```bash
+  1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+  41: net1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+      link/ether aa:37:23:b5:63:bc brd ff:ff:ff:ff:ff:ff
+      inet 192.168.2.2/24 brd 192.168.2.255 scope global net1
+        valid_lft forever preferred_lft forever
+  169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default 
+      link/ether 0a:00:00:10:00:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
+      inet 10.16.0.10/16 brd 10.16.255.255 scope global eth0
+        valid_lft forever preferred_lft forever
 ```
 
 ## Platform upgrade
