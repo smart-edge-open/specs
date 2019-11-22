@@ -99,11 +99,14 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   - [Multus plugin](#multus-plugin)
     - [Setup](#setup-2)
     - [Usage](#usage-2)
+  - [Kubernetes Topology Manager](#kubernetes-topology-manager)
+    - [Enabling](#enabling)
+    - [Usage](#usage-3)
   - [SR-IOV support](#sr-iov-support)
     - [Setup](#setup-3)
       - [Edgecontroller](#edgecontroller)
       - [Edgenode](#edgenode)
-    - [Usage](#usage-3)
+    - [Usage](#usage-4)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1889,6 +1892,59 @@ EOF
     link/ether 0a:00:00:10:00:12 brd ff:ff:ff:ff:ff:ff link-netnsid 0
     inet 10.16.0.17/16 brd 10.16.255.255 scope global eth0
        valid_lft forever preferred_lft forever
+```
+
+## Kubernetes Topology Manager
+Aplication Pods deployment can be managed with Topolgy Manager feature of Kubernetes. Topology Manager makes Kubernetes aware of NUMA node configuration so Pods that require access to CPUs and/or devices can be admitted to proper NUMA nodes of multi-socketed node, therefore minimizing communication latency between those devices and/or CPUs.
+
+Please always remember, that only pods with `guaranteed` QoS class can be managed with Topology Manager. Additionally, if you like to use additional devices by device plugins, those plugins must support this feature.
+
+### Enabling
+Topology Manager can be anabled for Kubernetes v1.16 or greater. To enable Topology Manager for your node simply set the following options of Ansible scripts in `roles/kubernetes/worker/defaults/main.yml`:
+
+```yaml
+cpu:
+  policy: "static"
+  reserved_cpus: 1
+
+topology_manager:
+  policy: "<selected_policy>"
+```
+
+Where `<selected_policy>` can be `none`, `best-effort`, `restricted` or `single-numa-node`. You can find further explanation of those policies in [Kubernetes Documantation](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/).
+
+You can also set `kubernetes_reserved_cpus` to number that suits you best. This parameter specifies the number of logical CPUs that will be reserved for Kubernetes system Pods.
+
+### Usage
+To use Topology Manger you have to create Pod with `guaranteed` QoS class (requests equal to limits), for example:
+
+```yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: examplePod
+spec:
+  containers:
+    - name: example
+      image: alpine
+      command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
+      resources:
+        limits:
+          cpu: "8"
+          memory: "500Mi"
+        requests:
+          cpu: "8"
+          memory: "500Mi"
+```
+
+Then apply it with `kubectl apply`. You can check in kubelet's logs on you node (`journalctl -xeu kubelet`), that Topology Manager obtained all the info about preferred affinity and deployed the Pod accordingly. The logs should be similar to the one below. 
+
+```
+Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.548692   64340 topology_manager.go:308] [topologymanager] Topology Admit Handler
+Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550016   64340 topology_manager.go:317] [topologymanager] Pod QoS Level: Guaranteed
+Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550171   64340 topology_hints.go:60] [cpumanager] TopologyHints generated for pod 'examplePod', container 'example': [{0000000000000000000000000000000000000000000000000000000000000001 true} {0000000000000000000000000000000000000000000000000000000000000010 true} {0000000000000000000000000000000000000000000000000000000000000011 false}]
+Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550204   64340 topology_manager.go:285] [topologymanager] ContainerTopologyHint: {0000000000000000000000000000000000000000000000000000000000000010 true}
+Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550216   64340 topology_manager.go:329] [topologymanager] Topology Affinity for Pod: 4ad6fb37-509d-4ea6-845c-875ce41049f9 are map[example:{0000000000000000000000000000000000000000000000000000000000000010 true}]
 ```
 
 ## SR-IOV support
