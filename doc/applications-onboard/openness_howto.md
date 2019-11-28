@@ -100,14 +100,17 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
   - [Multus plugin](#multus-plugin)
     - [Setup](#setup-2)
     - [Usage](#usage-2)
+  - [CMK plugin](#cmk-plugin)
+    - [Setup](#setup-3)
+    - [Usage](#usage-3)
   - [Kubernetes Topology Manager](#kubernetes-topology-manager)
     - [Enabling](#enabling)
-    - [Usage](#usage-3)
+    - [Usage](#usage-4)
   - [SR-IOV support](#sr-iov-support)
-    - [Setup](#setup-3)
+    - [Setup](#setup-4)
       - [Edgecontroller](#edgecontroller)
       - [Edgenode](#edgenode)
-    - [Usage](#usage-4)
+    - [Usage](#usage-5)
   - [Platform upgrade](#platform-upgrade)
   - [Troubleshooting](#troubleshooting)
     - [Modify OVN gateway port](#modify-ovn-gateway-port)
@@ -1919,7 +1922,7 @@ EOF
 ```bash
   kubectl get network-attachment-definitions
 ```
-3. To create a pod that uses the previously created interface add an annotaton to pod definition:
+3. To create a pod that uses the previously created interface add an annotation to pod definition:
 ```yaml
   apiVersion: v1
   kind: Pod
@@ -1928,8 +1931,8 @@ EOF
     annotations:
       k8s.v1.cni.cncf.io/networks: macvlan
 ```
-> NOTE: More networks can be added after a coma in the same annonation
-4. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similiar to the following:
+> NOTE: More networks can be added after a coma in the same annotation
+4. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similar to the following:
 ```bash
   1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -1944,6 +1947,88 @@ EOF
     inet 10.16.0.17/16 brd 10.16.255.255 scope global eth0
        valid_lft forever preferred_lft forever
 ```
+## CMK plugin
+
+[CPU Manager for Kubernetes (CMK)](https://github.com/intel/CPU-Manager-for-Kubernetes) is a Kubernetes plugin that provides core affinity for applications deployed as Kubernetes pods. It is advised to use isolcpus for core isolation when using CMK (otherwise full isolation cannot be guaranteed).
+
+CMK documentation is available in linked above repository and includes [operator](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md) and [user manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).
+
+CMK is a command-line program that wraps target application to provide core isolation (example pod with application wrapped by CMK is given in [Usage](#usage-3) section).
+
+### Setup
+
+**Edge Controller / Kubernetes master**
+
+1. Configure Edge Controller in Network Edge mode using `ne_controller.yml`, following roles must be enabled kubernetes/master, kubeovn/master and cmk/master.
+2. CMK is enabled with following default values of parameters in `roles/cmk/master/defaults/main.yml` (adjust the values if needed):
+- `cmk_num_exclusive_cores` set to `4`
+- `cmk_num_shared_cores` set to `1`
+- `cmk_host_list` set to `node01,node02` (it should contain comma separated list of nodes' hostnames).
+3. Deploy the controller with deploy_ne_controller.sh.
+
+**Edge Node / Kubernetes worker**
+
+1. Configure Edge Node in Network Edge mode using ne_node.yml, following roles must be enabled kubernetes/worker, kubeovn/worker and cmk/worker.
+2. Enable setting isolcpus kernel parameter (in grub role) by setting/adding `isolcpus=` with a list of cores to `additional_grub_params` parameter in `roles/grub/defaults/main.yml`, e.g. `isolcpus=1,2,3,4,5,6,7,8,9,10`. To set the parameter only for specific node add the variable (`additional_grub_params`) to the host_vars/node-name-in-inventory.yml
+3. Deploy the node with deploy_ne_node.sh.
+
+Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
+
+### Usage
+
+The following example creates a `Pod` that can be used to deploy application pinned to a core:
+
+1.  `DEPLOYED-APP` in `args` should be changed to deployed application name (the same for labels and names)
+2. `image` value `DEPLOYED-APP-IMG:latest` should be changed to valid application image available in Docker (if image is to be downloaded change `ImagePullPolicy` to `Always`):
+```bash
+cat <<EOF | kubectl create -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: cmk-isolate-DEPLOYED-APP-pod
+  name: cmk-isolate-DEPLOYED-APP-pod
+spec:
+  nodeName: <NODENAME>
+  containers:
+  - args:
+    - "/opt/bin/cmk isolate --conf-dir=/etc/cmk --pool=exclusive DEPLOYED-APP"
+    command:
+    - "/bin/bash"
+    - "-c"
+    env:
+    - name: CMK_PROC_FS
+      value: "/host/proc"
+    image: DEPLOYED-APP-IMG:latest
+    imagePullPolicy: "Never"
+    name: cmk-DEPLOYED-APP
+    resources:
+      limits:
+        cmk.intel.com/exclusive-cores: 1
+      requests:
+        cmk.intel.com/exclusive-cores: 1
+    volumeMounts:
+    - mountPath: "/host/proc"
+      name: host-proc
+      readOnly: true
+    - mountPath: "/opt/bin"
+      name: cmk-install-dir
+    - mountPath: "/etc/cmk"
+      name: cmk-conf-dir
+  restartPolicy: Never
+  volumes:
+  - hostPath:
+      path: "/opt/bin"
+    name: cmk-install-dir
+  - hostPath:
+      path: "/proc"
+    name: host-proc
+  - hostPath:
+      path: "/etc/cmk"
+    name: cmk-conf-dir
+EOF
+```
+More examples of Kubernetes manifests available in [CMK repository](https://github.com/intel/CPU-Manager-for-Kubernetes/tree/master/resources/pods) and [documentation](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).
 
 ## Kubernetes Topology Manager
 Aplication Pods deployment can be managed with Topolgy Manager feature of Kubernetes. Topology Manager makes Kubernetes aware of NUMA node configuration so Pods that require access to CPUs and/or devices can be admitted to proper NUMA nodes of multi-socketed node, therefore minimizing communication latency between those devices and/or CPUs.
