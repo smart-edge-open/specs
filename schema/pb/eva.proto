@@ -86,6 +86,11 @@ message Application {
     oneof source {
         HTTPSource http_uri = 10;
     }
+
+    // This contains a specification of the EAC features that this application wants.
+    // (Enhanced App Configuration). This is in Json format - but is at top level
+    // an array of string key-value pairs. Specific keys are defined by their respective features.
+    string EACJsonBlob = 11;
 }
 
 message ApplicationID {
