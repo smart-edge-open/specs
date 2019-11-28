@@ -35,6 +35,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
   - [OVS inter-app communication in Native mode](#ovs-inter-app-communication-in-native-mode)
     - [Setting up IAC](#setting-up-iac)
+  - [Kubernetes NetworkPolicies](#kubernetes-networkpolicies)
   - [Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints)
     - [1. Disable SE Linux & swap](#1-disable-se-linux--swap)
     - [2. Install Kubernetes](#2-install-kubernetes)
@@ -832,6 +833,56 @@ The following steps need to be done:
 - Troubleshooting: In an event of no response from 'ping'. Check if the corresponding ``` ve1-<docker-name> ``` interfaces are up. If not bring them up from host's terminal.
 ```shell
      ip link set ve1-<docker-name> up
+```
+## Kubernetes NetworkPolicies
+
+[Kubernetes NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) is a mechanism that enables control over how pods are allowed to communicate with each other and other network endpoints.
+
+By default, in NetworkEdge environment, all ingress traffic is blocked(services running inside of deployed applications are not reachable) and all egress traffic is enabled(pods are able to reach the internet).
+The following NetworkPolicy definition is used:
+```kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: block-all-ingress
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress: []
+```
+- `namespace: default` - selects default namespace
+- `podSelector: {}` - matches all the pods in the default namespace
+- `ingress: []` - no rules allowing ingress traffic = ingress blocked
+
+>Note: When adding a first egress rule, all egress is blocked except for that rule.
+
+Example NetworkPolicy opening port 5000(tcp and udp) on all pods matching name `openvino-cons-app`:
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: openvino-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      name: openvino-cons-app
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    ports:
+    - protocol: udp
+      port: 5000
+    - protocol: tcp
+      port: 5000
+```
+
+To apply a rule save it to a file and run the following command from the master node:
+```
+kubectl apply -f network_policy.yml
 ```
 
 ## Kubernetes and Kube-OVN Install hints
