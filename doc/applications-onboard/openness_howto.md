@@ -33,7 +33,7 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
     - [7 OpenVINO Manual Configuration steps](#7-openvino-manual-configuration-steps)
     - [8 OpenVINO Downstream setup](#8-openvino-downstream-setup)
     - [9 OpenVINO Client Simulator Setup](#9-openvino-client-simulator-setup)
-  - [OVS inter-app communication in Native mode](#ovs-inter-app-communication-in-native-mode)
+  - [OVS inter-app communication in OnPrem mode](#ovs-inter-app-communication-in-onprem-mode)
     - [Setting up IAC](#setting-up-iac)
   - [Kubernetes NetworkPolicies](#kubernetes-networkpolicies)
   - [Kubernetes and Kube-OVN Install hints](#kubernetes-and-kube-ovn-install-hints)
@@ -64,12 +64,8 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
       - [1.2. Kube-OVN mode setup](#12-kube-ovn-mode-setup)
     - [2. Perform node's enrollment](#2-perform-nodes-enrollment)
     - [3. Set up k8s worker - use the instruction above (Kubernetes and Kube-OVN Install hints)](#3-set-up-k8s-worker---use-the-instruction-above-kubernetes-and-kube-ovn-install-hints)
-    - [4. Set up dnsmasq - only in Flannel Mode](#4-set-up-dnsmasq---only-in-flannel-mode)
-      - [Disable libvirt's DNS](#disable-libvirts-dns)
-      - [Run commands in order to redefine network](#run-commands-in-order-to-redefine-network)
-      - [Set up custom dnsmasq](#set-up-custom-dnsmasq)
-    - [5. Reboot Edge Node - only in Flannel Mode](#5-reboot-edge-node---only-in-flannel-mode)
-    - [6. (master) Label worker and check status](#6-master-label-worker-and-check-status)
+    - [3. Verify that OpenNESS EAA Pod is up](#3-verify-that-openness-eaa-pod-is-up)
+    - [4. (master) Label worker and check status](#4-master-label-worker-and-check-status)
       - [Label worker](#label-worker)
       - [Check status of nodes](#check-status-of-nodes)
   - [CUPS UI usage](#cups-ui-usage)
@@ -777,7 +773,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
 ![OpenVino Output](howto-images/OpenVinoOutput.png)
 
 
-## OVS inter-app communication in Native mode
+## OVS inter-app communication in OnPrem mode
 
 Native Mode Docker deployment of Edge Node for On-Premise edge supports fast-path communication between deployed edge applications. This inter-app communication (IAC) is based on OVS/DPDK, information on how to enable support for this mode can be found in section ['7.3.2. Native IAC mode'](##https://github.com/otcshare/edgenode/blob/master/README.md#732-native-iac-mode ) of README.md file inside EdgeNode repository.
 
@@ -1140,17 +1136,17 @@ kubectl label node <HOST> kube-ovn/role=master
 
 Install Kube-OVN related CRDs
 ```
-kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/crd.yaml
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.8.0/yamls/crd.yaml
 ```
 
 Install native OVS and OVN components
 ```
-kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/ovn.yaml
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.8.0/yamls/ovn.yaml
 ```
 
 Install the Kube-OVN Controller and CNI plugins
 ```
-kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.7.0/yamls/kube-ovn.yaml
+kubectl apply -f https://raw.githubusercontent.com/alauda/kube-ovn/v0.8.0/yamls/kube-ovn.yaml
 ```
 
 Install OpenNess daemons (please change file path according to your setup)
@@ -1167,9 +1163,9 @@ kubectl apply -f edgecontroller/kube-ovn/default_network_policy.yaml
 Install OVN tools
 ```
 yum install -y unbound
-yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/openvswitch-2.11.1-1.el7.x86_64.rpm
-yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/ovn-2.11.1-1.el7.x86_64.rpm
-yum install -y https://github.com/alauda/ovs/releases/download/v2.11.1-1/ovn-common-2.11.1-1.el7.x86_64.rpm
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.4-1/openvswitch-2.11.4-1.el7.x86_64.rpm
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.4-1/ovn-2.11.4-1.el7.x86_64.rpm
+yum install -y https://github.com/alauda/ovs/releases/download/v2.11.4-1/ovn-common-2.11.4-1.el7.x86_64.rpm
 ```
 
 After this steps please checke if `/var/run/openvswitch/ovnnb_db.sock` is present. Wait till it's available.
@@ -1439,85 +1435,30 @@ example:
 kubeadm join 10.103.104.156:6443 --token <token> \
     --discovery-token-ca-cert-hash sha256:<token>
 ```
+### 3. Verify that OpenNESS EAA Pod is up
 
-### 4. Set up dnsmasq - only in Flannel Mode
-
-**Please do the steps in point 4. only if you want to use Kubernetes with Flannel.**
-
-#### Disable libvirt's DNS
-
-In file `/usr/share/libvirt/networks/default.xml` replace:
+As OpenNESS applications are started as k8s DaemonSet Pods, you can run
+```
+#  kubectl get pods -n=openness
+NAME                       READY   STATUS    RESTARTS   AGE
+eaa-mjlz2                  1/1     Running   1          45h
+```
+to get eaa Pod name and if it's already running:
 
 ```
-<dns>
-  <host ip="192.168.122.1">
-    <hostname>eaa.community.appliance.mec</hostname>
-  </host>
-  <host ip="192.168.122.1">
-    <hostname>syslog.community.appliance.mec</hostname>
-  </host>
-</dns>
+# kubectl logs eaa-mjlz2 -n=openness
+<134>Oct 24 08:12:03 eaa[1]: [main] Starting services
+<134>Oct 24 08:12:03 eaa[1]: [main] Starting: github.com/otcshare/edgenode/pkg/eaa
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Generated and stored CA key at: certs/eaa/rootCA.key
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Generated and stored CA certificate at: certs/eaa/rootCA.pem
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Generated and stored EAA key at: certs/eaa/server.key
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Generated and stored EAA cert at: certs/eaa/server.crt
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Serving EAA on: :443
+<134>Oct 24 08:12:03 eaa[1]: [eaa] Serving Auth on: :80
+<134>Oct 24 08:13:03 eaa[1]: [eaa] Heartbeat
 ```
 
-with
-
-```
-<dns enable="no"/>
-```
-
-#### Run commands in order to redefine network
-
-```
-virsh net-destroy default
-virsh net-undefine default
-virsh net-define /usr/share/libvirt/networks/default.xml
-virsh net-start default
-virsh net-autostart default
-```
-
-#### Set up custom dnsmasq
-
-Change dnsmasq config (`/etc/dnsmasq.conf`):
-
-```
-strict-order
-except-interface=lo
-address=/eaa.community.appliance.mec/syslog.community.appliance.mec/192.168.122.1
-```
-
-Start dnsmasq service:
-`systemctl enable dnsmasq --now`
-
-Provide kubelet with new DNS address
-Edit `/var/lib/kubelet/config.yaml` and change IP under `clusterDNS` to `192.168.122.1`, i.e.:
-
-```
-clusterDNS:
-- 192.168.122.1
-```
-
-Add rules to firewall
-
-```
-firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p tcp --dport 53 -j ACCEPT
-firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -d 192.168.122.1 -p udp --dport 53 -j ACCEPT
-firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -s 10.244.0.0/16 -d 192.168.122.0/24 -j ACCEPT
-firewall-cmd --reload
-```
-
-### 5. Reboot Edge Node - only in Flannel Mode
-
-**Please do the steps in point 5. only if you want to use Kubernetes with Flannel.**
-
-After reboot add virbr0, Edge Node containers (edgenode_appliance_1, edgenode_syslog-ng_1) must be started manually:
-
-```
-brctl addbr virbr0
-docker container ls -a | grep edgenode
-docker container start <ID>
-```
-
-### 6. (master) Label worker and check status
+### 4. (master) Label worker and check status
 
 #### Label worker
 

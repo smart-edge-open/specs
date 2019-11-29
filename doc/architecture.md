@@ -2,38 +2,40 @@ SPDX-License-Identifier: Apache-2.0
 Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.    
 
 # OpenNESS Architecture and Solution overview
-* [Introduction](#introduction)     
-  * [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
-* [Overview](#overview)
-  * [OpenNESS Controller Community Edition](#openness-controller-community-edition)
-    * [Edge Application Onboarding](#edge-application-onboarding)
-  * [OpenNESS Edge Node](#openness-edge-node)
-    * [Edge Node Microservices](#edge-node-microservices)
-    * [Edge Application API support](#edge-application-api-support)
-    * [Edge Compute Applications: Native](#edge-compute-applications-native)
-    * [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
-  * [Multi Access Support](#multi-access-support)
-* [Deployment Scenarios](#deployment-scenarios)
-    * [On-Premise Edge Deployment Scenario](#on-premise-edge-deployment-scenario)
-    * [Network Edge Deployment Scenario](#network-edge-deployment-scenario)
-* [OpenNESS Edge Node Applications](#openness-edge-node-applications)
-    * [Producer Application](#producer-application)
-    * [Consumer Application](#consumer-application)
-    * [Example of Producer and Consumer Applications](#example-of-producer-consumer-app)
-    * [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
-    * [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
-* [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
-    * [Edge Application APIs](#edge-application-apis)
-    * [Edge Application Authentication APIs](#edge-application-authentication-apis)
-    * [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
-    * [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
-    * [Core Network Configuration Agent APIs](#core-network-configuration-agent-apis)
-    * [OpenNESS Controller APIs](#openness-controller-apis)
-* [OpenNESS OS Environment](#openness-os-environment)
-* [OpenNESS steps to get started](#openness-steps-to-get-started)
-* [OpenNESS Repository Structure](#openness-repository-structure)
-* [Key OpenNESS solution documentation](#key-openness-solution-documentation)  
-* [List of Abbreviations](#list-of-abbreviations)    
+- [OpenNESS Architecture and Solution overview](#openness-architecture-and-solution-overview)
+  - [Introduction](#introduction)
+    - [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
+  - [Overview](#overview)
+    - [OpenNESS Controller Community Edition](#openness-controller-community-edition)
+      - [Edge Application Onboarding](#edge-application-onboarding)
+    - [OpenNESS Edge Node](#openness-edge-node)
+      - [Edge Node Microservices](#edge-node-microservices)
+      - [Edge Application API support](#edge-application-api-support)
+      - [Edge Compute Applications: Native](#edge-compute-applications-native)
+      - [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
+    - [Multi Access Support](#multi-access-support)
+  - [Deployment Scenarios](#deployment-scenarios)
+    - [On-Premise Edge Deployment Scenario](#on-premise-edge-deployment-scenario)
+    - [Network Edge Deployment Scenario](#network-edge-deployment-scenario)
+  - [OpenNESS Edge Node Applications](#openness-edge-node-applications)
+    - [Producer Application](#producer-application)
+    - [Consumer Application](#consumer-application)
+    - [Example of Producer and Consumer Applications](#example-of-producer-and-consumer-applications)
+    - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
+    - [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
+  - [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
+    - [Edge Application APIs](#edge-application-apis)
+    - [Edge Application Authentication APIs](#edge-application-authentication-apis)
+    - [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
+    - [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
+    - [Core Network Configuration APIs for edge compute](#core-network-configuration-apis-for-edge-compute)
+    - [OpenNESS Controller APIs](#openness-controller-apis)
+  - [OpenNESS OS environment](#openness-os-environment)
+  - [OpenNESS steps to get started](#openness-steps-to-get-started)
+  - [OpenNESS Repository Structure](#openness-repository-structure)
+  - [Key OpenNESS solution documentation](#key-openness-solution-documentation)
+  - [Other References](#other-references)
+  - [List of Abbreviations](#list-of-abbreviations)
 
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
@@ -122,7 +124,7 @@ OpenNESS user need to use the Controller to onboard and application to the OpenN
 
 #### Edge Node Microservices
 
-OpenNESS edge node hosts a set of microservices to enable Edge compute deployment. These microservices include ELA, EVA, EAA, Syslog, DNS Server and NTS Dataplane. Although ELA, EVA and EAA can be deployed in separate containers. For the purposes of ease of bring up ELA, EVA, EAA are all running in one container. Syslog, DNS Server and NTS Dataplane run in separate containers. 
+OpenNESS edge node hosts a set of microservices to enable Edge compute deployment. These microservices include EDA, ELA, EVA, EAA, Syslog, DNS Server and NTS Dataplane. For the purposes of ease of bring up EDA, ELA and EVA are all running in one container. EAA, Syslog, DNS Server and NTS Dataplane run in separate containers. 
 
  ![Edge Node Microservices](arch-images/openness_nodemicro.png)
 
@@ -130,9 +132,10 @@ OpenNESS edge node hosts a set of microservices to enable Edge compute deploymen
 
 OpenNESS Edge Node microservices implement functionality to enable execution of edge compute applications natively on the edge node or forward the user traffic to applications running on platforms connected to the Edge Node on a Local Breakout. 
 
-For the ease of deployment the Edge node microservices are deployed in four containers 
+For the ease of deployment the Edge node microservices are deployed in five containers 
 ```
-edgenode_appliance_1 - ELA, EVA, EDA and EAA
+edgenode_appliance_1 - EDA, ELA and EVA 
+edgenode_eaa_1       - EAA
 nts                  - Dataplane NTS (not present when OVS is used as dataplane)
 mec-app-edgednssvr   - Edge DNS Server
 edgenode_syslog-ng_1 - Syslog
@@ -499,4 +502,3 @@ Installation and configuration scripts will be provided to get the relevant vers
 - UE: User Equipment (in the context of LTE)
 - VIM: Virtual Infrastructure Manager 
 - UUID: Universally Unique IDentifier 
-
