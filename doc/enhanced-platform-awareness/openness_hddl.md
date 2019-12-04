@@ -3,19 +3,16 @@ Copyright © 2019 Intel Corporation
 
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS 
 
-* [OpenNESS Introduction](#openness-introduction)
 * [HDDL Introduction](#hddl-introduction)  
 * [HDDL OpenNESS Integration](#hddl-openness-integration)
   * [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
+* [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
+  * [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
+  * [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpu/vpu-usage)
+  * [Deploying application with HDDL support](#deploying-application-with-hddl-support)
 * [Summary](#summary) 
 
-
-## OpenNESS Introduction
-OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
-
-It leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to to downstream traffic safety applications.
-
-OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with regard to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
+Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload. 
 
 ## HDDL Introduction
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. It provides hardware and software reference for customers. The following figure shows the HDDL-R concept.
@@ -45,7 +42,7 @@ The 'hddl-service' container is running the HDDL Daemon which is responsible for
 Regarding the application deployment sample Dockerfiles with instructions on how to build docker images are provided by OpenNESS. Instructions on how to deploy Edge Applications and Services are out of scope of this document. There are two applications for OpenVINO sample deployment on Edge Node provided. The first application is an OpenVINO application running an inference on a video stream received by the application container. The second application is a Producer application servicing the first (OpenVINO) application via push notifications using the EAA service of OpenNESS. The Producer application periodically notifies the OpenVino application container to change inference model or the OpenVino plugin to use.
 Producer application container image can be build with an option to either constantly run the inference on HDDL VPUs or periodically change between CPU and HDDL workloads.
 
-From perspective of application built to use HDDL acceleration for inference there is no additional steps required to complete by the user during application deployment in comparison to an inference run on CPU. The application container needs access to 'hddl-service' socket and 'ion' device from host in order to communicate with the HDDL service. These resources are allocated to the application container automatically by OpenNESS' EVA micro-service if during the bring up of the Edge Node the HDDL service was properly configured.
+From perspective of application built to use HDDL acceleration for inference there is additional step required to complete by the user during application deployment in comparison to an inference run on CPU. The user needs to provide a feature key as part of application onboarding which will enable use o HDDL by application. The application container needs access to 'hddl-service' socket and 'ion' device from host in order to communicate with the HDDL service. These resources are allocated to the application container automatically by OpenNESS' EVA micro-service if during the bring up of the Edge Node the HDDL service was properly configured and application deployed with appropriate EPA flag.
 
 ### Dynamic CPU and VPU usage
 OpenNESS demonstrates one more great applicability Edge compute and efficient resource utilization in the Edge cloud. OpenVINO sample application supports support dynamic use of VPU or CPU for Object detection depending on the input from Producer application. The producer application can behave as a load balancer. It also demonstrates the Application portability with OpenVINO so that it can run on CPU or VPU.
@@ -54,5 +51,26 @@ OpenNESS demonstrates one more great applicability Edge compute and efficient re
 
 HDDL-R support is available for OnPrem OpenNESS deployment flavor with Docker.
 
+## Using HDDL-R PCI card with OpenNESS - Details
+Further sections provide information on how to use the HDDL setup on OpenNESS OnPremise Edge.
+
+### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
+To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
+
+To enable on the Edge Node set following in `onprem_node.yml` (Please note that the hddl role needs to be executed after openness/onprem/worker role):
+
+```
+- role: hddl
+```
+Run setup script `deploy_onprem_node.sh`.
+
+### Building Docker image with HDDL only or dynamic CPU/VPU usage
+
+In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/build/openvino/producer](https://github.com/open-ness/edgeapps/blob/master/build/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
+
+### Deploying application with HDDL support
+
+Application onboarding is out of scope of this document - please refer to [Application Onboard Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md). General steps for onboarding OpenVino application should be executed with one exception. During the addition of the OpenVino consumer application to OpenNESS controller's library, the user needs to input an 'EPA Feature Key' and 'EPA Feature Value', the key to be entered is `hddl`, the value is `true`.
+
 ## Summary
-Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria. 
+Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria.
