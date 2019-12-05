@@ -32,7 +32,7 @@ topology_manager:
   policy: "<selected_policy>"
 ```
 
-Where `<selected_policy>` can be `none`, `best-effort`, `restricted` or `single-numa-node`. You can find further explanation of those policies in [Kubernetes Documantation](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/).
+Where `<selected_policy>` can be `none`, `best-effort`, `restricted` or `single-numa-node`. You can find further explanation of those policies in [Kubernetes Documentation](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/).
 
 You can also set `kubernetes_reserved_cpus` to number that suits you best. This parameter specifies the number of logical CPUs that will be reserved for Kubernetes system Pods.
 
@@ -67,3 +67,5 @@ Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550171   64340 topology_
 Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550204   64340 topology_manager.go:285] [topologymanager] ContainerTopologyHint: {0000000000000000000000000000000000000000000000000000000000000010 true}
 Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550216   64340 topology_manager.go:329] [topologymanager] Topology Affinity for Pod: 4ad6fb37-509d-4ea6-845c-875ce41049f9 are map[example:{0000000000000000000000000000000000000000000000000000000000000010 true}]
 ```
+## Reference
+- [Topology Manager](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/)

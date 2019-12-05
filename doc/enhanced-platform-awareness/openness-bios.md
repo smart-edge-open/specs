@@ -44,3 +44,6 @@ In order to enable BIOSFW following steps need to be performed:
 * `kubectl biosfw restore <node_name> bios_to_restore.ini admin_password` to restore BIOS settings on `<node_name>` node using BIOS Admin Password (last argument)
 * `kubectl biosfw direct <node_name> /i` to run `syscfg /i` on `<node_name>` node
 * `kubectl biosfw direct <node_name> /d BIOSSETTINGS "Quiet Boot"` to run `syscfg /d BIOSSETTINGS "Quiet Boot"` on `<node_name>` node
+
+## Reference
+- [Intel Save and Restore System Configuration Utility (SYSCFG)](https://downloadcenter.intel.com/download/28713/Save-and-Restore-System-Configuration-Utility-SYSCFG-)

@@ -30,8 +30,6 @@ The following section outlines some considerations for using CPU Manager(CMK):
 
 CMK accomplishes core isolation by controlling what logical CPUs each container may use for execution by wrapping target application commands with the CMK command-line program. The cmk wrapper program maintains state in a directory hierarchy on disk that describes pools from which user containers can acquire available CPU lists. These pools can be exclusive (only one container per CPU list) or non-exclusive (multiple containers can share a CPU list.) Each CPU list directory contains a tasks file that tracks process IDs of the container subcommand(s) that acquired the CPU list. When the child process exits, the cmk wrapper program clears its PID from the tasks file. If the wrapper program is killed before it can perform this cleanup step, a separate periodic reconciliation program detects this condition and cleans the tasks file accordingly. A file system lock guards against conflicting concurrent modifications.
 
-For more details please refer to [CPU Manager](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/architecture.md) documentation.
-
 ## Details - CPU Manager support in OpenNESS
 
 [CPU Manager for Kubernetes (CMK)](https://github.com/intel/CPU-Manager-for-Kubernetes) is a Kubernetes plugin that provides core affinity for applications deployed as Kubernetes pods. It is advised to use isolcpus for core isolation when using CMK (otherwise full isolation cannot be guaranteed).
@@ -119,5 +117,6 @@ spec:
     name: cmk-conf-dir
 EOF
 ```
-
-More examples of Kubernetes manifests available in [CMK repository](https://github.com/intel/CPU-Manager-for-Kubernetes/tree/master/resources/pods) and [documentation](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).
+## Reference 
+- [CPU Manager Repo](https://github.com/intel/CPU-Manager-for-Kubernetes)
+- More examples of Kubernetes manifests available in [CMK repository](https://github.com/intel/CPU-Manager-for-Kubernetes/tree/master/resources/pods) and [documentation](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).

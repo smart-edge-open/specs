@@ -276,3 +276,9 @@ kubectl exec -it pod-bbdev-sample-app -- /bin/bash
 ```
 The output of the application should indicate total of ‘1’ tests and ‘1’ test passing, this concludes the validation of the FPGA VF working correctly inside K8s pod.
 
+## Reference 
+- [Intel® FPGA Programmable Acceleration Card N3000](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html)
+-  [FlexRAN 19.10 release - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743)
+- [PAC N3000 OPAE beta release - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616082)
+- [PAC N3000 OPAE beta release (2) - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616080) 
+

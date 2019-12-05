@@ -68,3 +68,6 @@ hugepage_amount: "5"
 ```
 
 will enable 5 pages, 1GB each.
+
+## Reference 
+- [Hugepages support in Kubernetes](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/)

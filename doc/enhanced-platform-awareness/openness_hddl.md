@@ -11,6 +11,7 @@ Copyright © 2019 Intel Corporation
   * [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpu/vpu-usage)
   * [Deploying application with HDDL support](#deploying-application-with-hddl-support)
 * [Summary](#summary) 
+* [Reference](#reference) 
 
 Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload. 
 
@@ -74,3 +75,6 @@ Application onboarding is out of scope of this document - please refer to [Appli
 
 ## Summary
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria.
+
+## Reference 
+- [HDDL-R: Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)  
