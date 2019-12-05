@@ -3,6 +3,13 @@ Copyright © 2019 Intel Corporation
 
 # InterApp Communication support in OpenNESS 
 
+- [InterApp Communication support in OpenNESS](#interapp-communication-support-in-openness)
+  - [Overview](#overview)
+  - [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
+  - [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
+
+## Overview
+
 Multi-core edge cloud platforms typically host multiple containers or virtual machines as PODs. These applications sometimes need to communicate with each other as part of a service or consuming services from another application instance. This means that an edge cloud platform should provide not just the Dataplane interface but also the infrastructure to enable applications communicate with each other whether they are on the same platform or spanning across multiple platform. OpenNESS provides the infrastructure for both the On-Premises and Network edge modes. 
 
 > Note: InterApps Communication mentioned here are not just for applications but also applicable for Network functions like Core Network User plane, Base station and so on. 

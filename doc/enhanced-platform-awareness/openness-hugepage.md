@@ -3,6 +3,15 @@ Copyright © 2019 Intel Corporation
 
 # Hugepage support on OpenNESS 
 
+- [Hugepage support on OpenNESS](#hugepage-support-on-openness)
+  - [Overview](#overview)
+  - [Details of Hugepage support on OpenNESS](#details-of-hugepage-support-on-openness)
+    - [Network edge mode](#network-edge-mode)
+    - [OnPrem mode](#onprem-mode)
+  - [Reference](#reference)
+
+## Overview 
+
 Memory is allocated to application processes in terms of pages - by default the 4K pages are supported. For Applications dealing with larger datasets, using 4K pages may lead to performance degradation and overhead because of TLB misses. To address this, modern CPUs support huge pages which are typically 2M and 1G. This helps avoid TLB miss overhead and therefore improves performance. 
 
 Both Applications and Network functions can gain in performance from using hugepages. Huge page support, added to Kubernetes v1.8, enables the discovery, scheduling and allocation of huge pages as a native first-class resource. This support addresses low latency and deterministic memory access requirements. 

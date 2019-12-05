@@ -5,22 +5,22 @@ OpenNESS Integration with Baidu OpenEdge
 =======
 - Application Note
 
-Contents
-* [1.0 Overview](#overview)
-* [2.0 Integration Architecture](#integration-architecture)
-* [3.0 Run OpenEdge on OpenNESS](#run-openedge-on-openness)
-  * [3.1 OpenNESS Setup](#openness-setup)
-  * [3.2 OpenEdge Setup](#openedge-setup)
-    * [3.2.1 Scripts overview](#scripts-overview)
-    * [3.2.2 Prepare OpenEdge certs and configuration files](#prepare-openedge-certs-and-configuration-files)
-    * [3.2.3 Running scripts -- build and run OpenEdge](#running-scripts-build-and-run-openedge)
-* [4.0 End to End Example Demo](#end-to-end-example-demo)
-  * [4.1 Overview](#overview-1)
-  * [4.2 Run MQTT simulator](#run-mqtt-simulator)
-    * [4.2.1 Test OpenEdge Sub and Pub](#test-openedge-sub-and-pub)
-    * [4.2.2 Test OpenEdge Route to IotHub](#test-openedge-route-to-iothub)
-    * [4.2.3 RTT Test with OpenEdge](#rtt-test-with-openedge)
-    * [4.2.4 RTT Test with IoTHub](#rtt-test-with-iothub)
+- [OpenNESS Integration with Baidu OpenEdge](#openness-integration-with-baidu-openedge)
+- [Overview](#overview)
+- [Integration Architecture](#integration-architecture)
+- [Run OpenEdge on OpenNESS](#run-openedge-on-openness)
+  - [OpenNESS Setup](#openness-setup)
+  - [OpenEdge Setup](#openedge-setup)
+    - [Scripts overview](#scripts-overview)
+    - [Prepare OpenEdge certs and configuration files](#prepare-openedge-certs-and-configuration-files)
+    - [Running scripts -- build and run OpenEdge](#running-scripts----build-and-run-openedge)
+- [End to End Example Demo](#end-to-end-example-demo)
+  - [Overview](#overview-1)
+  - [Run MQTT simulator](#run-mqtt-simulator)
+    - [Test OpenEdge Sub and Pub:](#test-openedge-sub-and-pub)
+    - [Test OpenEdge Route to IotHub:](#test-openedge-route-to-iothub)
+    - [RTT Test with OpenEdge:](#rtt-test-with-openedge)
+    - [RTT Test with IoTHub:](#rtt-test-with-iothub)
 
 Overview
 ========

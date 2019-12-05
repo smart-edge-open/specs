@@ -3,15 +3,16 @@ Copyright © 2019 Intel Corporation
 
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS 
 
-* [HDDL Introduction](#hddl-introduction)  
-* [HDDL OpenNESS Integration](#hddl-openness-integration)
-  * [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
-* [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
-  * [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
-  * [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpu/vpu-usage)
-  * [Deploying application with HDDL support](#deploying-application-with-hddl-support)
-* [Summary](#summary) 
-* [Reference](#reference) 
+- [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](#using-intel%c2%ae-movidius%e2%84%a2-myriad%e2%84%a2-x-high-density-deep-learning-hddl-solution-in-openness)
+  - [HDDL Introduction](#hddl-introduction)
+  - [HDDL OpenNESS Integration](#hddl-openness-integration)
+    - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
+  - [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
+    - [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
+    - [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpuvpu-usage)
+    - [Deploying application with HDDL support](#deploying-application-with-hddl-support)
+  - [Summary](#summary)
+  - [Reference](#reference)
 
 Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload. 
 

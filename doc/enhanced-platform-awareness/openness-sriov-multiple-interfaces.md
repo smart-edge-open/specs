@@ -3,11 +3,28 @@ Copyright © 2019 Intel Corporation
 
 # Multiple Interface and PCIe SRIOV support in OpenNESS 
 
+- [Multiple Interface and PCIe SRIOV support in OpenNESS](#multiple-interface-and-pcie-sriov-support-in-openness)
+  - [Overview](#overview)
+    - [Overview of Multus](#overview-of-multus)
+    - [Overview of SR-IOV CNI](#overview-of-sr-iov-cni)
+    - [Overview of SR-IOV Device Plugin](#overview-of-sr-iov-device-plugin)
+  - [Details - Multiple Interface and PCIe SRIOV support in OpenNESS](#details---multiple-interface-and-pcie-sriov-support-in-openness)
+    - [Multus usage](#multus-usage)
+    - [SRIOV](#sriov)
+      - [Edgecontroller setup](#edgecontroller-setup)
+      - [Edgenode setup](#edgenode-setup)
+      - [Usage](#usage)
+  - [Reference](#reference)
+
+## Overview 
+
 Edge deployments consist of both Network Functions and Applications. Cloud Native solutions like Kubernetes typically expose only one interface to the Application or Network function PODs. These interfaces are typically bridged interfaces. This means that Network Functions like Base station or Core network User plane functions and Applications like CDN etc. are limited by the default interface.
 
 To address this we need to enable two key networking features: 
 1) Enable a Kubernetes like orchestration environment to provision more than one interface to the application and Network function PODs 
 2) Enable the allocation of dedicated hardware interfaces to application and Network Function PODs 
+
+### Overview of Multus 
 
 To enable multiple interface support in PODs, OpenNESS Network Edge uses the Multus container network interface. Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables the attachment of multiple network interfaces to pods. Typically, in Kubernetes each pod only has one network interface (apart from a loopback) – with Multus you can create a multi-homed pod that has multiple interfaces. This is accomplished by Multus acting as a “meta-plugin”, a CNI plugin that can call multiple other CNI plugins. Multus CNI follows the Kubernetes Network Custom Resource Definition De-facto Standard to provide a standardized method by which to specify the configurations for additional network interfaces. This standard is put forward by the Kubernetes Network Plumbing Working Group.
 
@@ -17,11 +34,15 @@ Below is an illustration of the network interfaces attached to a pod, as provisi
 
 _Figure - Multus Overview_
 
+### Overview of SR-IOV CNI
+
 The Single Root I/O Virtualization (SR-IOV) feature provides the ability to partition a single physical PCI resource into virtual PCI functions that can be allocated to application and network function PODs. To enable SR-IOV device resource allocation and CNI, OpenNESS Network Edge uses the SR-IOV CNI and SR-IOV Device Plugin. The SR-IOV CNI plugin enables the Kubernetes pod to be attached directly to an SR-IOV virtual function (VF) using the standard SR-IOV VF driver in the container host’s kernel.
 
 ![SR-IOV CNI](multussriov-images/sriov-cni.png)
 
 _Figure - SR-IOV CNI_
+
+### Overview of SR-IOV Device Plugin
 
 The Intel SR-IOV Network device plugin discovers and exposes SR-IOV network resources as consumable extended resources in Kubernetes. This works with SR-IOV VFs in both Kernel drivers and DPDK drivers. When a VF is attached with a kernel driver, then the SR-IOV CNI plugin can be used to configure this VF in the Pod. When using the DPDK driver, a VNF application configures this VF as required.
 

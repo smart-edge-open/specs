@@ -4,7 +4,15 @@ Copyright © 2019 Intel Corporation
 
 # Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment
 
+- [Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment](#dataplane-support-for-edge-cloud-between-enb-and-epc-s1-u-deployment)
+  - [Overview](#overview)
+  - [Network Traffic Services](#network-traffic-services)
+
+## Overview 
+
 The ETSI MEC specification outlines the Edge Cloud can be deployed between the 4G base station (eNb) and Evolved Packet Core (EPC). Such deployments are sometimes used in private LTE deployments. This deployment was created specifically to address the needs of Private LTE and some low latency use cases. OpenNESS supports this deployment in the On-Premises version. Typically data between eNb and EPC is called S1. S1-U is user plane which is GTP-U traffic and is usually encrypted. Since private LTE controls the network, Private LTE operators have the ability to turn off encryption. 
+
+## Network Traffic Services  
 
 OpenNESS assumes that S1-U traffic is unencrypted. The control plane S1 traffic is S1-MME and is over the SCTP protocol. OpenNESS does not process or handle Control Plane S1-MME Traffic in this deployment. From an EPC perspective, the Edge Cloud platform looks like man-in-the middle. The following diagram shows the support of such deployment 
 

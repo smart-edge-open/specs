@@ -3,6 +3,17 @@ Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.
 
 # Release Notes 
 This document provides high level system features, issues and limitations information for OpenNESS. 
+- [Release Notes](#release-notes)
+- [Release history](#release-history)
+- [Features for Release](#features-for-release)
+- [Changes to Existing Features](#changes-to-existing-features)
+- [Fixed Issues](#fixed-issues)
+- [Known Issues](#known-issues)
+- [Release Content](#release-content)
+- [Hardware and Software Compatibility](#hardware-and-software-compatibility)
+  - [Skylake D](#skylake-d)
+  - [Skylake SP](#skylake-sp)
+- [Supported Operating Systems](#supported-operating-systems)
 
 # Release history 
 1. OpenNESS - 19.06

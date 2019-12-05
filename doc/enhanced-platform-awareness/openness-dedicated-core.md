@@ -3,6 +3,15 @@ Copyright © 2019 Intel Corporation
 
 # Dedicated CPU core for workload support in OpenNESS
 
+- [Dedicated CPU core for workload support in OpenNESS](#dedicated-cpu-core-for-workload-support-in-openness)
+  - [Overview](#overview)
+  - [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
+    - [Setup](#setup)
+    - [Usage](#usage)
+  - [Reference](#reference)
+
+## Overview 
+
 Multi-core COTS platforms are typical in any cloud or Cloudnative deployment. Parallel processing on multiple cores helps achieve better density. On a Multi-core platform, one challenge for applications and network functions that are latency and throughput density is deterministic compute. To achieve deterministic compute it is logical to have dedicated resources so that there is no interference with other applications (Noisy Neighbor). When deploying on a cloud native platform, applications are deployed as PODs, therefore, providing required information to the container orchestrator on dedicated CPU cores is key. CPU manager allows provisioning of a POD to dedicated cores.
 
 ![CPU Manager - CMK ](cmk-images/cmk1.png)

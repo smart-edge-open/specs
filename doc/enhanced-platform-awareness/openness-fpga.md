@@ -3,6 +3,23 @@ Copyright © 2019 Intel Corporation
 
 # Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration
 
+- [Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration](#using-fpga-in-openness-programming-resource-allocation-and-configuration)
+  - [Overview](#overview)
+  - [Intel® PAC N3000 FlexRAN host interface overview](#intel%c2%ae-pac-n3000-flexran-host-interface-overview)
+  - [Intel PAC N3000 Orchestration and deployment with Kubernetes for FlexRAN](#intel-pac-n3000-orchestration-and-deployment-with-kubernetes-for-flexran)
+  - [Intel PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intel-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
+  - [Using FPGA on OpenNESS - Details](#using-fpga-on-openness---details)
+    - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
+      - [Edge Controller](#edge-controller)
+      - [Edge Node](#edge-node)
+    - [FPGA Programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
+    - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
+    - [Requesting resources and running pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
+    - [Verifying Application POD access and usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
+  - [Reference](#reference)
+
+## Overview
+
 The FPGA Programmable Acceleration Card plays a key role in accelerating certain types of workloads which in-turn increases the overall compute capacity of a COTS platform. FPGA benefits include:
 - Flexibility - FPGA functionality can change upon every power-up of the device.
 - Acceleration - Get products to market quicker and/or increases your system performance.

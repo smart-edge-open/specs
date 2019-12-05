@@ -2,15 +2,16 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 
 # Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
-* [OpenNESS Introduction](#openness-introduction)     
-* [Open Visual Cloud Introduction](#open-visual-cloud-introduction) 
-* [Smart City Edge Application Introduction](#smart-city-edge-application-introduction)       
-* [Overview of the application](#overview-of-the-application)     
-* [OVC Processing pipeline](#ovc-processing-pipeline)  
-* [OpenNESS integration with OVC Application](#openness-integration-with-ovc-application)
-* [Data and Control flow](#data-and-control-flow)
-* [Open Visual Cloud & OpenNESS Integration](#open-visual-cloud-openness-integration)
-* [Conclusion](#conclusion)
+- [Open Visual Cloud Smart City Application on OpenNESS - Solution Overview](#open-visual-cloud-smart-city-application-on-openness---solution-overview)
+  - [OpenNESS Introduction](#openness-introduction)
+  - [Open Visual Cloud Introduction](#open-visual-cloud-introduction)
+  - [Smart City Edge Application Introduction](#smart-city-edge-application-introduction)
+  - [The Smart City Building Blocks](#the-smart-city-building-blocks)
+  - [Smart City App Deployment with OpenNESS](#smart-city-app-deployment-with-openness)
+  - [Open Visual Cloud & OpenNESS Integration](#open-visual-cloud--openness-integration)
+    - [The Infrastructure Challenges](#the-infrastructure-challenges)
+    - [The Smart City Application Challenges](#the-smart-city-application-challenges)
+  - [Conclusion](#conclusion)
 
 ## OpenNESS Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).

@@ -3,9 +3,20 @@ Copyright © 2019 Intel Corporation
 
 # Resource Locality awareness support through Topology manager in OpenNESS 
 
+- [Resource Locality awareness support through Topology manager in OpenNESS](#resource-locality-awareness-support-through-topology-manager-in-openness)
+  - [Overview](#overview)
+    - [Edge usecase](#edge-usecase)
+  - [Details - Topology manager support in OpenNESS](#details---topology-manager-support-in-openness)
+    - [Usage](#usage)
+  - [Reference](#reference)
+
+## Overview 
+
 Multi-core and Multi-Socket COTS systems are widely used for the deployment of application and network functions. COTS systems provide a variety of IO and memory features. In order to achieve determinism and high performance, mechanisms like CPU isolation, IO device locality and socket memory allocation are critical. Cloud native stacks like  Kubernetes is beginning to leverage resources such as CPU, hugepages and I/O, but is agnostic to the Non-Uniform Memory Access (NUMA) alignment of these. Non-optimal NUMA topology aware resource allocation can severely impact performance of latency sensitive workloads. 
 
 To address this requirement OpenNESS uses the Topology manager. Topology manager is now supported by Kubernetes. Topology Manager is a solution permitting k8s components e.g. CPU Manager &  Device Manager, to coordinate the resources  allocated to a workload. 
+
+### Edge usecase
 
 Let us look at an Analytics application that is consuming multiple high-definition video streams and executing an analytics algorithm. This analytics application pod is compute, memory and network performance sensitive. To achieve better and reliable performance of the analytics application on a typical dual socket or multi NUMA node system, the Orchestrator like Kubernetes needs to place the analytics pod on the same NUMA node where the Network Card is located and the memory is allocated. Without the topology manger the deployment may be like that shown in the diagram below where the analytics application  is on the NUMA 1 and the Device is on NUMA 2. This leads to poor and unreliable performance. 
 

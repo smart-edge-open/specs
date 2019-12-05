@@ -1,9 +1,21 @@
 SPDX-License-Identifier: Apache-2.0    
 Copyright © 2019 Intel Corporation
 
-# BIOS and Firmware Configuration on OpenNESS Platform 
+# BIOS and Firmware Configuration on OpenNESS Platform
+
+- [BIOS and Firmware Configuration on OpenNESS Platform](#bios-and-firmware-configuration-on-openness-platform)
+  - [Overview](#overview)
+  - [Usecase for edge](#usecase-for-edge)
+  - [Details: BIOS and Firmware Configuration on OpenNESS Network Edge](#details-bios-and-firmware-configuration-on-openness-network-edge)
+    - [Setup](#setup)
+    - [Usage](#usage)
+  - [Reference](#reference)
+
+## Overview 
 
 BIOS and Firmware are the fundamental platform configurations of a typical Commercial off-the-shelf (COTS) platform. BIOS and Firmware configuration has very low level configurations that can determine the environment that will be available for the Network Functions or Applications. A typical BIOS configuration that would be of relevance for a network function or application may include CPU configuration, Cache and Memory configuration, PCIe Configuration, Power and Performance configuration, etc. Some Network Functions and Applications need certain BIOS and Firmware settings to be configured in a specific way for optimal functionality and behavior. 
+
+## Usecase for edge 
 
 Let's take an AI Inference Application as an example that uses an Accelerator like an FPGA. To get optimal performance, when this application is deployed by the Resource Orchestrator, it is recommended to place the Application on the same Node and CPU Socket to which the Accelerator is attached. To ensure this, NUMA, PCIe Memory mapped IO and Cache configuration needs to be configured optimally. Similarly for a Network Function like a Base station or Core network instruction set, cache and hyper threading play an important role in the performance and density. 
 
