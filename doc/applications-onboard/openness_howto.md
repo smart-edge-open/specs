@@ -856,7 +856,7 @@ spec:
 
 >Note: When adding a first egress rule, all egress is blocked except for that rule.
 
-Example NetworkPolicy opening port 5000(tcp and udp) on all pods matching name `openvino-cons-app`:
+Example NetworkPolicy allowing ingress traffic on port 5000(tcp and udp) from 192.168.1.0/24 network to all pods matching label `name: openvino-cons-app`:
 
 ```
 apiVersion: networking.k8s.io/v1
@@ -872,10 +872,12 @@ spec:
   - Ingress
   ingress:
   - from:
+    - ipBlock:
+        cidr: 192.168.1.0/24
     ports:
-    - protocol: udp
+    - protocol: TCP
       port: 5000
-    - protocol: tcp
+    - protocol: UDP
       port: 5000
 ```
 
