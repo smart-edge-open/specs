@@ -1,0 +1,900 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Application Function Northbound APIs",
+    "version": "v1",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "externalDocs": {
+    "description": "Based on 3GPP TS 29.522 V15.3.0, 5G System, Network Exposure Function Northbound APIs.",
+    "url": "http://www.3gpp.org/ftp/Specs/archive/29_series/29.522/"
+  },
+  "servers": [
+    {
+      "url": "{apiRoot}/af/v1",
+      "variables": {
+        "apiRoot": {
+          "default": "https://example.com",
+          "description": "apiRoot as defined in subclause 5.2.4 of 3GPP TS 29.122."
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/subscriptions": {
+      "get": {
+        "summary": "read all of the active subscriptions for this AF",
+        "tags": [
+          "Traffic Influence API, AF level GET operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrafficInfluSub"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a new subscription resource",
+        "tags": [
+          "TrafficInfluence API Subscription level POST Operation"
+        ],
+        "requestBody": {
+          "description": "Request to create a new subscription resource",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrafficInfluSub"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created (Successful creation of subscription)",
+            "headers": {
+              "Location": {
+                "description": "Contains the URI of the newly created resource",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}": {
+      "parameters": [
+        {
+          "name": "subscriptionId",
+          "in": "path",
+          "description": "Identifier of the subscription resource",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Reads an active subscriptions for the AF and for the subscription ID",
+        "tags": [
+          "Traffic Influence API, subscription level GET operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK (Successful get the active subscription)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrafficInfluSub"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replaces an existing subscription resource based on subscription ID",
+        "tags": [
+          "Traffic Influence API, subscription level PUT operation"
+        ],
+        "requestBody": {
+          "description": "Parameters to replace the existing subscription",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrafficInfluSub"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK (Successful update of the subscription)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrafficInfluSub"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Updates an existing subscription resource based on subscription ID",
+        "tags": [
+          "Traffic Influence API, subscription level PATCH operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrafficInfluSubPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The subscription was modified successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrafficInfluSub"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes an already existing subscription based on subscription ID",
+        "tags": [
+          "Traffic Influence API, subscription level DELETE operation"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content (Successful deletion of the existing subscription)"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TrafficInfluSub": {
+        "type": "object",
+        "properties": {
+          "afServiceId": {
+            "type": "string",
+            "description": "Identifies a service on behalf of which the AF is issuing the request."
+          },
+          "afAppId": {
+            "type": "string",
+            "description": "Identifies an application."
+          },
+          "afTransId": {
+            "type": "string",
+            "description": "Identifies an NEF Northbound interface transaction, generated by the AF."
+          },
+          "appReloInd": {
+            "type": "boolean",
+            "description": "Identifies whether an application can be relocated once a location of the application has been selected."
+          },
+          "dnn": {
+            "$ref": "#/components/schemas/Dnn"
+          },
+          "snssai": {
+            "$ref": "#/components/schemas/Snssai"
+          },
+          "externalGroupId": {
+            "$ref": "#/components/schemas/ExternalGroupId"
+          },
+          "anyUeInd": {
+            "type": "boolean",
+            "description": "Identifies whether the AF request applies to any UE. This attribute shall set to \"true\" if applicable for any UE, otherwise, set to \"false\"."
+          },
+          "subscribedEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscribedEvent"
+            },
+            "minItems": 1,
+            "description": "Identifies the requirement to be notified of the event(s)."
+          },
+          "gpsi": {
+            "$ref": "#/components/schemas/Gpsi"
+          },
+          "ipv4Addr": {
+            "$ref": "#/components/schemas/Ipv4Addr"
+          },
+          "ipv6Addr": {
+            "$ref": "#/components/schemas/Ipv6Addr"
+          },
+          "macAddr": {
+            "$ref": "#/components/schemas/MacAddr48"
+          },
+          "dnaiChgType": {
+            "$ref": "#/components/schemas/DnaiChangeType"
+          },
+          "notificationDestination": {
+            "$ref": "#/components/schemas/Link"
+          },
+          "requestTestNotification": {
+            "type": "boolean",
+            "description": "Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3. Set to false or omitted otherwise."
+          },
+          "websockNotifConfig": {
+            "$ref": "#/components/schemas/WebsockNotifConfig"
+          },
+          "self": {
+            "$ref": "#/components/schemas/Link"
+          },
+          "trafficFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlowInfo"
+            },
+            "minItems": 1,
+            "description": "Identifies IP packet filters."
+          },
+          "ethTrafficFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EthFlowDescription"
+            },
+            "minItems": 1,
+            "description": "Identifies Ethernet packet filters."
+          },
+          "trafficRoutes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteToLocation"
+            },
+            "minItems": 1,
+            "description": "Identifies the N6 traffic routing requirement."
+          },
+          "tempValidities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemporalValidity"
+            }
+          },
+          "validGeoZoneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Identifies a geographic zone that the AF request applies only to the traffic of UE(s) located in this specific zone."
+          },
+          "suppFeat": {
+            "$ref": "#/components/schemas/SupportedFeatures"
+          }
+        },
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "afAppId"
+                ]
+              },
+              {
+                "required": [
+                  "trafficFilters"
+                ]
+              },
+              {
+                "required": [
+                  "ethTrafficFilters"
+                ]
+              }
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "ipv4Addr"
+                ]
+              },
+              {
+                "required": [
+                  "ipv6Addr"
+                ]
+              },
+              {
+                "required": [
+                  "macAddr"
+                ]
+              },
+              {
+                "required": [
+                  "gpsi"
+                ]
+              },
+              {
+                "required": [
+                  "externalGroupId"
+                ]
+              },
+              {
+                "required": [
+                  "anyUeInd"
+                ]
+              }
+            ]
+          }
+        ],
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "subscribedEvents"
+              ]
+            }
+          },
+          {
+            "required": [
+              "notificationDestination"
+            ]
+          }
+        ]
+      },
+      "TrafficInfluSubPatch": {
+        "type": "object",
+        "properties": {
+          "appReloInd": {
+            "type": "boolean",
+            "description": "Identifies whether an application can be relocated once a location of the application has been selected.",
+            "nullable": true
+          },
+          "trafficFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlowInfo"
+            },
+            "minItems": 1,
+            "description": "Identifies IP packet filters."
+          },
+          "ethTrafficFilters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EthFlowDescription"
+            },
+            "minItems": 1,
+            "description": "Identifies Ethernet packet filters."
+          },
+          "trafficRoutes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteToLocation"
+            },
+            "minItems": 1,
+            "description": "Identifies the N6 traffic routing requirement."
+          },
+          "tempValidities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemporalValidity"
+            },
+            "minItems": 1,
+            "nullable": true
+          },
+          "validGeoZoneIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Identifies a geographic zone that the AF request applies only to the traffic of UE(s) located in this specific zone.",
+            "nullable": true
+          }
+        }
+      },
+      "TemporalValidity": {
+        "description": "Indicates the time interval(s) during which the AF request is to be applied",
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "stopTime": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        }
+      },
+      "SubscribedEvent": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "UP_PATH_CHANGE"
+            ]
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "description": "Possible values is CHANGE_OF_DNAI - the AF requests to be notifie when the UP path changes for the PDU session."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/Uri"
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "$ref": "#/components/schemas/Uri"
+          },
+          "cause": {
+            "type": "string",
+            "description": "A machine-readable application error cause specific to this occurrence of the problem. This IE should be present and provide application-related error information, if available."
+          },
+          "invalidParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            },
+            "minItems": 1,
+            "description": "Description of invalid parameters, for a request rejected due to invalid parameters."
+          }
+        }
+      },
+      "FlowInfo": {
+        "type": "object",
+        "properties": {
+          "flowId": {
+            "type": "integer",
+            "description": "Indicates the IP flow."
+          },
+          "flowDescriptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Indicates the packet filters of the IP flow. Refer to subclause 5.3.8 of 3GPP TS 29.214 for encoding. It shall contain UL and/or DL IP flow description.",
+            "minItems": 1,
+            "maxItems": 2
+          }
+        },
+        "required": [
+          "flowId"
+        ]
+      },
+      "EthFlowDescription": {
+        "description": "Identifies an Ethernet flow.",
+        "type": "object",
+        "required": [
+          "ethType"
+        ],
+        "properties": {
+          "destMacAddr": {
+            "$ref": "#/components/schemas/MacAddr48"
+          },
+          "ethType": {
+            "type": "string"
+          },
+          "fDesc": {
+            "$ref": "#/components/schemas/FlowDescription"
+          },
+          "fDir": {
+            "$ref": "#/components/schemas/FlowDirection"
+          },
+          "sourceMacAddr": {
+            "$ref": "#/components/schemas/MacAddr48"
+          },
+          "vlanTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 2
+          }
+        }
+      },
+      "FlowDirection": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "DOWNLINK",
+              "UPLINK",
+              "BIDIRECTIONAL",
+              "UNSPECIFIED"
+            ]
+          },
+          {
+            "type": "string",
+            "description": "This string provides forward-compatibility with future extensions to the enumeration but is not used to encode content defined in the present version of this API."
+          }
+        ],
+        "description": "Possible values are DOWNLINK - the corresponding filter applies for traffic to the UE,  UPLINK - the corresponding filter applies for traffic from the UE, BIDIRECTIONAL - the corresponding filter applies for traffic both to and from the UE, UNSPECIFIED - the corresponding filter applies for traffic to the UE (downlink), but has no specific direction declared. The service data flow detection shall apply the filter for uplink traffic as if the filter was bidirectional. The PCF shall not use the value UNSPECIFIED in filters created by the network in NW-initiated procedures. The PCF shall only include the value UNSPECIFIED in filters in UE-initiated procedures if the same value is received from the SMF."
+      },
+      "WebsockNotifConfig": {
+        "type": "object",
+        "properties": {
+          "websocketUri": {
+            "$ref": "#/components/schemas/Link"
+          },
+          "requestWebsocketUri": {
+            "type": "boolean",
+            "description": "Set by the AF to indicate that the Websocket delivery is requested."
+          }
+        }
+      },
+      "InvalidParam": {
+        "type": "object",
+        "properties": {
+          "param": {
+            "type": "string",
+            "description": "Attribute's name encoded as a JSON Pointer, or header's name."
+          },
+          "reason": {
+            "type": "string",
+            "description": "A human-readable reason, e.g. \"must be a positive integer\"."
+          }
+        },
+        "required": [
+          "param"
+        ]
+      },
+      "DateTime": {
+        "type": "string",
+        "description": "string with format \"date-time\" as defined in OpenAPI."
+      },
+      "ExternalGroupId": {
+        "type": "string",
+        "description": "string containing a local identifier followed by \"@\" and a domain identifier. Both the local identifier and the domain identifier shall be encoded as strings that do not contain any \"@\" characters. See Clauses 4.6.2 and 4.6.3 of 3GPP TS 23.682 for more information."
+      },
+      "Ipv4Addr": {
+        "type": "string",
+        "description": "string identifying a Ipv4 address formatted in the \"dotted decimal\" notation as defined in IETF RFC 1166."
+      },
+      "Ipv6Addr": {
+        "type": "string",
+        "description": "string identifying a Ipv6 address formatted according to clause 4 in IETF RFC 5952. The mixed Ipv4 Ipv6 notation according to clause 5 of IETF RFC 5952 shall not be used."
+      },
+      "MacAddr48": {
+        "type": "string",
+        "pattern": "^([0-9a-fA-F]{2})((-[0-9a-fA-F]{2}){5})$"
+      },
+      "Link": {
+        "type": "string",
+        "description": "string formatted according to IETF RFC 3986 identifying a referenced resource."
+      },
+      "Uri": {
+        "type": "string",
+        "description": "string providing an URI formatted according to IETF RFC 3986."
+      },
+      "RouteToLocation": {
+        "type": "object",
+        "properties": {
+          "dnai": {
+            "$ref": "#/components/schemas/Dnai"
+          },
+          "routeInfo": {
+            "$ref": "#/components/schemas/RouteInformation"
+          },
+          "routeProfId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "dnai"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "routeInfo"
+            ]
+          },
+          {
+            "required": [
+              "routeProfId"
+            ]
+          }
+        ],
+        "nullable": true
+      },
+      "RouteInformation": {
+        "type": "object",
+        "properties": {
+          "ipv4Addr": {
+            "$ref": "#/components/schemas/Ipv4Addr"
+          },
+          "ipv6Addr": {
+            "$ref": "#/components/schemas/Ipv6Addr"
+          },
+          "portNumber": {
+            "$ref": "#/components/schemas/Uinteger"
+          }
+        },
+        "required": [
+          "portNumber"
+        ],
+        "nullable": true
+      },
+      "SupportedFeatures": {
+        "description": "A string used to indicate the features supported by an API that is used as defined in subclause 6.6 in 3GPP TS 29.500 [1]. The string shall contain a bitmask indicating supported features in hexadecimal representation. Each character in the string shall take a value of \"0\" to \"9\" or \"A\" to \"F\" and shall represent the support of 4 features as described in table 5.2.2-3. The most significant character representing the highest-numbered features shall appear first in the string, and the character representing features 1 to 4 shall appear last in the string. The list of features and their numbering (starting with 1) are defined separately for each API. Possible features for traffic influencing are Notification_websocket(1), Notification_test_event(2)",
+        "type": "string",
+        "pattern": "^[A-Fa-f0-9]*$"
+      },
+      "FlowDescription": {
+        "description": "Defines a packet filter of an IP flow. Contains direction (in or out). The direction IN refers to uplink IP flows, and the direction OUT refers to downlink IP flows. Provides source and destination IP address (possibly masked), protocol, source and destination port",
+        "type": "string"
+      },
+      "Dnn": {
+        "type": "string"
+      },
+      "Gpsi": {
+        "type": "string",
+        "pattern": "^(msisdn-[0-9]{5,15}|extid-[^@]+@[^@]+|.+)$"
+      },
+      "DnaiChangeType": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "EARLY",
+              "EARLY_LATE",
+              "LATE"
+            ]
+          },
+          {
+            "type": "string",
+            "description": "This string provides forward-compatibility with future extensions to the enumeration but is not used to encode content defined in the present version of this API."
+          }
+        ],
+        "description": "Possible values are EARLY - early notification of UP path reconfiguration, EARLY_LATE - Early and late notification of UP path reconfiguration (this value shall only be present in the subscription to the DNAI change event), LATE - Late notification of UP path reconfiguration."
+      },
+      "Dnai": {
+        "description": "Identifies the location of the application.",
+        "type": "string"
+      },
+      "Snssai": {
+        "type": "object",
+        "properties": {
+          "sst": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "sd": {
+            "type": "string",
+            "pattern": "^[A-Fa-f0-9]{6}$"
+          }
+        },
+        "required": [
+          "sst"
+        ]
+      },
+      "Uinteger": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "406": {
+        "description": "Not Acceptable",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "411": {
+        "description": "Length Required",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "415": {
+        "description": "Unsupported Media Type",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service Unavailable",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "default": {
+        "description": "Generic Error"
+      }
+    }
+  }
+}
