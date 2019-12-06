@@ -173,7 +173,7 @@ conID := AuthIdentity{
 
 conIdBytes, _ := json.Marshal(conID)
 
-resp, _ := http.Post("http://eaa.community.appliance.mec:80/auth",
+resp, _ := http.Post("http://eaa.openness:80/auth",
     bytes.NewBuffer(conIdBytes))
 
 var conCreds AuthCredentials
@@ -229,7 +229,7 @@ serv.Notifications[1] = notif2
 servBytes, _ := json.Marshal(serv)
 
 req, _ := http.NewRequest("POST",
-    "https://eaa.community.appliance.mec:443/services",
+    "https://eaa.openness:443/services",
     bytes.NewReader(servBytes))
 
 resp, _ := client.Do(req)
@@ -248,7 +248,7 @@ var socket = websocket.Dialer{
     TLSClientConfig: &tls.Config{
         RootCAs:      certPool,
         Certificates: []tls.Certificate{cert},
-        ServerName:   "eaa.community.appliance.mec",
+        ServerName:   "eaa.openness",
     },
 }
 
@@ -257,7 +257,7 @@ header["Host"] = []string{myURN.Namespace + ":" + myURN.ID}
 
 // Consumer establishes websocket with EAA
 conn, resp, _ := socket.Dial(
-    "wss://eaa.community.appliance.mec:443/notifications", header)
+    "wss://eaa.openness:443/notifications", header)
 
 log.Println("WebSocket establishment successful")
 
@@ -270,7 +270,7 @@ Example of service discovery is shown in the code snippet below:
 
 ```golang
 req, _ := http.NewRequest("GET",
-    "https://eaa.community.appliance.mec:443/services", nil)
+    "https://eaa.openness:443/services", nil)
 
 resp, _ := client.Do(req)
 
@@ -285,7 +285,7 @@ Example for subscribing to all services in a namespace is given below:
 
 ```golang
 req, _ := http.NewRequest("POST",
-    "https://eaa.community.appliance.mec:443/subscriptions/"+
+    "https://eaa.openness:443/subscriptions/"+
     service.URN.Namespace, bytes.NewReader(notifBytes))
 
 resp, _ := client.Do(req)
