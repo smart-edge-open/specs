@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2019 Intel Corporation
-# The source of this file is from 3GPP 29.522
-# at http://www.3gpp.org/ftp/Specs/archive/29_series/29.522/
+# The source of this file is from 3GPP 29.522 Release 15 version 3
+# taken from http://www.3gpp.org/ftp/Specs/archive/29_series/29.522/
 
 openapi: 3.0.0
 info:
