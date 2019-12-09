@@ -1,7 +1,7 @@
 SPDX-License-Identifier: Apache-2.0  
 Copyright © 2019 Intel Corporation  
 
-# CNCA Kubernetes kubectl plugin
+# CNCA kubectl plugin
 Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM, AF and LTE CUPS network functions.
 
 Available management with `kube-cnca` against NGC OAM are:
