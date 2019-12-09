@@ -2,7 +2,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright © 2019 Intel Corporation  
 
 # CNCA kubectl plugin
-Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM, AF and LTE CUPS network functions.
+Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM, AF and LTE CUPS OAM agent.
 
 Available management with `kube-cnca` against NGC OAM are:
 1. Registration of AF service
@@ -13,7 +13,7 @@ Available management with `kube-cnca` against NGC Application Function (AF) are:
 2. Deletion of subscriptions
 3. Updating (patching) subscriptions
 
-Available management with `kube-cnca` against LTE CUPS are:
+Available management with `kube-cnca` against LTE CUPS OAM agent are:
 1. Creation of LTE CUPS userplanes
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
@@ -36,7 +36,7 @@ The following parameters MUST be provided to the command in order to succeed:
 5. UPF IP Address (upfIp)
 6. Network Slice Identifier (SNSSAI)
 
-Upon successful registration, subscriptions can be instantiated over with NGC AF.
+Upon successful registration, subscriptions can be instantiated over with NGC AF. The `afServiceId` is returned by the `register` command to be used in further correspondence with NGC OAM & AF functions.
 
 Un-registration of the AF service can be performed as in the command below:
 ```shell
@@ -49,6 +49,10 @@ Creation the AF subscription is performed based on the configuration provided by
 ```shell
 kubectl cnca apply -f <config.yml>
 ```
+
+When the subscription is created successfully, the `apply` command will return the subscription identifier `<subscription-id>`, which should be used in further correspondence with AF concerning this particular subscription. It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.
+
+> NOTE: All active subscriptions can be retrieved from AF through command `kubectl cnca get subscriptions`.
 
 To retrieve an existing subscription with a known subscription ID, use the below command:
 ```shell
@@ -77,12 +81,16 @@ Creation the LTE CUPS userplane is performed based on the configuration provided
 kubectl cnca apply -f <config.yml>
 ```
 
+When the userplane is created successfully, the `apply` command will return the userplane identifier `<userplane-id>`, which should be used in further correspondence with LTE CUPS OAM agent concerning this particular userplane. It is the responsibility of the user to retain the `<userplane-id>` as `kube-cnca` is a stateless function.
+
+> NOTE: All active userplanes can be retrieved from AF through command `kubectl cnca get userplanes`.
+
 To retrieve an existing userplane with a known userplane ID, use the below command:
 ```shell
 kubectl cnca get userplane <userplane-id>
 ```
 
-To retrieve all active userplanes at LTE CUPS functions, execute this command:
+To retrieve all active userplanes at LTE CUPS OAM agent, execute this command:
 ```shell
 kubectl cnca get userplanes
 ```
