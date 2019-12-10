@@ -1,2 +1,391 @@
 SPDX-License-Identifier: Apache-2.0    
 Copyright © 2019 Intel Corporation
+
+- [Introduction](#introduction)
+- [Building Applications](#building-applications)
+  - [Building Sample Application images](#building-sample-application-images)
+  - [Building the OpenVINO Application images](#building-the-openvino-application-images)
+- [Onboarding Sample Application](#onboarding-sample-application)
+  - [Prerequisites](#prerequisites)
+  - [Verifying image availability](#verifying-image-availability)
+  - [Applying Kubernetes Network Policies](#applying-kubernetes-network-policies)
+  - [Deploying Consumer and Producer Sample Application](#deploying-consumer-and-producer-sample-application)
+- [Onboarding OpenVINO application](#onboarding-openvino-application)
+  - [Prerequisites](#prerequisites-1)
+  - [Setting up Networking Interfaces](#setting-up-networking-interfaces)
+  - [Deploying the Application](#deploying-the-application)
+  - [Applying Kubernetes Network Policies](#applying-kubernetes-network-policies-1)
+  - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
+- [Inter Application Communication](#inter-application-communication)
+- [Enhanced Platform Awareness](#enhanced-platform-awareness)
+- [Troubleshooting](#troubleshooting)
+  - [Useful Commands:](#useful-commands)
+
+# Introduction
+The aim of this document is to familiarize the user with the OpenNESS application on-boarding process for the Network Edge. This guide will provide instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller via the Kubernetes `kubectl` command line utility, sample specification files for application onboarding will also be provided.
+
+# Building Applications
+It is the responsibility of the user to provide the application to be deployed on the OpenNESS platform for Network Edge. The application must be provided in a format of Docker image available either from an external Docker repository (ie. Docker Hub) or a locally build/imported Docker image - the image must be available on the Edge Node which the application will be deployed on.
+
+> Note: setting up of the Docker registry is out of scope of this document. If the user already has a docker container image file and would like to copy it to the node manually then `docker load` command can be used to add the image. The success of using such pre-built docker image depends on dependencies of the application that user needs to be aware of. 
+
+The OpenNESS [edgeapps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. Please pull the repository to your Edge Node in order to build the images.
+
+This document will explain the build and deployment to two applications 
+1. Sample application: Simple hello-world like reference application for OpenNESS 
+2. OpenVINO application: A close to real-world inference application 
+
+## Building Sample Application images
+The sample application is available in this [location in edgeapps repository](https://github.com/otcshare/edgeapps/tree/master/sample-app), further information about the application is contained within `Readme.md` file.
+
+To build the sample application Docker images for testing OpenNESS EAA with the consumer and producer applications the following steps are required:
+
+1. To build the application binaries and Docker images run:
+   ```
+   make
+   make build-docker
+   ```
+2. Check that the images built successfully and are available in local Docker image registry:
+   ```
+   docker images | grep producer
+   docker images | grep consumer
+   ```
+## Building the OpenVINO Application images
+The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
+
+To build sample application Docker images for testing OpenVINO consumer and producer applications the following steps are required:
+
+1. To build the producer application image from the application directory navigate to the `./producer` directory and run:
+   ```
+   ./build-image.sh
+   ``` 
+    **Note**: Only CPU inference support is currently available for OpenVINO application on OpenNESS Network Edge - environmental variable `OPENVINO_ACCL` must be set to `CPU` within Dockerfile available in the directory
+
+2. To build the consumer application image from application directory navigate to the `./consumer` directory and run:
+   ```
+   ./build-image.sh
+   ``` 
+3. Check that the images built successfully and are available in local Docker image registry:
+   ```
+   docker images | grep openvino-prod-app
+   docker images | grep openvino-cons-app
+   ```
+
+Additionally, an application to generate sample traffic is provided. The application should be built on separate host which will generate the traffic.
+
+1. To build the client simulator application image from application directory navigate to the `./clientsim` directory and run: 
+   ```
+   ./build-image.sh
+   ``` 
+2. Check that the image built successfully and is available in local Docker image registry:
+   ```
+   docker images | grep client-sim
+   ```
+
+# Onboarding Sample Application
+The purpose of this section is to guide the user on the complete process of onboarding Sample Application, testing the EAA functionality of OpenNESS for the Network Edge. This process will outline how to start the application, setup network policies and verify the functionality.
+
+## Prerequisites
+
+* OpenNESS for Network Edge is fully installed and set up.
+* Docker images for the Sample Application consumer and producer are available on Edge Node.
+
+## Verifying image availability
+
+To verify that the images for Sample Application consumer and producer are [built](#building-sample-application-images) and available on the Edge Node run:
+   ```
+   docker image list | grep producer
+   docker image list | grep consumer
+   ```
+
+## Applying Kubernetes Network Policies
+Kubernetes NetworkPolicy is a mechanism that enables control over how pods are allowed to communicate with each other and other network endpoints. By default, in the Network Edge environment, all ingress traffic is blocked (services running inside of deployed applications are not reachable) and all egress traffic is enabled (pods are able to reach the internet).
+
+1. To apply a network policy for the Sample Application allowing ingress traffic create following `sample_policy.yml` file specifying the Network policy:
+   ```yml
+   apiVersion: networking.k8s.io/v1
+   kind: NetworkPolicy
+   metadata:  
+     name: eaa-prod-cons-policy
+     namespace: default
+   spec:
+     podSelector: {}
+     policyTypes:  
+     - Ingress
+     ingress:
+     - from:  
+       - ipBlock:
+           cidr: 10.16.0.0/16  
+       ports:
+       - protocol: TCP
+         port: 80
+       - protocol: TCP
+         port: 443
+   ```
+2. Apply the Network Policy:
+   ```
+   kubectl apply -f sample_policy.yml
+   ```
+
+## Deploying Consumer and Producer Sample Application
+
+NOTE: Producer application must be deployed before the consumer application. The applications must be deployed within short time of each other as they have a limited lifespan.
+
+1. To deploy a sample Producer application create the following `sample_producer.yml` pod specification file.
+   ```yml
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: producer
+   spec:  
+     replicas: 1
+     selector:  
+       matchLabels:  
+         app: producer  
+     template:  
+       metadata:
+         labels:
+           app: producer
+       spec:
+         tolerations:
+         - key: node-role.kube-ovn/master
+           effect: NoSchedule
+         containers:
+         - name: producer
+           image: producer:1.0
+           imagePullPolicy: Never
+           ports:
+           - containerPort: 80
+           - containerPort: 443
+   ```
+2. Deploy the pod:
+   ```
+   kubectl create -f sample_producer.yml
+   ```
+3. Check that the pod is running:
+   ```
+   kubectl get pods | grep producer
+   ```
+4. Verify logs of the Sample Application producer:
+   ```
+   kubectl logs <producer_pod_name> -f
+
+   Expected output:
+   The Example Producer eaa.openness  [{ExampleNotification 1.0.0 Description for Event #1 by Example Producer}]}]}
+   Sending notification
+   ```
+5. Verify logs of EAA
+   ```
+   kubectl logs <eaa_pod_name> -f
+
+   Expected output:
+   RequestCredentials  request from CN: ExampleNamespace:ExampleProducerAppID, from IP: <IP_ADDRESS> properly handled
+   ```
+6. To deploy a sample Consumer application create the following `sample_consumer.yml` pod specification file.
+   ```yml
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: consumer
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: consumer
+     template:
+       metadata:
+         labels:
+           app: consumer
+       spec:
+         tolerations:
+         - key: node-role.kube-ovn/master  
+           effect: NoSchedule
+         containers:
+         - name: consumer
+           image: consumer:1.0
+           imagePullPolicy: Never
+           ports:
+           - containerPort: 80
+           - containerPort: 443
+   ```
+7. Deploy the pod:
+   ```
+   kubectl create -f sample_consumer.yml
+   ```
+8. Check that the pod is running:
+   ```
+   kubectl get pods | grep consumer
+   ```
+9. Verify logs of the Sample Application consumer:
+   ```
+   kubectl logs <consumer_pod_name> -f
+
+   Expected output:
+   Received notification
+   ```
+10. Verify logs of EAA
+    ```
+    kubectl logs <eaa_pod_name> -f
+
+    Expected output:
+    RequestCredentials  request from CN: ExampleNamespace:ExampleConsumerAppID, from IP: <IP_ADDRESS> properly handled
+    ```
+# Onboarding OpenVINO application
+The purpose of this section is to guide the user on the complete process of onboarding the OpenVINO producer and consumer applications. This process will also guide the user on setting up network connection between Client Simulator (Traffic Generator), setting up network policies and testing the application. The following sub-sections should be executed step by step.
+
+## Prerequisites
+
+* OpenNESS for Network Edge is fully installed and set up.
+* The Docker images for the OpenVINO are available on the Edge Node.
+* A separate host used for generating traffic via Client Simulator is set up.
+* The Edge Node host and traffic generating host are connected together point to point via unused physical network interfaces.
+* The Docker image for Client Simulator application is available on the traffic generating host.
+
+## Setting up Networking Interfaces
+
+1. On the traffic generating host set up to run Client Simulator, configure the network interface connected to Edge Node host. External client traffic in OpenNESS Network Edge configuration is routed via 192.168.1.1, the IP address of traffic generating host must be one from same sub-net. Configure the routing accordingly:
+   ```
+   ip a a 192.168.1.10/24 dev <client_interface_name>
+   route add -net 10.16.0.0/24 gw 192.168.1.1 dev <client_interface_name>
+   ```
+2. From the Edge Controller, set up the interface service to connect the Edge Node's physical interface used for the communication between Edge Node and traffic generating host to OVS. This allows the Client Simulator to communicate with the OpenVINO application K8s Pod located on the Edge Node (sample output separated by `"..."`, PCI Bus Function ID of the interface used my vary).
+   ```
+   kubectl interfaceservice get <edge_node_host_name>
+   ...
+   0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
+   ...
+  
+   kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
+   ...
+   Interface: 0000:86:00.0 successfully attached
+   ...
+
+   kubectl interfaceservice get <edge_node_host_name>
+   ...
+   0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  attached
+   ...
+   ```
+
+## Deploying the Application
+
+1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
+   ```
+   kubectl apply -f openvino-prod-app.yml
+   ```
+2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./build/openvino/producer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
+   ```
+   kubectl apply -f openvino-cons-app.yml
+   ```
+3. Verify that no errors show up in logs of OpenVINO consumer application:
+   ```
+   kubectl logs openvino-cons-app
+   ```
+4. Log into the consumer application pod and modify `analytics.openness` entry in `/etc/hosts` with IP address set in step one of [Setting up Networking Interfaces](#Setting-up-Networking-Interfaces) (192.168.1.10 by default, the physical interface connected to traffic generating host).
+   ```
+   kubectl exec -it openvino-cons-app /bin/sh
+   vi /etc/hosts
+   ```
+
+## Applying Kubernetes Network Policies
+Kubernetes NetworkPolicy is a mechanism that enables control over how pods are allowed to communicate with each other and other network endpoints.
+
+By default, in a Network Edge environment, all ingress traffic is blocked (services running inside of deployed applications are not reachable) and all egress traffic is enabled (pods are able to reach the internet). The following NetworkPolicy definition is used:
+   ```yaml
+   apiVersion: networking.k8s.io/v1
+   metadata:
+     name: block-all-ingress
+     namespace: default        # selects default namespace
+   spec:
+     podSelector: {}           # matches all the pods in the default namespace
+     policyTypes:
+     - Ingress
+     ingress: []               # no rules allowing ingress traffic = ingress blocked
+   ```
+
+`Note: When adding the first egress rule, all egress is blocked except for that rule.`
+
+1. To deploy a Network Policy allowing ingress traffic on port 5000 (tcp and udp) from 192.168.1.0/24 network to OpenVINO consumer application pod, create the following specification file for this Network Policy:
+   ```yaml
+   apiVersion: networking.k8s.io/v1
+   kind: NetworkPolicy
+   metadata:
+     name: openvino-policy
+     namespace: default
+   spec:
+     podSelector:
+       matchLabels:
+         name: openvino-cons-app
+     policyTypes:
+     - Ingress
+     ingress:
+     - from:
+       - ipBlock:
+           cidr: 192.168.1.0/24
+       ports:
+       - protocol: TCP
+         port: 5000
+       - protocol: UDP
+         port: 5000
+   ```
+2. Create the Network Policy:
+   ```
+   kubectl apply -f network_policy.yml
+   ```
+
+## Starting traffic from Client Simulator
+
+1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
+2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+   ```
+   ./run_docker.sh
+   ```
+
+# Inter Application Communication 
+The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
+For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
+
+# Enhanced Platform Awareness
+Enhanced platform awareness is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default please refer to the [NFD whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
+
+Refer to [<b>supported-epa.md</b>](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge. 
+
+# Troubleshooting
+In this sections steps for debugging Edge applications in Network Edge will be covered.
+
+## Useful Commands:
+
+To display pods deployed in default namespace:
+```
+kubectl get pods
+```
+
+To display pods running in all namespaces:
+
+```
+kubectl get pods --all-namespaces
+```
+
+To display status and latest events of deployed pods:
+```
+kubectl describe pod <pod_name> --namespace=<namespace_name>
+```
+
+To get logs of running pods:
+```
+kubectl logs <pod_name> -f --namespace=<namespace_name>
+```
+
+To display the allocatable resources:
+```
+kubectl get node <node_name> -o json | jq '.status.allocatable'
+```
+
+To display node information:
+```
+kubectl describe node <node_name>
+```
+
+To display available images on local machine (from host):
+```
+docker images
+```
