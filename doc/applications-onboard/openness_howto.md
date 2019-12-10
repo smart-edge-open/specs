@@ -167,7 +167,7 @@ systemctl restart httpd
 ```
 
 ##### Instruction to upload and access images
-> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino. 
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/openvino. 
 
 - Put the images into /var/www/html    
 `cp test_image.tar.gz /var/www/html/`    
@@ -475,7 +475,7 @@ Prerequisite:
 - User has access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
 - A saved copy of Docker image for OpenVino 'consumer' and 'producer' application in a location accessible by above HTTPS server.
 
-> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/build/openvino for instructions on how to build the image for the application and how to enable different modes of execution for Producer application (ie. CPU or HDDL support). For instructions on how to configure Edge Node for deployment of OpenVINO sample application with support for HDDL devices refer to section '7.3.6' of README.md file in <edgenode> repository.
+> Note: Refer to "Docker Images Creation" in the "OpenVINO Sample Application in OpenNESS - README.md file" under <edgeapps>/openvino for instructions on how to build the image for the application and how to enable different modes of execution for Producer application (ie. CPU or HDDL support). For instructions on how to configure Edge Node for deployment of OpenVINO sample application with support for HDDL devices refer to section '7.3.6' of README.md file in <edgenode> repository.
 
 The following steps need to be done to deploy the OpenVinoConsumer application:
 - From UI go to "APPLICATIONS" tab.
@@ -767,7 +767,7 @@ OpenNESS Edge Node with an IP address in the same subnet as for
    the provided script to get the traffic flowing and visualized:
 
     ```shell
-    cd <edgenode-directory>/build/openvino/clientsim
+    cd <edgenode-directory>/openvino/clientsim
     ./run-docker.sh
     ```
 ![OpenVino Output](howto-images/OpenVinoOutput.png)

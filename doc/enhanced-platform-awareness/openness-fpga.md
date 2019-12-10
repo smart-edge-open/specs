@@ -273,7 +273,7 @@ The automation of the Docker image build is available from the Edge Apps package
 
 Navigate to:
 
-`edgeapps/build/fpga-sample-app`
+`edgeapps/fpga-sample-app`
 
 Copy the necessary `flexran-dpdk-bbdev-v19-10.patch` file into the directory. This patch is available as part of FlexRAN 19.10 release package. To obtain this FlexRAN patch allowing 5G functionality for BBDEV in DPDK please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743 )
 
