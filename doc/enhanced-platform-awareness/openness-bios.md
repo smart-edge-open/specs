@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # BIOS and Firmware Configuration on OpenNESS Platform
 
@@ -59,3 +59,4 @@ In order to enable BIOSFW following steps need to be performed:
 
 ## Reference
 - [Intel Save and Restore System Configuration Utility (SYSCFG)](https://downloadcenter.intel.com/download/28713/Save-and-Restore-System-Configuration-Utility-SYSCFG-)
+

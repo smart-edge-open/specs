@@ -1,12 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2019 Intel Corporation
+
 # The source of this file is from 3GPP 29.522 Release 15 version 3
 # taken from http://www.3gpp.org/ftp/Specs/archive/29_series/29.522/
 
 openapi: 3.0.0
 info:
   title: Application Function Northbound APIs
-  version: v1 
+  version: v1
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -362,7 +363,7 @@ components:
           title:
             type: string
             description: A short, human-readable summary of the problem type.
-              It should not change from occurrence to occurrence of the problem. 
+              It should not change from occurrence to occurrence of the problem.
           status:
             type: integer
             description: The HTTP status code for this occurrence of the problem.
@@ -413,7 +414,7 @@ components:
           $ref: '#/components/schemas/MacAddr48'
         vlanTags:
           type: array
-          items: 
+          items:
             type: string
           minItems: 1
           maxItems: 2
@@ -467,7 +468,7 @@ components:
       description: string formatted according to IETF RFC 3986 identifying a referenced resource.
     Uri:
       type: string
-      description: string providing an URI formatted according to IETF RFC 3986. 
+      description: string providing an URI formatted according to IETF RFC 3986.
     RouteToLocation:
       type: object
       properties:

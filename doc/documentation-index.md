@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation  
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # OpenNESS Solution Documentation Index
 * [<b>documentation-index.md</b>: List of OpenNESS Documents (this document)](https://github.com/open-ness/specs/blob/master/doc/documentation-index.md)
@@ -44,4 +44,5 @@ Copyright © 2019 Intel Corporation
 ## Other useful Documents 
 * [<b>OpenNESS Website - Developers </b>: Website containing developer resources](https://www.openness.org/developers) 
 * [<b>openness_releasenotes.md</b>: This document provides high level system features, issues and limitations information for OpenNESS](https://github.com/open-ness/specs/blob/master/openness_releasenotes.md)
-* [<b>schema</b>: Folder containing APIs protobuf or schema for varios endpoints in OpenNESS solution](https://github.com/open-ness/specs/tree/master/schema) 
+* [<b>schema</b>: Folder containing APIs protobuf or schema for varios endpoints in OpenNESS solution](https://github.com/open-ness/specs/tree/master/schema)
+ 

@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation    
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS 
 
@@ -78,4 +78,5 @@ Application onboarding is out of scope of this document - please refer to [Appli
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria.
 
 ## Reference 
-- [HDDL-R: Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)  
+- [HDDL-R: Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)
+

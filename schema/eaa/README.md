@@ -1,3 +1,6 @@
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
+
 # Edge Application Agent - EAA
 
 The Edge Application Agent is a service that runs on the appliance and operates

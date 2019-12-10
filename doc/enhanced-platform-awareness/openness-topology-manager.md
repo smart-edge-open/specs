@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # Resource Locality awareness support through Topology manager in OpenNESS 
 
@@ -80,3 +80,4 @@ Nov 05 09:22:52 tmanager kubelet[64340]: I1105 09:22:52.550216   64340 topology_
 ```
 ## Reference
 - [Topology Manager](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/)
+

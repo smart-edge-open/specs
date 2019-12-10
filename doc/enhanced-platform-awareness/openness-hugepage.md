@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # Hugepage support on OpenNESS 
 
@@ -80,3 +80,4 @@ will enable 5 pages, 1GB each.
 
 ## Reference 
 - [Hugepages support in Kubernetes](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/)
+

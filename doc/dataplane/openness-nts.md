@@ -1,6 +1,5 @@
-SPDX-License-Identifier: Apache-2.0           
-Copyright © 2019 Intel Corporation       
-
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment
 
@@ -55,4 +54,5 @@ It is the IO → NTS → IO sequence that implements Dataplane traffic routing.
 
 _Figure - NTS Dataplane flow processing_
 
-NTS also supports identification of a DNS request packet type from the UE and it forwards it to the DNS agent running on the edge node. 
+NTS also supports identification of a DNS request packet type from the UE and it forwards it to the DNS agent running on the edge node.
+

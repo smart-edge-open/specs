@@ -1,5 +1,5 @@
 SPDX-License-Identifier: Apache-2.0
-Copyright © 2019 Intel Corporation
+Copyright (c) 2019 Intel Corporation
 
 # Dedicated CPU core for workload support in OpenNESS
 

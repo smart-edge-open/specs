@@ -1,5 +1,5 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation and Smart-Edge.com, Inc.    
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
 
 # OpenNESS Application development and porting guide
 - [OpenNESS Application development and porting guide](#openness-application-development-and-porting-guide)
