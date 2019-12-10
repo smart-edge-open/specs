@@ -1,4 +1,4 @@
-SPDX-License-Identifier: Apache-2.0  
+SPDX-License-Identifier: Apache-2.0     
 Copyright © 2019 Intel Corporation  
 
 # CNCA kubectl plugin
