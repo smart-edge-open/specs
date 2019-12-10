@@ -12,6 +12,7 @@ This document provides high level system features, issues and limitations inform
 - [Release Content](#release-content)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Skylake D](#skylake-d)
+  - [Cascade lake SP](#cascade-lake-sp)
   - [Skylake SP](#skylake-sp)
 - [Supported Operating Systems](#supported-operating-systems)
 
@@ -19,6 +20,7 @@ This document provides high level system features, issues and limitations inform
 1. OpenNESS - 19.06
 2. OpenNESS - 19.06.01 
 3. OpenNESS - 19.09 
+4. OpenNESS - 19.12
 
 # Features for Release 
 1. <b>OpenNESS - 19.06 </b>
@@ -78,11 +80,46 @@ This document provides high level system features, issues and limitations inform
       - Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
       - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
       - OpenNESS How-to Guide (update)
+3. <b>OpenNESS – 19.12 </b>
+    - Hardware
+      - Support for Cascade lake 6252N
+      - Support for Intel FPGA PAC N3000
+    - Edge cloud 
+      - EAA and CNCA microservice as native Kubernetes managed services
+      - Support for Kubernetes version 1.16.2 
+    - Edge Compute EPA features support for Network Edge 
+      - CPU Manager: Support deployment of POD with dedicated pinning 
+      - SRIOV NIC: Support deployment of POD with dedicated SRIOV VF from NIC
+      - SRIOV FPGA: Support deployment of POD with dedicated SRIOV VF from FPGA 
+      - Topology Manager: Support k8s to manage the resources allocated to workloads in a NUMA topology-aware manner
+      - BIOS/FW Configuration service - Intel SysCfg based BIOS/FW management service 
+      - Hugepages: Support for allocation of 1G/2M huge pages to the Pod.
+      - Multus: Support for Multiple network interface in the PODs deployed by Kubernetes
+      - Node Feature discovery: Support detection of Silicon and Software features and automation of deployment of CNF and Applications
+      - FPGA Remote System Update service: Support Intel OPAE (fpgautil) based image update service for FPGA.
+      - Non-Privileged Container: Support deployment of non-privileged pods (CNFs and Applications as reference)
+    - Edge Compute EPA features support for OnPremises 
+      - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
+    - OpenNESS Experience Kit for Network and OnPremises edge
+      - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremise version of OpenNESS without the need for Internet access.
+    - 5G NR Edge Cloud deployment support
+      - 5G NR edge cloud deployment support with SA mode – 5G NR FlexRAN – OpenNESS - FlexCore
+      - AF: Support for 5G NGC Application function as a microservice
+      - NEF: Support for 5G NGC Network Exposure function as a microservice
+      - Support for 5G NR UDM, UPF, AMF, PCF and SCF (not part of the release)
+    - DNS support
+      - DNS support for UE
+      - DNS Support for Edge applications
+    - Documentation
+      - Completely reorganized documentation structure for ease of navigation 
+      - 5G NR Edge Cloud deployment Whitepaper
+      - EPA application note for each of the features
 
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.09** There are no unsupported or discontinued features relevant to this release.
+ - **OpenNESS 19.12** : NTS Dataplane support for Network edge is discontinued. 
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
@@ -96,6 +133,7 @@ This document provides high level system features, issues and limitations inform
    - Bug in libvirt deployment
    - Invalid status after app undeployment
    - Application memory field is in MB
+- **OpenNESS 19.12**
 
 # Known Issues
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -106,11 +144,13 @@ This document provides high level system features, issues and limitations inform
     - If after running all 3 scripts 
     - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
     - We would recommend cleaning up the installation on the node
+- **OpenNESS 19.12** 
   
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.09** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
+- **OpenNESS 19.12** OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications and Experience kit. 
   
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
@@ -119,12 +159,26 @@ OpenNESS Edge Node has been tested using the following hardware specification:
    - Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
    - Motherboard type: [X11SDV-16C-TP8F](https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm)
    - Intel® Xeon® Processor D-2183IT
-
-## Skylake SP
-
+## Cascade lake SP
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
-| SKX-SP           | Compute Node based on SKX-SP                                  |
+| CLX-SP           | Compute Node based on CLX-SP(6252N)                           |
+| Board            |  S2600WFT server board                                        |
+|                  | 2 x Intel(R) Xeon(R) Gold 6252N CPU @ 2.30GHz                 |
+|                  | 2 x associated Heatsink                                       |
+| Memory           | 12x Micron 16GB DDR4 2400MHz DIMMS * [2666 for PnP]           |
+| Chassis          | 2U Rackmount Server Enclosure                                 |
+| Storage          | Intel M.2 SSDSCKJW360H6 360G                                  |
+| NIC              | 1x Intel Fortville NIC  X710DA4  SFP+ ( PCIe card to CPU-0)   |
+| QAT              | Intel  Quick Assist Adapter Device 37c8                       |
+|                  | (Symmetrical design) LBG integrated                           |
+| NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
+| Other card       | 2x PCIe Riser cards                                           |
+
+## Skylake SP
+|                  |                                                               |
+|------------------|---------------------------------------------------------------|
+| SKX-SP           | Compute Node based on SKX-SP(6148)                            |
 | Board            | WolfPass S2600WFQ server board(symmetrical QAT)CPU            |
 |                  | 2 x Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz                  |
 |                  | 2 x associated Heatsink                                       |
@@ -139,5 +193,5 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 
 # Supported Operating Systems
-> OpenNESS was tested on CentOS 7.6 : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
+> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
 
