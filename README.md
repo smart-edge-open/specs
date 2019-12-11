@@ -75,10 +75,22 @@ Below is the complete list of OpenNESS solution documentation
      * [<b>openness_awsgreengrass.md</b>: Deploying single or multiple instance of Amazon Greengrass IoT gateway on OpenNESS edge cloud as an edge application](https://github.com/otcshare/specs/blob/master/doc/cloud-adapters/openness_awsgreengrass.md)
      * [<b>openness_baiducloud.md</b>: Deploying single or multiple instance of Baidu IoT gateway on OpenNESS edge cloud as an edge application](https://github.com/otcshare/specs/blob/master/doc/cloud-adapters/openness_baiducloud.md)
 
+## API and Schema 
+
+* [<b>Edge Application API: EAA</b>](https://www.openness.org/api-documentation/?api=eaa)
+* [<b>Edge Application Authentication API</b>](https://www.openness.org/api-documentation/?api=auth)
+* [<b>OnPremises Controller API: EAA</b>](https://www.openness.org/api-documentation/?api=controller)
+* [<b>Core Network Configuration API</b>](https://www.openness.org/api-documentation/?api=cups)
+* [<b>Edge Lifecycle Management API: ELA</b>](https://github.com/open-ness/specs/blob/master/schema/pb/ela.proto)
+* [<b>Edge Virtualization Infrastructure API: EVA</b>](https://github.com/open-ness/specs/blob/master/schema/pb/eva.proto)
+* [<b>schema</b>: Folder containing APIs protobuf or schema for varios endpoints in OpenNESS solution](https://github.com/otcshare/specs/tree/master/schema)
+
+## Release history 
+
+* [<b>openness_releasenotes.md</b>: This document provides high level system features, issues and limitations information for OpenNESS](https://github.com/otcshare/specs/blob/master/openness_releasenotes.md)
+
 ## Related resources 
 
 * [<b>OpenNESS Website - Developers </b>: Website containing developer resources](https://www.openness.org/developers) 
-* [<b>openness_releasenotes.md</b>: This document provides high level system features, issues and limitations information for OpenNESS](https://github.com/otcshare/specs/blob/master/openness_releasenotes.md)
-* [<b>schema</b>: Folder containing APIs protobuf or schema for varios endpoints in OpenNESS solution](https://github.com/otcshare/specs/tree/master/schema)
 * [<b>Intel Network Builders OpenNESS training </b>](https://builders.intel.com/university/networkbuilders/coursescategory/open-network-edge-services-software-openness)
  
