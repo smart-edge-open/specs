@@ -1,10 +1,9 @@
 SPDX-License-Identifier: Apache-2.0    
 Copyright  2019 Intel Corporation
 
-# OpenNESS EdgeDNS
-  - [Overview](#overview)
-  - [Usage](#usage)
-    - [Example usage](#example-usage)
+- [Overview](#overview)
+- [Usage](#usage)
+  - [Example usage](#example-usage)
 
 ## Overview 
 

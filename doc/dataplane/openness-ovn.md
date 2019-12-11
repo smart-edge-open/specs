@@ -1,4 +1,4 @@
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: Apache-2.0    
 Copyright (c) 2019 Intel Corporation
 
 # OpenNESS Support for OVS as dataplane with OVN 
@@ -26,7 +26,7 @@ OVN/OVS is used as the default networking infrastructure for:
 - Default Interface: Interface for managing the Application POD (e.g. ssh to application POD)
 - Cloud/Internet Interface: Interface for Edge applications to communicate with the Cloud/Internet  
 
-> Note: It should be noted that the current release does not support OVS-DPDK as a dataplane, but it's planned to be added in the future.
+> Note: It should be noted that the current release does not support OVS-DPDK as a dataplane, but it is planned to be added in the future.
 
 ## Summary 
 OpenNESS is built with a microservices architecture. Depending on the deployment, there may be a requirement to service pure IP traffic and configure the dataplane using standard SDN based tools. OpenNESS demonstrates such a requirement this by providing OVS as a dataplane in the place of NTS without changing the APIs from an end user perspective.

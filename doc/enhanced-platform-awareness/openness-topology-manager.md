@@ -1,4 +1,4 @@
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: Apache-2.0    
 Copyright (c) 2019 Intel Corporation
 
 # Resource Locality awareness support through Topology manager in OpenNESS 

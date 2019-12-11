@@ -1,4 +1,4 @@
-SPDX-License-Identifier: Apache-2.0
+SPDX-License-Identifier: Apache-2.0    
 Copyright (c) 2019 Intel Corporation
 
 # Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
@@ -8,7 +8,7 @@ Copyright (c) 2019 Intel Corporation
   - [Smart City Edge Application Introduction](#smart-city-edge-application-introduction)
   - [The Smart City Building Blocks](#the-smart-city-building-blocks)
   - [Smart City App Deployment with OpenNESS](#smart-city-app-deployment-with-openness)
-  - [Open Visual Cloud & OpenNESS Integration](#open-visual-cloud--openness-integration)
+  - [Open Visual Cloud and OpenNESS Integration](#open-visual-cloud-and-openness-integration)
     - [The Infrastructure Challenges](#the-infrastructure-challenges)
     - [The Smart City Application Challenges](#the-smart-city-application-challenges)
   - [Conclusion](#conclusion)
@@ -85,7 +85,7 @@ The **Cloud** and **Camera** parts of the Smart City Application are not part of
 
 ![Smart City Application UI](ovc-images/screenshot.gif)
 
-## Open Visual Cloud & OpenNESS Integration
+## Open Visual Cloud and OpenNESS Integration
 
 The integration of the Smart City application with the OpenNESS infrastructure presents unique challenges on both the application and the infrastructure.
 
