@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0    
 Copyright © 2019 Intel Corporation
+```
 
 OpenNESS gateway feature
 ========================
@@ -40,3 +42,4 @@ Further reading
 If you're interested in implementation details, or want to use the gateway
 library by itself, start by having a look at common/proxy/README and
 common/proxy/examples.
+

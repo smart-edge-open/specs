@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # OpenNESS Network Edge - Enhanced Platform Awareness Features supported 
 
@@ -19,3 +21,4 @@ Following are the EPA features supported in OpenNESS Network Edge
    * [<b>openness-bios.md</b>: Edge platform BIOS and Firmware and configuration support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md)
    * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
    * [<b>openness-topology-manager.md</b>: Resource Locality awareness support through Topology manager in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
+

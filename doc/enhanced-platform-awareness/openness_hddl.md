@@ -1,5 +1,7 @@
-SPDX-License-Identifier: Apache-2.0    
+```text
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS 
 

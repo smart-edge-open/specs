@@ -1,5 +1,7 @@
-SPDX-License-Identifier: Apache-2.0    
+```text
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # Release Notes 
 This document provides high level system features, issues and limitations information for OpenNESS. 
@@ -193,5 +195,5 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 
 # Supported Operating Systems
-> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
+> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel.
 

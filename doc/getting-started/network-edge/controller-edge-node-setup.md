@@ -214,3 +214,4 @@ To provide the token, edit value of `git_repo_token` variable in in `group_vars/
 ### Customize tag/commit/sha to checkout
 
 Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller
+

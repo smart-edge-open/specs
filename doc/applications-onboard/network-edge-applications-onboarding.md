@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2019 Intel Corporation
+```
 
 - [Introduction](#introduction)
 - [Building Applications](#building-applications)
@@ -389,3 +391,4 @@ To display available images on local machine (from host):
 ```
 docker images
 ```
+

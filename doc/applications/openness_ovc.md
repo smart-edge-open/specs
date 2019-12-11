@@ -1,5 +1,7 @@
-SPDX-License-Identifier: Apache-2.0    
+```text
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
 - [Open Visual Cloud Smart City Application on OpenNESS - Solution Overview](#open-visual-cloud-smart-city-application-on-openness---solution-overview)
