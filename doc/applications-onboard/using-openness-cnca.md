@@ -14,12 +14,14 @@ Copyright © 2019 Intel Corporation
     - [Get User Plane specific information and Update](#get-user-plane-specific-information-and-update)
     - [Add a new user plane information to Core](#add-a-new-user-plane-information-to-core)
     - [Delete a user plane information from Core](#delete-a-user-plane-information-from-core)
-- [5G NGC Configuration using CNCA](#5g-ngc-configuration-using-cnca)
+- [5G NGC components bringup and Configuration using CNCA](#5g-ngc-components-bringup-and-configuration-using-cnca)
+  - [Bringup of NGC components in Network Edge mode](#bringup-of-ngc-components-in-network-edge-mode)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
     - [NGC OAM management](#ngc-oam-management)
     - [NGC AF management](#ngc-af-management)
       - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
-  - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-2)
+  - [Configuring in On-Premise mode](#configuring-in-on-premise-mode)
+    - [NGC OAM management](#ngc-oam-management-1)
 
 # 4G/LTE Core Configuration using CNCA
 
@@ -195,7 +197,46 @@ In case of On-Premise deployment mode, Core network can be configured through CN
   ![UserplaneDeleteList screen](cups-howto-images/userplane_delete_thenlist.png)
   &nbsp;
 
-# 5G NGC Configuration using CNCA
+# 5G NGC components bringup and Configuration using CNCA
+
+## Bringup of NGC components in Network Edge mode 
+
+1. If the Edge controller is not yet deployed through openness-experience-kit then: 
+  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/ne_controller.yml` before starting `deploy_ne_controller.sh` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **else skips this step.**
+
+2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
+  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/ne_controller.yml` and then re-run `deploy_ne_controller.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+
+    **NOTE:** 
+    In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs. 
+
+3. On successfully start of AF, NEF and OAM PODs, status of PODS and Services can verified using the below commands: 
+   - `kubectl get pods --all-namespaces`
+  expected out as below:
+  ![NGC list of PODS](using-openness-cnca-images/ngc_pods_list_output.png)
+
+   - `kubectl get services--all-namespaces`
+    expected out as below:
+    ![NGC list of PODS](using-openness-cnca-images/ngc_services_list_output.png)
+
+4. After all the PODs are successfully up and running, few AF configuration parameters needs to be updated (as per your deployment configuration) and then re-start the AF.
+
+   * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters. 
+   * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
+   * `"NEFHostname": "localhost"` : Replace the `localhost` with `nefservice` ie., service name NEF POD.
+   * Save and exit.
+
+5. Now restart AF POD using the below command:
+  `kubectl exec -it af --namespace=ngc -- /bin/bash -c "pkill af"`
+  Successful restart of AF with the updated config can be observed through AF container logs. Run the below command to get AF container logs:
+  `kubectl logs af --namespace=ngc af-container`
+  Sample output of the AF container logs with updated config may appear as:
+![NGC list of PODS](using-openness-cnca-images/ngc_af_service_config_log.png)
+
+
+*NOTE: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Master node. In real implementation, these two pods will run *
+
+6. Similar config update and restart required for OAM -- TBA
 
 ## Configuring in Network Edge mode
 
@@ -304,6 +345,8 @@ policy:
     routeProfId: default
 ```
 
-## Configuring in Network Edge mode
+## Configuring in On-Premise mode
+
+### NGC OAM management
 
 **TBA**
