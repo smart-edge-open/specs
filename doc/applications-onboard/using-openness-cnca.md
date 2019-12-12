@@ -2,8 +2,16 @@
 SPDX-License-Identifier: Apache-2.0     
 Copyright © 2019 Intel Corporation  
 ```
+# Core Network Configuration Agent (CNCA)
+- [Core Network Configuration Agent (CNCA)](#core-network-configuration-agent-cnca)
+  - [CNCA kubectl plugin](#cnca-kubectl-plugin)
+    - [NGC OAM management](#ngc-oam-management)
+    - [NGC AF management](#ngc-af-management)
+    - [LTE CUPS management](#lte-cups-management)
+    - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
+    - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
 
-# CNCA kubectl plugin
+## CNCA kubectl plugin
 Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM, AF and LTE CUPS OAM agent.
 
 Available management with `kube-cnca` against NGC OAM are:
@@ -23,7 +31,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about CNCA management.
 
-## NGC OAM management
+### NGC OAM management
 
 To register AF service through NGC OAM function, execute:
 ```shell
@@ -45,7 +53,7 @@ Un-registration of the AF service can be performed as in the command below:
 kubectl cnca unregister <af-service-id>
 ```
 
-## NGC AF management
+### NGC AF management
 
 Creation the AF subscription is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration) section. Use the `apply` command as below to post a subscription creation request onto AF:
 ```shell
@@ -76,7 +84,7 @@ To delete an active subscription, use the `delete` command as below:
 kubectl cnca delete subscription <subscription-id>
 ```
 
-## LTE CUPS management
+### LTE CUPS management
 
 Creation the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command as below to post a userplane creation request onto AF:
 ```shell
@@ -107,7 +115,7 @@ To delete an active userplane, use the `delete` command as below:
 kubectl cnca delete userplane <userplane-id>
 ```
 
-## Sample YAML NGC AF subscription configuration
+### Sample YAML NGC AF subscription configuration
 
 The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific subscription information.
 
@@ -140,7 +148,7 @@ policy:
     routeProfId: default
 ```
 
-## Sample YAML LTE CUPS userplane configuration
+### Sample YAML LTE CUPS userplane configuration
 
 Similarly, the `kube-cnca` expects the YAML configuration as in the format below for the LTE CUPS-specific information. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`.
 
