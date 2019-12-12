@@ -28,6 +28,7 @@ Copyright (c) 2019 Intel Corporation
   - [Setting Git](#setting-git)
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
+  - [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)
 
 # Purpose
 
@@ -53,7 +54,6 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
   - `deploy_onprem_node.sh`
 
 > NOTE: Playbooks for Controller must be played before playbooks for Edge Nodes.
-
 
 ## On Premise Playbooks
 
@@ -97,26 +97,17 @@ The following steps need to be done for successful login:
 
 ![Login screen](../../applications-onboard/howto-images/login.png)
 
-#### Enrollment 
+#### Enrollment
 
 In order for the Controller and Edge Node to work together the Edge Node needs to enroll with the Controller. The Edge Node will continuously try to connect to the controller until its serial key is recognized by the Controller.
 
 Prerequisites:
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be acquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . ` ([Step 2 in Deploy Edge Controller and Edge Nodes](#deploy-edge-controller-and-edge-nodes)):
+
 - User has logged in to UI.
 
 In order to enroll and add new Edge Node to be managed by the Controller the following steps are to be taken:
 
-1. Get the Nodes' serial numbers:
-```bash
-ssh NODE_HOSTNAME_1
-openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
-<copy output>
-exit
-
-ssh NODE_HOSTNAME_2
-...
-```
+1. Get the Nodes' serial numbers, which is saved by ansible script to following file: /opt/edgenode/verification_key.txt (for alternative way to obtain serial refer to [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)).
 2. Navigate to 'NODES' tab.
 3. Click on 'ADD EDGE NODE' button.
 
@@ -387,3 +378,10 @@ To provide the token, edit value of `git_repo_token` variable in in `group_vars/
 
 Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller.
 
+## Obtaining Edge Node's serial with command
+
+Alternatively to reading from /opt/edgenode/verification_key.txt Edge Node's serial can be obtained using following command run on Edgenode machine:
+
+```bash
+openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
+```
