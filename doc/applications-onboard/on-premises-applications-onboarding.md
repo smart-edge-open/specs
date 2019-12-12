@@ -153,7 +153,7 @@ Note: Fallback interface address is the one define above
    ./run_docker.sh
    ```
 
-> **NOTE:** If a problem encountered when running the `client-sim ` docker as `Could not initialize SDL - No available video device`. Disable SELinux through this command:
+> **NOTE:** If a problem is encountered when running the `client-sim ` docker as `Could not initialize SDL - No available video device`. Disable SELinux through this command:
 >  ```shell
 >  $ setenforce 0
 >  ```
