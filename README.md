@@ -37,6 +37,7 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>network-edge-applications-onboarding.md</b>: Steps for onboarding sample application on OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md)
    * [<b>on-premises-applications-onboarding.md</b>: Steps for onboarding sample application on OpenNESS OnPremises Edge](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md)
    * [<b>openness-edgedns.md</b>: Using edge DNS service](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
+   * [<b>openness-interface-service.md</b>: Using network interfaces management service](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-interface-service.md)
    * [<b>using-openness-cnca.md</b>: Steps for configuring 4G CUPS or 5G Application Function for Edge deployment for Network and OnPremises Edge](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/using-openness-cnca.md)
 
 ## Core Network - 4G and 5G  
