@@ -343,6 +343,17 @@ By default, in a Network Edge environment, all ingress traffic is blocked (servi
    ./run_docker.sh
    ```
 
+> **NOTE:** If a problem is encountered when running the `client-sim ` docker as `Could not initialize SDL - No available video device`. Disable SELinux through this command:
+>  ```shell
+>  $ setenforce 0
+>  ```
+
+> **NOTE:**  If the video window is not popping up and/or an error like `Could not find codec parameters for stream 0` appears, add a rule in firewall to permit ingress traffic on port `5001`:
+>  ```shell
+>  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 5001 -j ACCEPT
+>  firewall-cmd --reload
+>  ```
+
 # Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
 For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)

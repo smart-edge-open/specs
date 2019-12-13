@@ -1,7 +1,22 @@
-SPDX-License-Identifier: Apache-2.0  
-Copyright © 2019 Intel Corporation
+```text
+SPDX-License-Identifier: Apache-2.0     
+Copyright © 2019 Intel Corporation  
+```
 
 # OpenVINO Sample Application in OpenNESS
+- [OpenVINO Sample Application in OpenNESS](#openvino-sample-application-in-openness)
+	- [Introduction](#introduction)
+	- [Accelerating OpenVINO execution through Intel Movidius VPUs](#accelerating-openvino-execution-through-intel-movidius-vpus)
+	- [Components](#components)
+		- [Client Simulator](#client-simulator)
+		- [OpenVINO Producer Application](#openvino-producer-application)
+		- [OpenVINO Consumer Application](#openvino-consumer-application)
+	- [Execution Flow Between EAA, Producer &amp; Consumer](#execution-flow-between-eaa-producer-amp-consumer)
+	- [Build &amp; Deployment of OpenVINO Applications](#build-amp-deployment-of-openvino-applications)
+		- [Docker Images Creation](#docker-images-creation)
+		- [Streaming &amp; Displaying the Augmented Video](#streaming-amp-displaying-the-augmented-video)
+
+## Introduction
 OpenVINO toolkit, short for Open Visual Inference and Neural network Optimization toolkit, provides improved neural network performance on Intel processors and enables development of cost-effective and real-time vision applications. The toolkit enables deep learning inference and easy heterogeneous execution across multiple Intel platforms (Intel CPUs, Intel Integrated Graphics, Intel FPGA, Intel Movidius Neural Compute Stick, Intel Neural Compute Stick 2 and Intel Vision Accelerator Design with Intel Movidius VPUs) - providing implementations across cloud architectures to edge devices.
 
 Open Network Edge Services Software (OpenNESS) toolkit enables developers and businesses to easily land deep learning solutions that were optimized using OpenVINO toolkit on premises and on the network edge. Visual inference applications using OpenVINO are onboarded by OpenNESS for accelerated and low-latency execution on the edge.
@@ -125,5 +140,4 @@ The `client-sim` docker container performs the operations:
 2. Visualizing the augmented video, using the FFmpeg-based `ffplay`
    media player.
 
-> **NOTE:** Any platform where the video is to be visualized must have
-Docker installed and an OS with graphical support.
+> **NOTE:** Any platform where the video is to be visualized must have Docker installed and an OS with graphical support.
