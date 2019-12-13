@@ -21,13 +21,26 @@ Copyright © 2019 Intel Corporation
     - [NGC AF management](#ngc-af-management)
       - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
   - [Configuring in On-Premise mode](#configuring-in-on-premise-mode)
-    - [NGC OAM management](#ngc-oam-management-1)
+    - [Bringing up NGC components in Op-Premise mode](#bringing-up-ngc-components-in-op-premise-mode)
+    - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
+      - [Registration of OpenNESS Controller (AF) with 5G Core](#registration-of-openness-controller-af-with-5g-core)
+      - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
+    - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
+      - [Traffic influence operations](#traffic-influence-operations)
 
 # 4G/LTE Core Configuration using CNCA
 
 ## Configuring in Network Edge mode
 
 In case of Network Edge mode, CNCA provides kubectl plugin to configure 4G/LTE Core network. Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against LTE CUPS OAM agent.
+
+Available management with `kube-cnca` against LTE CUPS OAM agent are:
+1. Creation of LTE CUPS userplanes
+2. Deletion of LTE CUPS userplanes
+3. Updating (patching) LTE CUPS userplanes
+
+The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+In the following sections, a detailed explanation with examples is provided about CNCA management.
 
 Creation the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command as below to post a userplane creation request onto AF:
 ```shell
@@ -219,45 +232,43 @@ In case of On-Premise deployment mode, Core network can be configured through CN
     expected out as below:
     ![NGC list of PODS](using-openness-cnca-images/ngc_services_list_output.png)
 
-4. After all the PODs are successfully up and running, few AF configuration parameters needs to be updated (as per your deployment configuration) and then re-start the AF.
+4. After all the PODs are successfully up and running, few AF and OAM configuration parameters needs to be updated (as per your deployment configuration) and then re-start the AF.
 
    * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters. 
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * `"NEFHostname": "localhost"` : Replace the `localhost` with `nefservice` ie., service name NEF POD.
    * Save and exit.
-
-5. Now restart AF POD using the below command:
+   * Now restart AF POD using the below command:
   `kubectl exec -it af --namespace=ngc -- /bin/bash -c "pkill af"`
   Successful restart of AF with the updated config can be observed through AF container logs. Run the below command to get AF container logs:
   `kubectl logs af --namespace=ngc af-container`
   Sample output of the AF container logs with updated config may appear as:
 ![NGC list of PODS](using-openness-cnca-images/ngc_af_service_config_log.png)
 
+5. To update OAM configuration and restart OAM micro service:
+   * Open the file `/etc/openness/configs/ngc/oam.json` and modify the below parameters. 
+   * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
+   * Save and exit.
+   * Now restart OAM POD using the below command:
+  `kubectl exec -it oam --namespace=ngc -- /bin/bash -c "pkill oam"`
+  Successful restart of OAM with the updated config can be observed through OAM container logs. Run the below command to get logs:
+  `kubectl logs oam --namespace=ngc oam-container`
 
-*NOTE: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Master node. In real implementation, these two pods will run *
-
-6. Similar config update and restart required for OAM -- TBA
+*NOTE: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Master node for testing purpose. In real implementation, if NEF and OAM being used, these two services will run on 5G Core network servers either in POD or standalone application on host is depends on 5G Core server environment*
 
 ## Configuring in Network Edge mode
 
-In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM, AF and LTE CUPS OAM agent.
+In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM and AF micro service on controller itself.
 
-Available management with `kube-cnca` against NGC OAM are:
-1. Registration of AF service
-2. Un-registration of AF service
+Supported operations through `kube-cnca` plugin:
 
-Available management with `kube-cnca` against NGC Application Function (AF) are:
-1. Creation of subscriptions
-2. Deletion of subscriptions
-3. Updating (patching) subscriptions
+  * Registration of edge service info for an UPF with 5G Core through OAM interface (co-located with Edge-Node)
+  * Un-registration of edge service info
+  * Creation of traffic influence subscriptions through AF micro service to steer application traffic towards edge-node
+  * Deletion of subscriptions
+  * Updating (patching) subscriptions
 
-Available management with `kube-cnca` against LTE CUPS OAM agent are:
-1. Creation of LTE CUPS userplanes
-2. Deletion of LTE CUPS userplanes
-3. Updating (patching) LTE CUPS userplanes
-
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
-In the following sections, a detailed explanation with examples is provided about CNCA management.
+The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 ### NGC OAM management
 
@@ -347,6 +358,22 @@ policy:
 
 ## Configuring in On-Premise mode
 
-### NGC OAM management
+### Bringing up NGC components in Op-Premise mode
 
-**TBA**
+### Edge Node services operations with 5G Core (through OAM interface)
+
+#### Registration of OpenNESS Controller (AF) with 5G Core
+
+  *This will be supported in future releases.*
+
+  ***NOTE:**
+  Registration of OpenNESS Controller's AF instance with 5G core need to be performed manually or through any other interface exposed by 5G Core.  OAM capabilities will be enhanced in future releases to support this. Current version of OAM supports only one instance of OpenNESS Controller to communicate.*
+
+#### Registration of UPF services associated with Edge-node with 5G Core
+
+  **TBA**
+
+### Traffic influence operations with 5G Core (through AF interface)
+
+#### Traffic influence operations
+
