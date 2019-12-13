@@ -272,11 +272,11 @@ The purpose of this section is to guide the user on the complete process of onbo
 
 1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
-   kubectl apply -f openvino-prod-app.yml
+   kubectl apply -f openvino-prod-app.yaml
    ```
 2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./build/openvino/producer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
    ```
-   kubectl apply -f openvino-cons-app.yml
+   kubectl apply -f openvino-cons-app.yaml
    ```
 3. Verify that no errors show up in logs of OpenVINO consumer application:
    ```
@@ -285,7 +285,8 @@ The purpose of this section is to guide the user on the complete process of onbo
 4. Log into the consumer application pod and modify `analytics.openness` entry in `/etc/hosts` with IP address set in step one of [Setting up Networking Interfaces](#Setting-up-Networking-Interfaces) (192.168.1.10 by default, the physical interface connected to traffic generating host).
    ```
    kubectl exec -it openvino-cons-app /bin/sh
-   vi /etc/hosts
+   apt-get install vim
+   vim /etc/hosts
    ```
 
 ## Applying Kubernetes Network Policies
