@@ -136,6 +136,7 @@ This document provides high level system features, issues and limitations inform
    - Invalid status after app undeployment
    - Application memory field is in MB
 - **OpenNESS 19.12**
+  - Issue with Ansible scripts 
 
 # Known Issues
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -147,6 +148,8 @@ This document provides high level system features, issues and limitations inform
     - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
     - We would recommend cleaning up the installation on the node
 - **OpenNESS 19.12** 
+ - Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+ - OpenNESS OnPremise: Can not remove a failed/disconnected the edge node information/state from the controller  
   
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
