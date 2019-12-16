@@ -68,7 +68,8 @@ CMK documentation available on github includes:
 **Edge Node / Kubernetes worker**
 
 1. Configure Edge Node in Network Edge mode using ne_node.yml, following roles must be enabled kubernetes/worker, kubeovn/worker and cmk/worker.
-2. Enable setting isolcpus kernel parameter (in grub role) by setting/adding `isolcpus=` with a list of cores to `additional_grub_params` parameter in `roles/grub/defaults/main.yml`, e.g. `isolcpus=1,2,3,4,5,6,7,8,9,10`. To set the parameter only for specific node add the variable (`additional_grub_params`) to the host_vars/node-name-in-inventory.yml
+2. To change core isolation and tuned realtime profile settings edit `os_kernel_rt_tuned_vars` in `roles/os_kernelrt/defaults/main.yml`.
+The changes will affect all edge nodes in the inventory, to set the parameter only for a specific node add the variable `os_kernel_rt_tuned_vars` to host_vars/node-name-in-inventory.yml.
 3. Deploy the node with deploy_ne_node.sh.
 
 Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
