@@ -13,6 +13,7 @@ Copyright (c) 2019 Intel Corporation
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
 - [Q&amp;A](#qampa)
+  - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
   - [Exchanging SSH keys with hosts](#exchanging-ssh-keys-with-hosts)
@@ -25,6 +26,8 @@ Copyright (c) 2019 Intel Corporation
 
 In order to use the playbooks several preconditions must be fulfilled:
 
+- Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
+  
 - Hosts for Edge Controller (Kubernetes master) and Edge Nodes (Kubernetes workers) must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
 
 - Ansible inventory must be configured (refer to [Configuring inventory](#configuring-inventory)).
@@ -77,6 +80,55 @@ The following is a complete set of actions that need to be completed to successf
 
 Please refer to [network-edge-applications-onboarding.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
 # Q&A
+
+## Configuring time
+
+By default CentOS ships with [chrony](https://chrony.tuxfamily.org/) NTP client. It uses default NTP servers listed below that might not be available in certain networks:
+```
+0.centos.pool.ntp.org
+1.centos.pool.ntp.org
+2.centos.pool.ntp.org
+3.centos.pool.ntp.org
+```
+OpenNESS requires the time to be synchronized between all of the nodes and controllers to allow for correct certificate verification.
+
+To change the default servers run the following commands:
+```
+# Remove previously set NTP servers
+sed -i '/^server /d' /etc/chrony.conf
+
+# Allow significant time difference
+# More info: https://chrony.tuxfamily.org/doc/3.4/chrony.conf.html
+echo 'maxdistance 999999' >> /etc/chrony.conf
+
+# Add new NTP server(s)
+echo 'server <ntp-server-address> iburst' >> /etc/chrony.conf
+
+# Restart chrony service
+systemctl restart chronyd
+```
+
+To verify that the time is synchronized correctly run the following command:
+```
+chronyc tracking
+```
+
+Sample output:
+```
+Reference ID    : 0A800239
+Stratum         : 3
+Ref time (UTC)  : Mon Dec 16 09:10:51 2019
+System time     : 0.000015914 seconds fast of NTP time
+Last offset     : -0.000002627 seconds
+RMS offset      : 0.000229037 seconds
+Frequency       : 4.792 ppm fast
+Residual freq   : -0.001 ppm
+Skew            : 0.744 ppm
+Root delay      : 0.008066391 seconds
+Root dispersion : 0.003803928 seconds
+Update interval : 130.2 seconds
+Leap status     : Normal
+```
 
 ## Setup static hostname
 
