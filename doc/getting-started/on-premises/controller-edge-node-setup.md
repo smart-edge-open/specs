@@ -52,6 +52,9 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be played by running helper deploy scripts.
+
+> NOTE: All nodes provided in the inventory might get rebooted during the installation.
+
 Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for On Premise mode:
   - `cleanup_onprem.sh`
   - `deploy_onprem_controller.sh`
@@ -331,6 +334,8 @@ ctrl ansible_ssh_user=root ansible_host=192.168.0.2
 node1 ansible_ssh_user=root ansible_host=192.168.0.3
 node2 ansible_ssh_user=root ansible_host=192.168.0.4
 ```
+
+>NOTE: All nodes have to be specified using an IP address.
 
 Then you can use those hosts in `edgenode_group` and `controller_group`, i.e.:
 
