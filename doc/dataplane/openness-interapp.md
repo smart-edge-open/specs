@@ -8,6 +8,7 @@ Copyright (c) 2019 Intel Corporation
 - [InterApp Communication support in OpenNESS](#interapp-communication-support-in-openness)
   - [Overview](#overview)
   - [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
+    - [Setup](#setup)
   - [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
 
 ## Overview
@@ -36,6 +37,18 @@ In total three interfaces would be allocated:
 - OVS-DPDK interface for inter-app communication. OVS will be used with DPDK and physical ports may be assigned to it(PMD drivers)
 
 Ports assigned to OVS will be ignored by ELA, so it is not possible for them to be used by NTS. It should be possible to optionally install and configure OVS-DPDK using ansible automation scripts.
+
+### Setup
+
+To enable OVS-DPDK for inter app communication follow the steps below.
+
+1. Enable `ovs` role in `openness-experience-kits/onprem_node.yml`
+2. Set the `ovs_ports` variable in `host_vars/node-name-in-inventory.yml`. Example:
+
+    ```
+    ovs_ports: ["0000:02:00.1","0000:02:00.0"]
+    ```
+3. Setup the cluster using automation scripts
 
 ## InterApp Communication support in OpenNESS Network Edge 
 InterApp communication on the OpenNESS Network edge version is supported using OVN/OVS as the infrastructure. OVN/OVS in the network edge is supported through the Kubernetes kube-OVN Container Network Interface (CNI).
