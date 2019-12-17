@@ -15,18 +15,19 @@ Copyright © 2019 Intel Corporation
     - [Add a new user plane information to Core](#add-a-new-user-plane-information-to-core)
     - [Delete a user plane information from Core](#delete-a-user-plane-information-from-core)
 - [5G NGC components bringup and Configuration using CNCA](#5g-ngc-components-bringup-and-configuration-using-cnca)
-  - [Bringup of NGC components in Network Edge mode](#bringup-of-ngc-components-in-network-edge-mode)
-  - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
-    - [NGC OAM management](#ngc-oam-management)
-    - [NGC AF management](#ngc-af-management)
-      - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
-  - [Configuring in On-Premise mode](#configuring-in-on-premise-mode)
+  - [Network Edge mode](#network-edge-mode)
+    - [Bring-up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
+    - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
+      - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
+        - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
+      - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
+        - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
+  - [On-Premise mode](#on-premise-mode)
     - [Bringing up NGC components in Op-Premise mode](#bringing-up-ngc-components-in-op-premise-mode)
-    - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
-      - [Registration of OpenNESS Controller (AF) with 5G Core](#registration-of-openness-controller-af-with-5g-core)
-      - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
-    - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
-      - [Traffic influence operations](#traffic-influence-operations)
+    - [Configuring in On-Premise mode](#configuring-in-on-premise-mode)
+      - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface-1)
+        - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core-1)
+      - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface-1)
 
 # 4G/LTE Core Configuration using CNCA
 
@@ -212,7 +213,9 @@ In case of On-Premise deployment mode, Core network can be configured through CN
 
 # 5G NGC components bringup and Configuration using CNCA
 
-## Bringup of NGC components in Network Edge mode 
+## Network Edge mode
+
+### Bring-up of NGC components in Network Edge mode 
 
 1. If the Edge controller is not yet deployed through openness-experience-kit then: 
   Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/ne_controller.yml` before starting `deploy_ne_controller.sh` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **else skips this step.**
@@ -256,21 +259,23 @@ In case of On-Premise deployment mode, Core network can be configured through CN
 
 *NOTE: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Master node for testing purpose. In real implementation, if NEF and OAM being used, these two services will run on 5G Core network servers either in POD or standalone application on host is depends on 5G Core server environment*
 
-## Configuring in Network Edge mode
+### Configuring in Network Edge mode
 
-In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM and AF micro service on controller itself.
+In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopt plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against NGC OAM and AF micro service on controller itself.
+
+The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+
+#### Edge Node services operations with 5G Core (through OAM interface)
+
+  ***NOTE:**
+  Registration of OpenNESS Controller's AF instance with 5G core need to be performed manually or through any other interface exposed by 5G Core.  OAM capabilities will be enhanced in future releases to support this. Current version of OAM supports only one instance of OpenNESS Controller to communicate.*
+
+##### Registration of UPF services associated with Edge-node with 5G Core
 
 Supported operations through `kube-cnca` plugin:
 
   * Registration of edge service info for an UPF with 5G Core through OAM interface (co-located with Edge-Node)
   * Un-registration of edge service info
-  * Creation of traffic influence subscriptions through AF micro service to steer application traffic towards edge-node
-  * Deletion of subscriptions
-  * Updating (patching) subscriptions
-
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
-
-### NGC OAM management
 
 To register AF service through NGC OAM function, execute:
 ```shell
@@ -289,19 +294,24 @@ Upon successful registration, subscriptions can be instantiated over with NGC AF
 
 Un-registration of the AF service can be performed as in the command below:
 ```shell
-kubectl cnca unregister <af-service-id>
+kubectl cnca deregister <af-service-id>
 ```
 
-### NGC AF management
+#### Traffic influence operations with 5G Core (through AF interface)
+
+Supported operations through `kube-cnca` plugin:
+
+  * Creation of traffic influence subscriptions through AF micro service to steer application traffic towards edge-node
+  * Deletion of subscriptions
+  * Updating (patching) subscriptions
+  * get or get-all subscriptions
 
 Creation the AF subscription is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration) section. Use the `apply` command as below to post a subscription creation request onto AF:
 ```shell
 kubectl cnca apply -f <config.yml>
 ```
 
-When the subscription is created successfully, the `apply` command will return the subscription identifier `<subscription-id>`, which should be used in further correspondence with AF concerning this particular subscription. It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.
-
-> NOTE: All active subscriptions can be retrieved from AF through command `kubectl cnca get subscriptions`.
+When the subscription is created successfully, the `apply` command will return the subscription identifier `<subscription-id>`, which should be used in further correspondence with AF concerning this particular subscription. **It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.**
 
 To retrieve an existing subscription with a known subscription ID, use the below command:
 ```shell
@@ -323,7 +333,7 @@ To delete an active subscription, use the `delete` command as below:
 kubectl cnca delete subscription <subscription-id>
 ```
 
-#### Sample YAML NGC AF subscription configuration
+##### Sample YAML NGC AF subscription configuration
 
 The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific subscription information.
 
@@ -356,24 +366,56 @@ policy:
     routeProfId: default
 ```
 
-## Configuring in On-Premise mode
+## On-Premise mode
 
 ### Bringing up NGC components in Op-Premise mode
 
-### Edge Node services operations with 5G Core (through OAM interface)
+  To bringup NGC components in on-premise mode, enable the rule `ngc_test/onprem/master` in the file: `openness-experience-kits/onprem_controller.yml`. and then run the script `deploy_onprem_controller.sh`  as described in [OpenNESS On-Premise: Controller and Edge node setup document](../getting-started/on-premises/controller-edge-node-setup.md).
 
-#### Registration of OpenNESS Controller (AF) with 5G Core
+### Configuring in On-Premise mode
 
-  *This will be supported in future releases.*
+  OpenNESS On-Premise management homepage:
+      sample url: http://10.233.182.33:3000/landing
+      ![OpenNESS NGC homepage](using-openness-cnca-images/ngc_homepage.png)
+
+#### Edge Node services operations with 5G Core (through OAM interface)
 
   ***NOTE:**
   Registration of OpenNESS Controller's AF instance with 5G core need to be performed manually or through any other interface exposed by 5G Core.  OAM capabilities will be enhanced in future releases to support this. Current version of OAM supports only one instance of OpenNESS Controller to communicate.*
 
-#### Registration of UPF services associated with Edge-node with 5G Core
+##### Registration of UPF services associated with Edge-node with 5G Core
 
-  **TBA**
+   * Edge services registration home page:
+      sample url: http://10.233.182.33:3020/services
+      ![Edge services operations homepage](using-openness-cnca-images/oam_services_home.png)
 
-### Traffic influence operations with 5G Core (through AF interface)
+   * Registration a new edge service offered by UPF (associated with edge-node)
+      ![Edge services create](using-openness-cnca-images/oam_services_create.png)
 
-#### Traffic influence operations
+   * Display of registered edge servers with 5G Core
+      ![Edge services display](using-openness-cnca-images/oam_services_display.png)
 
+   * To edit a registered services 
+      ![Edge services edit](using-openness-cnca-images/oam_services_edit.png)
+
+   * To delete a registered service
+      ![Edge services delete](using-openness-cnca-images/oam_services_delete.png)
+
+#### Traffic influence operations with 5G Core (through AF interface)
+
+   * Edge traffic subscription submission homepage
+      sample url: http://10.233.182.33:3020/subscriptions
+      ![Subscription services homepage](using-openness-cnca-images/af_subscription_display_home.png)
+
+   * Edge traffic subscription submissions with 5G-Core (NEF)
+      click on the "Create" button on the above homepage
+      ![Subscription service create](using-openness-cnca-images/af_subscription_create.png)
+
+   * Display of submitted Edge traffic subscriptions
+      ![Subscription service display](using-openness-cnca-images/af_subscription_display.png)
+
+   * To edit a submitted edge traffic subscription
+      ![Subscription service edit](using-openness-cnca-images/af_subscription_edit.png)
+
+   * To delete a submitted edge traffic subscription
+      ![Subscription service delete](using-openness-cnca-images/af_subscription_delete.png)
