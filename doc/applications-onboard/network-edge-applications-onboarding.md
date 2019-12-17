@@ -17,6 +17,7 @@ Copyright (c) 2019 Intel Corporation
   - [Setting up Networking Interfaces](#setting-up-networking-interfaces)
   - [Deploying the Application](#deploying-the-application)
   - [Applying Kubernetes Network Policies](#applying-kubernetes-network-policies-1)
+  - [Setting up Edge DNS](#setting-up-edge-dns)
   - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
 - [Inter Application Communication](#inter-application-communication)
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
@@ -335,10 +336,46 @@ By default, in a Network Edge environment, all ingress traffic is blocked (servi
    kubectl apply -f network_policy.yml
    ```
 
+## Setting up Edge DNS
+Edge DNS enables the user to resolve addresses of Edge Applications using domain names.
+The following is an example of how to set up DNS resolution for OpenVINO consumer application.
+
+1. Find Edge DNS pod:
+   ```
+   kubectl get pods -n openness | grep edgedns
+   ```
+2. Get IP address of the Edge DNS pod and take note of it (this will be used to [allow remote host](#Starting-traffic-from-Client-Simulator) to access Edge DNS):
+   ```
+   kubectl exec -it <edgedns-pod-name> -n openness ip a
+   ```
+3. Create a file openvino-dns.json specifying the Edge DNS entry for the OpenVINO consumer application (where `10.16.0.10` is the IP address of OpenVINO consumer application - change accordingly):
+   ```yaml
+   {
+     "record_type":"A",
+     "fqdn":"openvino.openness",
+     "addresses":["10.16.0.10"]
+   }
+   ```
+4. Apply the Edge DNS entry for the application:
+   ```
+   kubectl edgedns set <edge_node_host_name> openvino-dns.json
+   ```
+
 ## Starting traffic from Client Simulator
 
-1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
-2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+1. Configure nameserver to allow connection to Edge DNS (make sure that openvino.openness is not defined in `/etc/hosts`). Modify `/etc/resolv.conf` and add IP address of [Edge DNS server](#Setting-up-Edge-DNS).
+   ```
+   vim /etc/resolv.conf
+
+   Add to the file:
+   nameserver <edge_dns_ip_address>
+   ```
+2. Verify that `openvino.openness` is correctly resolved (`ANSWER` section should contain IP of Edge DNS).
+   ```
+   dig openvino.openness
+   ```
+3. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images)
+4. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
    ```
    ./run_docker.sh
    ```
