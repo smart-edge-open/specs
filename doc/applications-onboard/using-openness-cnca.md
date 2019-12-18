@@ -1,8 +1,5 @@
-```text
 SPDX-License-Identifier: Apache-2.0     
 Copyright © 2019 Intel Corporation  
-
-
 
 - [4G/LTE Core Configuration using CNCA](#4glte-core-configuration-using-cnca)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode)
