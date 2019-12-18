@@ -366,5 +366,5 @@ _Figure - Kubernetes Dashboard Login_
     make ui-up
     ```
 
-11. The OpenNESS controller landing page is accessible at `https://<LANDING_UI_URL>/`.
+11. The OpenNESS controller landing page is accessible at `http://<LANDING_UI_URL>/`.
     > **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
