@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# OpenNESS OnPremises: Controller and Edge node setup 
+# OpenNESS OnPremises: Controller and Edge node setup
 
 - [OpenNESS OnPremises: Controller and Edge node setup](#openness-onpremises-controller-and-edge-node-setup)
 - [Purpose](#purpose)
@@ -22,12 +22,14 @@ Copyright (c) 2019 Intel Corporation
       - [Configuring Interface](#configuring-interface)
       - [Starting NTS](#starting-nts)
 - [Q&amp;A](#qampa)
+  - [Configuring time](#configuring-time)
   - [Configuring inventory](#configuring-inventory)
   - [Exchanging SSH keys with hosts](#exchanging-ssh-keys-with-hosts)
   - [Setting proxy](#setting-proxy)
   - [Setting Git](#setting-git)
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
+  - [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)
 
 # Purpose
 
@@ -36,6 +38,9 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 # Preconditions
 
 In order to use the playbooks several preconditions must be fulfilled:
+
+- Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
+
 - Inventory must be configured (refer to [Configuring inventory](#configuring-inventory))
 
 - SSH keys must be exchanged with hosts (refer to [Exchanging SSH keys with hosts](#Exchanging-SSH-keys-with-hosts))
@@ -52,8 +57,11 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
   - `deploy_onprem_controller.sh`
   - `deploy_onprem_node.sh`
 
+> NOTE: All nodes provided in the inventory might get rebooted during the installation.
+
 > NOTE: Playbooks for Controller must be played before playbooks for Edge Nodes.
 
+> NOTE: Edge Nodes and Edge Controller must be set up on different machines.
 
 ## On Premise Playbooks
 
@@ -97,26 +105,17 @@ The following steps need to be done for successful login:
 
 ![Login screen](../../applications-onboard/howto-images/login.png)
 
-#### Enrollment 
+#### Enrollment
 
 In order for the Controller and Edge Node to work together the Edge Node needs to enroll with the Controller. The Edge Node will continuously try to connect to the controller until its serial key is recognized by the Controller.
 
 Prerequisites:
-- Controller's ROOT CA  needs to be added to "/etc/pki/tls/certs/controller-root-ca.pem" on Edge Node. The certificate can be acquired by running `docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem . ` ([Step 2 in Deploy Edge Controller and Edge Nodes](#deploy-edge-controller-and-edge-nodes)):
+
 - User has logged in to UI.
 
 In order to enroll and add new Edge Node to be managed by the Controller the following steps are to be taken:
 
-1. Get the Nodes' serial numbers:
-```bash
-ssh NODE_HOSTNAME_1
-openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
-<copy output>
-exit
-
-ssh NODE_HOSTNAME_2
-...
-```
+1. Get the Nodes' serial numbers, which is saved by ansible script to following file: /opt/edgenode/verification_key.txt (for alternative way to obtain serial refer to [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)).
 2. Navigate to 'NODES' tab.
 3. Click on 'ADD EDGE NODE' button.
 
@@ -266,6 +265,55 @@ Once the interfaces are configured accordingly the following steps need to be do
 
 # Q&A
 
+## Configuring time
+
+By default CentOS ships with [chrony](https://chrony.tuxfamily.org/) NTP client. It uses default NTP servers listed below that might not be available in certain networks:
+```
+0.centos.pool.ntp.org
+1.centos.pool.ntp.org
+2.centos.pool.ntp.org
+3.centos.pool.ntp.org
+```
+OpenNESS requires the time to be synchronized between all of the nodes and controllers to allow for correct certificate verification.
+
+To change the default servers run the following commands:
+```
+# Remove previously set NTP servers
+sed -i '/^server /d' /etc/chrony.conf
+
+# Allow significant time difference
+# More info: https://chrony.tuxfamily.org/doc/3.4/chrony.conf.html
+echo 'maxdistance 999999' >> /etc/chrony.conf
+
+# Add new NTP server(s)
+echo 'server <ntp-server-address> iburst' >> /etc/chrony.conf
+
+# Restart chrony service
+systemctl restart chronyd
+```
+
+To verify that the time is synchronized correctly run the following command:
+```
+chronyc tracking
+```
+
+Sample output:
+```
+Reference ID    : 0A800239
+Stratum         : 3
+Ref time (UTC)  : Mon Dec 16 09:10:51 2019
+System time     : 0.000015914 seconds fast of NTP time
+Last offset     : -0.000002627 seconds
+RMS offset      : 0.000229037 seconds
+Frequency       : 4.792 ppm fast
+Residual freq   : -0.001 ppm
+Skew            : 0.744 ppm
+Root delay      : 0.008066391 seconds
+Root dispersion : 0.003803928 seconds
+Update interval : 130.2 seconds
+Leap status     : Normal
+```
+
 ## Configuring inventory
 
 In order to execute playbooks, `inventory.ini` must be configure to include specific hosts to run the playbooks on.
@@ -287,6 +335,8 @@ ctrl ansible_ssh_user=root ansible_host=192.168.0.2
 node1 ansible_ssh_user=root ansible_host=192.168.0.3
 node2 ansible_ssh_user=root ansible_host=192.168.0.4
 ```
+
+>NOTE: All nodes have to be specified using an IP address.
 
 Then you can use those hosts in `edgenode_group` and `controller_group`, i.e.:
 
@@ -386,3 +436,11 @@ To provide the token, edit value of `git_repo_token` variable in in `group_vars/
 ### Customize tag/commit/sha to checkout
 
 Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller.
+
+## Obtaining Edge Node's serial with command
+
+Alternatively to reading from /opt/edgenode/verification_key.txt Edge Node's serial can be obtained using following command run on Edgenode machine:
+
+```bash
+openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
+```

@@ -1,7 +1,13 @@
+```text
 SPDX-License-Identifier: Apache-2.0     
 Copyright (c) 2019 Intel Corporation
+```
 
 - [Introduction](#introduction)
+  - [Instructions to setup HTTPD server for images](#instructions-to-setup-httpd-server-for-images)
+    - [How to setup apache step by step for IP address](#how-to-setup-apache-step-by-step-for-ip-address)
+    - [Instruction to generate certificate for a domain](#instruction-to-generate-certificate-for-a-domain)
+    - [Instruction to upload and access images](#instruction-to-upload-and-access-images)
 - [Building Applications](#building-applications)
   - [Building the OpenVINO Application images](#building-the-openvino-application-images)
 - [Onboarding OpenVINO applications](#onboarding-openvino-applications)
@@ -11,6 +17,67 @@ Copyright (c) 2019 Intel Corporation
 
 # Introduction
 The aim of this guide is to familiarize the user with the OpenNESS application on-boarding process for the OnPremises mode. This guide will provide instructions on how to deploy an application from the Edge Controller on Edge Nodes; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller UI webservice.
+
+## Instructions to setup HTTPD server for images
+
+### How to setup apache step by step for IP address
+1. Install apache and mod_ssl: 
+```
+ yum -y install httpd mod_ssl
+```
+2. Go into `/etc/ssl/certs`:
+```
+cd /etc/ssl/certs
+```
+3. Acquire the controller root ca and key
+```
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/cert.pem .
+docker cp edgecontroller_cce_1:/artifacts/certificates/ca/key.pem .
+```
+4. Generate the apache key and crt for IP address
+```
+openssl genrsa -out apache.key 2048
+openssl req -new -key apache.key -out apache.csr
+```
+5. Edit `/etc/pki/tls/openssl.cnf` and add
+```
+[ req_ext ]
+subjectAltName=IP:<your_ip_address>
+```
+6. Generate apache certificate
+```
+openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -out apache.crt -days 500 -sha256 -extensions req_ext -extfile /etc/pki/tls/openssl.cnf
+```
+7. Edit apache config and point it to the new certs
+```
+sed -i 's|^SSLCertificateFile.*$|SSLCertificateFile /etc/ssl/certs/apache.crt|g' /etc/httpd/conf.d/ssl.conf
+sed -i 's|^SSLCertificateKeyFile.*$|SSLCertificateKeyFile /etc/ssl/certs/apache.key|g' /etc/httpd/conf.d/ssl.conf
+```
+8. Set the firewall to accept the traffic
+```
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 80 -j ACCEPT
+firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 443 -j ACCEPT
+```
+9. Enable and restart apache after the changes
+```
+systemctl enable httpd
+systemctl restart httpd
+```
+
+### Instruction to generate certificate for a domain
+```
+openssl genrsa -out apache.key 2048
+openssl req -new -sha256 -key apache.key -subj "/C=IE/ST=Clare/O=ESIE/CN=$(hostname -f)" -out apache.csr
+openssl x509 -req -in apache.csr -CA cert.pem -CAkey key.pem -CAcreateserial -out apache.crt -days 500 -sha256
+```
+
+### Instruction to upload and access images
+You have to put the images into `/var/www/html`
+```
+cp test_image.tar.gz /var/www/html/
+chmod a+r /var/www/html/*
+```
+The URL (Source in Controller UI) should be constructed as: `https://controller_hostname/test_image.tar.gz`
 
 # Building Applications
 User needs to prepare the applications that will be deployed on the OpenNESS platform in OnPromises mode. Applications should be built as Docker images and should be hosted on some HTTPS server that is available to the EdgeNode.
@@ -57,6 +124,9 @@ An application to generate sample traffic is provided. The application should be
    ```
 
 # Onboarding OpenVINO applications
+
+This chapter describes how to deploy OpenVINO applications on OpenNESS platform working in OnPremises mode.
+
 ## Prerequisites
 
 * OpenNESS for OnPremises is fully installed and EdgeNode is enrolled to the EdgeController.
@@ -78,35 +148,32 @@ An application to generate sample traffic is provided. The application should be
     ip a a 192.168.10.9/24 dev <gateway_interface_name>
     ```
 
-3. Log in to the EdgeController UI. Move to Traffic Policies page and using the form add three policies according to the instruction below:
-   * to_ENB policy with:
-     * Priority: 1
-       * Destination:
-         * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-         * IP Filter Mask: 32
-       * Target action: accept
+    Arps should be set this way:
 
-    * to_DP policy with:
-      * Priority: 1
-        * Source:
-          * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-          * IP Filter Mask: 32
-      * Target action: accept
+    ```
+    arp -s 192.168.10.11 f2:6c:29:2b:06:e6
+    ```
+    where `f2:6c:29:2b:06:e6` is MAC address of the interface bound to the OpenVINO consumer application container.
 
-    * openvino policy with:
-      * Priority: 99
-      * Source:
-        * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-        * IP Filter Mask: 24
-      * Destination:
-        * IP Filter Address: 192.168.10.11 (OpenVINO app address)
-        * IP Filter Mask: 24
-        * Protocol: All
-      * Target action: accept
+    Firewall on gateway machine should disabled or allowing rule for port 5001 should be applied.
+
+3. Log in to the EdgeController UI. Move to Traffic Policies page and using the form add OpenVino policy according to the instruction below:
+    * Priority: 99
+    * Source:
+      * IP Filter Address: 192.168.10.10 (OpenVINO client address)
+      * IP Filter Mask: 24
+    * Destination:
+      * IP Filter Address: 192.168.10.11 (OpenVINO app address)
+      * IP Filter Mask: 24
+      * Protocol: All
+    * Target action: accept
+
+    ![Defining openvino traffic policy](on-premises-app-onboarding-images/openvino-policy1.png)
+
+    ![Defining openvino traffic policy](on-premises-app-onboarding-images/openvino-policy2.png)
 
 4. Move to the EdgeNode interfaces setup. It should be available under button `Edit` next to the EdgeNode position on Dashboard page.
    * Find the port that is directly connected to the OpenVINO client machine port (eg. 0000:04:00.1)
-     * Add to_ENB policy to it
      * Edit interface settings:
 
     ![OpenVINO client machine interface settings](on-premises-app-onboarding-images/if-set-1.png)
@@ -114,21 +181,24 @@ An application to generate sample traffic is provided. The application should be
     Note: Fallback interface address is the one define below
 
     * Find the port that is directly connected to the gateway machine (eg. 0000:04:00.0)
-      * Add to_DP policy to it
       * Edit interface settings:
 
- ![OpenVINO client machine interface settings](on-premises-app-onboarding-images/if-set-2.png)
+    ![OpenVINO client machine interface settings](on-premises-app-onboarding-images/if-set-2.png)
 
-Note: Fallback interface address is the one define above
+    Note: Fallback interface address is the one defined above
 
 5. Commit those changes to start NTS
 6. Create OpenVINO producer and consumer applications and deploy them on the node. When the applications has `Deployed` status start them with 10 seconds distance to let the producer to subscribe to the platform.
    
- ![Adding producer application entry to Edge Controller](on-premises-app-onboarding-images/adding-application.png)
+    ![Adding producer application entry to Edge Controller](on-premises-app-onboarding-images/adding-application.png)
 
- Note: Deployment of consumer application should be done by analogy
+    Note: Fields `Port` and `Protocol` have no affect on the application
 
-  ![Applications listed on "applications" page](on-premises-app-onboarding-images/deployed-apps.png)
+    Note: When creating a new application, there is an option to specify a key/value pair which defines an enhanced platform awareness (EPA) feature. If set, this key/value pair will be used to configure the feature when deploying an application to an edge node. For more information on the EPA features supported by OpenNESS, please see [Enhanced Platform Awareness](https://github.com/otcshare/specs/tree/master/doc/enhanced-platform-awareness).
+
+    Note: Deployment of consumer application should be done by analogy
+
+    ![Applications listed on "applications" page](on-premises-app-onboarding-images/deployed-apps.png)
 
 7. Add openvino traffic policy to consumer app
 8. Log in to the consumer container and set IP address using
@@ -143,10 +213,23 @@ Note: Fallback interface address is the one define above
 10. Send ping from OpenVINO client platform to gateway using 192.168.10.9 IP address
 11. On EdgeNode platform run `./edgenode/internal/nts/client/build/nes_client and check if NTS configured KNI interfaces correctly
 
+    ![Sample nes-client output](on-premises-app-onboarding-images/nes-client-reference.png)
+
 ## Starting traffic from Client Simulator
 
 1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
-2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
    ```
    ./run_docker.sh
    ```
+
+> **NOTE:** If a problem is encountered when running the `client-sim ` docker as `Could not initialize SDL - No available video device`. Disable SELinux through this command:
+>  ```shell
+>  $ setenforce 0
+>  ```
+
+> **NOTE:**  If the video window is not popping up and/or an error like `Could not find codec parameters for stream 0` appears, add a rule in firewall to permit ingress traffic on port `5001`:
+>  ```shell
+>  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 5001 -j ACCEPT
+>  firewall-cmd --reload
+>  ```

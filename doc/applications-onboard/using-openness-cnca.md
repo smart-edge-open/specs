@@ -1,3 +1,4 @@
+```text
 SPDX-License-Identifier: Apache-2.0     
 Copyright © 2019 Intel Corporation  
 
@@ -52,6 +53,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 
 The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
+
 
 Creation the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command as below to post a userplane creation request onto AF:
 ```shell
@@ -378,7 +380,9 @@ policy:
     routeProfId: default
 ```
 
+
 ## On-Premises mode
+
 
 ### Bringing up NGC components in On-Premises mode
 
@@ -510,3 +514,4 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 |suppFeat|Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
 |requestTestNotification|Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3 of 3GPP TS 29.122 [4]. Set to false or omitted otherwise|
 |websockNotifConfig|Configuration parameters to set up notification delivery over Websocket protocol|
+

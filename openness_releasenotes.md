@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # Release Notes 
 This document provides high level system features, issues and limitations information for OpenNESS. 
@@ -134,6 +136,7 @@ This document provides high level system features, issues and limitations inform
    - Invalid status after app undeployment
    - Application memory field is in MB
 - **OpenNESS 19.12**
+  - Issue with Ansible scripts 
 
 # Known Issues
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -145,6 +148,8 @@ This document provides high level system features, issues and limitations inform
     - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
     - We would recommend cleaning up the installation on the node
 - **OpenNESS 19.12** 
+ - Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+ - OpenNESS OnPremise: Can not remove a failed/disconnected the edge node information/state from the controller  
   
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
@@ -193,5 +198,5 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 
 # Supported Operating Systems
-> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel. 
+> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel.
 

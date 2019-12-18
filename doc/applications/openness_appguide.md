@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
+```
 
 # OpenNESS Application development and porting guide
 - [OpenNESS Application development and porting guide](#openness-application-development-and-porting-guide)
@@ -10,7 +12,7 @@ Copyright (c) 2019 Intel Corporation
     - [Example of Producer and Consumer Applications](#example-of-producer-and-consumer-applications)
       - [OpenVINO Producer Application](#openvino-producer-application)
       - [OpenVINO Consumer Application](#openvino-consumer-application)
-      - [Execution Flow Between EAA, Producer & Consumer](#execution-flow-between-eaa-producer--consumer)
+      - [Execution Flow Between EAA, Producer and Consumer](#execution-flow-between-eaa-producer-and-consumer)
     - [<b> Cloud Adapter Edge compute Application </b>](#b-cloud-adapter-edge-compute-application-b)
   - [Application On-boarding](#application-on-boarding)
     - [OpenNESS-aware Applications](#openness-aware-applications)
@@ -99,7 +101,7 @@ Websocket connection retains a channel for EAA to forward notifications to the c
 
 This sample OpenVINO consumer application represents a real world application depending on the input object model can detect objects in the input video stream and annotate (count if needed). 
 
-#### Execution Flow Between EAA, Producer & Consumer
+#### Execution Flow Between EAA, Producer and Consumer
 
 The simplified execution flow of the consumer & producer applications with EAA is depicted in the sequence diagram below. Details on the various procedures of service activation/subcription and notifications are given in subsequent sections.
 
