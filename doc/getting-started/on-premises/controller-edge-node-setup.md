@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# OpenNESS OnPremises: Controller and Edge node setup 
+# OpenNESS OnPremises: Controller and Edge node setup
 
 - [OpenNESS OnPremises: Controller and Edge node setup](#openness-onpremises-controller-and-edge-node-setup)
 - [Purpose](#purpose)
@@ -52,15 +52,16 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be played by running helper deploy scripts.
-
-> NOTE: All nodes provided in the inventory might get rebooted during the installation.
-
 Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for On Premise mode:
   - `cleanup_onprem.sh`
   - `deploy_onprem_controller.sh`
   - `deploy_onprem_node.sh`
 
+> NOTE: All nodes provided in the inventory might get rebooted during the installation.
+
 > NOTE: Playbooks for Controller must be played before playbooks for Edge Nodes.
+
+> NOTE: Edge Nodes and Edge Controller must be set up on different machines.
 
 ## On Premise Playbooks
 

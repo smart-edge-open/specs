@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# OpenNESS Network Edge: Controller and Edge node setup 
+# OpenNESS Network Edge: Controller and Edge node setup
 - [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -27,7 +27,7 @@ Copyright (c) 2019 Intel Corporation
 In order to use the playbooks several preconditions must be fulfilled:
 
 - Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
-  
+
 - Hosts for Edge Controller (Kubernetes master) and Edge Nodes (Kubernetes workers) must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
 
 - Ansible inventory must be configured (refer to [Configuring inventory](#configuring-inventory)).
@@ -51,6 +51,8 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
   - `deploy_ne_node.sh`
 
 > NOTE: Playbooks for Edge Controller/Kubernetes master must be executed before playbooks for Edge Nodes.
+
+> NOTE: Edge Nodes and Edge Controller must be set up on different machines.
 
 ## Network Edge Playbooks
 
@@ -269,4 +271,3 @@ To provide the token, edit value of `git_repo_token` variable in in `group_vars/
 ### Customize tag/commit/sha to checkout
 
 Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller
-
