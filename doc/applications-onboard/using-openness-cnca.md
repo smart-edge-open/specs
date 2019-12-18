@@ -234,6 +234,8 @@ In case of On-Premises deployment mode, Core network can be configured through t
    - `kubectl get services--all-namespaces`
     expected out as below:
     ![NGC list of PODS](using-openness-cnca-images/ngc_services_list_output.png)
+  
+    *NOTE: In general, below steps #4 and #5 are not needed. If user wants to change the hostname/ip-address parameters for AF/NEF/OAM then #4 and #5 will provide the guidance.*
 
 4. After all the PODs are successfully up and running, few AF and OAM configuration parameters need to be updated (as per your deployment configuration) and then re-start the AF.
 
@@ -409,6 +411,7 @@ policy:
 
    * Edge traffic subscription submissions with 5G-Core (NEF)
       click on the "Create" button on the above homepage
+      NOTE: "AF Service Id" field should be the same as the value returned through the AF services create request. In the below sample screen capture shows a different value.  
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part1.png)
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part2.png)
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part3.png)
