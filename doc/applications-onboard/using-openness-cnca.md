@@ -409,7 +409,9 @@ policy:
 
    * Edge traffic subscription submissions with 5G-Core (NEF)
       click on the "Create" button on the above homepage
-      ![Subscription service create](using-openness-cnca-images/af_subscription_create.png)
+      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part1.png)
+      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part2.png)
+      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part3.png)
 
    * Display of submitted Edge traffic subscriptions
       ![Subscription service display](using-openness-cnca-images/af_subscription_display.png)
