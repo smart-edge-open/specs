@@ -21,6 +21,7 @@ Copyright (c) 2019 Intel Corporation
   - [Setting Git](#setting-git)
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
+  - [Installing Kubernetes Dashboard](#installing-kubernetes-dashboard)
 
 # Preconditions
 
@@ -79,6 +80,7 @@ The following is a complete set of actions that need to be completed to successf
 ### Application on-boarding
 
 Please refer to [network-edge-applications-onboarding.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+
 # Q&A
 
 ## Configuring time
@@ -267,3 +269,96 @@ To provide the token, edit value of `git_repo_token` variable in in `group_vars/
 
 Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller
 
+## Installing Kubernetes Dashboard
+
+Kubernetes does not ship with a graphical interface by default, but a web-based tool called [Kubernetes Dashboard](https://github.com/kubernetes/dashboard) can be installed with few simple steps. Kubernetes Dashboard allows users to manage the cluster and the edge applications.
+
+Kubernetes dashboard can only be installed with Network Edge deployments.
+
+Follow the below steps to get the Kubernetes dashboard installed after OpenNESS is installed through [playbooks](#running-playbooks).
+
+1. Deploy the dashboard using `kubectl`
+
+    ```shell
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+    ```
+
+2. Grep all the pods & namespaces
+
+    ```shell
+    kubectl get pods -o wide --all-namespaces
+    ```
+
+3. Create a new service account with the cluster admin
+
+    ```shell
+    cat > dashboard-admin-user.yaml << EOF
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: admin-user
+      namespace: kubernetes-dashboard
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: admin-user
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: cluster-admin
+    subjects:
+    - kind: ServiceAccount
+      name: admin-user
+      namespace: kubernetes-dashboard
+    EOF
+    ```
+
+4. Apply admin user
+
+    ```shell
+    kubectl apply -f dashboard-admin-user.yaml
+    ```
+
+5. Edit kubernetes-dashboard service and change `type: ClusterIP` to `type: NodePort` and save the file
+
+    ```shell
+    kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
+    ```
+
+6. Note the port on which the dashboard is exposed
+
+    ```shell
+    kubectl -n kubernetes-dashboard get service kubernetes-dashboard
+    ```
+
+7. Open the dashboard from the browser at `https://<controller-ip>:<port>/`, use the port that was noted in the previous steps
+
+> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue. 
+
+8. Capture the bearer token using this command
+
+    ```shell
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+    ```
+
+Paste the Token in the browser to log in as shown in this diagram
+
+![Dashboard Login](controller-edge-node-setup-images/dashboard-login.png)
+_Figure - Kubernetes Dashboard Login_
+
+9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `CONTROLLER_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
+
+    ```shell
+    cd /opt/edgecontroller/
+    vi .env
+    ```
+
+10. Build the OpenNESS Controller UI
+
+    ```shell
+    cd /opt/edgecontroller/
+    make ui-up
+    ```
+
+11. The OpenNESS controller landing page is accessible at `https://<controller-ip>:3000/`.
