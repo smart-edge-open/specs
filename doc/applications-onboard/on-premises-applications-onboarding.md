@@ -1,5 +1,5 @@
 ```text
-SPDX-License-Identifier: Apache-2.0     
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
@@ -10,10 +10,15 @@ Copyright (c) 2019 Intel Corporation
     - [Instruction to upload and access images](#instruction-to-upload-and-access-images)
 - [Building Applications](#building-applications)
   - [Building the OpenVINO Application images](#building-the-openvino-application-images)
-- [Onboarding OpenVINO applications](#onboarding-openvino-applications)
-  - [Prerequisites](#prerequisites)
-  - [Setting up Network Interfaces](#setting-up-network-interfaces)
-  - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
+- [Onboarding applications](#onboarding-applications)
+  - [Onboarding container / VM application](#onboarding-container--vm-application)
+    - [Prerequisites](#prerequisites)
+    - [Creating application](#creating-application)
+    - [Deploying application steps](#deploying-application-steps)
+  - [Onboarding OpenVINO applications](#onboarding-openvino-applications)
+    - [Prerequisites](#prerequisites-1)
+    - [Setting up Network Interfaces](#setting-up-network-interfaces)
+    - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
 
 # Introduction
 The aim of this guide is to familiarize the user with the OpenNESS application on-boarding process for the OnPremises mode. This guide will provide instructions on how to deploy an application from the Edge Controller on Edge Nodes; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller UI webservice.
@@ -123,11 +128,81 @@ An application to generate sample traffic is provided. The application should be
    docker images | grep client-sim
    ```
 
-# Onboarding OpenVINO applications
+# Onboarding applications
+
+## Onboarding container / VM application
+
+### Prerequisites
+
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- NTS must be started.
+- User has an access to a HTTPS server providing a downloadable copy of Docker container image or VM image.
+- A saved copy of Docker image or VM image in a location accessible by above HTTPS server.
+
+### Creating application
+
+To add an application to list of applications managed by Controller following steps need to be taken:
+
+- From UI navigate to 'APPLICATIONS' tab.
+- Click on 'ADD APPLICATION' button.
+
+![Creating Application 1](on-premises-app-onboarding-images/CreatingApplication1.png)
+
+- After 'Add an Application' window pops up add details as per following example:
+  - Name: SampleApp
+  - Type: Container
+  - Version: 1
+  - Vendor: vendor
+  - Description: description
+  - Cores: 2
+  - Memory: 100
+  - Source: https://controller_hostname/image_file_name 
+- Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running ```hostname -f``` from terminal of that machine.
+- Then memory unit used is MB. A sample path to image could be https://controller_hostname/sample_docker_app.tar.gz
+- The hostname of the controller or server serving HTTPS can be checked by running: ```hostname -f``` command from servers terminal.
+- Click 'UPLOAD APPLICATION'
+
+![Creating Application 2](on-premises-app-onboarding-images/CreatingApplication2.png)
+
+- The application will be displayed in Controller's 'List of Applications'.
+
+![Creating Application 3](on-premises-app-onboarding-images/CreatingApplication3.png)
+
+### Deploying application steps
+
+The following steps need to be done:
+
+- From UI go to "NODE" tab and click on "EDIT" button for the desired node.
+- Navigate to "APPS" tab.
+- Click on "DEPLOY APP".
+
+![Deploying App 1](on-premises-app-onboarding-images/DeployingApp1.png)
+
+- Window titled "DEPLOY APPLICATION TO NODE" will appear.
+- Select the Application you want to deploy from drop down menu.
+- Click "DEPLOY".
+
+![Deploying App 2](on-premises-app-onboarding-images/DeployingApp2.png)
+
+- Your applications will be listed under "APPS" tab - the status of this app will be "deployed".
+- From here to start the Application click "START"
+
+![Deploying App 3](on-premises-app-onboarding-images/DeployingApp3.png)
+
+- Refresh the browser window to see the change in the status to "running".
+
+![Deploying App 4](on-premises-app-onboarding-images/DeployingApp4.png)
+
+- You can "DELETE/RESTART" an application from this tab.
+
+> Note the traffic policy if any must be removed before deleting the application.
+
+## Onboarding OpenVINO applications
 
 This chapter describes how to deploy OpenVINO applications on OpenNESS platform working in OnPremises mode.
 
-## Prerequisites
+### Prerequisites
 
 * OpenNESS for OnPremises is fully installed and EdgeNode is enrolled to the EdgeController.
 * The Docker images for the OpenVINO are available on HTTPS server and can be accessed by EdgeNode.
@@ -136,7 +211,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 * A separate host or VM acts as gateway is used for NTS learning. It should be connected to the Edge Node via physical network interface as well.
 * The Docker image for Client Simulator application is available on the traffic generating host.
 
-## Setting up Network Interfaces
+### Setting up Network Interfaces
 
 1. OpenVINO client host machine should have one of its physical interfaces connected to EdgeNode machine. IP address on this interface needs to be set to provide correct packets routing. Set it up using `ip` command:
    ```
@@ -215,7 +290,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 
     ![Sample nes-client output](on-premises-app-onboarding-images/nes-client-reference.png)
 
-## Starting traffic from Client Simulator
+### Starting traffic from Client Simulator
 
 1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
 2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
