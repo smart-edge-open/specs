@@ -157,37 +157,16 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 
     Firewall on gateway machine should disabled or allowing rule for port 5001 should be applied.
 
-3. Log in to the EdgeController UI. Move to Traffic Policies page and using the form add three policies according to the instruction below:
-   * to_ENB policy with:
-     * Priority: 1
-       * Destination:
-         * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-         * IP Filter Mask: 32
-       * Target action: accept
-
-    ![Defining to_ENB traffic policy](on-premises-app-onboarding-images/to_enb-policy1.png)
-
-    ![Defining to_ENB traffic policy](on-premises-app-onboarding-images/to_enb-policy2.png)
-
-    * to_DP policy with:
-      * Priority: 1
-        * Source:
-          * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-          * IP Filter Mask: 32
-      * Target action: accept
-
-    ![Defining to_DP traffic policy](on-premises-app-onboarding-images/to_dp-policy.png)
-
-    * openvino policy with:
-      * Priority: 99
-      * Source:
-        * IP Filter Address: 192.168.10.10 (OpenVINO client address)
-        * IP Filter Mask: 24
-      * Destination:
-        * IP Filter Address: 192.168.10.11 (OpenVINO app address)
-        * IP Filter Mask: 24
-        * Protocol: All
-      * Target action: accept
+3. Log in to the EdgeController UI. Move to Traffic Policies page and using the form add OpenVino policy according to the instruction below:
+    * Priority: 99
+    * Source:
+      * IP Filter Address: 192.168.10.10 (OpenVINO client address)
+      * IP Filter Mask: 24
+    * Destination:
+      * IP Filter Address: 192.168.10.11 (OpenVINO app address)
+      * IP Filter Mask: 24
+      * Protocol: All
+    * Target action: accept
 
     ![Defining openvino traffic policy](on-premises-app-onboarding-images/openvino-policy1.png)
 
@@ -195,7 +174,6 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 
 4. Move to the EdgeNode interfaces setup. It should be available under button `Edit` next to the EdgeNode position on Dashboard page.
    * Find the port that is directly connected to the OpenVINO client machine port (eg. 0000:04:00.1)
-     * Add to_ENB policy to it
      * Edit interface settings:
 
     ![OpenVINO client machine interface settings](on-premises-app-onboarding-images/if-set-1.png)
@@ -203,7 +181,6 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
     Note: Fallback interface address is the one define below
 
     * Find the port that is directly connected to the gateway machine (eg. 0000:04:00.0)
-      * Add to_DP policy to it
       * Edit interface settings:
 
     ![OpenVINO client machine interface settings](on-premises-app-onboarding-images/if-set-2.png)
