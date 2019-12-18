@@ -41,6 +41,9 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be executed by running helper deployment scripts.
+
+> NOTE: All nodes provided in the inventory may reboot during the installation.
+
 Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for Network Edge mode:
   - `deploy_ne.sh` - sets up cluster (first controller, then nodes)
   - `cleanup_ne.sh`
