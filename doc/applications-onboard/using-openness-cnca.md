@@ -125,7 +125,7 @@ In case of On-Premises deployment mode, Core network can be configured through t
 
     `make all-up`
 
-    `make cups-ui-up`
+    > NOTE: To bring up just the CUPS UI run `make cups-ui-up`
   - Check whether controller CUPS UI already bring up by: 
 
 ```
@@ -375,7 +375,7 @@ policy:
 ### Configuring in On-Premises mode
 
   OpenNESS On-Premises management homepage:
-      sample url: http://10.233.182.33:3000/landing
+      sample url: http://<controller_ip>:3000/landing
       ![OpenNESS NGC homepage](using-openness-cnca-images/ngc_homepage.png)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
@@ -386,7 +386,7 @@ policy:
 ##### Registration of UPF services associated with Edge-node with 5G Core
 
    * Edge services registration home page:
-      sample url: http://10.233.182.33:3020/services
+      sample url: http://<cnca_ui_ip>:3020/services
       ![Edge services operations homepage](using-openness-cnca-images/oam_services_home.png)
 
    * Registration of a new edge service offered by UPF (associated with edge-node)
@@ -404,7 +404,7 @@ policy:
 #### Traffic influence operations with 5G Core (through AF interface)
 
    * Edge traffic subscription submission homepage
-      sample url: http://10.233.182.33:3020/subscriptions
+      sample url: http://<cnca_ui_ip>:3020/subscriptions
       ![Subscription services homepage](using-openness-cnca-images/af_subscription_display_home.png)
 
    * Edge traffic subscription submissions with 5G-Core (NEF)
@@ -418,6 +418,9 @@ policy:
 
    * To edit a submitted edge traffic subscription
       ![Subscription service edit](using-openness-cnca-images/af_subscription_edit.png)
+
+   * To patch a submitted edge traffic subscription
+      ![Subscription service patch](using-openness-cnca-images/af_subscription_patch.png)
 
    * To delete a submitted edge traffic subscription
       ![Subscription service delete](using-openness-cnca-images/af_subscription_delete.png)
