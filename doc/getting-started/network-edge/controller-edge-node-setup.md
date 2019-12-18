@@ -347,7 +347,7 @@ Paste the Token in the browser to log in as shown in this diagram
 ![Dashboard Login](controller-edge-node-setup-images/dashboard-login.png)
 _Figure - Kubernetes Dashboard Login_
 
-9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `CONTROLLER_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
+9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `INFRASTRUCTURE_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
 
     ```shell
     cd /opt/edgecontroller/
@@ -361,4 +361,5 @@ _Figure - Kubernetes Dashboard Login_
     make ui-up
     ```
 
-11. The OpenNESS controller landing page is accessible at `https://<controller-ip>:3000/`.
+11. The OpenNESS controller landing page is accessible at `https://<LANDING_UI_URL>/`.
+    > **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
