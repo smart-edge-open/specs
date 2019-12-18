@@ -1,5 +1,5 @@
 ```text
-SPDX-License-Identifier: Apache-2.0     
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
@@ -17,7 +17,9 @@ Copyright (c) 2019 Intel Corporation
 - [OS Proxy set up](#os-proxy-set-up)
   - [/etc/environment](#etcenvironment)
   - [/etc/yum.conf](#etcyumconf)
-- [Troublehooting](#troublehooting)
+- [HDDL](#hddl)
+- [Troubleshooting](#troubleshooting)
+
 # Introduction
 The aim of this guide is to familiarize the user with the OpenNESS on-premises offline package create and restore process.
 This guide will provide instructions on how to create offline product package and how to restore it on servers.
@@ -37,7 +39,7 @@ Offline package mentioned in this document, means that user can compile product,
 * System proxy and proxy for yum is configured
 * date, time and timezone is set up correctly
 * server is able to access the internet
-* user has administrative right on this server (root user permissions) 
+* user has administrative rights on this server (root user permissions)
 * user downloaded openness-experience-kits repository
 * github token is available (for accessing some of Github repositories)
 
@@ -85,7 +87,7 @@ Using two provided scripts, it is possible to set up controller and any amount o
 User can modify `inventory.ini` file, enter IP addresses of servers that will have node/controller roles installed.
 
 ## Restore variants
-There are many variants of deploying offline package. 
+There are many variants of deploying offline package.
 
 For example:
 - one additional server is used (so called control server), where user copies offline package and initiates deployment on a separate servers from it
@@ -99,7 +101,7 @@ Next chapters in this document assume that the second variant is used (without c
 * no any additional software is installed
 * OS proxy is disabled
 * date, time and timezone is set up correctly
-* user has administrative right on this server (root user permissions) 
+* user has administrative rights on this server (root user permissions)
 * control server is able to reach other OpenNESS hosts via network
 ```
 Note: this server - compared to build server (where offline package is created) - does not need any proxy settings, github tokens or OpenNESS repository code. Only on-premises offline package is required.
@@ -110,7 +112,7 @@ Deploying controller or node uses Ansible native mechanisms for inventory set up
 
 For the ease of understanding inventory, lets assume that user needs to deploy one controller and one node.
 
-In extracted offline package, in `openness-experience-kits` folder, you will find a file called `inventory.ini`. 
+In extracted offline package, in `openness-experience-kits` folder, you will find a file called `inventory.ini`.
 * In section called `[all]` user needs to pass a real, private IP addresses for hosts where controller and nodes will be deployed. This will act as a general storage for all hosts.
 * connection will take place through SSH protocol
 * in `[controller_group]` section, user needs to put only the name of server that will be configured and have dedicated role installed. Only one controller can be placed here. Use server name provided in `[all]` section, do not use IP addresses here
@@ -136,8 +138,8 @@ In extracted offline package, in `openness-experience-kits` folder, you will fin
    # ssh-copy-id root@<edgecontroller_ip_address>
    ```
 6. Extract offline package content. No special path is required, it can be /root user subfolder.
-   ``` 
-   tar xf <offline_package_tar> 
+   ```
+   tar xf <offline_package_tar>
    ```
    You will see files like `extract.sh` or `openness_experience_kits.tar`.
 7. Go to `openness_experience_kits` folder.
@@ -182,10 +184,10 @@ And finally, run `deploy_onprem_node.sh` script from controller:
    ```
    ./deploy_onprem_node.sh
    ```
-   Note: This operation may take one hour or more, depending on the amout of chosen hosts in inventory.<br>
+   Note: This operation may take one hour or more, depending on the amount of chosen hosts in inventory.<br>
    Node functionality will be installed on chosen list of hosts.<br>
    Once scripts completes successfully, nodes will try to establish connection with the Controller.<br>
-   Time needed depends on network speed, cpu and local storage speed (SSD,HDD).<br>
+   Time needed depends on network speed, cpu and local storage speed (SSD, HDD).<br>
 
 # OS Proxy set up
 
@@ -210,6 +212,14 @@ Note: please log out and log in again, to make sure your environment loads then 
 ```
 Note: for build server, both files need to be configured and for server where offline package is being extracted, only `/etc/yum.conf`.
 
-# Troublehooting
+# HDDL
+
+Offline prepare and restore of the HDDL image is not enabled by default due to its size.
+
+In order to prepare and later restore the HDDL image, `- role: offline/prepare/hddl` line must be uncommented in `offline_prepare.yml` playbook before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
+
+During offline package restoration HDDL role must be enabled in order to finish the building. It is done by uncommenting `- role: hddl` line in `onprem_node.yml` before `deploy_onprem_node.sh` is executed.
+
+# Troubleshooting
 Q: <br>
-A: 
+A:

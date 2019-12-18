@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# OpenNESS Network Edge: Controller and Edge node setup 
+# OpenNESS Network Edge: Controller and Edge node setup
 - [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -28,7 +28,7 @@ Copyright (c) 2019 Intel Corporation
 In order to use the playbooks several preconditions must be fulfilled:
 
 - Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
-  
+
 - Hosts for Edge Controller (Kubernetes master) and Edge Nodes (Kubernetes workers) must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
 
 - Ansible inventory must be configured (refer to [Configuring inventory](#configuring-inventory)).
@@ -42,6 +42,9 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be executed by running helper deployment scripts.
+
+> NOTE: All nodes provided in the inventory may reboot during the installation.
+
 Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for Network Edge mode:
   - `deploy_ne.sh` - sets up cluster (first controller, then nodes)
   - `cleanup_ne.sh`
@@ -49,6 +52,8 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
   - `deploy_ne_node.sh`
 
 > NOTE: Playbooks for Edge Controller/Kubernetes master must be executed before playbooks for Edge Nodes.
+
+> NOTE: Edge Nodes and Edge Controller must be set up on different machines.
 
 ## Network Edge Playbooks
 
