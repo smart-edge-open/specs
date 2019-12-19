@@ -65,13 +65,13 @@ To build sample application Docker images for testing OpenVINO consumer and prod
 1. To build the producer application image from the application directory navigate to the `./producer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
     **Note**: Only CPU inference support is currently available for OpenVINO application on OpenNESS Network Edge - environmental variable `OPENVINO_ACCL` must be set to `CPU` within Dockerfile available in the directory
 
 2. To build the consumer application image from application directory navigate to the `./consumer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
 3. Check that the images built successfully and are available in local Docker image registry:
    ```
    docker images | grep openvino-prod-app
@@ -83,7 +83,7 @@ Additionally, an application to generate sample traffic is provided. The applica
 1. To build the client simulator application image from application directory navigate to the `./clientsim` directory and run: 
    ```
    ./build-image.sh
-   ``` 
+   ```
 2. Check that the image built successfully and is available in local Docker image registry:
    ```
    docker images | grep client-sim
@@ -261,7 +261,7 @@ The purpose of this section is to guide the user on the complete process of onbo
    ...
    0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
    ...
-  
+    
    kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
    ...
    Interface: 0000:86:00.0 successfully attached
@@ -408,6 +408,7 @@ The full pipeline of the Smart City sample application on OpenNESS is distribute
 The Smart City setup with OpenNESS should typically deployed as shown in this Figure. The drawing depicts 2 offices for the purpose of this guide, but there is no limitation to the number of offices.
 
 ![Smart City Setup](network-edge-app-onboarding-images/ovc-smartcity-setup.png)
+
 _Figure - Smart City Setup with OpenNESS_
 
 
