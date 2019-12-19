@@ -3,7 +3,7 @@ Copyright © 2019 Intel Corporation
 
 - [Introduction](#introduction)
 - [5G Systems Architecture](#5g-systems-architecture)
-  - [5G Architecture view w.r.t Edge](#5g-architecture-view-wrt-edge)
+  - [Edge 5G Architecture view](#edge-5g-architecture-view)
     - [Edge deployment scenarios in 5G](#edge-deployment-scenarios-in-5g)
     - [Application Traffic steering in 5G towards Edge](#application-traffic-steering-in-5g-towards-edge)
 - [OpenNESS integration with 5G systems](#openness-integration-with-5g-systems)
@@ -22,6 +22,7 @@ Copyright © 2019 Intel Corporation
     - [AF-NEF interface for traffic influence](#af-nef-interface-for-traffic-influence)
     - [OAM interface for edge service registration](#oam-interface-for-edge-service-registration)
       - [OAM API flows](#oam-api-flows)
+  - [5G End to End flows for Edge by OpenNESS](#5g-end-to-end-flows-for-edge-by-openness)
   - [5G Edge Data paths supported by OpenNESS](#5g-edge-data-paths-supported-by-openness)
 - [5G Core Network functionality for OpenNESS integration](#5g-core-network-functionality-for-openness-integration)
 - [Summary](#summary)
@@ -32,15 +33,15 @@ Copyright © 2019 Intel Corporation
 
 The introduction of the Release 15 specification from 3GPP officially introduced Edge Computing. Edge Compute is highlighted as a key deployment mechanism for delivering services to end users by placing applications closer to the user. Network and Enterprise operators are trying to take advantage of this advancement to provide low latency, user centric and secure edge services. 
 
-The context of this white paper will focus on some of the key challenges for 5G Standalone (SA) mode edge deployments and will outline how OpenNESS helps to address them. The next version of this white paper will address 5G Non Standalone (NSA) mode.
+This white paper will focus on some of the key challenges for 5G Standalone (SA) mode edge deployments and will outline how OpenNESS helps to address them. The next version of this white paper will address 5G Non Standalone (NSA) mode.
 
 Two of the key challenges in edge deployments are:
 
 1. UPF selection for UEs
     - The 3GPP standards has multiple references for the UPF selection  procedure, which provides flexibility for implementation. Therefore, choosing the right implementation is a key factor in edge-deployments. 
   
-2. UE Traffic identification and steering with in UPF towards edge-nodes interfaces
-    - The standard clearly outlines to REST based APIs for this purpose in 5G. 
+2. UE Traffic identification and steering within the UPF towards edge nodes interfaces
+    - The standard clearly outlines the REST based APIs for this purpose in 5G. 
 
 OpenNESS provides reference REST based APIs along with 3GPP standard traffic influencing APIs (using the Application Function) to address some of these major challenges in 5G edge deployments.
 
@@ -54,13 +55,13 @@ The picture below depicts the 3GPP 5G Core networking components connected to ea
 
 3GPP TS 23.501 Rel15.3 Sec 4.2.3 : 5G System Architecture
 
-## 5G Architecture view w.r.t Edge
+## Edge 5G Architecture view
 
 As discussed in the ETSI White paper "MEC in 5G Networks" [ETSI_2018a], a new set of functional enablers introduced in 5G are essential for Edge deployments, below are a few to highlight in the context of this document :
 
-* With the introduction of multiple Local Data Networks connected to the UPF and traffic steering of selected data traffic for a PDU session towards a local data network interface in UPF are first and fourth most enablers in 5g edge deployments.
+* Multiple Local Data Networks connected to the UPF and traffic steering of selected data traffic for a PDU session towards a local data network interface in UPF are key enablers of 5g edge deployments.
 
-* Influencing the traffic steering rules in the UPF through external components like OpenNESS/MEC Controllers using Application Function (AF) provides another level of flexibility for on-demand application deployments on edge-nodes as described in 3GPP TS 23.501-f30 Sec. 5.6.7.
+* Influencing the traffic steering rules in the UPF through external components like OpenNESS/MEC Controllers using Application Function (AF) provides another level of flexibility for on-demand application deployments on edge nodes as described in 3GPP TS 23.501-f30 Sec. 5.6.7.
 
 * Session and Service Connectivity (SSC) and Local Area Data Networks (LADN) play an important role in edge deployments.
 
@@ -68,18 +69,18 @@ As discussed in the ETSI White paper "MEC in 5G Networks" [ETSI_2018a], a new se
 
 The following section outlines the various deployment scenarios in 5G:
 
-1. The edge-node hosts the edge-applications and is co-located with Base Station and UPF:
+1. The edge node hosts the edge-applications and is co-located with Base Station and UPF:
 ![RAN,UPF and MEC co-located at Edge](ngc-images/5g_edge_deployment_scenario1.png)
 
-2. The edge-node hosts the edge-applications and is co-located with local UPF:
+2. The edge node hosts the edge-applications and is co-located with local UPF:
 ![UPF and MEC co-located at Edge](ngc-images/5g_edge_deployment_scenario2.png)
 
-3. The edge-node hosts the edge-applications and is co-located at Regional-Office:
+3. The edge node hosts the edge-applications and is co-located at Regional-Office:
 ![UPF and MEC co-located at Regional Office](ngc-images/5g_edge_deployment_scenario3.png)
 
 There may be other edge deployment scenarios in addition to those highlighted above, however, they are not the focus of this document. 
 
-In all of the above scenarios, the UPF will have a dedicated N6 interface associated with each edge-node hosting multiple applications.  In some cases, the UPF may have multiple logical N6 interfaces (one for each application) associated with the edge-node.
+In all of the above scenarios, the UPF will have a dedicated N6 interface associated with each edge node hosting multiple applications.  In some cases, the UPF may have multiple logical N6 interfaces (one for each application) associated with the edge node.
 
 ### Application Traffic steering in 5G towards Edge
 
@@ -95,33 +96,33 @@ OpenNESS as a reference software solution kit, will address some of the key chal
 
 ## OpenNESS scope
 
-In the context of 5G edge deployments, OpenNESS interacts with the 5G NGC through the AF Network Function micro service as defined in 3GPP standard SBI interface. In addition to that, OpenNESS also suggests a reference REST based API end point (OAM interface) to configure the 5G Control Plane elements with the information about UPF deployed at the edge-nodes. In most cases, 5G NGC solutions may have this configuration path implemented. In the scope of OpenNESS integration with the 5G Core, the OAM interface is a point of discussion based on 5G core existing interface.  
+In the context of 5G edge deployments, OpenNESS interacts with the 5G NGC through the AF Network Function micro service as defined in 3GPP standard SBI interface. In addition to that, OpenNESS also suggests a reference REST based API end point (OAM interface) to configure the 5G Control Plane elements with the information about UPF deployed at the edge nodes. In most cases, 5G NGC solutions may have this configuration path implemented. In the scope of OpenNESS integration with the 5G Core, the OAM interface is a point of discussion based on 5G core existing interface.  
 
 ## OpenNESS implementation
 
 The key challenges for Edge deployments in 5G networks have been outlined in the previous sections, OpenNESS tries to addresses them in compliance with the standards by:
 
 1. UPF selection:
-    - For the deployment scenarios #1 and #2 where the serving UPF and edge-node are co-located with the RAN, proper UPF selection for UE is critical. If the 5G Core considers UE location and requesting DNN (i.e. TAC, DNN, DNAI, SNSSAI, SSC) as well in UPF selection would make the Edge deployment more efficient.  To enable this capability, OpenNESS suggest an OAM REST based API interface to inform the 5G core about the UPF info (upf-ip, tac, dnn, dnai, snssai, dns-ip) co-located with edge-node.
+    - For the deployment scenarios #1 and #2 where the serving UPF and edge node are co-located with the RAN, proper UPF selection for UE is critical. If the 5G Core considers UE location and requesting DNN (i.e. TAC, DNN, DNAI, SNSSAI, SSC) as well in UPF selection would make the Edge deployment more efficient.  To enable this capability, OpenNESS suggest an OAM REST based API interface to inform the 5G core about the UPF info (upf-ip, tac, dnn, dnai, snssai, dns-ip) co-located with edge node.
   
-    - In the case of an edge-node deployed at regional centers (#3), selection of the serving UPF is taken care by 5G Core (SMF), however, UE application traffic needs to be steered from the serving UPF to the UPF co-located at the edge-node through N9 interface.  In order to achieve this, traffic influencing rules need to be pushed in both UPFs to identify proper N9 and N6 interfaces for the data traffic to reach applications deployed on edge-node.
+    - In the case of an edge node deployed at regional centers (#3), selection of the serving UPF is taken care by 5G Core (SMF), however, UE application traffic needs to be steered from the serving UPF to the UPF co-located at the edge node through N9 interface.  In order to achieve this, traffic influencing rules need to be pushed in both UPFs to identify proper N9 and N6 interfaces for the data traffic to reach applications deployed on edge node.
 
 2. Traffic steering:
 
-    The 5G standard exposes multiple REST based APIs to define through Network Exposure Function [3GPP TS 23.502-f30 Sec. 5.2.6] for AF to configure: the traffic flow rules to identify the application traffic, ie. Packet Flow Descriptor (PFD) operations create/modify/delete and traffic influencing subscription APIs for steering application traffic towards edge-node N6 interface and more.  OpenNESS supported AF functionality will support these APIs to influence the 5G core in multiple phases, starting with traffic influencing subscription in OpenNESS Rel 19.12.
+    The 5G standard exposes multiple REST based APIs to define through Network Exposure Function [3GPP TS 23.502-f30 Sec. 5.2.6] for AF to configure: the traffic flow rules to identify the application traffic, ie. Packet Flow Descriptor (PFD) operations create/modify/delete and traffic influencing subscription APIs for steering application traffic towards edge node N6 interface and more.  OpenNESS supported AF functionality will support these APIs to influence the 5G core in multiple phases, starting with traffic influencing subscription in OpenNESS Rel 19.12.
 
 3. DNS service:
 
     For UE traffic to reach to applications deployed at the edge, the DNS plays a major role.  Resolving the DNS entry for applications running on Edge is always a topic for discussion with multiple options available and choice is always influenced by required deployment scenario. 
 
-    Two immediate options are (1) Using the DNS server maintained by Network operator (2) Using the DNS services provided by OpenNESS edge-node :
+    Two immediate options are (1) Using the DNS server maintained by Network operator (2) Using the DNS services provided by OpenNESS edge node :
     1. DNS server provided by the network operator:
-        - Pros: Central DNS server for multiple edge-nodes hosting applications, one-stop-shop.
-        - Cons: Challenging to keep the DNS records database up to date with the dynamic nature of application deployment at edge-nodes.
+        - Pros: Central DNS server for multiple edge nodes hosting applications, one-stop-shop.
+        - Cons: Challenging to keep the DNS records database up to date with the dynamic nature of application deployment at edge nodes.
 
-    2. DNS server provided by the OpenNESS edge-node:
+    2. DNS server provided by the OpenNESS edge node:
         - Pros: Maintains DNS records up to date for applications deployed dynamically, supports DNS forwarding functionality for unresolved DNS queries. Ideal solution for single edge node deployment scenarios.
-        - Cons: if a single UPF connects to multiple edge-nodes, then some sort of daisy chaining of the DNS server configuration within edge nodes is needed. Assigning Edge-Node DNS server IP to UEs is also a challenge in some implementations.  Through the OAM reference APIs, OpenNESS suggests a path to configure the edge DNS server (associated with UPF) to the 5G core but may not be able to address all scenarios.
+        - Cons: if a single UPF connects to multiple edge nodes, then some sort of daisy chaining of the DNS server configuration within edge nodes is needed. Assigning an Edge Node DNS server IP to UEs is also a challenge in some implementations.  Through the OAM reference APIs, OpenNESS suggests a path to configure the edge DNS server (associated with UPF) to the 5G core but may not be able to address all scenarios.
 
 4. UE mobility:
 
@@ -145,7 +146,7 @@ Below pictures shows the Micro service architectural view of OpenNESS solution w
 
 ### Application Function
 
-An Application Function (AF) is a micro service in the OpenNESS edge-controller solution, developed in golang.  In the scope of the current release (v19.12), AF supports the Traffic influencing subscription functionality to help in steering the Edge specific traffic in UPF towards the applications deployed on the OpenNESS edge-node.
+An Application Function (AF) is a micro service in the OpenNESS edge controller solution, developed in golang.  In the scope of the current release (OpenNESS 19.12), AF supports the Traffic influencing subscription functionality to help in steering the Edge specific traffic in UPF towards the applications deployed on the OpenNESS edge node.
 
 Other AF functionalities as discussed in 3GPP 5G standard [3GPP_29122], PFD Management Section 4.4.10, Changing chargeable party Section 4.4.4, configuration QoS for AF sessions Section 4.4.13, Monitoring Section 4.4.2, Device triggering Section 4.4.6 and resource management of Background Data Transfer (BDT) Section 4.4.3 are in under consideration for implementation in future OpenNESS releases.
 
@@ -175,18 +176,18 @@ According to 3GPP 5G System Architecture [3GPP TS 23.501-f30], NEF is a function
 
 * Trivial, but still may be helpful for 5G Core partners who are looking for NEF service to add to their solution for OpenNESS integration.
 
-In the OpenNESS provided NEF reference implementation for Traffic influence is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE}, are terminated and loop-backed at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
+In the OpenNESS provided NEF reference implementation for Traffic influence is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE}, are terminated and looped back at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
 
 ### OAM Interface
 
-OAM agent functionality is another component which should be part of 5G Core solution to add/update certain configuration information which is outside the scope of standards. For example, Configuration of UPF parameters like, UPF IP address, DNS configuration, DNNs supported.  In the case of edge deployments, when the UPF is deployed as an NFV service on the edge-node platform, MEC controllers may need to update the 5G Core control-plane components about the edge associated user-planes.  5G solutions may have some sort of interface to address this requirement, however, to provide an unified interface for integrated solutions, OpenNESS suggests a REST based OAM interface APIs to configure certain UPF related parameters.  Use of the OAM agent is optional and can be replaced with an OAM interface of the 5G Core solution if any exists.  
+OAM agent functionality is another component which should be part of 5G Core solution to add/update certain configuration information which is outside the scope of standards. For example, Configuration of UPF parameters like, UPF IP address, DNS configuration, DNNs supported.  In the case of edge deployments, when the UPF is deployed as an NFV service on the edge node platform, MEC controllers may need to update the 5G Core control-plane components about the edge associated user-planes.  5G solutions may have some sort of interface to address this requirement, however, to provide an unified interface for integrated solutions, OpenNESS suggests a REST based OAM interface APIs to configure certain UPF related parameters.  Use of the OAM agent is optional and can be replaced with an OAM interface of the 5G Core solution if any exists.  
 
 #### Edge service registration
 
 * OpenNESS suggested OAM API endpoint: _/ngcoam/v1/af/services_
 * Supported methods: POST, GET, PUT, DELETE
 
-**NOTE1:**  As the OAM agent is a component in 5G Core, and may need to interact with multiple AF instances (i.e. the OpenNESS edge-controllers), in that case the above API endpoint may need enhancements to incorporate afId to distinguish between AFs.  Updated API endpoint could be _/ngcoam/v2/af/{afId}/services_, which is an interest for OpenNESS in future enhancements as need basis.
+**NOTE1:**  As the OAM agent is a component in 5G Core, and may need to interact with multiple AF instances (i.e. the OpenNESS edge controllers), in that case the above API endpoint may need enhancements to incorporate afId to distinguish between AFs.  Updated API endpoint could be _/ngcoam/v2/af/{afId}/services_, which is an interest for OpenNESS in future enhancements as need basis.
 
 **NOTE2:** Registration of AF instance (OpenNESS controller) with 5G Core network could also be a topic for discussion during implementation.   One could choose the 3GPP suggested method using NRF functionality, or the existing OAM functionality can be extended with an additional API (for example _/ngcoam/v2/af/register_)  to register and obtain afId from 5G Core.  
 
@@ -217,7 +218,7 @@ The flow diagrams below depict the scenarios for the traffic influence subscript
 #### OAM API flows
 
 As discussed above, the need for configuring the 5G Control plane components with the information about UPF DNN information related to the edge.  The flow diagrams below depict the API flow between various components to passdown the information towards 5G control plane. 
-Detailed information about the OAM reference API endpoints can be found at 5G OAM API Schema at OpenNESS.org (file: 5goam.swagger.json)
+Detailed information about the OAM reference API endpoints can be found at 5G OAM API Schema in the documentation page at OpenNESS.org.
 
 * Addition of UPF services info about Edge to 5G Control Plane:
 ![AF Service registration](ngc-images/oam_af_service_add.png)
@@ -231,6 +232,29 @@ Detailed information about the OAM reference API endpoints can be found at 5G OA
 * Delete UPF services info about Edge from 5G Control Plane:
 ![AF Service Delete](ngc-images/oam_af_service_del.png)
 
+
+## 5G End to End flows for Edge by OpenNESS
+
+The flow diagram below depicts a possible end to end edge deployment scenario including the PFD management, traffic influencing and traffic routing in UPF towards Local DN.
+
+![AF Service Delete](ngc-images/e2e_edge_deployment_flows.png)
+
+* AF registration and PFD management
+  * AF authenticates and registers with the 5G Core
+  * AF registers for DNAI change notifications through the TrafficInfluence request API
+  * When a new UPF is deployed in the 5G network or a new DN service is started on an existing UPF, SMF may generate a trigger to AF about the DNAI change notification.
+  * PFD profiles can be created based on the trigger in PCF by AF or the 5G Network operator can create PFD profiles.
+
+* Traffic influence in UPF by AF
+  * Traffic influence requests can be sent by AF towards the PCF (via NEF) for PFD profiles created in PCF. The action of a traffic influence request created in AF can be triggered by an external applications like OSS or a DNAI change notification events from the NEF or Device triggering events from NEF.
+  * Traffic influence requests will be consumed by PCF or UDR based on the requested information.
+  * UE may initiate the PDU Session Modification procedure towards SMF, because of the location change event. Or the PCF may initiate a Network initiated PDU Session Modification request procedure towards SMF because of a traffic influence request generated by AF. 
+  * SMF may push this updated PFD profiles to UPF
+  
+* Data path from UE
+  * Edge traffic sent by the UE reaches the UPF, the UPF routes the edge-traffic towards the local DN where the OpenNESS Edge Node is configured. 
+  * All other traffic sent by the UE that reaches the UPF will be sent to another UPF or to a remote gateway.
+
 ## 5G Edge Data paths supported by OpenNESS
 
 The below picture shows multiple data paths that are supported in OpenNESS integrated edge deployment scenarios.
@@ -241,11 +265,11 @@ Each data path/scenario is represented by a colored line, which is described bel
 
 All the UEs attached from Base Station gNB1 are assigned to UPF1 based on location (TAC) configuration. UEs that are attached from gNB2 are assigned to UPF1 or UPF2 based on TAC, DNN configuration while assigning UPF.
 
-**Green Colored data-path :**  UE application traffic that reaches UPF1 is routed to OpenNESS edge-node through N6 interface.  Traffic is served by applications deployed at the Edge-node.
+**Green Colored data-path :**  UE application traffic that reaches UPF1 is routed to OpenNESS edge node through N6 interface.  Traffic is served by applications deployed at the Edge node.
 
 **Orange colored data-path :** UE application traffic that reaches UPF1, but non-edge traffic will be routed towards cloud through another N6 interface.
 
-**Blue colored data-path :** UE attached to a Base Station (gNB2), but assigned to UPF1. UE application traffic that reaches UPF1 is routed towards edge-node through N6 interface.
+**Blue colored data-path :** UE attached to a Base Station (gNB2), but assigned to UPF1. UE application traffic that reaches UPF1 is routed towards edge node through N6 interface.
 
 **Red colored data-path :** UE attached to a gNB2, but assigned to UPF2. UE application traffic reaches UPF2 is routed towards cloud through it's N6 interface.
 
@@ -255,19 +279,17 @@ All the UEs attached from Base Station gNB1 are assigned to UPF1 based on locati
 
 The following is the minimum functionality required to support the integration of the OpenNESS integrated MEC solution with a 5G Core network based on the required deployment scenarios:
 
-* Control and Configuration in UPF selection functionality,  required in case of location based edge-node deployments with associated 5G user-plane.
+* Control and Configuration in UPF selection functionality,  required in case of location based edge node deployments with associated 5G user-plane.
 
-* Interface for dynamic configuration of user-plane deployed or deleted from edge-nodes. Referred to as the OAM interface in this document. 
+* Interface for dynamic configuration of user-plane deployed or deleted from edge nodes. Referred to as the OAM interface in this document. 
 
 * Network Exposure Function (NEF), with minimal functionality to support Traffic influence subscription operations through Application Function (AF)
 
 # Summary
 
-This white paper highlights the Edge computing enhancements made in the 3GPP 5G standards along with the key implementation challenges. The document provides a description of the OpenNESS view of integration for Edge controllers with the 5G Core Network as well as the API end points and end to end flows required in edge deployments. The OpenNESS reference implementation was validated with a modified 5G Core in SA mode to support the APIs for edge deployments (per 3GPP 5G Standard) and the 5G UPF with multiple N6 interfaces with the edge-node connected towards local DNN interface.
+This white paper highlights the Edge computing enhancements made in the 3GPP 5G standards along with the key implementation challenges. The document provides a description of the OpenNESS view of integration for Edge controllers with the 5G Core Network as well as the API end points and end to end flows required in edge deployments. The OpenNESS reference implementation was validated with a modified 5G Core in SA mode to support the APIs for edge deployments (per 3GPP 5G Standard) and the 5G UPF with multiple N6 interfaces with the edge node connected towards local DNN interface.
 
 Along with discussing the supported features in OpenNESS for 5G integration also outlined are the areas of interest for future enhancements. 
-
-Further validation of OpenNESS integration activities will be continued with commercial 5G Core network solution partners.
 
 ## References
 
