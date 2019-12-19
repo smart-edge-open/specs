@@ -330,7 +330,7 @@ Creation of the AF subscription is performed based on the configuration provided
 kubectl cnca apply -f <config.yml>
 ```
 
-When the subscription is successfully created, the `apply` command will return the subscription identifier `<subscription-id>`, which should be used in further correspondence with AF concerning this particular subscription. **It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.**
+When the subscription is successfully created, the `apply` command will return the subscription URL that includes subscription identifier at the end of the string. Only this subscription identifier `<subscription-id>` should be used in further correspondence with AF concerning this particular subscription. For example, https://localhost:8060/3gpp-traffic-influence/v1/1/subscriptions/11111  and subscription-id is 11111. **It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.**
 
 To retrieve an existing subscription with a known subscription ID, use the below command:
 ```shell
