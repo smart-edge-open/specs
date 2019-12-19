@@ -13,9 +13,9 @@ This document provides high level system features, issues and limitations inform
 - [Known Issues and Limitations](#known-issues-and-limitations)
 - [Release Content](#release-content)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
-  - [Skylake D](#skylake-d)
-  - [Cascade lake SP](#cascade-lake-sp)
-  - [Skylake SP](#skylake-sp)
+  - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
+  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
+  - [Intel® Xeon® Scalable Processors](#intel%c2%ae-xeon%c2%ae-scalable-processors)
 - [Supported Operating Systems](#supported-operating-systems)
 
 # Release history 
@@ -75,7 +75,7 @@ This document provides high level system features, issues and limitations inform
       - Early Access Support for Open Visual Cloud (OVC) based Smart City App on OpenNESS OnPrem 
       - Support for Dynamic use of VPU or CPU for Inference
     - Gateway
-      - Support for Edge node and OpenNESS Controller gate way to support route-ability   
+      - Support for Edge node and OpenNESS Controller gate way to support route-ability  
     - Documentation 
       - OpenNESS Architecture (update)
       - OpenNESS Support for OVS as dataplane with OVN
@@ -107,7 +107,7 @@ This document provides high level system features, issues and limitations inform
     - OpenNESS Experience Kit for Network and OnPremises edge
       - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremises version of OpenNESS without the need for Internet access.
     - 5G NR Edge Cloud deployment support
-      - 5G NR edge cloud deployment support with SA mode – 5G NR FlexRAN – OpenNESS - FlexCore
+      - 5G NR edge cloud deployment support with SA mode 
       - AF: Support for 5G NGC Application function as a microservice
       - NEF: Support for 5G NGC Network Exposure function as a microservice
       - Support for 5G NR UDM, UPF, AMF, PCF and SCF (not part of the release)
@@ -167,11 +167,11 @@ This document provides high level system features, issues and limitations inform
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
 
-## Skylake D
+## Intel® Xeon® D Processor
    - Super Micro 3U form factor chasis server, product SKU code: 835TQ-R920B
    - Motherboard type: [X11SDV-16C-TP8F](https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm)
    - Intel® Xeon® Processor D-2183IT
-## Cascade lake SP
+## 2nd Generation Intel® Xeon® Scalable Processors
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | CLX-SP           | Compute Node based on CLX-SP(6252N)                           |
@@ -187,7 +187,7 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
 | Other card       | 2x PCIe Riser cards                                           |
 
-## Skylake SP
+## Intel® Xeon® Scalable Processors
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | SKX-SP           | Compute Node based on SKX-SP(6148)                            |
