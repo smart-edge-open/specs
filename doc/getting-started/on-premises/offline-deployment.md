@@ -132,7 +132,7 @@ In extracted offline package, in `openness-experience-kits` folder, you will fin
    127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 YOUR_NEW_HOSTNAME
    ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 YOUR_NEW_HOSTNAME
    ```
-5. Run below two commands to generate ssh private/public key pair and copy it to localhost. Leave password for public key empty and accept defaults. Please do not use localhost nor 127.0.0.1 address as `<edgecontroller_ip_address>`.
+5. Run below two commands to generate ssh private/public key pair and **copy it to localhost (i.e. controller)**. Leave password for public key empty and accept defaults. Please do not use localhost nor 127.0.0.1 address as `<edgecontroller_ip_address>`.
    ```
    # ssh-keygen
    # ssh-copy-id root@<edgecontroller_ip_address>
@@ -141,10 +141,11 @@ In extracted offline package, in `openness-experience-kits` folder, you will fin
    ```
    tar xf <offline_package_tar>
    ```
-   You will see files like `extract.sh` or `openness_experience_kits.tar`.
-7. Go to `openness_experience_kits` folder.
-8. Update `inventory.ini` file and enter IP address of this controller machine machine in `[all]` section. Do not use localhost or 127.0.0.1.
-9. Run deploy script:
+   You will see files like `extract.sh` or `openness-experience-kits.tar.gz`.
+7. Run `extract.sh` script.
+8. Go to `openness-experience-kits` folder.
+9. Update `inventory.ini` file and enter IP address of this controller machine machine in `[all]` section. Do not use localhost or 127.0.0.1.
+10. Run deploy script:
    ```
    ./deploy_onprem_controller.sh
    ```
