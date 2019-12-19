@@ -10,7 +10,7 @@ This document provides high level system features, issues and limitations inform
 - [Features for Release](#features-for-release)
 - [Changes to Existing Features](#changes-to-existing-features)
 - [Fixed Issues](#fixed-issues)
-- [Known Issues](#known-issues)
+- [Known Issues and Limitations](#known-issues-and-limitations)
 - [Release Content](#release-content)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Skylake D](#skylake-d)
@@ -86,6 +86,8 @@ This document provides high level system features, issues and limitations inform
     - Hardware
       - Support for Cascade lake 6252N
       - Support for Intel FPGA PAC N3000
+    - Edge Application
+      - Fully Cloudnative Open Visual Cloud Smart City Application pipeline on OpenNESS Network edge.
     - Edge cloud 
       - EAA and CNCA microservice as native Kubernetes managed services
       - Support for Kubernetes version 1.16.2 
@@ -103,7 +105,7 @@ This document provides high level system features, issues and limitations inform
     - Edge Compute EPA features support for OnPremises 
       - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
     - OpenNESS Experience Kit for Network and OnPremises edge
-      - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremise version of OpenNESS without the need for Internet access.
+      - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremises version of OpenNESS without the need for Internet access.
     - 5G NR Edge Cloud deployment support
       - 5G NR edge cloud deployment support with SA mode – 5G NR FlexRAN – OpenNESS - FlexCore
       - AF: Support for 5G NGC Application function as a microservice
@@ -121,7 +123,10 @@ This document provides high level system features, issues and limitations inform
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.09** There are no unsupported or discontinued features relevant to this release.
- - **OpenNESS 19.12** : NTS Dataplane support for Network edge is discontinued. 
+ - **OpenNESS 19.12** : 
+   - NTS Dataplane support for Network edge is discontinued. 
+   - Controller UI for Network edge has be discontinued except for the CNCA configuration. Customers can optionally leverage Kubernetes dashboard to onboard applications. 
+   - Edge node only supports non-realtime kernel. 
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
@@ -136,9 +141,9 @@ This document provides high level system features, issues and limitations inform
    - Invalid status after app undeployment
    - Application memory field is in MB
 - **OpenNESS 19.12**
-  - Issue with Ansible scripts 
+  - Improved usability/automation in Ansible scripts 
 
-# Known Issues
+# Known Issues and Limitations
 - **OpenNESS 19.06** There are no issues relevant to this release.
 - **OpenNESS 19.06.01** There is one issue relevant to this release: it is not possible to remove application from Edge Node in case of error during application deployment. The issue concerns application in Virtual Machine.
 - **OpenNESS 19.09** 
@@ -148,8 +153,10 @@ This document provides high level system features, issues and limitations inform
     - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
     - We would recommend cleaning up the installation on the node
 - **OpenNESS 19.12** 
- - Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
- - OpenNESS OnPremise: Can not remove a failed/disconnected the edge node information/state from the controller  
+  - Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+  - OpenNESS OnPremises: Can not remove a failed/disconnected the edge node information/state from the controller
+  - The CNCA APIs (4G & 5G) supported in this release is an early access reference implementation and does not support authentication 
+  - Realtime kernel support has been temporarily disabled to address the Kubernetes 1.16.2 and Realtime kernel instability. 
   
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
