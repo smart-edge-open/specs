@@ -19,6 +19,10 @@ Copyright (c) 2019 Intel Corporation
   - [Applying Kubernetes Network Policies](#applying-kubernetes-network-policies-1)
   - [Setting up Edge DNS](#setting-up-edge-dns)
   - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
+- [Onboarding Smart City Sample Application](#onboarding-smart-city-sample-application)
+  - [Installing OpenNESS](#installing-openness)
+  - [Building Smart City ingredients](#building-smart-city-ingredients)
+  - [Running Smart City](#running-smart-city)
 - [Inter Application Communication](#inter-application-communication)
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
 - [Troubleshooting](#troubleshooting)
@@ -61,13 +65,13 @@ To build sample application Docker images for testing OpenVINO consumer and prod
 1. To build the producer application image from the application directory navigate to the `./producer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
     **Note**: Only CPU inference support is currently available for OpenVINO application on OpenNESS Network Edge - environmental variable `OPENVINO_ACCL` must be set to `CPU` within Dockerfile available in the directory
 
 2. To build the consumer application image from application directory navigate to the `./consumer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
 3. Check that the images built successfully and are available in local Docker image registry:
    ```
    docker images | grep openvino-prod-app
@@ -79,7 +83,7 @@ Additionally, an application to generate sample traffic is provided. The applica
 1. To build the client simulator application image from application directory navigate to the `./clientsim` directory and run: 
    ```
    ./build-image.sh
-   ``` 
+   ```
 2. Check that the image built successfully and is available in local Docker image registry:
    ```
    docker images | grep client-sim
@@ -257,7 +261,7 @@ The purpose of this section is to guide the user on the complete process of onbo
    ...
    0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
    ...
-  
+    
    kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
    ...
    Interface: 0000:86:00.0 successfully attached
@@ -391,7 +395,96 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
 >  firewall-cmd --reload
 >  ```
 
-# Inter Application Communication 
+# Onboarding Smart City Sample Application
+
+Smart City sample application is a sample applications that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The application is deployed across multiple regional offices (OpenNESS edge nodes). Each office is an aggregation point of multiple IP cameras (simulated) with their analytics. The media processing and analytics workloads are running on the OpenNESS edge nodes for latency consideration.
+
+The full pipeline of the Smart City sample application on OpenNESS is distributed across three regions:
+
+ 1. Client-side Cameras Simulator
+ 2. OpenNESS Cluster
+ 3. Smart City Cloud Cluster
+
+The Smart City setup with OpenNESS should typically deployed as shown in this Figure. The drawing depicts 2 offices for the purpose of this guide, but there is no limitation to the number of offices.
+
+![Smart City Setup](network-edge-app-onboarding-images/ovc-smartcity-setup.png)
+
+_Figure - Smart City Setup with OpenNESS_
+
+
+## Installing OpenNESS
+The OpenNESS must be installed before going forward with Smart City application deployment. Installation is performed through [OpenNESS playbooks](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
+
+> **NOTE**: At the time of writing this guide, there was no [Network Policy for Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/) defined yet for the Smart City application. So, it is advised to remove the default OpenNESS network policy using this command:
+> ```shell
+> kubectl delete netpol block-all-ingress
+> ```
+
+From the OpenNESS Controller, attach the physical ethernet interface to be used for dataplane traffic using the `interfaceservice` kubectl plugin by providing the office hostname and the PCI Function ID corresponding to the ethernet interface (the PCI ID below is just a sample and may vary on other setups):
+```shell
+kubectl interfaceservice get <edge_node_host_name>
+...
+0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
+...
+
+kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
+...
+Interface: 0000:86:00.0 successfully attached
+...
+
+kubectl interfaceservice get <edge_node_host_name>
+...
+0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  attached
+...
+```
+
+## Building Smart City ingredients
+
+1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
+
+2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
+
+## Running Smart City
+
+1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
+    ```shell
+    ip a a 192.168.1.10/24 dev <office1_interface_name>
+    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
+    ```
+
+2. On the Camera simulator machine, run the camera simulator containers
+    ```shell
+    make start_openness_camera
+    ```
+
+3. On the Smart City cloud master machine, run the Smart City cloud containers
+    ```shell
+    make start_openness_cloud
+    ```
+
+    > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+    > ```shell
+    > systemctl stop firewalld
+    > ```
+
+    > **NOTE**: Do not stop firewall on OpenNESS nodes.
+
+4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
+    ```shell
+    export CAMERA_HOST=192.168.1.10
+    export CLOUD_HOST=<cloud-master-node-ip>
+
+    make
+    make update
+    make start_openness_office
+   ```
+
+    > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+
+5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
+
+
+## Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
 For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
 
@@ -440,4 +533,3 @@ To display available images on local machine (from host):
 ```
 docker images
 ```
-
