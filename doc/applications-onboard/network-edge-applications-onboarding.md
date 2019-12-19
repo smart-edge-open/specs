@@ -442,7 +442,7 @@ kubectl interfaceservice get <edge_node_host_name>
 
 1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
 
-2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS]([tbd](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/master/deployment/kubernetes)). At least 2 offices must be installed on OpenNESS.
+2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
 
 ## Running Smart City
 
