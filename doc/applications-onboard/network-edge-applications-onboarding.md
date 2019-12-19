@@ -32,7 +32,7 @@ It is the responsibility of the user to provide the application to be deployed o
 
 > Note: setting up of the Docker registry is out of scope of this document. If the user already has a docker container image file and would like to copy it to the node manually then `docker load` command can be used to add the image. The success of using such pre-built docker image depends on dependencies of the application that user needs to be aware of. 
 
-The OpenNESS [edgeapps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. Please pull the repository to your Edge Node in order to build the images.
+The OpenNESS [edgeapps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. Please pull the repository to your Edge Node in order to build the images.  
 
 This document will explain the build and deployment to two applications 
 1. Sample application: Simple hello-world like reference application for OpenNESS 
@@ -179,7 +179,7 @@ NOTE: Producer application must be deployed before the consumer application. The
    ```
 5. Verify logs of EAA
    ```
-   kubectl logs <eaa_pod_name> -f
+   kubectl logs <eaa_pod_name> -f -n openness 
 
    Expected output:
    RequestCredentials  request from CN: ExampleNamespace:ExampleProducerAppID, from IP: <IP_ADDRESS> properly handled

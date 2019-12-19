@@ -257,7 +257,9 @@ proxy_os_https: "http://proxy.example.com:3128"
 proxy_os_ftp: "http://proxy.example.com:3128"
 proxy_os_noproxy: "localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ```
-
+> NOTE: Ensure the no_proxy environment variable in your profile is set
+>  
+>     export no_proxy="localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ## Setting Git
 
 ### GitHub Token
