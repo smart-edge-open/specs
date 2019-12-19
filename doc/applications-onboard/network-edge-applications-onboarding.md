@@ -23,6 +23,10 @@ Copyright (c) 2019 Intel Corporation
   - [Installing OpenNESS](#installing-openness)
   - [Building Smart City ingredients](#building-smart-city-ingredients)
   - [Running Smart City](#running-smart-city)
+- [Inter Application Communication](#inter-application-communication)
+- [Enhanced Platform Awareness](#enhanced-platform-awareness)
+- [Troubleshooting](#troubleshooting)
+  - [Useful Commands:](#useful-commands)
 
 # Introduction
 The aim of this document is to familiarize the user with the OpenNESS application on-boarding process for the Network Edge. This guide will provide instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller via the Kubernetes `kubectl` command line utility, sample specification files for application onboarding will also be provided.
@@ -457,14 +461,14 @@ kubectl interfaceservice get <edge_node_host_name>
     make start_openness_cloud
     ```
 
-> **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
-> ```shell
-> systemctl stop firewalld
-> ```
+    > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+    > ```shell
+    > systemctl stop firewalld
+    > ```
 
-> **NOTE**: Do not stop firewall on OpenNESS nodes.
+    > **NOTE**: Do not stop firewall on OpenNESS nodes.
 
-1. On the OpenNESS Controller machine, build & run the Smart City cloud containers
+4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
     ```shell
     export CAMERA_HOST=192.168.1.10
     export CLOUD_HOST=<cloud-master-node-ip>
@@ -474,11 +478,12 @@ kubectl interfaceservice get <edge_node_host_name>
     make start_openness_office
    ```
 
-> **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+    > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
 
 5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
 
-# Inter Application Communication 
+
+## Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
 For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
 
@@ -527,4 +532,3 @@ To display available images on local machine (from host):
 ```
 docker images
 ```
-
