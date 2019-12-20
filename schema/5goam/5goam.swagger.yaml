@@ -1,0 +1,200 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright © 2019 Intel Corporation
+
+swagger: '2.0'
+info:
+  version: 1.0.2
+  title: 5G OAM Northbound API
+  contact:
+    name: intel
+    url: github.com/open-ness/epcedge
+    email: support@intel.com
+  license:
+    name: Apache 2.0 License
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /ngcoam/v1/af/services:
+    post:
+      tags:
+        - 5GOAM
+      summary: Add to the registry of afServices
+      description: >-
+        Add an afService. One afInstance could have multiple afServices. For
+        this release, one afService corresponds to one locationService
+      operationId: Add
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/locationService'
+      responses:
+        '201':
+          description: Added a new afService.
+          schema:
+            $ref: '#/definitions/afServiceRsp'
+        '400':
+          description: Invalid  properties provided
+          schema: {}
+        '403':
+          description: Unauthorized
+          schema: {}
+    get:
+      tags:
+        - 5GOAM
+      summary: GetAll list of afServices
+      description: Retrieve all the afServices.
+      operationId: GetAll
+      parameters: []
+      responses:
+        '200':
+          description: All the afServices with corresponding afServiceId
+          schema:
+            $ref: '#/definitions/afServiceList'
+        '403':
+          description: Unauthorized
+          schema: {}
+  '/ngcoam/v1/af/services/{afServiceId}':
+    get:
+      tags:
+        - 5GOAM
+      summary: Get afService by ID
+      description: 'Retrieves the af service by {afServiceId}'
+      operationId: Get
+      parameters:
+        - name: afServiceId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The specified afService.
+          schema:
+            $ref: '#/definitions/locationService'
+        '403':
+          description: Unauthorized
+          schema: {}
+        '404':
+          description: not found
+          schema: {}
+    delete:
+      tags:
+        - 5GOAM
+      summary: Delete afService by ID
+      description: 'Deletes the af service by {afServiceId}'
+      operationId: Delete
+      parameters:
+        - name: afServiceId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A successful response.
+          schema: {}
+        '204':
+          description: 'Deleted '
+          schema: {}
+        '403':
+          description: Unauthorized
+          schema: {}
+        '404':
+          description: not found
+          schema: {}
+    patch:
+      tags:
+        - 5GOAM
+      summary: Update afService by ID
+      description: 'Update the af service by {afServiceId}'
+      operationId: Update
+      parameters:
+        - name: afServiceId
+          in: path
+          description: The identifier of the af service (read-only)
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/locationService'
+      responses:
+        '200':
+          description: A successful response.
+          schema: {}
+        '204':
+          description: 'Updated '
+          schema: {}
+        '400':
+          description: Invalid properties provided
+          schema: {}
+        '403':
+          description: Unauthorized
+          schema: {}
+        '404':
+          description: not found
+          schema: {}
+definitions:
+  afServiceId:
+    type: string
+    description: ID of a single AF Service.  32bit INT value
+    example: '12345678'
+  dnn:
+    type: string
+    description: data network name
+  dnai:
+    type: string
+    description: dnai
+  dns:
+    type: string
+    description: DNS IPv4 address
+  upf-ip:
+    type: string
+    description: UPF IPv4 address
+  tac:
+    type: integer
+    description: Decimal value of TAC
+  snssai:
+    type: string
+    description: 'Single Network Slice Selection Assistance Information, ''st-sd'' format'
+  locationService:
+    type: object
+    properties:
+      dnai:
+        $ref: '#/definitions/dnai'
+      dnn:
+        $ref: '#/definitions/dnn'
+      tac:
+        $ref: '#/definitions/tac'
+      priDns:
+        $ref: '#/definitions/dns'
+      secDns:
+        $ref: '#/definitions/dns'
+      upfIp:
+        $ref: '#/definitions/upf-ip'
+      snssai:
+        $ref: '#/definitions/snssai'
+    description: Single location service info
+  afServiceList:
+    type: array
+    items:
+      type: object
+      properties:
+        afServiceId:
+          $ref: '#/definitions/afServiceId'
+        LocationService:
+          $ref: '#/definitions/locationService'
+    description: 'Multiple afServices info '
+  afServiceRsp:
+    type: object
+    properties:
+      afServiceId:
+        $ref: '#/definitions/afServiceId'
+    description: The afService post response body info
+
