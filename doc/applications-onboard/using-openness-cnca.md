@@ -313,7 +313,7 @@ Upon successful registration, subscriptions can be instantiated over the NGC AF.
 
 Un-registration of the AF service can be performed as in the command below:
 ```shell
-kubectl cnca deregister <af-service-id>
+kubectl cnca unregister <af-service-id>
 ```
 
 #### Traffic influence operations with 5G Core (through AF interface)
