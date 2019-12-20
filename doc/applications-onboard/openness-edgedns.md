@@ -43,8 +43,43 @@ del.json
 
 ### OnPrem usage
 
-In OnPremises mode EdgeDNS is by Controller's web interface.
+All applications(VMs and containers) deployed in On-Premise mode can leverage DNS resolution of EdgeDNS service configured through the Controller.
+Only entries that match the `local.mec` domain(e.g `service.local.mec`) can be resolved by deployed applications.
+All entries that are provided to EdgeDNS service can be resolved by data plane clients.
 
+To be able to control EdgeDNS prerequisite need to be satisfied:
+Prerequisite:
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- NTS must be started\configured.
+
+At this point a user can manage DNS entries by following steps:
+- From UI navigate to "NODES" tab click "EDIT" on the edge node, then navigate to "DNS" tab.
+- Add a Name for your DNS rule. In the example provided this is openvino.openness.
+- Click "ADD" beside rerecords field, sub-window titled 'A Record' will pop-up.
+- Add a Name to "A Record" field and provide description.
+- Click on "ADD" near the values field. A field 'values' will pop-up.
+- Provide IP address for DNS entry in the "values" field. For this example this is 192.168.200.20 (It is important to remember this network as later steps on configuring will use interface on same subnet)
+- Click "SAVE" in the bottom right corner.
+
+![DNS Setup in Controller Wen UI](dns-images/DNS.png)
+
+Additionally manual configuration needs to be run from a terminal on the EdgeNode.
+
+Configure DNS container's KNI interface:
+
+```
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 arp off
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip a a 53.53.53.53/24 dev vEth0
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 up
+docker exec -it <Container_ID_of_mec-app-edgednssvr> ip route add 192.168.200.0/24 dev vEth0
+```
+
+Make a request on the DNS interface subnet to register the KNI interface with NTS client (press CTRL + C buttons as soon as a request is made (no expectation for hostname to resolve)):
+
+```
+docker exec -it <Container_ID_of_mec-app-edgednssvr> wget 192.168.200.123 -Y off
+```
 
 ### Network-edge usage
 
