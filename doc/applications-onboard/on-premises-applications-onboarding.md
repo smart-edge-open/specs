@@ -87,10 +87,10 @@ The URL (Source in Controller UI) should be constructed as: `https://controller_
 # Building Applications
 User needs to prepare the applications that will be deployed on the OpenNESS platform in OnPromises mode. Applications should be built as Docker images and should be hosted on some HTTPS server that is available to the EdgeNode.
 
-The OpenNESS [EdgeApps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. They should be downloaded on machine where docker is installed.
+The OpenNESS [EdgeApps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. They should be downloaded on machine where docker is installed.
 
 ## Building the OpenVINO Application images
-The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
 
 To build sample application Docker images for testing OpenVINO consumer and producer applications the following steps are required:
 
@@ -269,7 +269,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 
     Note: Fields `Port` and `Protocol` have no affect on the application
 
-    Note: When creating a new application, there is an option to specify a key/value pair which defines an enhanced platform awareness (EPA) feature. If set, this key/value pair will be used to configure the feature when deploying an application to an edge node. For more information on the EPA features supported by OpenNESS, please see [Enhanced Platform Awareness](https://github.com/otcshare/specs/tree/master/doc/enhanced-platform-awareness).
+    Note: When creating a new application, there is an option to specify a key/value pair which defines an enhanced platform awareness (EPA) feature. If set, this key/value pair will be used to configure the feature when deploying an application to an edge node. For more information on the EPA features supported by OpenNESS, please see [Enhanced Platform Awareness](https://github.com/open-ness/specs/tree/master/doc/enhanced-platform-awareness).
 
     Note: Deployment of consumer application should be done by analogy
 
@@ -293,7 +293,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 ### Starting traffic from Client Simulator
 
 1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
-2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
+2. Run the following from [edgeapps/openvino/clientsim](https://github.com/open-ness/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
    ```
    ./run_docker.sh
    ```

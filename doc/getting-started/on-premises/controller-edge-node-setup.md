@@ -78,7 +78,7 @@ Note that there might be some leftovers created by installed software.
 
 ## Manual steps
 
-> *Ansible Controller* is a machine with [openness-experience-kits](https://github.com/otcshare/openness-experience-kits) repo and it's used to configure *Edge Controller* and *Edge Nodes*. Please be careful not to confuse them.
+> *Ansible Controller* is a machine with [openness-experience-kits](https://github.com/open-ness/openness-experience-kits) repo and it's used to configure *Edge Controller* and *Edge Nodes*. Please be careful not to confuse them.
 
 After the deployment scripts are run there are still some manual steps required to setup the environment.
 

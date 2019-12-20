@@ -18,7 +18,7 @@ Machines connected to attached interface can communicate with K8s pods of the wo
   ip a a 192.168.1.5/24 dev eth1
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
-> NOTE: Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness_howto.md#kubernetes-networkpolicies) for example policy allowing ingress traffic from `192.168.1.0` subnet on specific port. 
+> NOTE: Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness_howto.md#kubernetes-networkpolicies) for example policy allowing ingress traffic from `192.168.1.0` subnet on specific port. 
 
 
 ## Usage

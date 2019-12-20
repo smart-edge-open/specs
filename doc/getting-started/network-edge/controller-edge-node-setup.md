@@ -70,7 +70,7 @@ For example, when installing Docker - RPM repository is added and Docker install
 Note that there might be some leftovers created by installed software.
 
 ### Supported EPA features
-A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [supported-epa.md](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md), the documents referenced in the list provide detailed description of the features and step by step instructions how to enable them. The user is advised to get familiarized with the features available before executing the deployment playbooks.
+A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [supported-epa.md](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md), the documents referenced in the list provide detailed description of the features and step by step instructions how to enable them. The user is advised to get familiarized with the features available before executing the deployment playbooks.
 
 ### Quickstart
 The following is a complete set of actions that need to be completed to successfully set up OpenNESS cluster.
@@ -84,7 +84,7 @@ The following is a complete set of actions that need to be completed to successf
 
 ### Application on-boarding
 
-Please refer to [network-edge-applications-onboarding.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+Please refer to [network-edge-applications-onboarding.md](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
 
 # Q&A
 
