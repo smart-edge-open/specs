@@ -6,10 +6,10 @@ Copyright (c) 2019 Intel Corporation
 # OpenNESS Quick Start
 
    ## <b>Network Edge</b> 
-   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md)  
+   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md)  
 
    ## <b>OnPremises Edge</b> 
-   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/on-premises/controller-edge-node-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
+   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/on-premises/controller-edge-node-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
 
 # OpenNESS solution documentation index
 
