@@ -42,7 +42,7 @@ Below is the complete list of OpenNESS solution documentation
 
 ## Core Network - 4G and 5G  
 
-* [<b>core-network</b>: Folder containing details of 4G CUPS and 5G edge cloud deployment support](./core-network)
+* [<b>core-network</b>: Folder containing details of 4G CUPS and 5G edge cloud deployment support](https://github.com/open-ness/specs/tree/master/doc/core-network)
    * [<b>openness_epc.md</b>: Whitepaper detailing the 4G CUPS support for Edge cloud deployment in OpenNESS for Network and OnPremises Edge](https://github.com/open-ness/specs/blob/master/doc/core-network/openness_epc.md)
    * [<b>openness_ngc.md</b>: Whitepaper detailing the 5G Edge Cloud deployment support in OpenNESS for Network and OnPremises Edge](https://github.com/open-ness/specs/blob/master/doc/core-network/openness_ngc.md)
 
@@ -61,8 +61,8 @@ Below is the complete list of OpenNESS solution documentation
 ## Dataplane
 
 * [<b>dataplane</b>: Folder containing Dataplane and inter-app infrastructure support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/dataplane)
-   * [<b>openness_interapp.md</b>: InterApp Communication support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness_interapp.md)
-   * [<b>openness_ovn.md</b>: OpenNESS Support for OVS as dataplane with OVN](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness_ovn.md)
+   * [<b>openness-interapp.md</b>: InterApp Communication support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-interapp.md)
+   * [<b>openness-ovn.md</b>: OpenNESS Support for OVS as dataplane with OVN](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-ovn.md)
    * [<b>openness-nts.md</b>: Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-nts.md)
 
 ## Edge Applications 
