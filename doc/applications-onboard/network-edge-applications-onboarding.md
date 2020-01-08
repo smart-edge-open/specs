@@ -391,7 +391,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
 
 > **NOTE:**  If the video window is not popping up and/or an error like `Could not find codec parameters for stream 0` appears, add a rule in firewall to permit ingress traffic on port `5001`:
 >  ```shell
->  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 5001 -j ACCEPT
+>  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p udp --dport 5001 -j ACCEPT
 >  firewall-cmd --reload
 >  ```
 
