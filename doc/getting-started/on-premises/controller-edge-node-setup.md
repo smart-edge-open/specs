@@ -23,6 +23,7 @@ Copyright (c) 2019 Intel Corporation
       - [Starting NTS](#starting-nts)
 - [Q&amp;A](#qampa)
   - [Configuring time](#configuring-time)
+  - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
   - [Exchanging SSH keys with hosts](#exchanging-ssh-keys-with-hosts)
   - [Setting proxy](#setting-proxy)
@@ -40,6 +41,8 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 In order to use the playbooks several preconditions must be fulfilled:
 
 - Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
+
+- Hosts for Edge Controller and Edge Nodes must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
 
 - Inventory must be configured (refer to [Configuring inventory](#configuring-inventory))
 
@@ -312,6 +315,22 @@ Root delay      : 0.008066391 seconds
 Root dispersion : 0.003803928 seconds
 Update interval : 130.2 seconds
 Leap status     : Normal
+```
+
+## Setup static hostname
+
+In order to set some custom static hostname a command can be used:
+
+```
+hostnamectl set-hostname <host_name>
+```
+
+Make sure that static hostname provided is proper and unique.
+The hostname provided needs to be defined in /etc/hosts as well:
+
+```
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 <host_name>
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 <host_name>
 ```
 
 ## Configuring inventory
