@@ -14,7 +14,7 @@ Copyright (c) 2019 Intel Corporation
   - [Manual steps](#manual-steps)
     - [Enrolling Nodes with Controller](#enrolling-nodes-with-controller)
       - [First Login](#first-login)
-      - [Enrollment](#enrollment)
+      - [Manual enrollment](#manual-enrollment)
     - [NTS Configuration](#nts-configuration)
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
       - [Creating Traffic Policy](#creating-traffic-policy)
@@ -108,7 +108,9 @@ The following steps need to be done for successful login:
 
 ![Login screen](../../applications-onboard/howto-images/login.png)
 
-#### Enrollment
+#### Manual enrollment
+
+> NOTE: Following steps are now part of Ansible automated platform setup. Manual steps are left for reference.
 
 In order for the Controller and Edge Node to work together the Edge Node needs to enroll with the Controller. The Edge Node will continuously try to connect to the controller until its serial key is recognized by the Controller.
 
