@@ -12,7 +12,7 @@ Copyright (c) 2019 Intel Corporation
     - [Supported EPA features](#supported-epa-features)
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
-- [Q&amp;A](#qampa)
+- [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
@@ -22,6 +22,7 @@ Copyright (c) 2019 Intel Corporation
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
   - [Installing Kubernetes Dashboard](#installing-kubernetes-dashboard)
+  - [Customization of kernel, grub parameters and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
 # Preconditions
 
@@ -258,7 +259,7 @@ proxy_os_ftp: "http://proxy.example.com:3128"
 proxy_os_noproxy: "localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ```
 > NOTE: Ensure the no_proxy environment variable in your profile is set
->  
+>
 >     export no_proxy="localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ## Setting Git
 
@@ -341,7 +342,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 
 7. Open the dashboard from the browser at `https://<controller-ip>:<port>/`, use the port that was noted in the previous steps
 
-> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue. 
+> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
 8. Capture the bearer token using this command
 
@@ -370,3 +371,8 @@ _Figure - Kubernetes Dashboard Login_
 
 11. The OpenNESS controller landing page is accessible at `http://<LANDING_UI_URL>/`.
     > **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
+
+
+## Customization of kernel, grub parameters and tuned profile
+
+OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).

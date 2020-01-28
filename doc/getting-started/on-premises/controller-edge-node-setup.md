@@ -31,6 +31,7 @@ Copyright (c) 2019 Intel Corporation
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
   - [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)
+  - [Customization of kernel, grub parameters and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
 # Purpose
 
@@ -465,3 +466,7 @@ Alternatively to reading from /opt/edgenode/verification_key.txt Edge Node's ser
 ```bash
 openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
 ```
+
+## Customization of kernel, grub parameters and tuned profile
+
+OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).
