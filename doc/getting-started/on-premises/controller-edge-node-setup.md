@@ -21,7 +21,7 @@ Copyright (c) 2019 Intel Corporation
       - [Adding Traffic Policy to Interface](#adding-traffic-policy-to-interface)
       - [Configuring Interface](#configuring-interface)
       - [Starting NTS](#starting-nts)
-- [Q&amp;A](#qampa)
+- [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
@@ -106,7 +106,7 @@ The following steps need to be done for successful login:
 4. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all.yml*).
 5. Click on "SIGN IN" button.
 
-![Login screen](../../applications-onboard/howto-images/login.png)
+![Login screen](controller-edge-node-setup-images/login.png)
 
 #### Manual enrollment
 
@@ -124,17 +124,17 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 2. Navigate to 'NODES' tab.
 3. Click on 'ADD EDGE NODE' button.
 
-![Add Edge Node 1](../../applications-onboard/howto-images/Enroll1.png)
+![Add Edge Node 1](controller-edge-node-setup-images/Enroll1.png)
 
 4. Enter previously obtained Edge Node Serial Key into 'Serial*' field (Step 1).
 5. Enter the name and location of Edge Node.
 6. Press 'ADD EDGE NODE'.
 
-![Add Edge Node 2](../../applications-onboard/howto-images/Enroll2.png)
+![Add Edge Node 2](controller-edge-node-setup-images/Enroll2.png)
 
 7. Check that your Edge Node is visible under 'List of Edge Nodes'.
 
-![Add Edge Node 3](../../applications-onboard/howto-images/Enroll3.png)
+![Add Edge Node 3](controller-edge-node-setup-images/Enroll3.png)
 
 ### NTS Configuration
 OpenNESS data-plane interface configuration.
@@ -149,12 +149,12 @@ To check the interfaces available on the Edge Node execute following steps:
 2. Find you Edge Node on the list.
 3. Click 'EDIT'.
 
-![Check Edge Node Interfaces 1](../../applications-onboard/howto-images/CheckingNodeInterfaces.png)
+![Check Edge Node Interfaces 1](controller-edge-node-setup-images/CheckingNodeInterfaces.png)
 
 5. Navigate to 'INTERFACES' tab.
 6. Available interfaces are listed.
 
-![Check Edge Node Interfaces 2](../../applications-onboard/howto-images/CheckingNodeInterfaces1.png)
+![Check Edge Node Interfaces 2](controller-edge-node-setup-images/CheckingNodeInterfaces1.png)
 
 #### Creating Traffic Policy
 Prerequisites:
@@ -167,7 +167,7 @@ The steps to create a sample traffic policy are as follows:
 
 > Note: This specific traffic policy is only an example.
 
-![Creating Traffic Policy 1](../../applications-onboard/howto-images/CreatingTrafficPolicy.png)
+![Creating Traffic Policy 1](controller-edge-node-setup-images/CreatingTrafficPolicy.png)
 
 3. Give policy a name.
 4. Click 'ADD' next to 'Traffic Rules*' field.
@@ -183,11 +183,11 @@ The steps to create a sample traffic policy are as follows:
   - Target -> Action: accept
 6. Click on "CREATE".
 
-![Creating Traffic Policy 2](../../applications-onboard/howto-images/CreatingTrafficPolicy2.png)
+![Creating Traffic Policy 2](controller-edge-node-setup-images/CreatingTrafficPolicy2.png)
 
 After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
 
-![Creating Traffic Policy 3](../../applications-onboard/howto-images/CreatingTrafficPolicy3.png)
+![Creating Traffic Policy 3](controller-edge-node-setup-images/CreatingTrafficPolicy3.png)
 
 #### Adding Traffic Policy to Interface
 Prerequisites:
@@ -202,7 +202,7 @@ To add a previously created traffic policy to an interface available on Edge Nod
 
 > Note: This step is instructional only, users can decide if they need/want a traffic policy designated for their interface, or if they desire traffic policy designated per application instead.
 
-![Adding Traffic Policy To Interface 1](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface1.png)
+![Adding Traffic Policy To Interface 1](controller-edge-node-setup-images/AddingTrafficPolicyToInterface1.png)
 
 4. Navigate to "INTERFACES" tab.
 5. Find desired interface which will be used to add traffic policy.
@@ -210,11 +210,11 @@ To add a previously created traffic policy to an interface available on Edge Nod
 7. A window titled 'Assign Traffic Policy to interface' will pop-up. Select a previously created traffic policy.
 8. Click on 'ASSIGN'.
 
-![Adding Traffic Policy To Interface 2](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface2.png)
+![Adding Traffic Policy To Interface 2](controller-edge-node-setup-images/AddingTrafficPolicyToInterface2.png)
 
 On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Traffic Policy' column for desired interface. These buttons can be respectively used for editing and removing traffic rule policy on that interface.
 
-![Adding Traffic Policy To Interface 3](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface3.png)
+![Adding Traffic Policy To Interface 3](controller-edge-node-setup-images/AddingTrafficPolicyToInterface3.png)
 
 #### Configuring Interface
 Prerequisites:
@@ -228,7 +228,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 | WARNING: do not modify a NIC which is used for Internet connection! |
 | --- |
 
-![Configuring Interface 1](../../applications-onboard/howto-images/AddingInterfaceToNTS.png)
+![Configuring Interface 1](controller-edge-node-setup-images/AddingInterfaceToNTS.png)
 
 1. A window will pop-up titled "Edit Interface". The following fields need to be set:
   - Driver: userspace
@@ -237,11 +237,11 @@ In order to configure interface available on the Edge Node for the NTS the follo
   - In case of two interfaces being configured, one for 'Upstream' another for 'Downstream', the fallback interface for 'Upstream' is the 'Downstream' interface and vice versa.
 2. Click 'SAVE'.
 
-![Configuring Interface 2](../../applications-onboard/howto-images/AddingInterfaceToNTS1.png)
+![Configuring Interface 2](controller-edge-node-setup-images/AddingInterfaceToNTS1.png)
 
 3. The interface's 'Driver' and 'Type' columns will reflect changes made.
 
-![Configuring Interface 3](../../applications-onboard/howto-images/AddingInterfaceToNTS2.png)
+![Configuring Interface 3](controller-edge-node-setup-images/AddingInterfaceToNTS2.png)
 
 #### Starting NTS
 Prerequisite:
@@ -258,11 +258,11 @@ Once the interfaces are configured accordingly the following steps need to be do
 1. From UI navigate to 'INTERFACES' tab of the Edge Node.
 2. Click 'COMMIT CHANGES'
 
-![Starting NTS 1](../../applications-onboard/howto-images/StartingNTS.png)
+![Starting NTS 1](controller-edge-node-setup-images/StartingNTS.png)
 
 3. NTS will start
 
-![Starting NTS 2](../../applications-onboard/howto-images/StartingNTS2.png)
+![Starting NTS 2](controller-edge-node-setup-images/StartingNTS2.png)
 
 4. Make sure that the **nts** and **edgednssvr** containers are running on an *Edge Node* machine:
 
