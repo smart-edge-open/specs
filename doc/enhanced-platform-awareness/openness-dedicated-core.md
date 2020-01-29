@@ -12,7 +12,7 @@ Copyright (c) 2019 Intel Corporation
     - [Usage](#usage)
   - [Reference](#reference)
 
-## Overview 
+## Overview
 
 Multi-core COTS platforms are typical in any cloud or Cloudnative deployment. Parallel processing on multiple cores helps achieve better density. On a Multi-core platform, one challenge for applications and network functions that are latency and throughput density is deterministic compute. To achieve deterministic compute allocating dedicated resources is important. Dedicated resource allocation avoids interference with other applications (Noisy Neighbor). When deploying on a cloud native platform, applications are deployed as PODs, therefore, providing required information to the container orchestrator on dedicated CPU cores is key. CPU manager allows provisioning of a POD to dedicated cores.
 
@@ -68,8 +68,7 @@ CMK documentation available on github includes:
 **Edge Node / Kubernetes worker**
 
 1. Configure Edge Node in Network Edge mode using ne_node.yml, following roles must be enabled kubernetes/worker, kubeovn/worker and cmk/worker.
-2. To change core isolation and tuned realtime profile settings edit `os_kernel_rt_tuned_vars` in `roles/os_kernelrt/defaults/main.yml`.
-The changes will affect all edge nodes in the inventory, to set the parameter only for a specific node add the variable `os_kernel_rt_tuned_vars` to host_vars/node-name-in-inventory.yml.
+2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
 3. Deploy the node with deploy_ne_node.sh.
 
 Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
