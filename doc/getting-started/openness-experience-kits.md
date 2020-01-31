@@ -21,6 +21,7 @@ Copyright (c) 2019 Intel Corporation
     - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
     - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
     - [Add custom GRUB parameter](#add-custom-grub-parameter)
+    - [Configure OVS-DPDK inside kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
 
 ## Purpose
 
@@ -171,4 +172,25 @@ default_grub_params: "hugepagesz={{ hugepage_size }} hugepages={{ hugepage_amoun
 ### Add custom GRUB parameter
 ```yaml
 additional_grub_params: "debug"
+```
+
+### Configure ovs-dpdk in kube-ovn
+By default OVS-DPDK is enabled. To be able to disable it please set a flag:
+```yaml
+ovs_dpdk: false
+```
+Additionally hugepages in ovs pod can be adjusted once default hugepage settings are changed. 
+```yaml
+ovs_dpdk_hugepage_size: "2Mi"
+ovs_dpdk_hugepages: "1Gi"
+```
+OVS pods limits are configured by:
+```yaml
+ovs_dpdk_resources_requests: "1Gi"
+ovs_dpdk_resources_limits: "1Gi"
+```
+CPU settings can be configured using:
+```yaml
+ovs_dpdk_pmd_cpu_mask: "0x4"
+ovs_dpdk_lcore_mask: "0x2"
 ```
