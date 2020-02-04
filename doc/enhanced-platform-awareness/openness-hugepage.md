@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# Hugepage support on OpenNESS 
+# Hugepage support on OpenNESS
 
 - [Hugepage support on OpenNESS](#hugepage-support-on-openness)
   - [Overview](#overview)
@@ -12,15 +12,15 @@ Copyright (c) 2019 Intel Corporation
     - [OnPrem mode](#onprem-mode)
   - [Reference](#reference)
 
-## Overview 
+## Overview
 
-Memory is allocated to application processes in terms of pages - by default the 4K pages are supported. For Applications dealing with larger datasets, using 4K pages may lead to performance degradation and overhead because of TLB misses. To address this, modern CPUs support huge pages which are typically 2M and 1G. This helps avoid TLB miss overhead and therefore improves performance. 
+Memory is allocated to application processes in terms of pages - by default the 4K pages are supported. For Applications dealing with larger datasets, using 4K pages may lead to performance degradation and overhead because of TLB misses. To address this, modern CPUs support huge pages which are typically 2M and 1G. This helps avoid TLB miss overhead and therefore improves performance.
 
-Both Applications and Network functions can gain in performance from using hugepages. Huge page support, added to Kubernetes v1.8, enables the discovery, scheduling and allocation of huge pages as a native first-class resource. This support addresses low latency and deterministic memory access requirements. 
+Both Applications and Network functions can gain in performance from using hugepages. Huge page support, added to Kubernetes v1.8, enables the discovery, scheduling and allocation of huge pages as a native first-class resource. This support addresses low latency and deterministic memory access requirements.
 
 ## Details of Hugepage support on OpenNESS
 
-Hugepages are enabled by default. There are two parameters that are describing the hugepages: the size of single page (can be 2MB or 1GB) and amount of those pages. In network edge deployment there is, enabled by default, 500 of 2MB hugepages (which equals to 2GB of memory) per node/controller, and in OnPrem deployment hugepages are enabled only for nodes and the default is 5000 of 2MB pages (10GB). If you want to change those settings you will need to edit config files as described below. All the settings have to be adjusted before OpenNESS installation. 
+Hugepages are enabled by default. There are two parameters that are describing the hugepages: the size of single page (can be 2MB or 1GB) and amount of those pages. In network edge deployment there is, enabled by default, 500 of 2MB hugepages (which equals to 2GB of memory) per node/controller, and in OnPrem deployment hugepages are enabled only for nodes and the default is 5000 of 2MB pages (10GB). If you want to change those settings you will need to edit config files as described below. All the settings have to be adjusted before OpenNESS installation.
 
 ### Network edge mode
 
@@ -38,23 +38,25 @@ To set the page size of 1GB:
 hugepage_size: "1G"
 ```
 
-The amount of hugepages can be set separately for both controller and nodes. To set the amount of hugepages for controller please change the value of variable `hugepage_amount` in `ne_controller.yml`:
+The amount of hugepages can be set separately for both controller and nodes. To set the amount of hugepages for controller please change the value of variable `hugepage_amount` in `network_edge.yml`:
 
 For example:
 
 ```yaml
-vars:
+- hosts: controller_group
+  vars:
     hugepage_amount: "1500"
 ```
 
 will enable 1500 pages of the size specified by `hugepage_size` variable.
 
-To set the amount of hugepages for nodes please change the value of variable `hugepage_amount` in `ne_node.yml`:
+To set the amount of hugepages for nodes please change the value of variable `hugepage_amount` in `network_edge.yml` :
 
 For example:
 
 ```yaml
-vars:
+- hosts: edgenode_group
+  vars:
     hugepage_amount: "3000"
 ```
 
@@ -80,6 +82,5 @@ hugepage_amount: "5"
 
 will enable 5 pages, 1GB each.
 
-## Reference 
+## Reference
 - [Hugepages support in Kubernetes](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/)
-

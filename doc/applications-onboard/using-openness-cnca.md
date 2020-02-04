@@ -1,5 +1,7 @@
-SPDX-License-Identifier: Apache-2.0     
-Copyright © 2019 Intel Corporation  
+```text
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019 Intel Corporation
+```
 
 - [4G/LTE Core Configuration using CNCA](#4glte-core-configuration-using-cnca)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode)
@@ -120,7 +122,7 @@ In case of On-Premises deployment mode, Core network can be configured through t
 ### CUPS UI Prerequisites
 
 - Controller installation, configuration and run as root. Before building, setup the controller env file for CUPS as below:
-  
+
 ```
   REACT_APP_CONTROLLER_API=http://<controller_ip_address>>:8080
   REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080
@@ -135,15 +137,15 @@ In case of On-Premises deployment mode, Core network can be configured through t
     `make all-up`
 
     > NOTE: To bring up just the CUPS UI run `make cups-ui-up`
-  - Check whether controller CUPS UI already bring up by: 
+  - Check whether controller CUPS UI already bring up by:
 
 ```
-    Docker ps 
+    Docker ps
     CONTAINER ID   IMAGE        COMMAND                  CREATED     STATUS      PORTS
     0eaaafc01013   cups:latest  "docker-entrypoint.s…"   8 days ago  Up 8 days   0.0.0.0:3010->80/tcp
     d732e5b93326   ui:latest    "docker-entrypoint.s…"   9 days ago  Up 9 days   0.0.0.0:3000->80/tcp
     8f055896c767   cce:latest   "/cce -adminPass cha…"   9 days ago  Up 9 days   0.0.0.0:6514->6514/tcp, 0.0.0.0:8080-8081->8080-8081/tcp, 0.0.0.0:8125->8125/tcp
-    d02b5179990c   mysql:8.0    "docker-entrypoint.s…"   13 days ago Up 9 days   33060/tcp, 0.0.0.0:8083->3306/tcp  
+    d02b5179990c   mysql:8.0    "docker-entrypoint.s…"   13 days ago Up 9 days   33060/tcp, 0.0.0.0:8083->3306/tcp
 ```
 
 - OAMAgent(called EPC-OAM) and EPC Control plane installation, configuration and run as `root`.
@@ -158,11 +160,11 @@ In case of On-Premises deployment mode, Core network can be configured through t
 - REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080 added to Controller's "~/controller/.env" file.
 - Controller full stack including CUPS UI are running.
 - Oamagent and EPC are running.
-- Confirm connection between controller and oamagent (EPC). 
+- Confirm connection between controller and oamagent (EPC).
 
 #### Steps to access UI
 
-- Open any internet browser 
+- Open any internet browser
 - Type in "http://<Controller_ip_address>:3010/userplanes" in address bar.
 - This will display all the existing EPC user planes list as shown below:
   &nbsp;
@@ -172,16 +174,16 @@ In case of On-Premises deployment mode, Core network can be configured through t
 
 - Identify the specific userplane using the UUID to get additional information
 - Click on **EDIT** as shown below
-  &nbsp;  
+  &nbsp;
   ![Edit screen](cups-howto-images/edit.png)
   &nbsp;
 
 - User plane information is displayed as shown below
-  &nbsp; 
+  &nbsp;
   ![Userplane5 screen](cups-howto-images/userplane5.png)
   &nbsp;
 
-- Update parameters: any of the parameters _{S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC, APN}_ as needed and then click on **Save**. 
+- Update parameters: any of the parameters _{S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC, APN}_ as needed and then click on **Save**.
   **NOTE** A pop up window will appear with “successfully updated userplane”
   &nbsp;
   ![Userplane5Update screen](cups-howto-images/userplane5_update.png)
@@ -202,7 +204,7 @@ In case of On-Premises deployment mode, Core network can be configured through t
   &nbsp;
 
 - After that, web page will automatically return back to the updated user plane list as shown below
-  &nbsp; 
+  &nbsp;
   ![UserplaneCreateList screen](cups-howto-images/userplane_create_thenlist.png)
   &nbsp;
 
@@ -211,7 +213,7 @@ In case of On-Premises deployment mode, Core network can be configured through t
 - Find the user plane to delete using UUID and click **EDIT**
 
 - Then web page will list the user plane information, and then click on **DELETE USERPLANE** with popup message with **successfully deleted userplane** as shown below
-  &nbsp;  
+  &nbsp;
   ![UserplaneDelete screen](cups-howto-images/userplane_delete.png)
   &nbsp;
 
@@ -232,18 +234,18 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 ## Network Edge mode
 
-### Bring-up of NGC components in Network Edge mode 
+### Bring-up of NGC components in Network Edge mode
 
-1. If the Edge controller is not yet deployed through openness-experience-kit then: 
-  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/ne_controller.yml` before starting `deploy_ne_controller.sh` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
+1. If the Edge controller is not yet deployed through openness-experience-kit then:
+  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/network_edge.yml` before running `deploy_ne.sh controller` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/ne_controller.yml` and then re-run `deploy_ne_controller.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/network_edge.yml` and then re-run `deploy_ne.sh controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
 
-    **NOTE:** 
-    In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs. 
+    **NOTE:**
+    In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.
 
-3. On successful start of AF, NEF and OAM PODs, status of PODS and Services can verified using the below commands: 
+3. On successful start of AF, NEF and OAM PODs, status of PODS and Services can verified using the below commands:
    - `kubectl get pods --all-namespaces`
   expected out as below:
   ![NGC list of PODS](using-openness-cnca-images/ngc_pods_list_output.png)
@@ -251,12 +253,12 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
    - `kubectl get services--all-namespaces`
     expected out as below:
     ![NGC list of PODS](using-openness-cnca-images/ngc_services_list_output.png)
-  
+
     *NOTE: In general, below steps #4 and #5 are not needed. If user wants to change the hostname/ip-address parameters for AF/NEF/OAM then #4 and #5 will provide the guidance.*
 
 4. After all the PODs are successfully up and running, few AF and OAM configuration parameters need to be updated (as per your deployment configuration) and then re-start the AF.
 
-   * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters. 
+   * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * `"NEFHostname": "localhost"` : Replace the `localhost` with `nefservice` ie., service name NEF POD.
    * Save and exit.
@@ -268,7 +270,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ![NGC list of PODS](using-openness-cnca-images/ngc_af_service_config_log.png)
 
 5. To update OAM configuration and restart OAM micro service:
-   * Open the file `/etc/openness/configs/ngc/oam.json` and modify the below parameters. 
+   * Open the file `/etc/openness/configs/ngc/oam.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * Save and exit.
    * Now restart OAM POD using the below command:
@@ -391,7 +393,7 @@ policy:
 
 ### Bringing up NGC components in On-Premises mode
 
-  To bring-up the NGC components in on-premises mode, enable the rule `ngc_test/onprem/master` in the file: `openness-experience-kits/onprem_controller.yml`. and then run the script `deploy_onprem_controller.sh`  as described in [OpenNESS On-Premise: Controller and Edge node setup document](../getting-started/on-premises/controller-edge-node-setup.md).
+  To bring-up the NGC components in on-premises mode, enable the rule `ngc_test/onprem/master` in the file: `openness-experience-kits/on_premises.yml`. and then run the script `deploy_onprem.sh controller`  as described in [OpenNESS On-Premise: Controller and Edge node setup document](../getting-started/on-premises/controller-edge-node-setup.md).
 
 ### Configuring in On-Premises mode
 
@@ -416,7 +418,7 @@ policy:
    * Display of registered edge servers with 5G Core
       ![Edge services display](using-openness-cnca-images/oam_services_display.png)
 
-   * To edit a registered services 
+   * To edit a registered services
       ![Edge services edit](using-openness-cnca-images/oam_services_edit.png)
 
    * To delete a registered service
@@ -430,7 +432,7 @@ policy:
 
    * Edge traffic subscription submissions with 5G-Core (NEF)
       click on the "Create" button on the above homepage
-      NOTE: "AF Service Id" field should be the same as the value returned through the AF services create request. In the below sample screen capture shows a different value.  
+      NOTE: "AF Service Id" field should be the same as the value returned through the AF services create request. In the below sample screen capture shows a different value.
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part1.png)
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part2.png)
       ![Subscription service create](using-openness-cnca-images/af_subscription_create_part3.png)
@@ -464,7 +466,7 @@ This sections describes the paramters that are used in the Traffic Influce subsc
 |dnn|Identifies a DNN|
 |snssai|Identifies an S-NSSAI|
 
-Note: One of afServiceId or dnn shall be included 
+Note: One of afServiceId or dnn shall be included
 
 |Attribute name|Description|
 |--------------|-----------|
@@ -472,7 +474,7 @@ Note: One of afServiceId or dnn shall be included
 |trafficFilters|Identifies IP packet filters|
 |ethTrafficFilters|Identifies Ethernet packet filters|
 
-Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be included 
+Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be included
 
 ### Target UE Identifier (Mandatory)
 |Attribute name|Description|
@@ -480,7 +482,7 @@ Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be include
 |externalGroupId|Identifies a group of users|
 |anyUeInd|Identifies whether the AF request applies to any UE. This attribute shall set to "true" if applicable for any UE, otherwise, set to "false"|
 |gpsi|Identifies a user|
-|ipv4Addr|Identifies the IPv4 address| 
+|ipv4Addr|Identifies the IPv4 address|
 |ipv6Addr|Identifies the IPv6 address|
 |macAddr|Identifies the MAC address|
 
@@ -491,7 +493,7 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 |--------------|-----------|
 |appReloInd |Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise set to "false". Default value is "false" if omitted |
 
-### Traffic Routing (Optional) 
+### Traffic Routing (Optional)
 |Attribute name|Description|
 |--------------|-----------|
 |trafficRoutes|Identifies the N6 traffic routing requirement|
@@ -519,4 +521,3 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 |suppFeat|Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
 |requestTestNotification|Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3 of 3GPP TS 29.122 [4]. Set to false or omitted otherwise|
 |websockNotifConfig|Configuration parameters to set up notification delivery over Websocket protocol|
-

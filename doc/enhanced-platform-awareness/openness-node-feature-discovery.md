@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# Node Feature Discovery support in OpenNESS 
+# Node Feature Discovery support in OpenNESS
 
 - [Node Feature Discovery support in OpenNESS](#node-feature-discovery-support-in-openness)
   - [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
@@ -11,15 +11,15 @@ Copyright (c) 2019 Intel Corporation
     - [Usage](#usage)
   - [Reference](#reference)
 
-## Overview of NFD and Edge usecase 
+## Overview of NFD and Edge usecase
 
-COTS Platforms used for edge deployment come with many features that enable workloads take advantage of, to provide better performance and meet the SLA. When such COTS platforms are deployed in a cluster as part of a Cloudnative deployment it becomes important to detect the hardware and software features on all nodes that are part of that cluster. It should also be noted that some of the nodes might have special accelerator hardware like FPGA, GPU, NVMe, etc. 
+COTS Platforms used for edge deployment come with many features that enable workloads take advantage of, to provide better performance and meet the SLA. When such COTS platforms are deployed in a cluster as part of a Cloudnative deployment it becomes important to detect the hardware and software features on all nodes that are part of that cluster. It should also be noted that some of the nodes might have special accelerator hardware like FPGA, GPU, NVMe, etc.
 
 Let us consider an edge application like CDN that needs to be deployed in the cloud native edge cloud. It would be favorable for a Container orchestrator like Kubernetes to detect the nodes that have CDN friendly hardware and software features like NVMe, media extensions and so on.
 
 Now let us consider a Container Network Function (CNF) like 5G gNb that implements L1 5G NR base station. It would be favorable for the Container orchestrator like Kubernetes to detect nodes that have hardware and software features like FPGA acceleration for Forward error correction, Advanced vector instructions to implement math functions, real-time kernel and so on.
 
-OpenNESS supports the discovery of such features using Node Feature Discovery (NFD). NFD is a Kubernetes add-on that detects and advertises hardware and software capabilities of a platform that can, in turn, be used to facilitate intelligent scheduling of a workload. Node Feature Discovery is one of the Intel technologies that supports targeting of intelligent configuration and capacity consumption of platform capabilities. NFD runs as a separate container on each individual node of the cluster, discovers capabilities of the node, and finally, publishes these as node labels using the Kubernetes API. NFD only handles non-allocatable features. 
+OpenNESS supports the discovery of such features using Node Feature Discovery (NFD). NFD is a Kubernetes add-on that detects and advertises hardware and software capabilities of a platform that can, in turn, be used to facilitate intelligent scheduling of a workload. Node Feature Discovery is one of the Intel technologies that supports targeting of intelligent configuration and capacity consumption of platform capabilities. NFD runs as a separate container on each individual node of the cluster, discovers capabilities of the node, and finally, publishes these as node labels using the Kubernetes API. NFD only handles non-allocatable features.
 
 Some of the Node features that NFD can detect include:
 
@@ -48,7 +48,7 @@ _Figure - CDN app deployment with NFD Features_
 
 ## Details - Node Feature Discovery support in OpenNESS
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `ne_controller.yml` file and commenting out `nfd` role before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `network_edge.yml` file and commenting out `nfd` role before OpenNESS installation.
 
 Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
 
@@ -111,5 +111,5 @@ spec:
     feature.node.kubernetes.io/cpu-pstate.turbo: 'true'
 ```
 
-## Reference 
+## Reference
 More details about NFD can be found here: https://github.com/Intel-Corp/node-feature-discovery

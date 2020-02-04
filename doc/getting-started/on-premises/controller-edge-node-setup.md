@@ -56,10 +56,11 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be played by running helper deploy scripts.
-Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for On Premise mode:
-  - `cleanup_onprem.sh`
-  - `deploy_onprem_controller.sh`
-  - `deploy_onprem_node.sh`
+Convention for the scripts is: `action_mode.sh [group]`. Following scripts are available for On Premise mode:
+  - `cleanup_onprem.sh [ controller | nodes ]`
+  - `deploy_onprem.sh [ controller | nodes ]`
+
+To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and `deploy_ne.sh controller` respectively.
 
 > NOTE: All nodes provided in the inventory might get rebooted during the installation.
 
@@ -69,7 +70,7 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
 
 ## On Premise Playbooks
 
-`onprem_controller.yml`, `onprem_node.yml` and `onprem_cleanup.yml` contain playbooks for On Premise mode. Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
+`on_premises.yml` and `on_premises_cleanup.yml` contain playbooks for On Premise mode. Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
 
 ### Cleanup playbooks
 

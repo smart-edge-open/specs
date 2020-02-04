@@ -32,7 +32,7 @@ _Figure - CPU Manager support on OpenNESS_
 
 The following section outlines some considerations for using CPU Manager(CMK):
 
-- If the workload already uses a threading library (e.g. pthread) and uses set affinity like APIs then CMK might not be needed. For such workloads, in order to provide cores to use for deployment, Kubernetes ConfigMaps is the recommended methodology. ConfigMaps can be used to pass the CPU core mask to the application to use. 
+- If the workload already uses a threading library (e.g. pthread) and uses set affinity like APIs then CMK might not be needed. For such workloads, in order to provide cores to use for deployment, Kubernetes ConfigMaps is the recommended methodology. ConfigMaps can be used to pass the CPU core mask to the application to use.
 - The workload is a medium to long-lived process with inter-arrival times of the order of ones to tens of seconds or greater.
 - After a workload has started executing, there is no need to dynamically update its CPU assignments.
 - Machines running workloads explicitly isolated by cmk must be guarded against other workloads that do not consult the cmk tool chain. The recommended way to do this is for the operator to taint the node. The provided cluster-init subcommand automatically adds such a taint.
@@ -56,20 +56,20 @@ CMK documentation available on github includes:
 
 **Edge Controller / Kubernetes master**
 
-1. Configure Edge Controller in Network Edge mode using `ne_controller.yml`, following roles must be enabled kubernetes/master, kubeovn/master and cmk/master.
+1. Configure Edge Controller in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/master`, `kubeovn/master` and `cmk/master`.
 2. CMK is enabled with following default values of parameters in `roles/cmk/master/defaults/main.yml` (adjust the values if needed):
 
 - `cmk_num_exclusive_cores` set to `4`
 - `cmk_num_shared_cores` set to `1`
 - `cmk_host_list` set to `node01,node02` (it should contain comma separated list of nodes' hostnames).
 
-3. Deploy the controller with deploy_ne_controller.sh.
+3. Deploy the controller with `deploy_ne.sh controller`.
 
 **Edge Node / Kubernetes worker**
 
-1. Configure Edge Node in Network Edge mode using ne_node.yml, following roles must be enabled kubernetes/worker, kubeovn/worker and cmk/worker.
+1. Configure Edge Node in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/worker`, `kubeovn/worker` and `cmk/worker`.
 2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
-3. Deploy the node with deploy_ne_node.sh.
+3. Deploy the node with `deploy_ne.sh node`.
 
 Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
 
@@ -128,6 +128,6 @@ spec:
     name: cmk-conf-dir
 EOF
 ```
-## Reference 
+## Reference
 - [CPU Manager Repo](https://github.com/intel/CPU-Manager-for-Kubernetes)
 - More examples of Kubernetes manifests available in [CMK repository](https://github.com/intel/CPU-Manager-for-Kubernetes/tree/master/resources/pods) and [documentation](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).

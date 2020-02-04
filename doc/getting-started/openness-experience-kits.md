@@ -11,7 +11,6 @@ Copyright (c) 2019 Intel Corporation
   - [Playbooks for OpenNESS offline deployment](#playbooks-for-openness-offline-deployment)
   - [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
     - [Default values](#default-values)
-    - [Enable kernel & tuned customization for the Node in Network Edge mode](#enable-kernel--tuned-customization-for-the-node-in-network-edge-mode)
     - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
     - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
     - [Use tuned 2.9](#use-tuned-29)
@@ -93,15 +92,6 @@ tuned_vars: |
   isolated_cores=2-3
   nohz=on
   nohz_full=2-3
-```
-
-### Enable kernel & tuned customization for the Node in Network Edge mode
-Currently, kernel-rt is not installed for Network Edge mode.
-
-Since host_vars have lower precedence that playbook/role vars it must be enabled by removing or commenting following lines from ne_node.yml:
-```yaml
-kernel_skip: true
-tuned_skip: true
 ```
 
 ### Use newer realtime kernel (3.10.0-1062)

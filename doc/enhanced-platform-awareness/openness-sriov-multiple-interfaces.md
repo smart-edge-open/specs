@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# Multiple Interface and PCIe SRIOV support in OpenNESS 
+# Multiple Interface and PCIe SRIOV support in OpenNESS
 
 - [Multiple Interface and PCIe SRIOV support in OpenNESS](#multiple-interface-and-pcie-sriov-support-in-openness)
   - [Overview](#overview)
@@ -18,19 +18,19 @@ Copyright (c) 2019 Intel Corporation
       - [Usage](#usage)
   - [Reference](#reference)
 
-## Overview 
+## Overview
 
 Edge deployments consist of both Network Functions and Applications. Cloud Native solutions like Kubernetes typically expose only one interface to the Application or Network function PODs. These interfaces are typically bridged interfaces. This means that Network Functions like Base station or Core network User plane functions and Applications like CDN etc. are limited by the default interface.
 
-To address this we need to enable two key networking features: 
-1) Enable a Kubernetes like orchestration environment to provision more than one interface to the application and Network function PODs 
-2) Enable the allocation of dedicated hardware interfaces to application and Network Function PODs 
+To address this we need to enable two key networking features:
+1) Enable a Kubernetes like orchestration environment to provision more than one interface to the application and Network function PODs
+2) Enable the allocation of dedicated hardware interfaces to application and Network Function PODs
 
-### Overview of Multus 
+### Overview of Multus
 
 To enable multiple interface support in PODs, OpenNESS Network Edge uses the Multus container network interface. Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables the attachment of multiple network interfaces to pods. Typically, in Kubernetes each pod only has one network interface (apart from a loopback) – with Multus you can create a multi-homed pod that has multiple interfaces. This is accomplished by Multus acting as a “meta-plugin”, a CNI plugin that can call multiple other CNI plugins. Multus CNI follows the Kubernetes Network Custom Resource Definition De-facto Standard to provide a standardized method by which to specify the configurations for additional network interfaces. This standard is put forward by the Kubernetes Network Plumbing Working Group.
 
-Below is an illustration of the network interfaces attached to a pod, as provisioned by the Multus CNI. The diagram shows the pod with three interfaces: eth0, net0 and net1. eth0 connects to the Kubernetes cluster network to connect with the Kubernetes server/services (e.g. kubernetes api-server, kubelet and so on). net0 and net1 are additional network attachments and connect to other networks by using other CNI plugins (e.g. vlan/vxlan/ptp). 
+Below is an illustration of the network interfaces attached to a pod, as provisioned by the Multus CNI. The diagram shows the pod with three interfaces: eth0, net0 and net1. eth0 connects to the Kubernetes cluster network to connect with the Kubernetes server/services (e.g. kubernetes api-server, kubelet and so on). net0 and net1 are additional network attachments and connect to other networks by using other CNI plugins (e.g. vlan/vxlan/ptp).
 
 ![Multus overview](multussriov-images/multus-pod-image.svg)
 
@@ -55,7 +55,7 @@ _Figure - SR-IOV Device plugin_
 
 ## Details - Multiple Interface and PCIe SRIOV support in OpenNESS
 
-The Multus role is enabled by default in ansible(`ne_controller.yml`):
+The Multus role is enabled by default in the Network Edge Ansible playbook (`network_edge.yml`):
 
 ```
     - role: multus
@@ -121,20 +121,20 @@ EOF
 ### SRIOV
 
 #### Edgecontroller setup
-To install the OpenNESS controller with SR-IOV support please uncomment `role: sriov/master` in `ne_controller.yml` of Ansible scripts. Please also remember, that `role: multus` has to be enabled as well.
+To install the OpenNESS controller with SR-IOV support please uncomment `role: sriov/master` in Edge Controller play in `network_edge.yml` of Ansible scripts. Please also remember, that `role: multus` has to be enabled as well.
 
 ```yaml
 - role: sriov/master
 ```
 
 #### Edgenode setup
-To install the OpenNESS node with SR-IOV support please uncomment `role: sriov/worker` in `ne_node.yml` of Ansible scripts.
+To install the OpenNESS node with SR-IOV support please uncomment `role: sriov/worker` in Edge Node play in `network_edge.yml` of Ansible scripts.
 
 ```yaml
 - role: sriov/worker
 ```
 
-For the installer to turn on the specified number of SR-IOV VFs for selected network interface of node, please provide that information in format `{interface_name: VF_NUM, ...}` in `sriov.network_interfaces` variable inside config files in `host_vars` ansible directory. 
+For the installer to turn on the specified number of SR-IOV VFs for selected network interface of node, please provide that information in format `{interface_name: VF_NUM, ...}` in `sriov.network_interfaces` variable inside config files in `host_vars` ansible directory.
 Due to the technical reasons, each node has to be configured separately. Copy the example file `host_vars/node1.yml` and then create a similar one for each node being deployed.
 
 Please also remember, that each node must be added to Ansible inventory file `inventory.ini`.
@@ -203,16 +203,14 @@ spec:
       link/ether aa:37:23:b5:63:bc brd ff:ff:ff:ff:ff:ff
       inet 192.168.2.2/24 brd 192.168.2.255 scope global net1
         valid_lft forever preferred_lft forever
-  169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default 
+  169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default
       link/ether 0a:00:00:10:00:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
       inet 10.16.0.10/16 brd 10.16.255.255 scope global eth0
         valid_lft forever preferred_lft forever
 ```
 
-## Reference 
-For further details 
+## Reference
+For further details
 - SR-IOV CNI: https://github.com/intel/sriov-cni
 - Multus: https://github.com/Intel-Corp/multus-cni
 - SR-IOV network device plugin: https://github.com/intel/intel-device-plugins-for-kubernetes
-
-

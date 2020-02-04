@@ -46,11 +46,11 @@ For convenience, playbooks can be executed by running helper deployment scripts.
 
 > NOTE: All nodes provided in the inventory may reboot during the installation.
 
-Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for Network Edge mode:
-  - `deploy_ne.sh` - sets up cluster (first controller, then nodes)
-  - `cleanup_ne.sh`
-  - `deploy_ne_controller.sh`
-  - `deploy_ne_node.sh`
+Convention for the scripts is: `action_mode.sh [group]`. Following scripts are available for Network Edge mode:
+  - `deploy_ne.sh [ controller | nodes ]`
+  - `cleanup_ne.sh [ controller | nodes ] `
+
+To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and `deploy_ne.sh controller` respectively.
 
 > NOTE: Playbooks for Edge Controller/Kubernetes master must be executed before playbooks for Edge Nodes.
 
@@ -58,7 +58,7 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
 
 ## Network Edge Playbooks
 
-The `ne_controller.yml`, `ne_node.yml` and `ne_cleanup.yml` files contain playbooks for Network Edge mode.
+The `network_edge.yml` and `network_edge_cleanup.yml` files contain playbooks for Network Edge mode.
 Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
 
 ### Cleanup playbooks
