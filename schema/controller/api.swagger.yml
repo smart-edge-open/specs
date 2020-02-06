@@ -351,7 +351,7 @@ components:
     ipModifier:
       type: object
       properties:
-        address: 
+        address:
           oneOf:
             - $ref: '#/components/schemas/ipv4Address'
             - $ref: '#/components/schemas/ipv6Address'
