@@ -20,7 +20,8 @@ Copyright (c) 2019 Intel Corporation
     - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
     - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
     - [Add custom GRUB parameter](#add-custom-grub-parameter)
-    - [Configure OVS-DPDK inside kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
+    - [Configure OVS-DPDK in kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
+  - [Adding new CNI plugins for Kubernetes (Network Edge)](#adding-new-cni-plugins-for-kubernetes-network-edge)
 
 ## Purpose
 
@@ -164,12 +165,12 @@ default_grub_params: "hugepagesz={{ hugepage_size }} hugepages={{ hugepage_amoun
 additional_grub_params: "debug"
 ```
 
-### Configure ovs-dpdk in kube-ovn
+### Configure OVS-DPDK in kube-ovn
 By default OVS-DPDK is enabled. To be able to disable it please set a flag:
 ```yaml
 ovs_dpdk: false
 ```
-Additionally hugepages in ovs pod can be adjusted once default hugepage settings are changed. 
+Additionally hugepages in ovs pod can be adjusted once default hugepage settings are changed.
 ```yaml
 ovs_dpdk_hugepage_size: "2Mi"
 ovs_dpdk_hugepages: "1Gi"
@@ -184,3 +185,24 @@ CPU settings can be configured using:
 ovs_dpdk_pmd_cpu_mask: "0x4"
 ovs_dpdk_lcore_mask: "0x2"
 ```
+
+## Adding new CNI plugins for Kubernetes (Network Edge)
+
+* Role that handles CNI deployment must be placed in `roles/kubernetes/cni/` directory, e.g. `roles/kubernetes/cni/kube-ovn/`.
+* Subroles for master and worker (if needed) should be placed in `master/` and `worker/` dirs, e.g `roles/kubernetes/cni/kube-ovn/{master,worker}`.
+* If there is a part of common command for both master and worker additional subrole can be created - `common` (e.g. `roles/kubernetes/cni/sriov/common`).<br>
+Note that automatic inclusion of the `common` role should be handled by Ansible mechanisms (e.g. usage of meta's `dependiences` or `include_role` module)
+* Name of the main role must be added to `available_kubernetes_cnis` variable in `roles/kubernetes/cni/defaults/main.yml`.
+* If there are some additional requirements that should be checked before running the playbook (to not have an error in the middle of execution), they can be placed in the `roles/kubernetes/cni/tasks/precheck.yml` file which is included as a pre_task in plays for both Edge Controller and Edge Node.<br>
+Currently executed basic prechecks are:
+  * Check if any CNI is requested (i.e. `kubernetes_cni` is not empty),
+  * Check if `sriov` is not requested as primary (first on the list) or standalone (only on the list)
+  * Check if requested CNI is available (check if some CNI is requested that isn't present in the `available_kubernetes_cnis` list).
+* CNI roles should as self-contained as possible (CNI specific tasks should not be present in `kubernetes/{master,worker,common}` or `openness/network_edge/{master,worker}` if not absolutely necessary).
+* If CNI needs custom OpenNESS service (like Interface Service in case of `kube-ovn`), then it can be added to the `openness/network_edge/{master,worker}`.<br>
+   Best if such tasks would be contained in separate task file (like `roles/openness/network_edge/master/tasks/kube-ovn.yml`) and executed only if CNI is requested, for example:
+  ```yaml
+  - name: deploy interface service for kube-ovn
+    include_tasks: kube-ovn.yml
+    when: "'kubeovn' in kubernetes_cnis"
+  ```

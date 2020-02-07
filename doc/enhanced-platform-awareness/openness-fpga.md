@@ -89,7 +89,7 @@ To enable on Edge Controller set/uncomment following in `network_edge.yml` in Op
 - role: multus
 - role: sriov/master
 ```
-Also enable/configure following options in `roles/sriov/common/defaults/main.yml`.
+Also enable/configure following options in `roles/kubernetes/cni/sriov/common/defaults/main.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
 ```
 fpga_sriov_userspace:

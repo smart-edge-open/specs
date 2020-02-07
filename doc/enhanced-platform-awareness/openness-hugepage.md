@@ -24,7 +24,7 @@ Hugepages are enabled by default. There are two parameters that are describing t
 
 ### Network edge mode
 
-You can change the size of single page editing the variable `hugepage_size` in `roles/grub/defaults/main.yml`:
+You can change the size of single page editing the variable `hugepage_size` in `roles/machine_setup/grub/defaults/main.yml`:
 
 To set the page size of 2 MB:
 
@@ -64,7 +64,7 @@ will enable 3000 pages of the size specified by `hugepage_size` variable for eac
 
 ### OnPrem mode
 
-The hugepages are enabled only for the nodes. You can change the size of single page and amount of the pages editing the variables `hugepage_size` and `hugepage_amount` in `roles/grub/defaults/main.yml`:
+The hugepages are enabled only for the nodes. You can change the size of single page and amount of the pages editing the variables `hugepage_size` and `hugepage_amount` in `roles/machine_setup/grub/defaults/main.yml`:
 
 For example:
 

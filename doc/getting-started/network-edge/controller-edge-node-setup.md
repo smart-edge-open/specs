@@ -12,6 +12,8 @@ Copyright (c) 2019 Intel Corporation
     - [Supported EPA features](#supported-epa-features)
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
+  - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
+    - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
 - [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
@@ -86,6 +88,40 @@ The following is a complete set of actions that need to be completed to successf
 ### Application on-boarding
 
 Please refer to [network-edge-applications-onboarding.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+
+## Kubernetes cluster networking plugins (Network Edge)
+
+Kubernetes uses 3rd party networking plugins to provide [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
+These plugins are based on [CNI (Container Network Interface) specification](https://github.com/containernetworking/cni).
+
+OpenNESS Experience Kits provides several ready-to-use Ansible roles deploying CNIs.
+Following CNIs are currently supported:
+* [kube-ovn](https://github.com/alauda/kube-ovn)
+* [flannel](https://github.com/coreos/flannel)
+* [calico](https://github.com/projectcalico/cni-plugin)
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
+
+Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [Multus CNI](https://github.com/intel/multus-cni) is used.
+
+> NOTE: For guide on how to add new CNI role to the OpenNESS Experience Kits refer to [the OpenNESS Experience Kits guide](../openness-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge)
+
+### Selecting cluster networking plugins (CNI)
+In order to customize which CNI are to be deployed for the Network Edge cluster edit `kubernetes_cnis` variable in `group_vars/all.yml` file.
+CNIs are applied in requested order.
+By default `kube-ovn` and `calico` are set up (with `multus` in between):
+```yaml
+kubernetes_cnis:
+- kubeovn
+- calico
+```
+
+For example, to add SR-IOV just add another item on the list. That'll result in following CNIs being applied: `kube-ovn`, `multus`, `calico` and `sriov`.
+```yaml
+kubernetes_cnis:
+- kubeovn
+- calico
+- sriov
+```
 
 # Q&A
 
