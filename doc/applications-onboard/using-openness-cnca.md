@@ -398,8 +398,9 @@ policy:
 ### Configuring in On-Premises mode
 
   OpenNESS On-Premises management homepage:
-      sample url: http://<controller_ip>:3000/landing
+      sample url: http://<LANDING_UI_URL>/landing
       ![OpenNESS NGC homepage](using-openness-cnca-images/ngc_homepage.png)
+  **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

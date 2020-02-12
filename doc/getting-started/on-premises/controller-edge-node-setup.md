@@ -100,7 +100,7 @@ Prerequisites (*Ansible Controller*):
 The following steps need to be done for successful login:
 
 1. Open internet browser on *Ansible Controller*.
-2. Type in `http://<EDGE_CONTROLLER_HOSTNAME>:3000` in address bar.
+2. Type in `http://<LANDING_UI_URL>/` in address bar. `LANDING_UI_URL` can be retrieved from `.env` file.
 3. Click on "INFRASTRUCTURE MANAGER" button.
 
 ![Landing page](controller-edge-node-setup-images/controller_ui_landing.png)
