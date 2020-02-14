@@ -176,7 +176,7 @@ NOTE: Producer application must be deployed before the consumer application. The
 4. Verify logs of the Sample Application producer:
    ```
    kubectl logs <producer_pod_name> -f
-
+   
    Expected output:
    The Example Producer eaa.openness  [{ExampleNotification 1.0.0 Description for Event #1 by Example Producer}]}]}
    Sending notification
@@ -255,6 +255,19 @@ The purpose of this section is to guide the user on the complete process of onbo
    ip a a 192.168.1.10/24 dev <client_interface_name>
    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <client_interface_name>
    ```
+    > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+    > **NOTE:** To identify which subnet is allocated to which node, use this command:
+    >  ```shell
+    >  $ kubectl get subnets
+    >  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+    >  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+    >  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+    >  ...
+    >  ```
+    >
+    > The list of subnets represents which edgenode is allocated to which subnet (CIDR), e.g: node `jfsdm002` is allocated to subnet `192.168.2.0/24`.
+   
 2. From the Edge Controller, set up the interface service to connect the Edge Node's physical interface used for the communication between Edge Node and traffic generating host to OVS. This allows the Client Simulator to communicate with the OpenVINO application K8s Pod located on the Edge Node (sample output separated by `"..."`, PCI Bus Function ID of the interface used my vary).
    ```
    kubectl interfaceservice get <edge_node_host_name>
@@ -451,6 +464,13 @@ kubectl interfaceservice get <edge_node_host_name>
     ip a a 192.168.1.10/24 dev <office1_interface_name>
     route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
     ```
+
+    > **NOTE:** When adding office 2 and so on, change the provided CIDR (i.e: `192.168.1.0/24`) to its allocated subnet. This can be checked by entering this command:
+    >  ```shell
+    >  kubectl get subnets
+    >  ```
+    >
+    > The subnet name represents the node which is allocated to it and appended with `-local`.
 
 2. On the Camera simulator machine, run the camera simulator containers
     ```shell

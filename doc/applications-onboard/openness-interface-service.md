@@ -13,13 +13,28 @@ Interface service is an application running in K8s pod on each worker node of Op
 
 ## Traffic from external host
 
-Machines connected to attached interface can communicate with K8s pods of the worker node (`10.16.0.0/16` subnet) through `192.168.1.1` gateway. Therefore, correct address and routing should be used. Eg:
+When a machine is physically connected to an OpenNESS edge node over a cable would be able to communicate its pods when this physical network interface is attached to the cluster. This network interface can be attached by providing its PCI ID or MAC address to the `interfaceservice` kubectl plugin.
+
+The machine which is connected to the edge node must be configured as shown below in order to allow the traffic directed to the kubernetes cluster (example: `10.16.0.0/16` subnet) to go through `192.168.1.1` gateway. Update the physical ethernet interface and the Linux IP routing table as:
+
 ```bash 
   ip a a 192.168.1.5/24 dev eth1
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
-> NOTE: Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0` subnet on specific port. 
+> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port. 
 
+> **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+> **NOTE:** To identify which subnet is allocated to which node, use this command:
+>  ```shell
+>  $ kubectl get subnets
+>  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+>  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+>  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+>  ...
+>  ```
+>
+> The list of subnets represents which edgenode is allocated to which subnet (CIDR), e.g: node `jfsdm002` is allocated to subnet `192.168.2.0/24`.
 
 ## Usage
 
