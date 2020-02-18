@@ -9,7 +9,7 @@ security:
   - {}
   - oAuth2ClientCredentials: []
 servers:
-  - url: '{apiRoot}/af/v1'
+  - url: '{apiRoot}/af/v1/pfd'
     variables:
       apiRoot:
         default: https://example.com
