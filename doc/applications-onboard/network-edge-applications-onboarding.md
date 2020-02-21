@@ -23,7 +23,7 @@ Copyright (c) 2019 Intel Corporation
   - [Installing OpenNESS](#installing-openness)
   - [Building Smart City ingredients](#building-smart-city-ingredients)
   - [Running Smart City](#running-smart-city)
-- [Inter Application Communication](#inter-application-communication)
+  - [Inter Application Communication](#inter-application-communication)
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
 - [Troubleshooting](#troubleshooting)
   - [Useful Commands:](#useful-commands)
@@ -440,48 +440,48 @@ kubectl interfaceservice get <edge_node_host_name>
 
 ## Building Smart City ingredients
 
-1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
 
-2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
+   2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
 
 ## Running Smart City
 
-1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
-    ```shell
-    ip a a 192.168.1.10/24 dev <office1_interface_name>
-    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
-    ```
+   1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
+       ```shell
+       ip a a 192.168.1.10/24 dev <office1_interface_name>
+       route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
+       ```
 
-2. On the Camera simulator machine, run the camera simulator containers
-    ```shell
-    make start_openness_camera
-    ```
+   2. On the Camera simulator machine, run the camera simulator containers
+       ```shell
+       make start_openness_camera
+       ```
 
-3. On the Smart City cloud master machine, run the Smart City cloud containers
-    ```shell
-    make start_openness_cloud
-    ```
+   3. On the Smart City cloud master machine, run the Smart City cloud containers
+       ```shell
+       make start_openness_cloud
+       ```
 
-    > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
-    > ```shell
-    > systemctl stop firewalld
-    > ```
+       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+       > ```shell
+       > systemctl stop firewalld
+       > ```
 
-    > **NOTE**: Do not stop firewall on OpenNESS nodes.
+       > **NOTE**: Do not stop firewall on OpenNESS nodes.
 
-4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
-    ```shell
-    export CAMERA_HOST=192.168.1.10
-    export CLOUD_HOST=<cloud-master-node-ip>
+   4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
+       ```shell
+       export CAMERA_HOST=192.168.1.10
+       export CLOUD_HOST=<cloud-master-node-ip>
 
-    make
-    make update
-    make start_openness_office
-   ```
+       make
+       make update
+       make start_openness_office
+      ```
 
-    > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+       > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
 
-5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
+   5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
 
 
 ## Inter Application Communication 
