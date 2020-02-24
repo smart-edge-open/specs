@@ -20,3 +20,4 @@ Enhanced Platform Awareness features are supported in OnPremises using EVA APIs.
 Following are the EPA features supported in OpenNESS OnPremises Edge
 1. [<b>openness_hddl.md</b>: Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness_hddl.md)
 2. [<b>openness-environment-variables.md</b>: Support for setting Environment Variables in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
+4. [<b>openness-tunable-exec.md</b>: Tunable executable command in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
