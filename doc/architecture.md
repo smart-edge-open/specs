@@ -401,7 +401,7 @@ OpenNESS APIs provide a mechanism to utilize platform resources efficiently in t
 
 ![OpenNESS Reference Application](arch-images/openness_hddlr.png)
 
-More details about HDDL-R support in OpenNESS for Applications using OpenVINO SDK can be found here [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/openness_hddl.md). 
+More details about HDDL-R support in OpenNESS for Applications using OpenVINO SDK can be found here [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness_hddl.md). 
 
 ### Cloud Adapter Edge compute Application
 All the major Cloud Service providers are implementing frameworks to deploy edge applications that link back to their cloud via connectors. For example, Amazon Greengrass enables lambda functions to be deployed on the edge and connecting to the AWS cloud using the GreenGrass service. While it was originally intended to host this type of edge software on IoT gateways, the same framework can be utilized by Service Providers and Enterprises, to implement a multi-cloud strategy for their Edge Nodes.  
@@ -414,9 +414,9 @@ OpenNESS supports this by providing the ability to deploy public cloud IOT gatew
 
 _Figure - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
-More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md). 
+More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/open-ness/specs/blob/master/doc/cloud-adapters/openness_baiducloud.md). 
 
-More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md). 
+More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/open-ness/specs/blob/master/doc/cloud-adapters/openness_awsgreengrass.md). 
 
 ## OpenNESS Microservices and APIs
 
@@ -438,7 +438,7 @@ Edge Application APIs are implemented by the EAA. Edge Application APIs are impo
 
 OpenNESS supports deployment of both types of applications mentioned above. The Edge Application Agent is a service that runs on the Edge Node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing Edge Node to discover one another as well as publish and subscribe to all notifications. The Figure below provides the sequence diagram of the supported APIs for the application 
 
-More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/resources) 
+More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/api-documentation/?api=eaa) 
 
 ![Edge Application APIs](arch-images/openness_eaa.png)
 
@@ -453,12 +453,12 @@ For applications executing on the Local breakout the Authentication is not appli
 
 Authentication APIs are implemented as HTTP REST APIs. 
 
-More details about the APIs can be found here [Application Authentication APIs](https://www.openness.org/resources) 
+More details about the APIs can be found here [Application Authentication APIs](https://www.openness.org/api-documentation/?api=auth) 
 
 ### Edge Lifecycle Management APIs
 ELA APIs are implemented by the ELA microservice on the Edge Node. The ELA runs on the Edge Node and operates as a deployment and lifecycle service for Edge applications and VNFs (Virtual Network Functions) that are needed for Edge compute deployment like e.g. 4G EPC CUPS User plane and DNS server. It also provides network interface, network zone, and application/interface policy services.
 
-ELA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Lifecycle Management APIs](https://www.openness.org/resources) 
+ELA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Lifecycle Management APIs](https://github.com/open-ness/specs/blob/master/schema/pb/ela.proto) 
 
 ### Edge Virtualization Infrastructure APIs
 EVA APIs are implemented by the EVA microservice on the Edge Node. The EVA operates as a mediator between the infrastructure that the apps run on and the other edge components.
@@ -467,7 +467,7 @@ The EVA abstracts how applications were deployed. In order to achieve this, ther
 
 As an example, an RPC to list the running applications on the node is achieved by calling the Docker daemon and virsh list on the Edge Node, get its response data and show the status of the running applications.
 
-EVA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Virtualization Infrastructure APIs](https://www.openness.org/resources) 
+EVA APIs are implemented over gRPC. For the purpose of visualization they are converted to json and can be found here [Edge Virtualization Infrastructure APIs](https://github.com/open-ness/specs/blob/master/schema/pb/eva.proto) 
 
 ### Core Network Configuration APIs for edge compute 
 
@@ -478,9 +478,9 @@ OpenNESS controller community edition supports configuration of the 5G Applicati
 
 _Figure - OpenNESS 5G end-to-end test setup_
 
-More details about the APIs can be found here [CNCA APIs](https://www.openness.org/resources). 
+More details about the APIs can be found here [CNCA APIs](https://www.openness.org/api-documentation/?api=cups). 
 
-Whitepaper describing the details of the Edge Computing support in 5G NGC can be found here [5G Edge Compute supports in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/openness_ngc.md).
+Whitepaper describing the details of the Edge Computing support in 5G NGC can be found here [5G Edge Compute supports in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/core-network/openness_ngc.md).
 
 ### Core Network Configuration API for 4G CUPS
 As part of the OpenNESS reference edge stack the OpenNESS controller community edition is used for configuring the traffic policy for CUPS EPC to steer traffic towards the edge compute, This API is based on HTTP REST. Since 3GPP or ETSI MEC does not provide a reference for these APIs various implementation of this Edge Controller to CUPS EPC might exist. OpenNESS has tried to take the approach of minimal changes to 3GPP CUPS EPC to achieve the edge compute deployment. OpenNESS and HTTP REST APIs for the EPC CUPS is a reference implementation to enable customers using OpenNESS to integrate their own HTTP REST APIs to the EPC CUPS into the OpenNESS Controller. Special care has been taken to make these components Modular microservices. The diagram below show the LTE environment that was used for testing OpenNESS edge compute end-to-end. 
@@ -495,9 +495,9 @@ The OpenNESS reference solution provides a framework for managing multiple Edge 
 
 _Figure - LTE EPC Configuration_
 
-More details about the APIs can be found here [CNCA APIs](https://www.openness.org/resources). 
+More details about the APIs can be found here [CNCA APIs](https://www.openness.org/api-documentation/?api=cups). 
 
-Whitepaper describing the details of the CUPS support in EPC can be found here [4G CUPS  Edge Compute supports in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/openness_epc.md).
+Whitepaper describing the details of the CUPS support in EPC can be found here [4G CUPS  Edge Compute supports in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/core-network/openness_epc.md).
 
 ### OpenNESS Controller APIs
 OpenNESS Controller APIs are important APIs for those managing one or more OpenNESS Edge Nodes. OpenNESS Controller APIs are called by the UI frontend and can be called by external orchestrators. These APIs allow centralized management of OpenNESS Edge Nodes. The API enables a developer to maintain a list of OpenNESS Edge Nodes, configure apps, manage policies and DNS, and more. The OpenNESS Controller API represents an abstraction layer for an operations administrator. While individual OpenNESS Edge Nodes may be managed singularly, the OpenNESS Controller API allows for management in a scalable way. Furthermore, it allows for secure communication to the many Edge Nodes.
