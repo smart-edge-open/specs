@@ -411,7 +411,7 @@ policy:
 
    * Edge services registration home page:
       sample url: http://<cnca_ui_ip>:3020/services
-      ![Edge services operations homepage](using-openness-cnca-images/oam_services_home.png)
+      ![Edge services operations homepage](using-openness-cnca-images/HomePage.png)
 
    * Registration of a new edge service offered by UPF (associated with edge-node)
       ![Edge services create](using-openness-cnca-images/oam_services_create.png)
