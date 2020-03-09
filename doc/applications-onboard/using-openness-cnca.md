@@ -563,4 +563,4 @@ This sections describes the paramters that are used in the Packet flow descripti
 |domainName|No|Indicates an FQDN or a regular expression as a domain name matching criteria.|
 
   ***NOTE:**
-  One of the attribute of flowDescriptions, URls, domainName is mandatory.
+  One of the attribute of flowDescriptions, URls and domainName is mandatory.
