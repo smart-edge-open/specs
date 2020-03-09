@@ -411,7 +411,7 @@ policy:
 
    * Edge services registration home page:
       sample url: http://<cnca_ui_ip>:3020/services
-      ![Edge services operations homepage](using-openness-cnca-images/HomePage.png)
+      ![Edge services operations homepage](using-openness-cnca-images/oam_services_home.png)
 
    * Registration of a new edge service offered by UPF (associated with edge-node)
       ![Edge services create](using-openness-cnca-images/oam_services_create.png)
@@ -522,3 +522,33 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 |suppFeat|Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
 |requestTestNotification|Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3 of 3GPP TS 29.122 [4]. Set to false or omitted otherwise|
 |websockNotifConfig|Configuration parameters to set up notification delivery over Websocket protocol|
+
+#### Packet Flow Description operation with 5G Core (through AF interface)
+
+   * Edge traffic PFD transaction submission homepage
+      sample url: http://<cnca_ui_ip>:3020/pfds
+      ![PFD transaction services homepage](using-openness-cnca-images/af_pfd_transaction_home.png)
+
+   * Edge PFD transaction submissions with 5G-Core (NEF)
+      click on the "Create" button on the above homepage
+      ![Subscription service create](using-openness-cnca-images/pfd_transaction_create.png)
+
+   * Display of submitted Edge PFD transaction
+      ![PFD transaction service display](using-openness-cnca-images/pfd_transaction_display.png)
+
+   * To edit a submitted edge PFD transaction
+      ![PFD transaction service edit](using-openness-cnca-images/pfd_transaction_edit.png)
+
+   * To edit a submitted edge PFD transaction application
+      ![PFD transaction service patch](using-openness-cnca-images/pfd_transaction_edit_appID.png)
+
+   * To delete a submitted edge PFD transaction
+      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete.png)
+
+   * To delete a submitted edge PFD transaction application
+      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete_appID.png)
+
+## Packet Flow Description transaction description
+
+This sections describes the paramters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
+
