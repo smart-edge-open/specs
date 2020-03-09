@@ -554,7 +554,7 @@ This sections describes the paramters that are used in the Packet flow descripti
 
 |Attribute name|Mandatory|Description|
 |--------------|-----------|---------|
-|externalAppID||Yes| Unique Application identifier of a PFD|
+|externalAppID|Yes|Unique Application identifier of a PFD|
 |Allowed Delay|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
 |Caching Time|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
 |pfdId|Yes|Identifies a PFD of an application identifier.|
