@@ -22,6 +22,8 @@ Copyright (c) 2019-2020 Intel Corporation
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
       - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
         - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
+      - [Packet Flow Descriptions operations with 5G Core (through AF interface)](#packet-flow-description-operations-with-5g-core-through-af-interface)
+        - [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration)
   - [On-Premises mode](#on-premises-mode)
     - [Bringing up NGC components in On-Premises mode](#bringing-up-ngc-components-in-on-premises-mode)
     - [Configuring in On-Premises mode](#configuring-in-on-premises-mode-1)
@@ -386,6 +388,98 @@ policy:
       ipv6Addr: ''
     routeProfId: default
 ```
+
+#### Packet Flow Description operations with 5G Core (through AF interface)
+
+Supported operations through `kube-cnca` plugin:
+
+  * Creation of packet flow description transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
+  * Deletion of transactions and applications within a transaction
+  * Updating (patching) transactions and applications within a transaction
+  * get or get-all transactions. get a specific application within a transaction
+
+Creation of the AF transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a transaction creation request onto AF:
+```shell
+kubectl cnca pfd apply -f <config.yml>
+```
+
+When the transaction is successfully created, the `apply` command will return the transaction URL that includes transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. **It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.**
+
+To retrieve an existing transaction with a known transaction ID, use the below command:
+```shell
+kubectl cnca pfd get transaction <transaction-id>
+```
+
+To retrieve all active transactions at AF, execute this command:
+```shell
+kubectl cnca pfd get transactions
+```
+
+To modify an active transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+```shell
+kubectl cnca pfd patch transaction <transaction-id> -f <config.yml>
+```
+
+To delete an active transaction, use the `delete` command as below:
+```shell
+kubectl cnca pfd delete transaction <transaction-id>
+```
+
+To retrieve an existing application within a transaction with a known application ID and transaction ID, use the below command:
+```shell
+kubectl cnca pfd get transaction <transaction-id> application <application-id>
+```
+
+To modify an application within an active transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+```shell
+kubectl cnca pfd patch transaction <transaction-id> application <application-id> -f <config.yml>
+```
+
+To delete an application within an active transaction, use the `delete` command as below:
+```shell
+kubectl cnca pfd delete transaction <transaction-id> application <application-id>
+```
+
+
+##### Sample YAML NGC AF transaction configuration
+
+The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
+
+```yaml
+apiVersion: v1
+kind: ngc_pfd
+policy:
+  pfdDatas:
+    - externalAppID: afApp01
+      allowedDelay: 1000
+      cachingTime: 1000
+      pfds:
+        - pfdID: pfdId01
+          flowDescriptions:
+            - "permit in ip from 10.11.12.123 80 to any"
+          domainNames:
+            - "www.google.com"
+        - pfdID: pfdId02
+          urls:
+            - "^http://test.example2.net(/\\S*)?$"
+        - pfdID: pfdId03
+          domainNames:
+            - "www.example.com"
+    - externalAppID: afApp02
+      allowedDelay: 1000
+      cachingTime: 1000
+      pfds:
+        - pfdID: pfdId03
+          flowDescriptions:
+            - "permit in ip from 10.68.28.39 80 to any"
+        - pfdID: pfdId04
+          urls:
+            - "^http://test.example1.net(/\\S*)?$"
+        - pfdID: pfdId05
+          domainNames:
+            - "www.example.com"
+```
+
 
 
 ## On-Premises mode
