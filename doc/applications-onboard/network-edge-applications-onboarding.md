@@ -417,7 +417,7 @@ Smart City sample application is a sample applications that is built on top of t
 
 The full pipeline of the Smart City sample application on OpenNESS is distributed across three regions:
 
- 1. Client-side Cameras Simulator
+ 1. Client-side Cameras Simulator(s)
  2. OpenNESS Cluster
  3. Smart City Cloud Cluster
 
@@ -456,26 +456,35 @@ kubectl interfaceservice get <edge_node_host_name>
 
 ## Building Smart City ingredients
 
-   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machines, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
 
-   2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
+   2. Build the Smart City application on all of the machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices (edge nodes) must be installed on OpenNESS.
 
 ## Running Smart City
 
-   1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
-       ```shell
-       ip a a 192.168.1.10/24 dev <office1_interface_name>
-       route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
-       ```
+   1. On the Camera simulator machines, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 & office2 nodes:
+   
+      On camera-sim1:
+      ```shell
+      ip a a 192.168.1.10/24 dev <office1_interface_name>
+      route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office1_interface_name>
+      ```
 
-      > **NOTE:** When adding office 2 and so on, change the provided CIDR (i.e: `192.168.1.0/24`) to its allocated subnet. This can be checked by entering this command:
-      >  ```shell
-      >  kubectl get subnets
-      >  ```
+      > **NOTE:** When adding office 2 and so on, change the provided CIDR (i.e: `192.168.1.0/24`) to its allocated subnet. This requires a  This can be checked by entering this command:
+      > ```shell
+      > kubectl get subnets
+      > ```
       >
       > The subnet name represents the node which is allocated to it and appended with `-local`.
 
-   2. On the Camera simulator machine, run the camera simulator containers
+      On camera-sim2:
+      > To send traffic 
+      > ```shell
+      > ip a a 192.168.2.10/24 dev <office2_interface_name>
+      > route add -net 10.16.0.0/24 gw 192.168.2.1 dev <office2_interface_name>
+      > ```
+
+   2. On the Camera simulator machines, run the camera simulator containers
       ```shell
       make start_openness_camera
       ```
@@ -485,7 +494,7 @@ kubectl interfaceservice get <edge_node_host_name>
        make start_openness_cloud
        ```
 
-       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the camera simulators & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
        > ```shell
        > systemctl stop firewalld
        > ```
@@ -494,7 +503,7 @@ kubectl interfaceservice get <edge_node_host_name>
 
    4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
        ```shell
-       export CAMERA_HOST=192.168.1.10
+       export CAMERA_HOSTS=192.168.1.10,192.168.2.10
        export CLOUD_HOST=<cloud-master-node-ip>
 
        make
