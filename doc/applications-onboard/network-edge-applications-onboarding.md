@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0       
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 - [Introduction](#introduction)
@@ -255,19 +255,22 @@ The purpose of this section is to guide the user on the complete process of onbo
    ip a a 192.168.1.10/24 dev <client_interface_name>
    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <client_interface_name>
    ```
-    > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
 
-    > **NOTE:** To identify which subnet is allocated to which node, use this command:
-    >  ```shell
-    >  $ kubectl get subnets
-    >  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
-    >  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
-    >  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
-    >  ...
-    >  ```
-    >
-    > The list of subnets represents which edgenode is allocated to which subnet (CIDR), e.g: node `jfsdm002` is allocated to subnet `192.168.2.0/24`.
-   
+   > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+   > **NOTE:** To identify which subnet is allocated to which node, use this command:
+   >  ```shell
+   >  $ kubectl get subnets
+   >  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+   >  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+   >  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+   >  ...
+   >  ```
+   >
+   > The list presents which subnet (CIDR) is bridged to which edgenode, e.g: node `jfsdm001` is bridged to subnet `192.168.1.0/24` and node `jfsdm002` is bridged to subnet `192.168.2.0/24`
+
+   > **NOTE:** Ingress traffic originating from `192.168.1.0/24` can *only* reach the pods deployed on `jfsdm001`, and similarly for `192.168.2.0/24` can reach the pods deployed on `jfsdm002`.
+
 2. From the Edge Controller, set up the interface service to connect the Edge Node's physical interface used for the communication between Edge Node and traffic generating host to OVS. This allows the Client Simulator to communicate with the OpenVINO application K8s Pod located on the Edge Node (sample output separated by `"..."`, PCI Bus Function ID of the interface used my vary).
    ```
    kubectl interfaceservice get <edge_node_host_name>
