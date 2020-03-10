@@ -80,6 +80,18 @@ message Application {
     // (Enhanced App Configuration). This is in Json format - but is at top level
     // an array of string key-value pairs. Specific keys are defined by their respective features.
     string EACJsonBlob = 11;
+
+    // CNI configuration for the application
+    CNIConfiguration cniConf = 12;
+}
+
+// CNIConfiguration stores CNI configuration data.
+// CNI specification is available at https://github.com/containernetworking/cni/blob/master/SPEC.md
+message CNIConfiguration {
+    string cniConfig = 1;     // CNI configuration in form of a JSON
+    string interfaceName = 2; // Name of the interface
+    string path = 3;          // CNI's path
+    string args = 4;          // CNI's extra args passed as a CNI_ARGS env variable
 }
 
 message ApplicationID {

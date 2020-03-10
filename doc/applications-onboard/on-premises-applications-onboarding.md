@@ -8,6 +8,9 @@ Copyright (c) 2019 Intel Corporation
     - [How to setup apache step by step for IP address](#how-to-setup-apache-step-by-step-for-ip-address)
     - [Instruction to generate certificate for a domain](#instruction-to-generate-certificate-for-a-domain)
     - [Instruction to upload and access images](#instruction-to-upload-and-access-images)
+    - [Instruction to create Traffic Policy and assign it to Interface](#instruction-to-create-traffic-policy-and-assign-it-to-interface)
+      - [Creating Traffic Policy](#creating-traffic-policy)
+      - [Adding Traffic Policy to Interface](#adding-traffic-policy-to-interface)
 - [Building Applications](#building-applications)
   - [Building the OpenVINO Application images](#building-the-openvino-application-images)
 - [Onboarding applications](#onboarding-applications)
@@ -83,6 +86,76 @@ cp test_image.tar.gz /var/www/html/
 chmod a+r /var/www/html/*
 ```
 The URL (Source in Controller UI) should be constructed as: `https://controller_hostname/test_image.tar.gz`
+
+### Instruction to create Traffic Policy and assign it to Interface
+
+#### Creating Traffic Policy
+
+Prerequisites:
+
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+
+The steps to create a sample traffic policy are as follows:
+
+1. From UI navigate to 'TRAFFIC POLICIES' tab.
+2. Click 'ADD POLICY'.
+
+> Note: This specific traffic policy is only an example.
+
+![Creating Traffic Policy 1](on-premises-app-onboarding-images/CreatingTrafficPolicy.png)
+
+3. Give policy a name.
+4. Click 'ADD' next to 'Traffic Rules*' field.
+5. Fill in following fields:
+
+- Description: "Sample Description"
+- Priority: 99
+- Source -> IP Filter -> IP Address: 1.1.1.1
+- Source -> IP Filter -> Mask: 24
+- Source -> IP Filter -> Begin Port: 10
+- Source -> IP Filter -> End Port: 20
+- Source -> IP Filter -> Protocol: all
+- Target -> Description: "Sample Description"
+- Target -> Action: accept
+
+6. Click on "CREATE".
+
+![Creating Traffic Policy 2](on-premises-app-onboarding-images/CreatingTrafficPolicy2.png)
+
+After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
+
+![Creating Traffic Policy 3](on-premises-app-onboarding-images/CreatingTrafficPolicy3.png)
+
+#### Adding Traffic Policy to Interface
+
+Prerequisites:
+
+- Enrollment phase completed successfully.
+- User is logged in to UI.
+- Traffic Policy Created.
+
+To add a previously created traffic policy to an interface available on Edge Node the following steps need to be completed:
+
+1. From UI navigate to "NODES" tab.
+2. Find Edge Node on the 'List Of Edge Nodes'.
+3. Click "EDIT".
+
+> Note: This step is instructional only, users can decide if they need/want a traffic policy designated for their interface, or if they desire traffic policy designated per application instead.
+
+![Adding Traffic Policy To Interface 1](on-premises-app-onboarding-images/AddingTrafficPolicyToInterface1.png)
+
+4. Navigate to "INTERFACES" tab.
+5. Find desired interface which will be used to add traffic policy.
+6. Click 'ADD' under 'Traffic Policy' column for that interface.
+7. A window titled 'Assign Traffic Policy to interface' will pop-up. Select a previously created traffic policy.
+8. Click on 'ASSIGN'.
+
+![Adding Traffic Policy To Interface 2](on-premises-app-onboarding-images/AddingTrafficPolicyToInterface2.png)
+
+On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Traffic Policy' column for desired interface. These buttons can be respectively used for editing and removing traffic rule policy on that interface.
+
+![Adding Traffic Policy To Interface 3](on-premises-app-onboarding-images/AddingTrafficPolicyToInterface3.png)
 
 # Building Applications
 User needs to prepare the applications that will be deployed on the OpenNESS platform in OnPromises mode. Applications should be built as Docker images and should be hosted on some HTTPS server that is available to the EdgeNode.
@@ -246,6 +319,8 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
     ![Defining openvino traffic policy](on-premises-app-onboarding-images/openvino-policy1.png)
 
     ![Defining openvino traffic policy](on-premises-app-onboarding-images/openvino-policy2.png)
+
+> Note: For creating Traffic Policy refer to [Instruction to create Traffic Policy and assign it to Interface](#instruction-to-create-traffic-policy-and-assign-it-to-interface)
 
 4. Move to the EdgeNode interfaces setup. It should be available under button `Edit` next to the EdgeNode position on Dashboard page.
    * Find the port that is directly connected to the OpenVINO client machine port (eg. 0000:04:00.1)
