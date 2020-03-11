@@ -444,7 +444,7 @@ kubectl cnca pfd delete transaction <transaction-id> application <application-id
 ```
 
 
-##### Sample YAML NGC AF PFD ransaction configuration
+##### Sample YAML NGC AF PFD transaction configuration
 
 The `kube-cnca pfd apply` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
 
@@ -483,6 +483,26 @@ policy:
             - "www.example.com"
 ```
 
+Sample yaml file for updating a single application
+
+```yaml
+apiVersion: v1
+kind: ngc_pfd
+policy:
+  externalAppID: afApp01
+  allowedDelay: 1000
+  cachingTime: 1000
+  pfds:
+    - pfdID: pfdId01
+      flowDescriptions:
+        - "permit in ip from 10.11.12.123 80 to any"
+    - pfdID: pfdId02
+      urls:
+        - "^http://test.example2.net(/\\S*)?$"
+    - pfdID: pfdId03
+      domainNames:
+        - "www.latest_example.com"
+```
 
 
 ## On-Premises mode
@@ -650,7 +670,6 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 
 This sections describes the paramters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
 
-<<<<<<< HEAD
 |Attribute name|Mandatory|Description|
 |--------------|-----------|---------|
 |externalAppID|Yes|Unique Application identifier of a PFD|
@@ -660,17 +679,6 @@ This sections describes the paramters that are used in the Packet flow descripti
 |flowDescriptions|No|Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.|
 |Urls|No|Indicates a URL or a regular expression which is used to match the significant parts of the URL.|
 |domainName|No|Indicates an FQDN or a regular expression as a domain name matching criteria.|
-=======
-| Attribute name   | Mandatory | Description                                                                                                                |
-| ---------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
-| externalAppID    | Yes       | Unique Application identifier of a PFD                                                                                     |
-| Allowed Delay    | No        | Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay |
-| Caching Time     | No        | Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay |
-| pfdId            | Yes       | Identifies a PFD of an application identifier.                                                                             |
-| flowDescriptions | No        | Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.                               |
-| Urls             | No        | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                           |
-| domainName       | No        | Indicates an FQDN or a regular expression as a domain name matching criteria.                                              |
->>>>>>> b0b3daffb4707e70caa368eff121d9b80adecf1e
 
   ***NOTE:**
   One of the attribute of flowDescriptions, URls and domainName is mandatory.
