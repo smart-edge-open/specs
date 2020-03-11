@@ -393,57 +393,58 @@ policy:
 
 Supported operations through `kube-cnca` plugin:
 
-  * Creation of packet flow description transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
+  * Creation of packet flow description (PFD) transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
   * Deletion of transactions and applications within a transaction
   * Updating (patching) transactions and applications within a transaction
-  * get or get-all transactions. get a specific application within a transaction
+  * get or get-all transactions. 
+  * get a specific application within a transaction
 
-Creation of the AF transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a transaction creation request onto AF:
+Creation of the AF PFD transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a PFD transaction creation request onto AF:
 ```shell
 kubectl cnca pfd apply -f <config.yml>
 ```
 
-When the transaction is successfully created, the `apply` command will return the transaction URL that includes transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. **It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.**
+When the PFD transaction is successfully created, the `apply` command will return the transaction URL, that includes transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. **It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.**
 
-To retrieve an existing transaction with a known transaction ID, use the below command:
+To retrieve an existing PFD transaction with a known transaction ID, use the below command:
 ```shell
 kubectl cnca pfd get transaction <transaction-id>
 ```
 
-To retrieve all active transactions at AF, execute this command:
+To retrieve all active PFD transactions at AF, execute this command:
 ```shell
 kubectl cnca pfd get transactions
 ```
 
-To modify an active transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca pfd patch transaction <transaction-id> -f <config.yml>
 ```
 
-To delete an active transaction, use the `delete` command as below:
+To delete an active PFD transaction, use the `delete` command as below:
 ```shell
 kubectl cnca pfd delete transaction <transaction-id>
 ```
 
-To retrieve an existing application within a transaction with a known application ID and transaction ID, use the below command:
+To retrieve an existing application within a PFD  transaction with a known application ID and transaction ID, use the below command:
 ```shell
 kubectl cnca pfd get transaction <transaction-id> application <application-id>
 ```
 
-To modify an application within an active transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an application within an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca pfd patch transaction <transaction-id> application <application-id> -f <config.yml>
 ```
 
-To delete an application within an active transaction, use the `delete` command as below:
+To delete an application within an active PFD transaction, use the `delete` command as below:
 ```shell
 kubectl cnca pfd delete transaction <transaction-id> application <application-id>
 ```
 
 
-##### Sample YAML NGC AF transaction configuration
+##### Sample YAML NGC AF PFD ransaction configuration
 
-The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
+The `kube-cnca pfd apply` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
 
 ```yaml
 apiVersion: v1
@@ -650,7 +651,7 @@ This sections describes the paramters that are used in the Packet flow descripti
 |--------------|-----------|---------|
 |externalAppID|Yes|Unique Application identifier of a PFD|
 |Allowed Delay|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
-|Caching Time|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
+|Caching Time|No|It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD|
 |pfdId|Yes|Identifies a PFD of an application identifier.|
 |flowDescriptions|No|Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.|
 |Urls|No|Indicates a URL or a regular expression which is used to match the significant parts of the URL.|
