@@ -22,12 +22,15 @@ Copyright (c) 2019-2020 Intel Corporation
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
       - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
         - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
+      - [Packet Flow Description operations with 5G Core (through AF interface)](#packet-flow-description-operations-with-5g-core-through-af-interface)
+        - [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration)
   - [On-Premises mode](#on-premises-mode)
     - [Bringing up NGC components in On-Premises mode](#bringing-up-ngc-components-in-on-premises-mode)
     - [Configuring in On-Premises mode](#configuring-in-on-premises-mode-1)
       - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface-1)
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core-1)
       - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface-1)
+      - [Packet Flow Description operation with 5G Core (through AF interface)](#packet-flow-description-operation-with-5g-core-through-af-interface)
   - [Traffic Influence Subscription description](#traffic-influence-subscription-description)
     - [Identification (Mandatory)](#identification-mandatory)
     - [Traffic Description Group (Mandatory)](#traffic-description-group-mandatory)
@@ -38,6 +41,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Temporal Validity (Optional)](#temporal-validity-optional)
     - [UPF Event Notifications (Optional)](#upf-event-notifications-optional)
     - [AF to NEF specific (Optional)](#af-to-nef-specific-optional)
+  - [Packet Flow Description transaction description](#packet-flow-description-transaction-description)
 
 # 4G/LTE Core Configuration using CNCA
 
@@ -387,6 +391,119 @@ policy:
     routeProfId: default
 ```
 
+#### Packet Flow Description operations with 5G Core (through AF interface)
+
+Supported operations through `kube-cnca` plugin:
+
+  * Creation of packet flow description (PFD) transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
+  * Deletion of transactions and applications within a transaction
+  * Updating (patching) transactions and applications within a transaction
+  * get or get-all transactions. 
+  * get a specific application within a transaction
+
+Creation of the AF PFD transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a PFD transaction creation request onto AF:
+```shell
+kubectl cnca pfd apply -f <config.yml>
+```
+
+When the PFD transaction is successfully created, the `apply` command will return the transaction URL, that includes transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. **It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.**
+
+To retrieve an existing PFD transaction with a known transaction ID, use the below command:
+```shell
+kubectl cnca pfd get transaction <transaction-id>
+```
+
+To retrieve all active PFD transactions at AF, execute this command:
+```shell
+kubectl cnca pfd get transactions
+```
+
+To modify an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+```shell
+kubectl cnca pfd patch transaction <transaction-id> -f <config.yml>
+```
+
+To delete an active PFD transaction, use the `delete` command as below:
+```shell
+kubectl cnca pfd delete transaction <transaction-id>
+```
+
+To retrieve an existing application within a PFD  transaction with a known application ID and transaction ID, use the below command:
+```shell
+kubectl cnca pfd get transaction <transaction-id> application <application-id>
+```
+
+To modify an application within an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+```shell
+kubectl cnca pfd patch transaction <transaction-id> application <application-id> -f <config.yml>
+```
+
+To delete an application within an active PFD transaction, use the `delete` command as below:
+```shell
+kubectl cnca pfd delete transaction <transaction-id> application <application-id>
+```
+
+
+##### Sample YAML NGC AF PFD transaction configuration
+
+The `kube-cnca pfd apply` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
+
+```yaml
+apiVersion: v1
+kind: ngc_pfd
+policy:
+  pfdDatas:
+    - externalAppID: afApp01
+      allowedDelay: 1000
+      cachingTime: 1000
+      pfds:
+        - pfdID: pfdId01
+          flowDescriptions:
+            - "permit in ip from 10.11.12.123 80 to any"
+          domainNames:
+            - "www.google.com"
+        - pfdID: pfdId02
+          urls:
+            - "^http://test.example2.net(/\\S*)?$"
+        - pfdID: pfdId03
+          domainNames:
+            - "www.example.com"
+    - externalAppID: afApp02
+      allowedDelay: 1000
+      cachingTime: 1000
+      pfds:
+        - pfdID: pfdId03
+          flowDescriptions:
+            - "permit in ip from 10.68.28.39 80 to any"
+        - pfdID: pfdId04
+          urls:
+            - "^http://test.example1.net(/\\S*)?$"
+        - pfdID: pfdId05
+          domainNames:
+            - "www.example.com"
+```
+
+Sample yaml file for updating a single application
+
+```yaml
+apiVersion: v1
+kind: ngc_pfd
+policy:
+  externalAppID: afApp01
+  allowedDelay: 1000
+  cachingTime: 1000
+  pfds:
+    - pfdID: pfdId01
+      flowDescriptions:
+        - "permit in ip from 10.11.12.123 80 to any"
+    - pfdID: pfdId02
+      urls:
+        - "^http://test.example2.net(/\\S*)?$"
+    - pfdID: pfdId03
+      domainNames:
+        - "www.latest_example.com"
+```
+
 
 ## On-Premises mode
 
@@ -449,76 +566,119 @@ policy:
 
    * To delete a submitted edge traffic subscription
       ![Subscription service delete](using-openness-cnca-images/af_subscription_delete.png)
+
+#### Packet Flow Description operation with 5G Core (through AF interface)
+
+   * Edge traffic PFD transaction submission homepage
+      sample url: http://<cnca_ui_ip>:3020/pfds
+      ![PFD transaction services homepage](using-openness-cnca-images/af_pfd_transaction_home.png)
+
+   * Edge PFD transaction submissions with 5G-Core (NEF)
+      click on the "Create" button on the above homepage
+      ![Subscription service create](using-openness-cnca-images/pfd_transaction_create.png)
+
+   * Display of submitted Edge PFD transaction
+      ![PFD transaction service display](using-openness-cnca-images/pfd_transaction_display.png)
+
+   * To edit a submitted edge PFD transaction
+      ![PFD transaction service edit](using-openness-cnca-images/pfd_transaction_edit.png)
+
+   * To edit a submitted edge PFD transaction application
+      ![PFD transaction service patch](using-openness-cnca-images/pfd_transaction_edit_appID.png)
+
+   * To delete a submitted edge PFD transaction
+      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete.png)
+
+   * To delete a submitted edge PFD transaction application
+      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete_appID.png)
+
 ## Traffic Influence Subscription description
 
 This sections describes the paramters that are used in the Traffic Influce subscription POST request. Groups mentioned as Mandatory needs te provided, in the absence of the Mandatory parameters a 400 response would be returned.
 
 ### Identification (Mandatory)
-|Attribute name|Description|
-|--------------|-----------|
-|afTransId | Identifies an NEF Northbound interface transaction, generated by the AF |
-|self| Link to this resource. This parameter shall be supplied by the NEF in HTTP POST responses, which is used by AF for further operations |
+| Attribute name | Description                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| afTransId      | Identifies an NEF Northbound interface transaction, generated by the AF                                                               |
+| self           | Link to this resource. This parameter shall be supplied by the NEF in HTTP POST responses, which is used by AF for further operations |
 
 ### Traffic Description Group (Mandatory)
 
-|Attribute name|Description|
-|--------------|-----------|
-|afServiceId|Identifies a service on behalf of which the AF is issuing the request|
-|dnn|Identifies a DNN|
-|snssai|Identifies an S-NSSAI|
+| Attribute name | Description                                                           |
+| -------------- | --------------------------------------------------------------------- |
+| afServiceId    | Identifies a service on behalf of which the AF is issuing the request |
+| dnn            | Identifies a DNN                                                      |
+| snssai         | Identifies an S-NSSAI                                                 |
 
 Note: One of afServiceId or dnn shall be included
 
-|Attribute name|Description|
-|--------------|-----------|
-|afAppId|Identifies an application|
-|trafficFilters|Identifies IP packet filters|
-|ethTrafficFilters|Identifies Ethernet packet filters|
+| Attribute name    | Description                        |
+| ----------------- | ---------------------------------- |
+| afAppId           | Identifies an application          |
+| trafficFilters    | Identifies IP packet filters       |
+| ethTrafficFilters | Identifies Ethernet packet filters |
 
 Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be included
 
 ### Target UE Identifier (Mandatory)
-|Attribute name|Description|
-|--------------|-----------|
-|externalGroupId|Identifies a group of users|
-|anyUeInd|Identifies whether the AF request applies to any UE. This attribute shall set to "true" if applicable for any UE, otherwise, set to "false"|
-|gpsi|Identifies a user|
-|ipv4Addr|Identifies the IPv4 address|
-|ipv6Addr|Identifies the IPv6 address|
-|macAddr|Identifies the MAC address|
+| Attribute name  | Description                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| externalGroupId | Identifies a group of users                                                                                                                 |
+| anyUeInd        | Identifies whether the AF request applies to any UE. This attribute shall set to "true" if applicable for any UE, otherwise, set to "false" |
+| gpsi            | Identifies a user                                                                                                                           |
+| ipv4Addr        | Identifies the IPv4 address                                                                                                                 |
+| ipv6Addr        | Identifies the IPv6 address                                                                                                                 |
+| macAddr         | Identifies the MAC address                                                                                                                  |
 
 Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or macAddr), External Group Identifier (i.e. "externalGroupId") or any UE indication "anyUeInd" shall be included
 
 ### Application Relocation (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|appReloInd |Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise set to "false". Default value is "false" if omitted |
+| Attribute name | Description                                                                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| appReloInd     | Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise set to "false". Default value is "false" if omitted |
 
 ### Traffic Routing (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|trafficRoutes|Identifies the N6 traffic routing requirement|
+| Attribute name | Description                                   |
+| -------------- | --------------------------------------------- |
+| trafficRoutes  | Identifies the N6 traffic routing requirement |
 
 ### Spatial Validity (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|validGeoZoneIds|Identifies a geographic zone that the AF request applies only to the traffic of UE(s) located in this specific zone |
+| Attribute name  | Description                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| validGeoZoneIds | Identifies a geographic zone that the AF request applies only to the traffic of UE(s) located in this specific zone |
 
 ### Temporal Validity (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|tempValidities|Indicates the time interval(s) during which the AF request is to be applied|
+| Attribute name | Description                                                                 |
+| -------------- | --------------------------------------------------------------------------- |
+| tempValidities | Indicates the time interval(s) during which the AF request is to be applied |
 
 ### UPF Event Notifications (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|subscribedEvents|Identifies the requirement to be notified of the event(s)|
-|dnaiChgType|Identifies a type of notification regarding UP path management event|
-|notificationDestination|Contains the Callback URL to receive the notification from the NEF. It shall be present if the "subscribedEvents" is present|
+| Attribute name          | Description                                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| subscribedEvents        | Identifies the requirement to be notified of the event(s)                                                                    |
+| dnaiChgType             | Identifies a type of notification regarding UP path management event                                                         |
+| notificationDestination | Contains the Callback URL to receive the notification from the NEF. It shall be present if the "subscribedEvents" is present |
 
 ### AF to NEF specific (Optional)
-|Attribute name|Description|
-|--------------|-----------|
-|suppFeat|Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
-|requestTestNotification|Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3 of 3GPP TS 29.122 [4]. Set to false or omitted otherwise|
-|websockNotifConfig|Configuration parameters to set up notification delivery over Websocket protocol|
+| Attribute name          | Description                                                                                                                                                                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| suppFeat                | Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
+| requestTestNotification | Set to true by the AF to request the NEF to send a test notification as defined in subclause 5.2.5.3 of 3GPP TS 29.122 [4]. Set to false or omitted otherwise                                                                                           |
+| websockNotifConfig      | Configuration parameters to set up notification delivery over Websocket protocol                                                                                                                                                                        |
+
+## Packet Flow Description transaction description
+
+This sections describes the paramters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
+
+|Attribute name|Mandatory|Description|
+|--------------|-----------|---------|
+|externalAppID|Yes|Unique Application identifier of a PFD|
+|Allowed Delay|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
+|Caching Time|No|It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD|
+|pfdId|Yes|Identifies a PFD of an application identifier.|
+|flowDescriptions|No|Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.|
+|Urls|No|Indicates a URL or a regular expression which is used to match the significant parts of the URL.|
+|domainName|No|Indicates an FQDN or a regular expression as a domain name matching criteria.|
+
+  ***NOTE:**
+  One of the attribute of flowDescriptions, URls and domainName is mandatory.
