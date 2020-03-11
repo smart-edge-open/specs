@@ -14,6 +14,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Application on-boarding](#application-on-boarding)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
+    - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
 - [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
@@ -97,9 +98,17 @@ These plugins are based on [CNI (Container Network Interface) specification](htt
 OpenNESS Experience Kits provides several ready-to-use Ansible roles deploying CNIs.
 Following CNIs are currently supported:
 * [kube-ovn](https://github.com/alauda/kube-ovn)
+  * **Only as primary CNI**
+  * CIDR: 10.16.0.0/16
 * [flannel](https://github.com/coreos/flannel)
+  * IPAM: host-local
+  * CIDR: 10.244.0.0/16
+  * Network attachment definition: openness-flannel
 * [calico](https://github.com/projectcalico/cni-plugin)
-* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
+  * IPAM: host-local
+  * CIDR: 10.243.0.0/16
+  * Network attachment definition: openness-calico
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
 
 Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [Multus CNI](https://github.com/intel/multus-cni) is used.
 
@@ -121,6 +130,48 @@ kubernetes_cnis:
 - kubeovn
 - calico
 - sriov
+```
+
+### Adding additional interfaces to pods
+
+In order to add additional interface from secondary CNIs annotation is required.
+Below is an example pod yaml file for a scenario with `kube-ovn` as a primary CNI and `calico` and `flannel` as additional CNIs.
+Multus will create an interface named `calico` using network attachment definition `openness-calico` and interface `flannel` using network attachment definition `openness-flannel`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cni-test-pod
+  annotations:
+    k8s.v1.cni.cncf.io/networks: openness-calico@calico, openness-flannel@flannel
+spec:
+  containers:
+  - name: cni-test-pod
+    image: docker.io/centos/tools:latest
+    command:
+    - /sbin/init
+```
+
+Below is an output (some lines were cut out for readability) of `ip a` command executed in the pod.
+Following interfaces are available: `calico@if142`, `flannel@if143` and `eth0@if141` (`kubeovn`).
+```
+# kubectl exec -ti cni-test-pod ip a
+
+1: lo:
+    inet 127.0.0.1/8 scope host lo
+
+2: tunl0@NONE:
+    link/ipip 0.0.0.0 brd 0.0.0.0
+
+4: calico@if142:
+    inet 10.243.0.3/32 scope global calico
+
+6: flannel@if143:
+    inet 10.244.0.3/16 scope global flannel
+
+140: eth0@if141:
+    inet 10.16.0.5/16 brd 10.16.255.255 scope global eth0
 ```
 
 # Q&A

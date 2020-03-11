@@ -196,7 +196,8 @@ Note that automatic inclusion of the `common` role should be handled by Ansible 
 * If there are some additional requirements that should be checked before running the playbook (to not have an error in the middle of execution), they can be placed in the `roles/kubernetes/cni/tasks/precheck.yml` file which is included as a pre_task in plays for both Edge Controller and Edge Node.<br>
 Currently executed basic prechecks are:
   * Check if any CNI is requested (i.e. `kubernetes_cni` is not empty),
-  * Check if `sriov` is not requested as primary (first on the list) or standalone (only on the list)
+  * Check if `sriov` is not requested as primary (first on the list) or standalone (only on the list),
+  * Check if `kubeovn` is requested as a primary (first on the list),
   * Check if requested CNI is available (check if some CNI is requested that isn't present in the `available_kubernetes_cnis` list).
 * CNI roles should as self-contained as possible (CNI specific tasks should not be present in `kubernetes/{master,worker,common}` or `openness/network_edge/{master,worker}` if not absolutely necessary).
 * If CNI needs custom OpenNESS service (like Interface Service in case of `kube-ovn`), then it can be added to the `openness/network_edge/{master,worker}`.<br>
@@ -206,3 +207,4 @@ Currently executed basic prechecks are:
     include_tasks: kube-ovn.yml
     when: "'kubeovn' in kubernetes_cnis"
   ```
+* If CNI is to be used as an additional CNI (with Multus), Network Attachment Definition must be supplied ([refer to Multus docs for more info](https://github.com/intel/multus-cni/blob/master/doc/quickstart.md#storing-a-configuration-as-a-custom-resource)).
