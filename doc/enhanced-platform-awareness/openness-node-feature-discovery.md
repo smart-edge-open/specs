@@ -7,8 +7,11 @@ Copyright (c) 2019 Intel Corporation
 
 - [Node Feature Discovery support in OpenNESS](#node-feature-discovery-support-in-openness)
   - [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
-  - [Details - Node Feature Discovery support in OpenNESS](#details---node-feature-discovery-support-in-openness)
-    - [Usage](#usage)
+  - [Details](#details)
+    - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
+      - [Usage](#usage)
+    - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
+      - [Usage](#usage-1)
   - [Reference](#reference)
 
 ## Overview of NFD and Edge usecase
@@ -32,7 +35,7 @@ At its core, NFD detects hardware features available on each node in a Kubernete
 NFD consists of two software components:
 
 1) nfd-master is responsible for labeling Kubernetes node objects
-2)  nfd-worker detects features and communicates them to the nfd-master. One instance of nfd-worker should be run on each node of the cluster
+2) nfd-worker detects features and communicates them to the nfd-master. One instance of nfd-worker should be run on each node of the cluster
 
 The figure below illustrates how the CDN application will be deployed on the right platform when NFD is utilized, where the required key hardware like NVMe and AVX instruction set support is available.
 
@@ -46,13 +49,15 @@ _Figure - CDN app deployment with NFD Features_
 
 > UEFI Secure Boot: Boot Firmware verification and authorization of OS Loader/Kernel  components
 
-## Details - Node Feature Discovery support in OpenNESS
+## Details
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `network_edge.yml` file and commenting out `nfd` role before OpenNESS installation.
+### Node Feature Discovery support in OpenNESS Network Edge
+
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `network_edge.yml` file and commenting out `nfd/network_edge` role before OpenNESS installation.
 
 Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
 
-### Usage
+#### Usage
 
 NFD is working automatically and does not require any user action to collect the features from nodes. Features found by NFD and labeled in Kubernetes can be shown by command: `kubectl get no -o json | jq '.items[].metadata.labels'`.
 
@@ -110,6 +115,24 @@ spec:
   nodeSelector:
     feature.node.kubernetes.io/cpu-pstate.turbo: 'true'
 ```
+
+### Node Feature Discovery support in OpenNESS On Premises
+
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `on_premises.yml` file and commenting out `nfd/onprem/master` role and `nfd/onprem/master` role before OpenNESS installation.
+
+NFD service in OpenNESS On Premises consists of two software components:
+
+- *nfd-worker*, which is taken from https://github.com/kubernetes-sigs/node-feature-discovery (downloaded as image)
+- *nfd-master*: stand alone service run on Edge Controller.
+
+Nfd-worker connects to nfd-master server. Connection between nfd-workers and nfd-master is secured by TLS based certificates used in Edge Node enrollment: nfd-worker uses certificates of Edge Node, nfd-master generates certificate based on Edge Controller root certificate. Nfd-worker provides hardware features to nfd-master.
+
+#### Usage
+
+NFD is working automatically and does not require any user action to collect the features from nodes.
+Default version of nfd-worker downloaded by ansible scripts during deployment is v.0.5.0. It can be changed by setting variable `nfd_version` in `roles/nfd/onprem/worker/defaults/main.yml`.
+
+Features found by NFD are visible in Edge Controller UI.
 
 ## Reference
 More details about NFD can be found here: https://github.com/Intel-Corp/node-feature-discovery
