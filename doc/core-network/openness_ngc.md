@@ -13,6 +13,8 @@ Copyright © 2019 Intel Corporation
     - [Application Function](#application-function)
       - [Traffic steering NB APIs](#traffic-steering-nb-apis)
       - [AF supported Traffic steering API (South bound)](#af-supported-traffic-steering-api-south-bound)
+      - [PFD Management NB APIs](#pfd-management-nb-apis)
+      - [AF supported PFD management API (South bound)](#af-supported-pfd-management-api-south-bound)
       - [NGC notifications](#ngc-notifications)
     - [Network Exposure Function](#network-exposure-function)
     - [OAM Interface](#oam-interface)
@@ -20,6 +22,7 @@ Copyright © 2019 Intel Corporation
     - [Core Network Configuration Agent](#core-network-configuration-agent)
   - [REST based API flows](#rest-based-api-flows)
     - [AF-NEF interface for traffic influence](#af-nef-interface-for-traffic-influence)
+    - [AF-NEF interface for PFD Management](#af-nef-interface-for-pfd-management)
     - [OAM interface for edge service registration](#oam-interface-for-edge-service-registration)
       - [OAM API flows](#oam-api-flows)
   - [5G End to End flows for Edge by OpenNESS](#5g-end-to-end-flows-for-edge-by-openness)
@@ -146,9 +149,9 @@ Below pictures shows the Micro service architectural view of OpenNESS solution w
 
 ### Application Function
 
-An Application Function (AF) is a micro service in the OpenNESS edge controller solution, developed in golang.  In the scope of the current release (OpenNESS 19.12), AF supports the Traffic influencing subscription functionality to help in steering the Edge specific traffic in UPF towards the applications deployed on the OpenNESS edge node.
+An Application Function (AF) is a micro service in the OpenNESS edge controller solution, developed in golang.  In the scope of the current release (OpenNESS 20.03), AF supports the Traffic influencing subscription and Packet Flow Description Management functionality to help in steering the Edge specific traffic in UPF towards the applications deployed on the OpenNESS edge node.
 
-Other AF functionalities as discussed in 3GPP 5G standard [3GPP_29122], PFD Management Section 4.4.10, Changing chargeable party Section 4.4.4, configuration QoS for AF sessions Section 4.4.13, Monitoring Section 4.4.2, Device triggering Section 4.4.6 and resource management of Background Data Transfer (BDT) Section 4.4.3 are in under consideration for implementation in future OpenNESS releases.
+Other AF functionalities as discussed in 3GPP 5G standard [3GPP_29122], Changing chargeable party Section 4.4.4, configuration QoS for AF sessions Section 4.4.13, Monitoring Section 4.4.2, Device triggering Section 4.4.6 and resource management of Background Data Transfer (BDT) Section 4.4.3 are in under consideration for implementation in future OpenNESS releases.
 
 The OpenNESS AF micro service provides a northbound (NB) REST based API interface for other micro services which provide a user interface (i.e. CNCA/UI or CLI) and also these NB API can be invoked from external services which provides infrastructure for automation and/or orchestration.
 
@@ -164,6 +167,18 @@ The OpenNESS AF micro service provides a northbound (NB) REST based API interfac
 * Supported methods:  POST,PUT,PATCH,GET,DELETE
 * Request/Response body: _5G NEF North Bound APIs schema at openness.org_
 
+#### PFD Management NB APIs
+
+* API End point: _/af/v1/pfd/transactions_ 
+* Supported methods: POST,PUT,PATCH,GET,DELETE
+* Request/Response body: _5G AF North Bound APIs schema at openness.org_
+
+#### AF supported PFD management API (South bound)
+
+* API End point: _/3gpp-pfd-management/v1/{scsAsId}/transactions_
+* Supported methods:  POST,PUT,PATCH,GET,DELETE
+* Request/Response body: _5G NEF North Bound APIs schema at openness.org_
+
 #### NGC notifications
 
 As part of the traffic subscription API exchange, SMF generated notifications related to DNAI change can be forwarded to AF through NEF. NEF Reference implementation has place holders to integrate with 5G Core control plane.
@@ -176,7 +191,7 @@ According to 3GPP 5G System Architecture [3GPP TS 23.501-f30], NEF is a function
 
 * Trivial, but still may be helpful for 5G Core partners who are looking for NEF service to add to their solution for OpenNESS integration.
 
-In the OpenNESS provided NEF reference implementation for Traffic influence is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE}, are terminated and looped back at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
+In the OpenNESS provided NEF reference implementation for Traffic influence and PFD management is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE} and Nnef_PfdManagement {CREATE, UPDATE, DELETE}, are terminated and looped back at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
 
 ### OAM Interface
 
@@ -212,6 +227,20 @@ The flow diagrams below depict the scenarios for the traffic influence subscript
 
 * Deletion of traffic influencing rules subscription through AF
 ![Traffic influence subscription Delete](ngc-images/traffic_subscription_del.png)
+
+### AF-NEF interface for PFD Management
+
+* Addition of PFD Management transaction rules through AF
+![PFD Management transaction Addition](ngc-images/PFD_Management_transaction_add.png)
+
+* Update of PFD Management transaction rules through AF
+![PFD Management transaction update](ngc-images/PFD_Management_transaction_update.png)
+
+* Get PFD Management transaction rules through AF
+![PFD Management transaction Get](ngc-images/PFD_Management_transaction_get.png)
+
+* Deletion of PFD Management transaction rules through AF
+![PFD Management transaction Delete](ngc-images/PFD_Management_transaction_del.png)
 
 ### OAM interface for edge service registration
 
