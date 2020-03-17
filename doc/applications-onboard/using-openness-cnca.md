@@ -521,12 +521,12 @@ policy:
   **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
 
 #### Certificates Management for communicating with 5G core components
-  5G Core components uses HTTPS protocol over HTTP2 for communication. To communicate with 5G components, the certificates used by 5G core components servers (AF/NEF/OAM) should be imported into web browser. The root certificate `root-ca-cert.pem` which need to be imported is available on edge controller at location `/etc/openness/certs/ngc/`. The certificate can be imported in the different browsers as:
+  5G Core components uses HTTPS protocol over HTTP2 for communication. To communicate with 5G components, the certificates used by 5G core microservices (AF/NEF/OAM) should be imported into web browser. The root certificate `root-ca-cert.pem` which need to be imported is available on edge controller at location `/etc/openness/certs/ngc/`. The certificate can be imported in the different browsers as:
   
    * Google Chrome (ver 80.0.3987): Go to settings --> Under "Privacy and security" Section Click on "More" --> Select "Manage Certificates" --> in the pop up window select "Intermediate Certification Authorities" --> Select "Import" and provide the downloaded certificate file (root-ca-cert.pem).
    * Mozilla Firefox (ver 72.0.2): Go to options --> Under "Privacy and security" Section Click on "View Certificates..." --> Under "Authorities" section click on "import" --> Provide the certificate (root-ca-cert.pem) and import it for accessing websites.
   
-  **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates other steps can be followed to trust the certificates. User needs to access these specific 5G core components URL to trust the digital certificates used by the 5G core components. First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`. On accessing these url browser will show the warning for trusting the self-signed certificate. Process by trusting the certificates.
+  **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates other steps can be followed to trust the certificates. User needs to access these specific 5G core components URL to trust the digital certificates used by the 5G core components. First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`. On accessing these url browser will show the warning for trusting the self-signed certificate. Proceed by trusting the certificates.
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 
