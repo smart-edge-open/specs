@@ -23,7 +23,7 @@ Copyright (c) 2019-2020 Intel Corporation
       - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface)
         - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
       - [Packet Flow Description operations with 5G Core (through AF interface)](#packet-flow-description-operations-with-5g-core-through-af-interface)
-        - [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration)
+        - [Sample YAML NGC AF PFD transaction configuration](#sample-yaml-ngc-af-pfd-transaction-configuration)
   - [On-Premises mode](#on-premises-mode)
     - [Bringing up NGC components in On-Premises mode](#bringing-up-ngc-components-in-on-premises-mode)
     - [Configuring in On-Premises mode](#configuring-in-on-premises-mode-1)
@@ -670,15 +670,15 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 
 This sections describes the paramters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
 
-|Attribute name|Mandatory|Description|
-|--------------|-----------|---------|
-|externalAppID|Yes|Unique Application identifier of a PFD|
-|Allowed Delay|No|Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay|
-|Caching Time|No|It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD|
-|pfdId|Yes|Identifies a PFD of an application identifier.|
-|flowDescriptions|No|Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.|
-|Urls|No|Indicates a URL or a regular expression which is used to match the significant parts of the URL.|
-|domainName|No|Indicates an FQDN or a regular expression as a domain name matching criteria.|
+| Attribute name   | Mandatory | Description                                                                                                                            |
+| ---------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| externalAppID    | Yes       | Unique Application identifier of a PFD                                                                                                 |
+| Allowed Delay    | No        | Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay             |
+| Caching Time     | No        | It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD |
+| pfdId            | Yes       | Identifies a PFD of an application identifier.                                                                                         |
+| flowDescriptions | No        | Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.                                           |
+| Urls             | No        | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                                       |
+| domainName       | No        | Indicates an FQDN or a regular expression as a domain name matching criteria.                                                          |
 
   ***NOTE:**
   One of the attribute of flowDescriptions, URls and domainName is mandatory.
