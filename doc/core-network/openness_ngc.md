@@ -17,6 +17,7 @@ Copyright © 2019 Intel Corporation
       - [AF supported PFD management API (South bound)](#af-supported-pfd-management-api-south-bound)
       - [NGC notifications](#ngc-notifications)
     - [Network Exposure Function](#network-exposure-function)
+    - [OAuth2 Support between AF and NEF Network function](#oauth2-support-between-af-and-nef-network-function)
     - [OAM Interface](#oam-interface)
       - [Edge service registration](#edge-service-registration)
     - [Core Network Configuration Agent](#core-network-configuration-agent)
@@ -192,6 +193,14 @@ According to 3GPP 5G System Architecture [3GPP TS 23.501-f30], NEF is a function
 * Trivial, but still may be helpful for 5G Core partners who are looking for NEF service to add to their solution for OpenNESS integration.
 
 In the OpenNESS provided NEF reference implementation for Traffic influence and PFD management is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE} and Nnef_PfdManagement {CREATE, UPDATE, DELETE}, are terminated and looped back at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
+
+### OAuth2 Support between AF and NEF Network function 
+
+The AF and NEF functions supports the OAuth2 with grant type as "client_credentials" over an https interface. This is in accordance to subclause 13.4.1 of 3GPP TS 33.501 (also refer 3GPP 29.122, 3GPP 29.500 and 3GPP 29.510 ). A reference OAuth2 library is provided which generates the OAuth2 token and validates it in absence of NRF server which is responsible for token management in 5G core.
+
+The OAuth2 flow between AF and NEF is as shown in below diagram.
+
+![OAuth2 flow between AF and NEF](ngc-images/OAuth2.png)
 
 ### OAM Interface
 
