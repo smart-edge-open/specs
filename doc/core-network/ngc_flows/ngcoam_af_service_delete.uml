@@ -11,10 +11,10 @@ footer "Proprietary and Confidential"
 title "NGC OAM flows between OpenNESS Controller and NGC Core OAM Component"
 
 actor "Admin" as user
-box  "OpenNESS Controller" #LightGreen
+box  "OpenNESS Controller" #LightBlue
 participant "UI/CLI" as cnca 
 end box
-box  "NGC component" #LightBlue
+box  "NGC component" #LightGreen
 participant "OAM"  as oam
 note over oam
    OpenNESS provided component 
@@ -27,9 +27,9 @@ end box
 == AF services operations with NGC Core through OAM Component ==
 
 group AF services deregistration with 5G Core
-    user -> cnca : Deregister AF services from 5G Core (UI): \n {afId}
+    user -> cnca : Deregister AF services from 5G Core (UI): \n {afServiceId}
     activate cnca
-    cnca -> oam : /ngcoam/v1/af/services/{afId}: DELETE
+    cnca -> oam : /ngcoam/v1/af/services/{afServiceId}: DELETE
     activate oam
     oam -> oam : NGC_OAM_STUB()
     oam -> ngccp : {Open: 3rd Party NGC integration with OpenNESS(oam)} 
@@ -37,20 +37,6 @@ group AF services deregistration with 5G Core
     oam --> cnca : OK \n ERROR: {400/500}
     deactivate oam
     cnca --> user : Success/Failure 
-    deactivate cnca
-end
-
-group DNN(Edge) services deregistration with 5G Core
-    user -> cnca : Deregister DNN with 5G Core from AF services (UI): \n {afId}
-    activate cnca
-    cnca -> oam : /ngcoam/v1/af/services/{afId}/dnn/{dnai}: DELETE
-    activate oam
-    oam -> oam : NGC_OAM_STUB()
-    oam -> ngccp : {Open: 3rd Party NGC integration with OpenNESS(oam)} 
-    ngccp --> oam : 
-    oam --> cnca : OK \n ERROR: {400/500}
-    deactivate oam
-    cnca --> user : Success/Failure
     deactivate cnca
 end
 

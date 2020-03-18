@@ -11,10 +11,10 @@ footer "Proprietary and Confidential"
 title "NGC OAM flows between OpenNESS Controller and NGC Core OAM Component"
 
 actor "Admin" as user
-box  "OpenNESS Controller" #LightGreen
+box  "OpenNESS Controller" #LightBlue
 participant "UI/CLI" as cnca 
 end box
-box  "NGC component" #LightBlue
+box  "NGC component" #LightGreen
 participant "OAM"  as oam
 note over oam
    OpenNESS provided component 
@@ -27,9 +27,9 @@ end box
 == AF services operations with NGC Core through OAM Component ==
 
 group Update DNS config values for DNN served by Edge DNN
-    user -> cnca : Update DNS configuration of DNN (UI): \n {afId, dnn, dnai, dns} 
+    user -> cnca : Update DNS configuration of DNN (UI): \n {afServiceId, dnn, dnai, snssai, tac, dns-ip, upf-ip} 
     activate cnca 
-    cnca -> oam : /ngcoam/v1/af/services/{afId} : PATCH \n {afInstance, [{dnn (RO), dnai(RO), dns}, ...]}
+    cnca -> oam : /ngcoam/v1/af/services/{afServiceId} : PATCH \n {dnn, dnai, snssai, tac, dns-ip, upf-ip} 
     activate oam 
     oam -> oam : NGC_OAM_STUB()
     oam -> ngccp : {Open: 3rd Party NGC integration with OpenNESS(oam)} 
