@@ -27,7 +27,7 @@ Copyright (c) 2019-2020 Intel Corporation
   - [On-Premises mode](#on-premises-mode)
     - [Bringing up NGC components in On-Premises mode](#bringing-up-ngc-components-in-on-premises-mode)
     - [Configuring in On-Premises mode](#configuring-in-on-premises-mode-1)
-      - [Certificates Management for communicating with 5G core components](#certificates-management-for-communicating-with-5g-core-components)
+      - [Certificates Management for communicating with 5G core micro-services](#certificates-management-for-communicating-with-5g-core-micro-services)
       - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface-1)
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core-1)
       - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface-1)
@@ -520,15 +520,20 @@ policy:
       ![OpenNESS NGC homepage](using-openness-cnca-images/ngc_homepage.png)
   **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
 
-#### Certificates Management for communicating with 5G core components
-  5G Core components uses HTTPS protocol over HTTP2 for communication. To communicate with 5G components, the certificates used by 5G core microservices (AF/NEF/OAM) should be imported into web browser. The root certificate `root-ca-cert.pem` which need to be imported is available on edge controller at location `/etc/openness/certs/ngc/`. The certificate can be imported in the different browsers as:
+#### Certificates Management for communicating with 5G core micro-services
+  5G Core micro-services uses HTTPS protocol over HTTP2 for communication. To communicate with 5G micro-services, the certificates used by 5G core micro-services (AF/NEF/OAM) should be imported into web browser. The root certificate `root-ca-cert.pem` which need to be imported is available at location `/etc/openness/certs/ngc/` where OpenNess Experience Kit is installed.
+
+  **NOTE:** The certificates generated as part of OpenNess Experience Kit are self signed certificates are for testing purpose only.
+
+  The certificate can be imported in the different browsers as:
   
    * Google Chrome (ver 80.0.3987): Go to settings --> Under "Privacy and security" Section Click on "More" --> Select "Manage Certificates" --> in the pop up window select "Intermediate Certification Authorities" --> Select "Import" and provide the downloaded certificate file (root-ca-cert.pem).
    * Mozilla Firefox (ver 72.0.2): Go to options --> Under "Privacy and security" Section Click on "View Certificates..." --> Under "Authorities" section click on "import" --> Provide the certificate (root-ca-cert.pem) and import it for accessing websites.
   
-  **NOTE:** These certificates are self-signed certificates and are used for testing purpose only.
-  
-  **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates other steps can be followed to trust the certificates. User needs to access these specific 5G core components URL to trust the digital certificates used by the 5G core components. First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`. On accessing these url browser will show the warning for trusting the self-signed certificate. Proceed by trusting the certificates.
+  **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates, other steps can be followed to trust the certificates:
+   * User needs to access these specific 5G core components URL to trust the certificates used by the 5G core components. 
+   * First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`. 
+   * On accessing these url, browser will show the warning for trusting the self-signed certificate. Proceed by trusting the certificates.
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 
@@ -679,7 +684,7 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 
 ## Packet Flow Description transaction description
 
-This sections describes the paramters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
+This sections describes the parameters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
 
 | Attribute name   | Mandatory | Description                                                                                                                            |
 | ---------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -687,9 +692,9 @@ This sections describes the paramters that are used in the Packet flow descripti
 | Allowed Delay    | No        | Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay             |
 | Caching Time     | No        | It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD |
 | pfdId            | Yes       | Identifies a PFD of an application identifier.                                                                                         |
-| flowDescriptions | No        | Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.                                           |
-| Urls             | No        | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                                       |
-| domainName       | No        | Indicates an FQDN or a regular expression as a domain name matching criteria.                                                          |
+| flowDescriptions | NOTE      | Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.                                           |
+| Urls             | NOTE      | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                                       |
+| domainName       | NOTE      | Indicates an FQDN or a regular expression as a domain name matching criteria.                                                          |
 
-  ***NOTE:**
+  **NOTE:**
   One of the attribute of flowDescriptions, URls and domainName is mandatory.

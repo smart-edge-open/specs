@@ -17,10 +17,12 @@ Copyright © 2019 Intel Corporation
       - [AF supported PFD management API (South bound)](#af-supported-pfd-management-api-south-bound)
       - [NGC notifications](#ngc-notifications)
     - [Network Exposure Function](#network-exposure-function)
-    - [OAuth2 Support between AF and NEF Network function](#oauth2-support-between-af-and-nef-network-function)
     - [OAM Interface](#oam-interface)
       - [Edge service registration](#edge-service-registration)
     - [Core Network Configuration Agent](#core-network-configuration-agent)
+    - [Security between OpenNess 5GC micro-services](#security-between-openness-5gc-micro-services)
+      - [HTTPS support](#https-support)
+      - [OAuth2 Support between AF and NEF micro-services](#oauth2-support-between-af-and-nef-micro-services)
   - [REST based API flows](#rest-based-api-flows)
     - [AF-NEF interface for traffic influence](#af-nef-interface-for-traffic-influence)
     - [AF-NEF interface for PFD Management](#af-nef-interface-for-pfd-management)
@@ -194,14 +196,6 @@ According to 3GPP 5G System Architecture [3GPP TS 23.501-f30], NEF is a function
 
 In the OpenNESS provided NEF reference implementation for Traffic influence and PFD management is as per 3GPP TS 23.502 Section 5.2.6. Supported API endpoints, Nnef_TrafficInfluence {CREATE,UPDATE,DELETE} and Nnef_PfdManagement {CREATE, UPDATE, DELETE}, are terminated and looped back at NEF itself, which allows partner the flexibility to integrate and validate without a Core solution.
 
-### OAuth2 Support between AF and NEF Network function 
-
-The AF and NEF functions supports the OAuth2 with grant type as "client_credentials" over an https interface. This is in accordance to subclause 13.4.1 of 3GPP TS 33.501 (also refer 3GPP 29.122, 3GPP 29.500 and 3GPP 29.510 ). A reference OAuth2 library is provided which generates the OAuth2 token and validates it in absence of NRF server which is responsible for token management in 5G core.
-
-The OAuth2 flow between AF and NEF is as shown in below diagram.
-
-![OAuth2 flow between AF and NEF](ngc-images/OAuth2.png)
-
 ### OAM Interface
 
 OAM agent functionality is another component which should be part of 5G Core solution to add/update certain configuration information which is outside the scope of standards. For example, Configuration of UPF parameters like, UPF IP address, DNS configuration, DNNs supported.  In the case of edge deployments, when the UPF is deployed as an NFV service on the edge node platform, MEC controllers may need to update the 5G Core control-plane components about the edge associated user-planes.  5G solutions may have some sort of interface to address this requirement, however, to provide an unified interface for integrated solutions, OpenNESS suggests a REST based OAM interface APIs to configure certain UPF related parameters.  Use of the OAM agent is optional and can be replaced with an OAM interface of the 5G Core solution if any exists.  
@@ -218,6 +212,25 @@ OAM agent functionality is another component which should be part of 5G Core sol
 ### Core Network Configuration Agent
 
 Core Network Configuration Agent (CNCA) is a micro service that provides an interface for end users of OpenNESS controller to interact with 5G Core network solution.  CNCA provides a web based UI and CLI (kube-ctl plugin) interface to interact with the AF and OAM services.
+
+### Security between OpenNess 5GC micro-services
+
+The security among OpenNess 5GC micro-services is supported through https and OAuth2.
+
+#### HTTPS support
+
+The OpenNess 5GC micro-services such as OAM, CNCA-UI, CLI kube-ctl, AF and NEF communicates using REST API's over https interface among then from 20.03 onwards.
+
+#### OAuth2 Support between AF and NEF micro-services 
+
+The AF and NEF micro-services supports the OAuth2 with grant type as "client_credentials" over an https interface. This is in accordance to subclause 13.4.1 of 3GPP TS 33.501 (also refer 3GPP 29.122, 3GPP 29.500 and 3GPP 29.510 ). A reference OAuth2 library is provided which generates the OAuth2 token and validates it. 
+
+*Note: When using 5GC core from any vendor the OAuth2 library need to be implemented as described by the vendor.*
+
+The OAuth2 flow between AF and NEF is as shown in below diagram.
+
+![OAuth2 flow between AF and NEF](ngc-images/OAuth2.png)
+
 
 ## REST based API flows
 
