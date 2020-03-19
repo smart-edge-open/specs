@@ -11,6 +11,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Running playbooks](#running-playbooks)
   - [On Premise Playbooks](#on-premise-playbooks)
     - [Cleanup playbooks](#cleanup-playbooks)
+    - [Dataplanes](#dataplanes)
   - [Manual steps](#manual-steps)
     - [Enrolling Nodes with Controller](#enrolling-nodes-with-controller)
       - [First Login](#first-login)
@@ -79,6 +80,16 @@ Teardown is made by going step by step in reverse order and undo the steps.
 For example, when installing Docker - RPM repository is added and Docker installed, when cleaning up - Docker is uninstalled and then repository is removed.
 
 Note that there might be some leftovers created by installed software.
+
+### Dataplanes
+OpenNESS' On Premises delivers two dataplanes to be used:
+* NTS (default)
+* OVS/OVN
+
+In order to use OVS/OVN instead of NTS, `onprem_dataplane` variable must be edited in `group_vars/all.yml` file before running the deployment scripts:
+```yaml
+onprem_dataplane: "ovncni"
+```
 
 ## Manual steps
 
