@@ -19,6 +19,7 @@ Copyright (c) 2019-2020 Intel Corporation
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
       - [Configuring Interface](#configuring-interface)
       - [Starting NTS](#starting-nts)
+    - [Configuring DNS](#configuring-dns)
 - [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
@@ -209,6 +210,9 @@ Once the interfaces are configured accordingly the following steps need to be do
 4. Make sure that the **nts** and **edgednssvr** containers are running on an *Edge Node* machine:
 
 ![Starting NTS 3](controller-edge-node-setup-images/StartingNTS3.png)
+
+### Configuring DNS
+* [Instructions for configuring DNS](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
 
 # Q&A
 
