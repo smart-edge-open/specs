@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0       
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 - [Introduction](#introduction)
@@ -255,6 +255,22 @@ The purpose of this section is to guide the user on the complete process of onbo
    ip a a 192.168.1.10/24 dev <client_interface_name>
    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <client_interface_name>
    ```
+
+   > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+   > **NOTE:** To identify which subnet is allocated to which node, use this command:
+   >  ```shell
+   >  $ kubectl get subnets
+   >  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+   >  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+   >  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+   >  ...
+   >  ```
+   >
+   > The list presents which subnet (CIDR) is bridged to which edgenode, e.g: node `jfsdm001` is bridged to subnet `192.168.1.0/24` and node `jfsdm002` is bridged to subnet `192.168.2.0/24`
+
+   > **NOTE:** Ingress traffic originating from `192.168.1.0/24` can *only* reach the pods deployed on `jfsdm001`, and similarly for `192.168.2.0/24` can reach the pods deployed on `jfsdm002`.
+
 2. From the Edge Controller, set up the interface service to connect the Edge Node's physical interface used for the communication between Edge Node and traffic generating host to OVS. This allows the Client Simulator to communicate with the OpenVINO application K8s Pod located on the Edge Node (sample output separated by `"..."`, PCI Bus Function ID of the interface used my vary).
    ```
    kubectl interfaceservice get <edge_node_host_name>
@@ -406,7 +422,7 @@ Smart City sample application is a sample applications that is built on top of t
 
 The full pipeline of the Smart City sample application on OpenNESS is distributed across three regions:
 
- 1. Client-side Cameras Simulator
+ 1. Client-side Cameras Simulator(s)
  2. OpenNESS Cluster
  3. Smart City Cloud Cluster
 
@@ -445,29 +461,45 @@ kubectl interfaceservice get <edge_node_host_name>
 
 ## Building Smart City ingredients
 
-   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machines, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
 
-   2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
+   2. Build the Smart City application on all of the machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices (edge nodes) must be installed on OpenNESS.
 
 ## Running Smart City
 
-   1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
-       ```shell
-       ip a a 192.168.1.10/24 dev <office1_interface_name>
-       route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
-       ```
+   1. On the Camera simulator machines, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 & office2 nodes:
+   
+      On camera-sim1:
+      ```shell
+      ip a a 192.168.1.10/24 dev <office1_interface_name>
+      route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office1_interface_name>
+      ```
 
-   2. On the Camera simulator machine, run the camera simulator containers
-       ```shell
-       make start_openness_camera
-       ```
+      > **NOTE:** When adding office 2 and so on, change the provided CIDR (i.e: `192.168.1.0/24`) to its allocated subnet. This requires a  This can be checked by entering this command:
+      > ```shell
+      > kubectl get subnets
+      > ```
+      >
+      > The subnet name represents the node which is allocated to it and appended with `-local`.
+
+      On camera-sim2:
+      > To send traffic 
+      > ```shell
+      > ip a a 192.168.2.10/24 dev <office2_interface_name>
+      > route add -net 10.16.0.0/24 gw 192.168.2.1 dev <office2_interface_name>
+      > ```
+
+   2. On the Camera simulator machines, run the camera simulator containers
+      ```shell
+      make start_openness_camera
+      ```
 
    3. On the Smart City cloud master machine, run the Smart City cloud containers
        ```shell
        make start_openness_cloud
        ```
 
-       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the camera simulators & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
        > ```shell
        > systemctl stop firewalld
        > ```
@@ -476,7 +508,7 @@ kubectl interfaceservice get <edge_node_host_name>
 
    4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
        ```shell
-       export CAMERA_HOST=192.168.1.10
+       export CAMERA_HOSTS=192.168.1.10,192.168.2.10
        export CLOUD_HOST=<cloud-master-node-ip>
 
        make

@@ -1,5 +1,5 @@
 SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019 Intel Corporation
+Copyright © 2019-2020 Intel Corporation
 
 # OpenNESS Interface Service
 
@@ -17,18 +17,38 @@ Copyright © 2019 Intel Corporation
 
 ## Overview 
 
-Interface service is an application running in K8s pod on each worker node of OpenNESS K8s cluster. It allows to attach additional network interfaces of the worker host to provided OVS bridge, enabling external traffic scenarios for applications deployed in K8s pods. Services on each worker can be controlled from master node using kubectl plugin.
+Interface service is an application running in Kubernetes pod on each worker node of OpenNESS Kubernetes cluster. It allows to attach additional network interfaces of the worker host to provided OVS bridge, enabling external traffic scenarios for applications deployed in Kubernetes pods. Services on each worker can be controlled from master node using kubectl plugin.
 
 Interface service can attach both kernel and userspace (DPDK) network interfaces to OVS bridges of suitable type.
 
 ## Traffic from external host
 
-Machines connected to attached interface can communicate with K8s pods of the worker node (`10.16.0.0/16` subnet) through `192.168.1.1` gateway. Therefore, correct address and routing should be used. Eg:
+A machine (client-sim) that is physically connected to OpenNESS edge node over a cable would be able to communicate to the pods in the Kubernetes cluster when the physical network interface (through which the cable is attached) is bridged over to the Kubernetes cluster subnet. This is done by providing the PCI ID or MAC address to the `interfaceservice` kubectl plugin.
+
+The machine that is connected to the edge node must be configured as below in order to allow the traffic originating from the client-sim (`192.168.1.0/24` subnet) to be routed over to the Kubernetes cluster (`10.16.0.0/16` subnet).
+
+Update the physical ethernet interface with an IP from `192.168.1.0/24` subnet and the Linux IP routing table with the routing rule as:
 ```bash 
-  ip a a 192.168.1.5/24 dev eth1
+  ip a a 192.168.1.10/24 dev eth1
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
-> NOTE: Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0` subnet on specific port. 
+
+> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port.
+
+> **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+> **NOTE:** To identify which subnet is allocated to which node, use this command:
+>  ```shell
+>  $ kubectl get subnets
+>  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+>  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+>  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+>  ...
+>  ```
+>
+> The list presents which subnet (CIDR) is bridged to which edgenode, e.g: node `jfsdm001` is bridged to subnet `192.168.1.0/24` and node `jfsdm002` is bridged to subnet `192.168.2.0/24`
+
+> **NOTE:** Ingress traffic originating from `192.168.1.0/24` can *only* reach the pods deployed on `jfsdm001`, and similarly for `192.168.2.0/24` can reach the pods deployed on `jfsdm002`.
 
 ## Usage
 
