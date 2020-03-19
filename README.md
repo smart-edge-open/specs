@@ -57,6 +57,8 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for Edge Applications and Network Functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
    * [<b>openness_hddl.md</b>: Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness_hddl.md)
    * [<b>openness-topology-manager.md</b>: Resource Locality awareness support through Topology manager in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
+   * [<b>openness-environment-variables.md</b>: Environment Variable configuration support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
+   * [<b>openness-tunable-exec.md</b>: Configurable startup command support for containers in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
 
 ## Dataplane
 
