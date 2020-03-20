@@ -13,11 +13,10 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Details - Multiple Interface and PCIe SRIOV support in OpenNESS](#details---multiple-interface-and-pcie-sriov-support-in-openness)
     - [Multus usage](#multus-usage)
     - [SRIOV for Network-Edge](#sriov-for-network-edge)
-      - [Edgecontroller setup](#edgecontroller-setup)
-      - [Edgenode setup](#edgenode-setup)
+      - [Edge Node SRIOV interfaces configuration](#edge-node-sriov-interfaces-configuration)
       - [Usage](#usage)
     - [SRIOV for On-Premises](#sriov-for-on-premises)
-      - [Edgenode Setup](#edgenode-setup-1)
+      - [Edgenode Setup](#edgenode-setup)
       - [Docker Container Deployment Usage](#docker-container-deployment-usage)
       - [Virtual Machine Deployment Usage](#virtual-machine-deployment-usage)
   - [Reference](#reference)
@@ -59,13 +58,12 @@ _Figure - SR-IOV Device plugin_
 
 ## Details - Multiple Interface and PCIe SRIOV support in OpenNESS
 
-The Multus role is enabled by default in the Network Edge Ansible playbook (`network_edge.yml`):
-
+In Network Edge mode Multus CNI, which provides possibility for attaching multiple interfaces to the pod, is deployed automatically when `kubernetes_cnis` variable list (in the `group_vars/all.yml` file) contains at least two elements, e.g.:
+```yaml
+kubernetes_cnis:
+- kubeovn
+- sriov
 ```
-    - role: multus
-```
-
->NOTE: Multus is installed only for Network Edge mode.
 
 ### Multus usage
 
@@ -124,19 +122,14 @@ EOF
 
 ### SRIOV for Network-Edge
 
-#### Edgecontroller setup
-To install the OpenNESS controller with SR-IOV support please uncomment `role: sriov/master` in Edge Controller play in `network_edge.yml` of Ansible scripts. Please also remember, that `role: multus` has to be enabled as well.
-
+To deploy the OpenNESS' Network Edge with SR-IOV `sriov` must be added to the `kubernetes_cnis` list in `group_vars/all.yml`:
 ```yaml
-- role: sriov/master
+kubernetes_cnis:
+- kubeovn
+- sriov
 ```
 
-#### Edgenode setup
-To install the OpenNESS node with SR-IOV support please uncomment `role: sriov/worker` in Edge Node play in `network_edge.yml` of Ansible scripts.
-
-```yaml
-- role: sriov/worker
-```
+#### Edge Node SRIOV interfaces configuration
 
 For the installer to turn on the specified number of SR-IOV VFs for selected network interface of node, please provide that information in format `{interface_name: VF_NUM, ...}` in `sriov.network_interfaces` variable inside config files in `host_vars` ansible directory.
 Due to the technical reasons, each node has to be configured separately. Copy the example file `host_vars/node1.yml` and then create a similar one for each node being deployed.
@@ -181,37 +174,38 @@ spec:
 > Note: Users can create network with different CRD if they need to.
 
 1. To create a POD with an attached SR-IOV device, add the network annotation to the POD definition and `request` access to the SR-IOV capable device (`intel.com/intel_sriov_netdevice`):
-```yaml
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: samplepod
-    annotations:
-      k8s.v1.cni.cncf.io/networks: sriov-openness
-  spec:
-    containers:
-    - name: samplecnt
-      image: centos/tools
-      resources:
-        requests:
-          intel.com/intel_sriov_netdevice: "1"
-```
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: samplepod
+     annotations:
+       k8s.v1.cni.cncf.io/networks: sriov-openness
+   spec:
+     containers:
+     - name: samplecnt
+       image: centos/tools
+       resources:
+         requests:
+           intel.com/intel_sriov_netdevice: "1"
+   ```
 
 2. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similar to the following:
-```bash
-  1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-  41: net1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-      link/ether aa:37:23:b5:63:bc brd ff:ff:ff:ff:ff:ff
-      inet 192.168.2.2/24 brd 192.168.2.255 scope global net1
+   ```bash
+   1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+     inet 127.0.0.1/8 scope host lo
         valid_lft forever preferred_lft forever
-  169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default
-      link/ether 0a:00:00:10:00:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
-      inet 10.16.0.10/16 brd 10.16.255.255 scope global eth0
-        valid_lft forever preferred_lft forever
-```
+   41: net1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+       link/ether aa:37:23:b5:63:bc brd ff:ff:ff:ff:ff:ff
+       inet 192.168.2.2/24 brd 192.168.2.255 scope global net1
+         valid_lft forever preferred_lft forever
+   169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default
+       link/ether 0a:00:00:10:00:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
+       inet 10.16.0.10/16 brd 10.16.255.255 scope global eth0
+         valid_lft forever preferred_lft forever
+   ```
+
 ### SRIOV for On-Premises
 Support for providing SR-IOV interfaces to containers and virtual machines is also available for OpenNESS On-Premises deployments.
 
