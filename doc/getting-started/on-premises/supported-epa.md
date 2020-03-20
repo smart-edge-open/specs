@@ -22,3 +22,4 @@ Following are the EPA features supported in OpenNESS OnPremises Edge
 2. [<b>openness-environment-variables.md</b>: Support for setting Environment Variables in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
 3. [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-dedicated-core.md)
 4. [<b>openness-tunable-exec.md</b>: Tunable executable command in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
+5. [<b>openness-sriov-mulitple-interfaces.md</b>](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
