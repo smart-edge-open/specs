@@ -121,14 +121,17 @@ Hence OpenNESS Controller deployment is described in these two modes:
   - Deploy edge compute applications from the image repository 
   - Configure the Edge compute application specific Traffic policy 
   - Configure the Edge compute application specific DNS policy 
+- **Node Feature Discovery (NFD)**: Contains two microservice. One on the controller (master) and one on the edge nodes (worker). NFD workers gets the hardware and software features on the edge node and the information is passed on to the NFD Master on the controller node. This information can be used by the user to deploy the applications to the edge node which meets the resource requirement. This ensures the reliable performance.
+- **Enhanced Platform Awareness**: is a subsystem of the application life cycle management that provides users to provide the key hardware or software features that needs to be made available to the applications when deployed on the edge node. The user is presented with a key:Value pair to choose from the supported EPA features. NFD when combined with EPA provides powerful mechanism for deployment for achieving application performance reliability. 
 - **Edge virtualization infrastructure management**: Use underlying virtualization infrastructure, whether directly via libvirt or Docker, or indirectly via Kubernetes, to manage the Edge Node platform and applications. 
 - **Telemetry**: Get basic edge compute microservices telemetry from connected Edge Nodes.
- 
+
 The Controller microservices make extensive use of the Go programming language and its runtime libraries.
 
 #### Details of Edge Controller Microservices functionality in Infrastructure deployment mode:
 - **Core Network Configuration**: Configure the access network (e.g., LTE/CUPS, 5G) control plane. 
 - **Telemetry**: Get basic edge compute microservices telemetry from connected Edge Nodes.
+- **Microservices and Enhancements for K8s master**: Set of microservice as daemon set deployed on Master to enable Cloudnative deployment. E.g. NFD (master), SRI-OV device plugin, etc. 
 
 OpenNESS when deployed using Kubernetes supports key features that expose the silicon micro architecture features of the platform to the applications and network functions  to achieve better and reliable performance. This will be described in the Enhanced Platform Awareness (EPA) section later in the document. 
 
@@ -149,8 +152,9 @@ OpenNESS Controller is used to onboard an application to the OpenNESS Edge Node.
 
 1. User sets up the HTTPS based Application image server. The image source needs to support HTTPS download. Edge Node trusts public CAs and the one from the controller. 
 2. User uploads the application image (container tar.gz image or VM qcow2) to the HTTPs server and ensures uploaded image is available for download over HTTPS.
-3. User initiates the Application deploy step using the Controller UI. This step initiates the download of the image from the HTTPS server to the Edge Node. After this step EVA registers the Application image. 
-4. User starts the Application, which kick starts the Container/Pod/VM. 
+3. User uses NFD to identify the edge node that supports the required EPA. 
+4. User initiates the Application deploy step using the Controller UI to the node that provides the required EPA for the application. This step initiates the download of the image from the HTTPS server to the Edge Node. After this step EVA registers the Application image. 
+5. User starts the Application, which kick starts the Container/Pod/VM. 
 
 ##### Application onboarding in OpenNESS Infrastructure deployment mode
 OpenNESS users need to use the Kubernetes Master to onboard and application to the OpenNESS Edge Node. OpenNESS support applications that can run in a docker container. Docker image tar.gz. The image source can be a docker registry or HTTPS image repository. The image repository can be an external image server or one that can be deployed on the controller. The figure below shows the steps involved in application onboarding.  
@@ -161,7 +165,7 @@ OpenNESS users need to use the Kubernetes Master to onboard and application to t
 
 1. User sets up the HTTPS based Application image server / Docker Registry where application container image is stored. 
 2. User uploads the application image (container tar.gz) to the HTTPs server. User downloads the application container image to the Edge Node.  
-3. User initiates the Application deploy step using Kubernetes (kubectl). 
+3. User initiates the Application deploy step using Kubernetes (kubectl). In this step user uses all the Kubernetes enhancements for EPA using NFD to deploy the application pod on the right node. 
 
 ### OpenNESS Edge Node 
 
@@ -170,7 +174,7 @@ OpenNESS users need to use the Kubernetes Master to onboard and application to t
 OpenNESS Edge Node hosts a set of microservices to enable Edge compute deployment. The type of OpenNESS microservices deployed on the Edge Node depends on the type of deployment - OpenNESS Infrastructure deployment or OpenNESS Native deployment. This is similar to OpenNESS controller deployment types described above.
 
 ##### Edge Node Microservices OpenNESS Native deployment mode
-Microservices deployed on the Edge Node in this mode include ELA, EVA, EAA, Syslog, DNS Server and NTS Dataplane. Although ELA, EVA and EAA can be deployed in separate containers.
+Microservices deployed on the Edge Node in this mode include ELA, EVA, EAA, Syslog, DNS Server and OVN/OVS-DPDK dataplane or optionally NTS Dataplane. 
 
  ![Edge Node Microservices](arch-images/openness_nodemicro.png)
 
@@ -190,7 +194,17 @@ Details of Edge Node Microservices functionality:
 - **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. DNS service supports resolving DNS requests from User Equipment (UE) and Applications on the edge cloud.  
 - **Edge Node Virtualization infrastructure**: Receive commands from the controller/NFV infrastructure managers to start and stop Applications. This functionality is implemented in the EVA (Edge virtualization Agent) microservice and is implemented in Go lang. 
 - **Edge application traffic policy**: Interface to set traffic policy for application deployed on the Edge Node. This functionality is implemented in the EDA (Edge Dataplane Agent) microservice and is implemented in Go lang. 
-- **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port. 
+- **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port.   
+   
+  <b>OVN/OVS-DPDK</b>
+  - The primary dataplane that is supported in native mode is OVN/OVS-DPDK. 
+  - OVN manages the IP address allocated to the applications 
+  - In this mode both north-south and east-west traffic is supported by OVS-DPDK.   
+  - vEth pair is used as interface for container and vitrio for VMs 
+  
+  <b>NTS</b>
+  - As a secondary option specifically targeted at S1u deployment NTS is supported. 
+  - When NTS is used as Dataplane OVS-DPDK can be used as inter-app service. 
   - Utilizing the Data Plane NTS (Network Transport Service), which runs on every Edge Node. It is implemented in C lang using DPDK for high performance IO. This is the recommended dataplane when incoming and outgoing flows is mix of pure IP + S1u (GTPu). 
     - Provide Reference ACL based Application specific packet tuple filtering 
     - Provide reference GTPU base packet learning for S1 deployment 
@@ -205,7 +219,6 @@ Details of Edge Node Microservices functionality:
     - Dedicated interface created for dataplane based on vhost-user for VM, dpdk-kni for Containers
     - Container or VM default Interface can be used for Inter-App, management and Internet access from application 
     - Dedicated OVS-DPDK interface for inter-apps communication can be created in case of On-Premises deployment. 
-
 - **Application Authentication**: Ability to authenticate an Edge compute application deployed from the Controller so that application can avail/call Edge Application APIs. Only applications that intend to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
 
 ![OpenNESS Application Authentication](arch-images/openness_appauth.png)
@@ -228,11 +241,12 @@ Details of Edge Node Microservices functionality:
 - **DNS service**: Support DNS resolution and forwarding services for the application deployed on the edge compute. DNS server is implemented based on Go DNS library. DNS service supports resolving DNS requests from User Equipment (UE) and Applications on the edge cloud.  
 - **Dataplane Service**: Steers traffic towards applications running on the Edge Node or the Local Break-out Port. 
   - Using OVN/OVS as Dataplane - recommended dataplane when incoming and outgoing flows are based on pure IP. 
+    - Dataplane is supported in both OVS only or OVS-DPDK mode for higher performance. 
     - Implemented using [kube-ovn](https://github.com/alauda/kube-ovn)
     - Provides IP 5-tuple based flow filtering and forwarding
     - Same Interface can be used for Inter-App, management, Internet and Dataplane interface
-
 - **Application Authentication**: Ability to authenticate Edge compute application deployed from Controller so that application can avail/call Edge Application APIs. Only applications that intend to call the Edge Application APIs need to be authenticated. TLS certificate based Authentication is implemented. 
+- **Microservices and Enhancements for node**: Set of microservice as daemon/replica set deployed on node to enable Cloudnative deployment. E.g. NFD (worker), multus, SRI-OV device plugin, etc. 
 
 ![OpenNESS Application Authentication](arch-images/openness_k8sappauth.png)
 
@@ -259,7 +273,8 @@ API endpoint for edge applications is implemented in the EAA (Edge Application A
 
 **OpenNESS Edge Node Resource usage**: 
 - All non-critical/non-realtime microservices on the OpenNESS Edge Node execute OS core typically Core 0.
-- Dataplane NTS and DPDK PMD thread requires a dedicated core/thread for high performance. 
+- Dataplane NTS and DPDK PMD thread requires a dedicated core/thread for high performance.
+- Dataplane OVS-DPDK requires dedicated core/thread for high performance.
   - DPDK library is used for the dataplane implementation 1G/2M hugepages support is required on the host. 
 
 #### Edge Compute Applications: Native on the Edge Node
@@ -282,14 +297,11 @@ OpenNESS may be deployed on 5G, LTE or IP (wireless or wireline) networks. The n
  
 OpenNESS supports multiple deployment options on an 5G Stand alone and LTE cellular network, as shown in Figure below. 
 
-
 - <b>5G Standalone edge cloud deployment</b> OpenNESS supports deployment of the Edge cloud as per the [3GPP_29.522 Rel v15.3]. In this mode, OpenNESS uses the 3GPP defined Service Based Architecture (SBA) REST APIs. The APIs use the "traffic influence" feature of the Application Function (AF) for Local Data Network (Edge cloud) processing. 
 
 - <b>Edge cloud deployment on CUPS or SGi</b> The Edge Node may be attached to the SGi interface of an EPC. Traffic from the EPC arrives as IP traffic, and is steered as appropriate to edge applications. EPCs may combine the control or user plane, or they may follow the Control-User Plane Separation (CUPS) architecture of [3GPP_23214], which provides for greater flexibility in routing data plane traffic through the LTE network. When EPC CUPS is deployed OpenNESS supports reference Core Network Configuration for APN based traffic steering for local edge cloud. 
 
-
 - <b>S1-U deployment in On-Premises Private LTE deployment </b>: Following [3GPP_23401], the Edge Node may be deployed on the S1 interface from an eNB. In this mode, traffic is intercepted by the Edge Node dataplane, which either redirects the traffic to edge applications or passes it through an upstream EPC. In this option, arriving traffic is encapsulated in a GTP tunnel; the dataplane handles decapsulation/encapsulation as required.
- 
 
 ![OpenNESS Multi-access support](arch-images/openness_multiaccess.png)
 
@@ -350,8 +362,19 @@ Edge Compute EPA- feature for Network edge and availability for CNF, Apps and Se
 - Node Feature discovery: Support detection of Silicon and Software features and automation of deployment of CNF, Applications and services
 - FPGA Remote System Update service: Support Intel OPAE (fpgautil) tool to build a Pod that is scheduled by K8s as a job that updated the FPGA with the new RTL
 - Real-time Kernel - Support for the K8s Edge Node running real time kernel 
+- Support for running legacy application in VM mode using Kubervirt and allocation of SRI-OV ethernet interfaces to VMs 
 - Non-Privileged Container: Support deployment of non-privileged pods (CNFs and Applications as reference)
+  
+Edge Compute EPA- feature for On-Premises edge 
 - Support for allocation of Intel® Movidius™ VPUs to the OnPrem applications running in Docker containers.
+- Support for dedicated core allocation to application running as VMs or Containers 
+- Support for dedicated SRIOV VF allocation to application running in VM or containers 
+> Note: when using SRIOV VFs in containers the VF is bound to the kernel driver. 
+- Support for system resource allocation into the application running as container 
+  - Mount point for shared storage 
+  - Pass environment variables 
+  - Configure the port rules 
+- Non-Privileged Container: Support deployment of non-privileged containers  
 
 ## OpenNESS Edge Node Applications
 OpenNESS Applications are onboarded and provisioned on the Edge Node through OpenNESS Controller in Native mode and K8s master in K8s mode. In K8s mode OpenNESS also supports onboarding of the Network Functions like RAN, Core, Firewall, etc. 
@@ -477,6 +500,30 @@ OpenNESS controller community edition supports configuration of the 5G Applicati
 ![5G end-to-end setup](arch-images/openness_ngc.png)
 
 _Figure - OpenNESS 5G end-to-end test setup_
+
+Following are the features supported by 5G Components of OpenNESS (AF, NEF, CNCA, WEB UI)
+
+Traffic Influence Submission API support : 3GPP 23.502  Sec. 52.6.7 Traffic Influence Service
+-	AF: Added support for traffic influence submission northbound API 
+-	NEF: added support for traffic influence submission API with stubs to loopback UDM and PCF calls
+-	kubectl support for traffic influence config in Network Edge mode 
+-	WEB UI support for traffic influence config in OnPerm mode
+
+OAM service 
+-	Registration of AF service with 5G CP
+
+PFD Management API support (3GPP 23.502  Sec. 52.6.3  PFD Management service)
+-	AF:   Added support for PFD Northbound API
+-	NEF:  Added support for PFD southbound API, and Stubs to loopback the PCF calls. 
+-	kubectl: Enhanced CNCA kube-ctl plugin to configure PFD parameters 
+-	WEB UI: Enhanced CNCA WEB UI to configure PFD params in OnPerm mode 
+
+oAuth2 based authentication between 5G Network functions: (as per 3GPP Standard)
+-	Implemented oAuth2 based authentication and validation 
+-	AF and NEF communication channel is updated to authenticated based on oAuth2 JWT token in addition to HTTP2. 
+
+HTTPS support 
+-	Enhanced the OAM, CNCA (web-ui and kube-ctl) to HTTPS interface 
 
 More details about the APIs can be found here [CNCA APIs](https://www.openness.org/api-documentation/?api=cups). 
 
