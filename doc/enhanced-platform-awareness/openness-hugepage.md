@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 # Hugepage support on OpenNESS
@@ -8,8 +8,13 @@ Copyright (c) 2019 Intel Corporation
 - [Hugepage support on OpenNESS](#hugepage-support-on-openness)
   - [Overview](#overview)
   - [Details of Hugepage support on OpenNESS](#details-of-hugepage-support-on-openness)
-    - [Network edge mode](#network-edge-mode)
-    - [OnPrem mode](#onprem-mode)
+    - [Examples](#examples)
+      - [Changing size of the hugepage for both controllers and nodes](#changing-size-of-the-hugepage-for-both-controllers-and-nodes)
+      - [Setting different hugepage amount for Edge Controller or Edge Nodes in Network Edge mode](#setting-different-hugepage-amount-for-edge-controller-or-edge-nodes-in-network-edge-mode)
+      - [Setting different hugepage amount for Edge Controller or Edge Nodes in On Premises mode](#setting-different-hugepage-amount-for-edge-controller-or-edge-nodes-in-on-premises-mode)
+      - [Setting hugepage size for Edge Controller or Edge Node in Network Edge mode](#setting-hugepage-size-for-edge-controller-or-edge-node-in-network-edge-mode)
+      - [Setting hugepage size for Edge Controller or Edge Node in On Premises mode](#setting-hugepage-size-for-edge-controller-or-edge-node-in-on-premises-mode)
+      - [Customizing hugepages for specific machine](#customizing-hugepages-for-specific-machine)
   - [Reference](#reference)
 
 ## Overview
@@ -20,40 +25,72 @@ Both Applications and Network functions can gain in performance from using hugep
 
 ## Details of Hugepage support on OpenNESS
 
-Hugepages are enabled by default. There are two parameters that are describing the hugepages: the size of single page (can be 2MB or 1GB) and amount of those pages. In network edge deployment there is, enabled by default, 500 of 2MB hugepages (which equals to 2GB of memory) per node/controller, and in OnPrem deployment hugepages are enabled only for nodes and the default is 5000 of 2MB pages (10GB). If you want to change those settings you will need to edit config files as described below. All the settings have to be adjusted before OpenNESS installation.
+OpenNESS deployment enables the hugepages by default and provides parameters for tuning the hugepages:
+* `hugepage_size` - size, which can be either `2M` or `1G`
+* `hugepage_amount` - amount
 
-### Network edge mode
+By default, these variables have values:
+| Mode         | Machine type | `hugepage_amount` | `hugepage_size` | Comments                                     |
+|--------------|--------------|:-----------------:|:---------------:|----------------------------------------------|
+| Network Edge | Controller   |      `1024`       |      `2M`       |                                              |
+|              | Node         |      `1024`       |      `2M`       |                                              |
+| On-Premises  | Controller   |      `1024`       |      `2M`       | For OVNCNI dataplane, otherwise no hugepages |
+|              | Node         |      `5000`       |      `2M`       |                                              |
 
-You can change the size of single page editing the variable `hugepage_size` in `roles/machine_setup/grub/defaults/main.yml`:
+Guide on changing these values is below. Customizations must be made before OpenNESS deployment.
 
-To set the page size of 2 MB:
+Variables for hugepage customization can be placed in several files:
+* `group_vars/all.yml` will affect all modes and machine types
+* `group_vars/controller_group.yml` and `group_vars/edgenode_group.yml` will affect Edge Controller and Edge Nodes respectively in all modes
+* `host_vars/<inventory_host_name>.yml` will only affect `<inventory_host_name>` host present in `inventory.ini` (in all modes)
+* To configure hugepages for specific mode, they can be placed in `network_edge.yml` and `on_premises.yml` under
+  ```yaml
+  - hosts: <group>   # e.g. controller_group or edgenode_group
+    vars:
+       hugepage_amount: "10"
+       hugepage_size: "1G"
+  ```
 
-```yaml
-hugepage_size: "2M"
-```
+This is summarized in a following table:
 
-To set the page size of 1GB:
+| File                                  | Network Edge | On Premises |            Edge Controller             |              Edge Node               |                                     Comment                                     |
+|---------------------------------------|:------------:|:-----------:|:--------------------------------------:|:------------------------------------:|:-------------------------------------------------------------------------------:|
+| `group_vars/all.yml`                  |     yes      |     yes     |                  yes                   |                 yes - every node                 |                                                                                 |
+| `group_vars/controller_group.yml`     |     yes      |     yes     |                  yes                   |                                      |                                                                                 |
+| `group_vars/edgenode_group.yml`       |     yes      |     yes     |                                        |                 yes - every node                  |                                                                                 |
+| `host_vars/<inventory_host_name>.yml` |     yes      |     yes     |                  yes                   |                 yes                  | affects machine specified in `inventory.ini` with name  `<inventory_host_name>` |
+| `network_edge.yml`                    |     yes      |             | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                                                                 |
+| `on_premises.yml`                     |              |     yes     | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node|                                                                                 |
 
-```yaml
-hugepage_size: "1G"
-```
+Note that variables have a precedence:
+1. `network_edge.yml` and `on_premises.yml` will always take precedence for files from this list (override every var)
+2. `host_vars/`
+3. `group_vars/`
+4. `default/main.yml` in roles' directory
 
-The amount of hugepages can be set separately for both controller and nodes. To set the amount of hugepages for controller please change the value of variable `hugepage_amount` in `network_edge.yml`:
+### Examples
 
-For example:
+#### Changing size of the hugepage for both controllers and nodes
+Add following line to the `group_vars/all.yml`:
+* To set the page size of 2 MB (which is default value):
+  ```yaml
+  hugepage_size: "2M"
+  ```
+* To set the page size of 1GB:
+  ```yaml
+  hugepage_size: "1G"
+  ```
 
+#### Setting different hugepage amount for Edge Controller or Edge Nodes in Network Edge mode
+The amount of hugepages can be set separately for both controller and nodes. To set the amount of hugepages for controller please change the value of variable `hugepage_amount` in `network_edge.yml`, for example:
 ```yaml
 - hosts: controller_group
   vars:
     hugepage_amount: "1500"
 ```
-
 will enable 1500 pages of the size specified by `hugepage_size` variable.
 
-To set the amount of hugepages for nodes please change the value of variable `hugepage_amount` in `network_edge.yml` :
-
-For example:
-
+To set the amount of hugepages for all of the nodes please change the value of variable `hugepage_amount` in `network_edge.yml`, for example:
 ```yaml
 - hosts: edgenode_group
   vars:
@@ -62,25 +99,27 @@ For example:
 
 will enable 3000 pages of the size specified by `hugepage_size` variable for each deployed node.
 
-### OnPrem mode
+#### Setting different hugepage amount for Edge Controller or Edge Nodes in On Premises mode
 
-The hugepages are enabled only for the nodes. You can change the size of single page and amount of the pages editing the variables `hugepage_size` and `hugepage_amount` in `roles/machine_setup/grub/defaults/main.yml`:
+[Instruction for Network Edge](#setting-different-hugepage-amount-for-edge-controller-or-edge-nodes-in-network-edge-mode) is applicable for On Premises mode with the exception of the file to be edited: `on_premises.yml`
 
-For example:
-
+#### Setting hugepage size for Edge Controller or Edge Node in Network Edge mode
+Different hugepage size for node or controller can be done by adding `hugepage_size` to the playbook (`network_edge.yml` file), e.g.
 ```yaml
-hugepage_size: "2M"
-hugepage_amount: "2000"
+- hosts: controller_group     # or edgenode_group
+  vars:
+    hugepage_amount: "5"
+    hugepage_size: "1G"
 ```
 
-will enable 2000 of 2MB pages, and:
+#### Setting hugepage size for Edge Controller or Edge Node in On Premises mode
 
-```yaml
-hugepage_size: "1G"
-hugepage_amount: "5"
-```
+[Instruction for Network Edge](#setting-hugepage-size-for-edge-controller-or-edge-node-in-network-edge-mode)  is applicable for On Premises mode with the exception of the file to be edited: `on_premises.yml`
 
-will enable 5 pages, 1GB each.
+#### Customizing hugepages for specific machine
+To specify size or amount only for specific machine, `hugepage_size` and/or `hugepage_amount` can be provided in `host_vars/<host_name_from_inventory>.yml` (i.e. if host is named `node01`, then the file is `host_vars/node01.yml`).
+
+Note that vars in `on_premises.yml` have greater precedence than ones in `host_vars/`, therefore to provide greater control over hugepage variables, `hugepage_amount` from `network_edge.yml` and/or `on_premises.yml` should be removed.
 
 ## Reference
 - [Hugepages support in Kubernetes](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/)
