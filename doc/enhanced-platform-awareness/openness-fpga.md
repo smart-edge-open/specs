@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 # Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration
@@ -84,14 +84,23 @@ To run the OpenNESS package with FPGA (FEC) functionality the feature needs to b
 #### Edge Controller
 
 To enable on Edge Controller set/uncomment following in `network_edge.yml` in OpenNESS-Experience-Kits top level directory:
-```
+```yaml
+# network_edge.yml
 - role: opae_fpga/master
-- role: multus
-- role: sriov/master
 ```
+
+Additionally SRIOV must be enabled in OpenNESS:
+```yaml
+# group_vars/all.yml
+kubernetes_cnis:
+- kubeovn
+- sriov
+```
+
 Also enable/configure following options in `roles/kubernetes/cni/sriov/common/defaults/main.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
-```
+```yaml
+# roles/kubernetes/cni/sriov/common/defaults/main.yml
 fpga_sriov_userspace:
   enabled: true
 fpga_userspace_vf:
@@ -100,17 +109,15 @@ fpga_userspace_vf:
   vf_device_id: "0d90"
   pf_device_id: "0d8f"
   vf_number: "2"
+  vf_driver: "vfio-pci"
 ```
-
-Run setup script `deploy_ne.sh controller`.
 
 #### Edge Node
 
-To enable on the Edge Node set following in `network_edge.yml` (Please note that the `sriov/worker` role needs to be executed before `kubernetes/worker` role):
+To enable on the Edge Node set following in `network_edge.yml`:
 
 ```
 - role: opae_fpga/worker
-- role: sriov/worker
 ```
 
 The following packages need to be placed into specific directories in order for the feature to work:
@@ -121,7 +128,42 @@ The following packages need to be placed into specific directories in order for 
 
 3. Factory image configuration package `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` needs to be placed inside `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of PAC N3000 OPAE beta release (Please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616080 ) to obtain the package)
 
-Run setup script `deploy_ne.sh node`.
+Run setup script `deploy_ne.sh`.
+
+On successful deployment following pods will be available in the cluster:
+```shell
+kubectl get pods -A
+
+NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+kube-ovn      kube-ovn-cni-hdgrl                        1/1     Running   0          3d19h
+kube-ovn      kube-ovn-cni-px79b                        1/1     Running   0          3d18h
+kube-ovn      kube-ovn-controller-578786b499-74vzm      1/1     Running   0          3d19h
+kube-ovn      kube-ovn-controller-578786b499-j22gl      1/1     Running   0          3d19h
+kube-ovn      ovn-central-5f456db89f-z7d6x              1/1     Running   0          3d19h
+kube-ovn      ovs-ovn-46k8f                             1/1     Running   0          3d18h
+kube-ovn      ovs-ovn-5r2p6                             1/1     Running   0          3d19h
+kube-system   coredns-6955765f44-mrc82                  1/1     Running   0          3d19h
+kube-system   coredns-6955765f44-wlvhc                  1/1     Running   0          3d19h
+kube-system   etcd-silpixa00394960                      1/1     Running   0          3d19h
+kube-system   kube-apiserver-silpixa00394960            1/1     Running   0          3d19h
+kube-system   kube-controller-manager-silpixa00394960   1/1     Running   0          3d19h
+kube-system   kube-multus-ds-amd64-2zdqt                1/1     Running   0          3d18h
+kube-system   kube-multus-ds-amd64-db8fd                1/1     Running   0          3d19h
+kube-system   kube-proxy-dd259                          1/1     Running   0          3d19h
+kube-system   kube-proxy-sgn9g                          1/1     Running   0          3d18h
+kube-system   kube-scheduler-silpixa00394960            1/1     Running   0          3d19h
+kube-system   kube-sriov-cni-ds-amd64-k9wnd             1/1     Running   0          3d18h
+kube-system   kube-sriov-cni-ds-amd64-pclct             1/1     Running   0          3d19h
+kube-system   kube-sriov-device-plugin-amd64-fhbv8      1/1     Running   0          3d18h
+kube-system   kube-sriov-device-plugin-amd64-lmx9k      1/1     Running   0          3d19h
+openness      eaa-78b89b4757-xzh84                      1/1     Running   0          3d18h
+openness      edgedns-dll9x                             1/1     Running   0          3d18h
+openness      interfaceservice-grjlb                    1/1     Running   0          3d18h
+openness      nfd-master-dd4ch                          1/1     Running   0          3d19h
+openness      nfd-worker-c24wn                          1/1     Running   0          3d18h
+openness      syslog-master-9x8hc                       1/1     Running   0          3d19h
+openness      syslog-ng-br92z                           1/1     Running   0          3d18h
+```
 
 ### FPGA Programming and telemetry on OpenNESS Network Edge
 In order to program the FPGA factory image (One Time Secure Upgrade) or the user image (5GN FEC vRAN) of the PAC N3000 via OPAE a `kubectl` plugin for K8s is provided. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs which will run to completion on desired host and display the logs/output of the command.
@@ -154,6 +196,19 @@ kubectl rsu program -f <signed_RTL_image> -n <hostname> -d <RSU_PCI_bus_function
 kubectl rsu get temp  -n <hostname>
 kubectl rsu get power  -n <hostname>
 kubectl rsu get fme  -n <hostname>
+
+
+# Sample output for correctly programmed card with `get fme` command
+//****** FME ******//
+Object Id : 0xED00000
+PCIe s\:b\:d.f : 0000:1b:00.0
+Device Id : 0x0b30
+Numa Node : 0
+Ports Num : 01
+Bitstream Id : 0x2145042A010304
+Bitstream Version : 0.2.1
+Pr Interface Id : a5d72a3c-c8b0-4939-912c-f715e5dc10ca
+Boot Page : user
 ```
 7. For more information on usage of each `kubectl rsu` plugin capability run each command with `-h` argument.
 
@@ -228,7 +283,11 @@ Expected: `Mode of operation = VF-mode FPGA_LTE PF [0000:xx:00.0] configuration 
 ### Requesting resources and running pods for OpenNESS Network Edge
 As part of OpenNESS Ansible automation a K8s device plugin to orchestrate the FPGA VFs bound to user-space driver is running. This will enable scheduling of pods requesting this device/devices. Number of devices available on the Edge Node can be checked from Edge Controller by running:
 
-`kubectl get node <node_name> -o json | jq '.status.allocatable'`
+```shell
+kubectl get node silpixa00400489 -o json | jq '.status.allocatable'
+
+"intel.com/intel_fec_5g": "2"
+```
 
 To request the device as a resource in the pod add the request for the resource into the pod specification file, by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the amount of resources available, the pod status will be 'Pending' until the resource is available.
 Note that the name of the resource must match the name specified in the configMap for the K8s devices plugin (`./fpga/configMap.yml`).
@@ -277,7 +336,7 @@ Navigate to:
 
 `edgeapps/fpga-sample-app`
 
-Copy the necessary `flexran-dpdk-bbdev-v19-10.patch` file into the directory. This patch is available as part of FlexRAN 19.10 release package. To obtain this FlexRAN patch allowing 5G functionality for BBDEV in DPDK please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743 )
+Copy the necessary `dpdk_19.11_new.patch` file into the directory. This patch is available as part of FlexRAN 20.02 release package. To obtain this FlexRAN patch allowing 5G functionality for BBDEV in DPDK please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743 )
 
 Build image:
 
@@ -288,10 +347,48 @@ From the Edge Controller deploy the application pod, pod specification located a
 `kubectl create -f fpga-sample-app.yaml`
 
 Execute into the application pod and run the sample app:
-```
+```shell
+# enter the pod
 kubectl exec -it pod-bbdev-sample-app -- /bin/bash
 
+# run test application
 ./test-bbdev.py --testapp-path ./testbbdev -e="-w ${PCIDEVICE_INTEL_COM_INTEL_FEC_5G}" -i -n 1 -b 1 -l 1 -c validation -v ./test_vectors/ldpc_dec_v7813.data
+
+# sample output
+EAL: Detected 48 lcore(s)
+EAL: Detected 2 NUMA nodes
+EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+EAL: Selected IOVA mode 'VA'
+EAL: No available hugepages reported in hugepages-1048576kB
+EAL: Probing VFIO support...
+EAL: VFIO support initialized
+EAL: PCI device 0000:20:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:d90 intel_fpga_5gnr_fec_vf
+EAL:   using IOMMU type 1 (Type 1)
+
+===========================================================
+Starting Test Suite : BBdev Validation Tests
+Test vector file = ./test_vectors/ldpc_dec_v7813.data
+mcp fpga_setup_queuesDevice 0 queue 16 setup failed
+Allocated all queues (id=16) at prio0 on dev0
+Device 0 queue 16 setup failed
+All queues on dev 0 allocated: 16
++ ------------------------------------------------------- +
+== test: validation/latency
+dev: 0000:20:00.1, burst size: 1, num ops: 1, op type: RTE_BBDEV_OP_LDPC_DEC
+Operation latency:
+        avg: 17744 cycles, 12.6743 us
+        min: 17744 cycles, 12.6743 us
+        max: 17744 cycles, 12.6743 us
+TestCase [ 0] : latency_tc passed
+ + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +
+ + Test Suite Summary : BBdev Validation Tests
+ + Tests Total :        1
+ + Tests Skipped :      0
+ + Tests Passed :       1
+ + Tests Failed :       0
+ + Tests Lasted :       95.2308 ms
+ + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +
 ```
 The output of the application should indicate total of ‘1’ tests and ‘1’ test passing, this concludes the validation of the FPGA VF working correctly inside K8s pod.
 
