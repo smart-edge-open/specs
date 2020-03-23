@@ -115,6 +115,9 @@ Multiple CNIs can be requested to be set up for the cluster. To provide such fun
 > NOTE: For guide on how to add new CNI role to the OpenNESS Experience Kits refer to [the OpenNESS Experience Kits guide](../openness-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge)
 
 ### Selecting cluster networking plugins (CNI)
+
+> Note: When using non-default CNI (default is kube-ovn) remember to add CNI's networks (CIDR for pods and other CIDRs used by the CNI) to `proxy_os_noproxy` in `group_vars/all.yml`
+
 In order to customize which CNI are to be deployed for the Network Edge cluster edit `kubernetes_cnis` variable in `group_vars/all.yml` file.
 CNIs are applied in requested order.
 By default `kube-ovn` and `calico` are set up (with `multus` in between):
