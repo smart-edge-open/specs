@@ -1,5 +1,7 @@
 @startuml
-
+/' SPDX-License-Identifier: Apache-2.0
+   Copyright (c) 2020 Intel Corporation
+'/
 skinparam monochrome false
 skinparam roundcorner 20
 skinparam defaultFontName "Intel Clear"
