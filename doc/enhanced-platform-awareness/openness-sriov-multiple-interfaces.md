@@ -102,7 +102,12 @@ EOF
     name: samplepod
     annotations:
       k8s.v1.cni.cncf.io/networks: macvlan
+  spec:
+    containers:
+    - name: multitoolcont
+      image: praqma/network-multitool
 ```
+
 > NOTE: More networks can be added after a coma in the same annotation
 4. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similar to the following:
 ```bash
