@@ -24,6 +24,8 @@ paths:
   '/transactions':
     get:
       summary: read all the PFD transactions for this AF
+      tags:
+        - PFD Management API AF level GET operation
       responses:
         '200':
           description: OK. All transactions related to the request URI are returned.
@@ -52,6 +54,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     post:
+      summary: Creates a new PFD Management resource
+      tags:
+        - PFD Management API Transaction level POST Operation
       requestBody:
         required: true
         content:
@@ -113,6 +118,9 @@ paths:
         schema:
           type: string
     get:
+      summary: Reads an active transaction for the AF based on the transaction ID
+      tags:
+        - PFD Management API Transaction level GET Operation
       responses:
         '200':
           description: OK. The transaction information related to the request URI is returned.
@@ -139,6 +147,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     put:
+      summary: Replaces an active transaction based on the transaction ID
+      tags:
+        - PFD Management API Transaction level PUT Operation
       requestBody:
         required: true
         content:
@@ -186,6 +197,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     delete:
+      summary: Deletes an already existing transaction based on transaction ID
+      tags:
+        - PFD Management API Transaction level DELETE Operation
       responses:
         '204':
           description: No Content. The transaction was deleted successfully. The payload body shall be empty.
@@ -220,6 +234,9 @@ paths:
         schema:
           type: string
     get:
+      summary: Reads PFD data for an application based on transaction ID and application ID
+      tags:
+        - PFD Management API Application level GET Operation
       responses:
         '200':
           description: OK. The application information related to the request URI is returned.
@@ -246,6 +263,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     put:
+      summary: Replaces PFD data for an application based on transaction ID and application ID
+      tags:
+        - PFD Management API Application level PUT Operation
       requestBody:
         required: true
         content:
@@ -306,6 +326,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     patch:
+      summary: Updates PFD data for an application based on transaction ID and application ID
+      tags:
+        - PFD Management API Application level PATCH Operation
       requestBody:
         required: true
         content:
@@ -366,6 +389,9 @@ paths:
         default:
           $ref: '#/components/responses/default'
     delete:
+      summary: Deletes PFD data for an application based on transaction ID and application ID
+      tags:
+        - PFD Management API Application level DELETE Operation
       responses:
         '204':
           description: No Content. The application was deleted successfully. The payload body shall be empty.
