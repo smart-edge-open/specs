@@ -25,6 +25,7 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Running Smart City](#running-smart-city)
   - [Inter Application Communication](#inter-application-communication)
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
+- [VM support for Network Edge](#vm-support-for-network-edge)
 - [Troubleshooting](#troubleshooting)
   - [Useful Commands:](#useful-commands)
 
@@ -520,7 +521,6 @@ kubectl interfaceservice get <edge_node_host_name>
 
    5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
 
-
 ## Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
 For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
@@ -528,7 +528,10 @@ For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [docu
 # Enhanced Platform Awareness
 Enhanced platform awareness is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default please refer to the [NFD whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
 
-Refer to [<b>supported-epa.md</b>](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge. 
+Refer to [<b>supported-epa.md</b>](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge.
+
+# VM support for Network Edge
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. For information on application deployment in VM please see [openness-network-edge-vm-support.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md).
 
 # Troubleshooting
 In this sections steps for debugging Edge applications in Network Edge will be covered.

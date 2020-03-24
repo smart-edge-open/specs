@@ -10,6 +10,7 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Network Edge Playbooks](#network-edge-playbooks)
     - [Cleanup playbooks](#cleanup-playbooks)
     - [Supported EPA features](#supported-epa-features)
+    - [VM support for Network Edge](#vm-support-for-network-edge)
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
@@ -75,6 +76,9 @@ Note that there might be some leftovers created by installed software.
 
 ### Supported EPA features
 A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [supported-epa.md](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md), the documents referenced in the list provide detailed description of the features and step by step instructions how to enable them. The user is advised to get familiarized with the features available before executing the deployment playbooks.
+
+### VM support for Network Edge
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. The user is advised to get familiarized with the VM support documentation before executing the deployment playbooks. Please see [openness-network-edge-vm-support.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md) for more information.
 
 ### Quickstart
 The following is a complete set of actions that need to be completed to successfully set up OpenNESS cluster.
