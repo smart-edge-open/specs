@@ -29,6 +29,9 @@
     "/transactions": {
       "get": {
         "summary": "read all the PFD transactions for this AF",
+        "tags": [
+          "PFD Management API AF level GET operation"
+        ],
         "responses": {
           "200": {
             "description": "OK. All transactions related to the request URI are returned.",
@@ -73,6 +76,10 @@
         }
       },
       "post": {
+        "summary": "Creates a new PFD Management resource",
+        "tags": [
+          "PFD Management API Transaction level POST Operation"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -169,6 +176,10 @@
         }
       ],
       "get": {
+        "summary": "Reads an active transaction for the AF based on the transaction ID",
+        "tags": [
+          "PFD Management API Transaction level GET Operation"
+        ],
         "responses": {
           "200": {
             "description": "OK. The transaction information related to the request URI is returned.",
@@ -210,6 +221,10 @@
         }
       },
       "put": {
+        "summary": "Replaces an active transaction based on the transaction ID",
+        "tags": [
+          "PFD Management API Transaction level PUT Operation"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -284,6 +299,10 @@
         }
       },
       "delete": {
+        "summary": "Deletes an already existing transaction based on transaction ID",
+        "tags": [
+          "PFD Management API Transaction level DELETE Operation"
+        ],
         "responses": {
           "204": {
             "description": "No Content. The transaction was deleted successfully. The payload body shall be empty."
@@ -337,6 +356,10 @@
         }
       ],
       "get": {
+        "summary": "Reads PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level GET Operation"
+        ],
         "responses": {
           "200": {
             "description": "OK. The application information related to the request URI is returned.",
@@ -378,6 +401,10 @@
         }
       },
       "put": {
+        "summary": "Replaces PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level PUT Operation"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -475,6 +502,10 @@
         }
       },
       "patch": {
+        "summary": "Updates PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level PATCH Operation"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -572,6 +603,10 @@
         }
       },
       "delete": {
+        "summary": "Deletes PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level DELETE Operation"
+        ],
         "responses": {
           "204": {
             "description": "No Content. The application was deleted successfully. The payload body shall be empty."
