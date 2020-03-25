@@ -8,6 +8,7 @@ Copyright © 2019-2020 Intel Corporation
   - [Usage](#usage)
   - [Default parameters](#default-parameters)
   - [Supported drivers](#supported-drivers)
+  - [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
   - [Hugepages (DPDK)](#hugepages-dpdk)
   - [Examples](#examples)
     - [Getting information about node's interfaces](#getting-information-about-nodes-interfaces)
@@ -72,6 +73,29 @@ Currently interface service supports following values of `driver` parameter:
 - `dpdk` - userspace driver `igb_uio` will be used 
 
 > NOTE: Please remember that `dpdk` devices can be only attached to DPDK-enabled bridges, and `kernel` devices can be only attached to OVS `system` bridges.
+
+## Userspace (DPDK) bridge
+
+Default DPDK-enabled bridge `br-userspace` will be only available if OpenNESS was deployed with support for [Userspace CNI](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using Userspace CNI. You can check if `br-userspace` bridge exists executing the following command on your node:
+
+```shell
+ovs-vsctl list-br
+```
+
+Output may be similar to:
+
+```shell
+[root@node01 ~]# ovs-vsctl list-br
+br-int
+br-local
+br-userspace
+```
+
+If `br-userspace` does not exists you can create it manually executing on your node:
+
+```shell
+ovs-vsctl add-br br-userspace -- set bridge br-userspace datapath_type=netdev
+```
 
 ## Hugepages (DPDK)
 
