@@ -408,6 +408,33 @@ kubectl virt help               # See info about rest of virtctl commands
    [node]# rm /var/vd/vol<vol_num_related_to_pv>/disk.img
    ```
 
+4. Cleanup script `cleanup_ne.sh` does not properly clean up KubeVirt/CDI components if user has intentionally/unintentionally deleted one of these components outside the script - The KubeVirt/CDI components must be cleaned up/deleted in a specific order to wipe them sucesfully and the cleanup script does that for the user. In an event when user tries to delete the KubeVirt/CDI operator in wrong order the namespace for the component may be stuck indefinately in a `terminating` state. This is not an issue if user runs the script to completely clean the cluster but might be troublesome if user wants to run cleanup for KubeVirt only. In order to fix this user must do the following:
+
+   1. Check which namespace is stuck in `terminating` state:
+      ```shell
+      [controller]# kubectl get namespace
+      NAME              STATUS       AGE
+      cdi               Active       30m
+      default           Active       6d1h
+      kube-node-lease   Active       6d1h
+      kube-ovn          Active       6d1h
+      kube-public       Active       6d1h
+      kube-system       Active       6d1h
+      kubevirt          Terminating  31m
+      openness          Active       6d1h
+      ```
+
+   2. Delete the finalizer for the terminating namespace:
+      ```shell
+      ##replace instances of `kubevirt` with 'cdi' in the command if CDI is the issue.
+      [controller]# kubectl get namespace "kubevirt" -o json  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" | kubectl replace --raw /api/v1/namespaces/kubevirt/finalize -f -
+      ```
+
+   3. Run clean up script for kubeVirt again:
+      ```shell
+      [controller]# ./cleanup_ne.sh
+      ```
+    
 ## Helpful Links
 
 - [KubeVirt](https://kubevirt.io/)
