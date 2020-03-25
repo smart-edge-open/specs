@@ -57,7 +57,7 @@ CMK documentation available on github includes:
 
 **Edge Controller / Kubernetes master**
 
-1. Configure Edge Controller in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/master`, `kubeovn/master` and `cmk/master`.
+1. Configure Edge Controller in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/master`, `kubernetes/cni` (both enabled by default) and `cmk/master` (disabled by default).
 2. CMK is enabled with following default values of parameters in `roles/cmk/master/defaults/main.yml` (adjust the values if needed):
 
 - `cmk_num_exclusive_cores` set to `4`
@@ -68,7 +68,7 @@ CMK documentation available on github includes:
 
 **Edge Node / Kubernetes worker**
 
-1. Configure Edge Node in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/worker`, `kubeovn/worker` and `cmk/worker`.
+1. Configure Edge Node in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/worker`, `kubernetes/cni` (both enabled by default) and `cmk/worker` (disabled by default).
 2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
 3. Deploy the node with `deploy_ne.sh node`.
 
@@ -129,6 +129,24 @@ spec:
     name: cmk-conf-dir
 EOF
 ```
+
+> NOTE: CMK requires modification of deployed pod manifest for **all** deployed pods:
+> - nodeName: <node-name> must be added under pod spec section before deploying application (to point node on which pod is to be deployed)
+>
+> alternatively
+> - toleration must be added to deployed pod under spec:
+>
+>   ```yaml
+>   ...
+>   tolerations:
+>
+>   - ...
+>
+>   - effect: NoSchedule
+>     key: cmk
+>     operator: Exists
+>   ```
+
 ### OnPremises Usage
 Dedicated core pinning is also supported for container and virtual machine deployment in OnPremises mode. This is done using the EPA Features section provided when creating applications for onboarding. For more details on application creation and onboarding in OnPremises mode, please see the [Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
 
