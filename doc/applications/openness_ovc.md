@@ -10,9 +10,10 @@ Copyright (c) 2019 Intel Corporation
   - [Smart City Edge Application Introduction](#smart-city-edge-application-introduction)
   - [The Smart City Building Blocks](#the-smart-city-building-blocks)
   - [Smart City App Deployment with OpenNESS](#smart-city-app-deployment-with-openness)
-  - [Open Visual Cloud and OpenNESS Integration](#open-visual-cloud-and-openness-integration)
+  - [Open Visual Cloud and OpenNESS Integration using Virtual Machines](#open-visual-cloud-and-openness-integration-using-virtual-machines)
     - [The Infrastructure Challenges](#the-infrastructure-challenges)
     - [The Smart City Application Challenges](#the-smart-city-application-challenges)
+  - [Open Visual Cloud and OpenNESS Integration as cloud-native](#open-visual-cloud-and-openness-integration-as-cloud-native)
   - [Conclusion](#conclusion)
 
 ## OpenNESS Introduction
