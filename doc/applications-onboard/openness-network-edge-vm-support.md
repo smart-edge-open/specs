@@ -47,13 +47,13 @@ Due to easy deployment and no impact on the existing OpenNESS architecture, Kube
 The types of VM deployments can be split into two categories based on the storage required by the workload. Stateless VMs are backed by ephemeral storage - meaning that the data will disappear with VM restart/reboot. Stateful VMs are backed by persistent storage - meaning that data will persist after VM restart/reboot. The type of storage required will be determined based on the use-case. In OpenNESS support for both types of VM is available with aid of KubeVirt.
 
 ### VMs with ephemeral storage 
-These are VMs with ephemeral storage, such as ContainerDisk storage that would be deployed in similar manner to ordinary container pods. The data contained in the VM would be erased on each VM deletion/restart thus it is suitable for stateless applications running inside the pods. Although usually a better fit for such application would be running the workload in container pod, for various reasons such as a Legacy application a user may not want to containerize their workload. The advantage of this deployment from an K8s/OpenNESS perspective is that there is no additional storage configuration and the user only needs to have a cluster with KubeVirt deployed and a Docker’ized version of a VM image in order to spin up the VM.
+These are VMs with ephemeral storage, such as ContainerDisk storage that would be deployed in similar manner to ordinary container pods. The data contained in the VM would be erased on each VM deletion/restart thus it is suitable for stateless applications running inside the pods. Although usually a better fit for such application would be running the workload in container pod, for various reasons such as a Legacy application a user may not want to containerize their workload. The advantage of this deployment from an K8s/OpenNESS perspective is that there is no additional storage configuration and the user only needs to have a cluster with KubeVirt deployed and a dockerized version of a VM image in order to spin up the VM.
 
 ### VMs with persistent Local Storage 
-These are VMs which require persistent storage, the data of this kind of VM stays persistent between restarts of the VM. In case of local storage, Kubernetes provides volume plugin ‘local volume plugin' which can be used to define a `PV` (Persistent Volume). In the case of the local volume plugin there is no support for dynamic creation (k8s 1.17.0) and the PVs must be created by a user before a Persistent Volume Claim (`PVC`) can be claimed by the pod/VM. This manual creation of PVs must be taken into consideration for an OpenNESS deployment as a PV will need to be created per each VM per each node as the storage is local to the Edge Node. In case of persistent storage the VM image must be loaded to the PVC, this can be done via use of KubeVirt's Container Data Importer (CDI). This kind of storage is meant for use with stateful workloads, and being local to the node is suitable for Edge deployments.
+These are VMs which require persistent storage, the data of this kind of VM stays persistent between restarts of the VM. In case of local storage, Kubernetes provides ‘local volume plugin' which can be used to define a `PV` (Persistent Volume). In the case of the local volume plugin there is no support for dynamic creation (k8s 1.17.0) and the PVs must be created by a user before a Persistent Volume Claim (`PVC`) can be claimed by the pod/VM. This manual creation of PVs must be taken into consideration for an OpenNESS deployment as a PV will need to be created per each VM per each node as the storage is local to the Edge Node. In case of persistent storage the VM image must be loaded to the PVC, this can be done via use of KubeVirt's Container Data Importer (CDI). This kind of storage is meant for use with stateful workloads, and being local to the node is suitable for Edge deployments.
 
 ### VMs with Cloud Storage
-Support for persistent storage via Cloud Storage providers is possible in K8s but it is currently not supported in OpenNESS. There are no plans to support it from OpenNESS in near future - this may change in future if a use case and demand for it is present.
+Support for persistent storage via Cloud Storage providers is possible in K8s but it is currently not supported in OpenNESS. There are no plans to support it from OpenNESS right now - this may change in the future depending on demand.
 
 ### Creating Docker image for stateless VM
 In order to create a Docker image for a stateless VM, the VM image needs to be wrapped inside the Docker image. In order to do this the user needs to create a `Dockerfile` and place the VM image in the same directory, then build the Docker image as per the example below:
@@ -67,9 +67,9 @@ docker build -t centosimage:1.0 .
 ```
 ## Enabling in OpenNESS
 
-The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the OpenNESS experience kit via Ansible automation. In this default state it does not support SRIOV in a VM so additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in BIOS of the EdgeNode.
+The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the OpenNESS experience kit via Ansible automation. In this default state it does not support SRIOV in a VM so additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in BIOS of the Edge Node.
 
- 1. Configure ansible for KubeVirt:
+ 1. Configure Ansible for KubeVirt:
 
       - Enable kubeovn CNI and SRIOV:
          ```yaml
@@ -152,13 +152,13 @@ To deploy a sample stateless VM with containerDisk storage:
       ```shell
       [root@controller ~]# kubectl virt console cirros-stateless-vm
       ```
-  5. Check that IP of OpenNESS/K8s overlay network is available in VM.
+  5. Check that IP address of OpenNESS/K8s overlay network is available in VM.
       ```shell
       [root@vm ~]# ip addr
       ```
 
 ### Stateful VM deployment
-To deploy a sample stateful VM with persistent storage and additionally use Generic Cloud Centos image which requires user to initially log in with ssh key instead of login/password over ssh:
+To deploy a sample stateful VM with persistent storage and additionally use Generic Cloud CentOS image which requires user to initially log in with ssh key instead of login/password over ssh:
 
 > Note: Please note that each stateful VM with a new `PVC` (Persistent Volume Claim) requires a new `PV` (Persistent Volume) to be created - see more in [limitations section](#limitations). Also note that CDI needs two PVs when creating a PVC and loading VM image from qcow2 file, one PV for the actual PVC to be created and one PV to translate the qcow2 image to raw input.
 
@@ -184,7 +184,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
          pv0    15Gi       RWO            Retain           Available           local-storage            7s
          pv1    15Gi       RWO            Retain           Available           local-storage            7s
          ```
-  2. Download the Generic Cloud qcow image for Centos 7
+  2. Download the Generic Cloud qcow image for CentOS 7
       ```shell
       [root@controller ~]# wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
       ```
@@ -247,7 +247,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
       ```shell
       [root@controller ~]# kubectl get pods | grep virt-launcher-centos
       ```
-  12. Get the IP of the VM:
+  12. Get the IP address of the VM:
       ```shell
       [root@controller ~]# kubectl get vmi
       ```
@@ -258,7 +258,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
 
 ### VM deployment with SRIOV NIC support
 
-To deploy of VM requesting SRIOV VF of NIC:
+To deploy a VM requesting SRIOV VF of NIC:
   1. Bind SRIOV interface to VFIO driver on Edge Node:
      ```shell
      [root@worker ~]# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
@@ -267,7 +267,7 @@ To deploy of VM requesting SRIOV VF of NIC:
      ```shell
      [root@controller ~]# kubectl delete pod kube-sriov-device-plugin-amd64-<podID> -n kube-system
      ```
-  3. Check that the SRIOV VF for VM is available as allocatable resource for DP (wait few seconds after restart):
+  3. Check that the SRIOV VF for VM is available as allocatable resource for DP (wait a few seconds after restart):
      ```
      [root@controller ~]# kubectl get node <worker-node-name> -o json | jq '.status.allocatable'
      {
@@ -285,7 +285,7 @@ To deploy of VM requesting SRIOV VF of NIC:
      "pods": "110"
      }
      ```
-  4. Deploy VM requesting SRIOV device (Adjust the amount of Hugepages Required in .yaml if lesser amount available on the platform):
+  4. Deploy VM requesting SRIOV device (adjust the amount of Hugepages Required in .yaml if a smaller amount available on the platform):
      ```shell
       [root@controller ~]# kubectl create -f /opt/edgecontroller/kubevirt/examples/sriovVM.yaml
       ```
@@ -354,11 +354,11 @@ Currently support for VM snapshot is allowed by manually taking snapshot of the 
 
 ### Cloud Storage
 
-Currently no support for Cloud Storage provided in OpenNESS
+Currently there is no support for Cloud Storage in OpenNESS.
 
 ### Storage Orchestration and PV/PVC management
 
-Currently in Network Edge OpenNESS there is no mechanism to manage storage, assumption is made the default HDD/SSD of the Edge Node is used for storage. Additionally, various methods of optimizing storage (ie. by using various file system types etc.) for performance are not in scope of OpenNESS at time of writing. From a Network Edge perspective, K8s and local persistent volumes there is a need to create a directory per each PV which will be used to store VMs virtual disk. The creation of directories to store PV is automated from OpenNESS but the creation of the PV itself and keeping track of which PV corresponds to which VM is currently responsibility of user - this is due to the local volume plugin enabling local storage in K8s does not provide dynamic PV creation when a PVC claim is made. A consideration of how to automate and simplify PV management for the user will be made in the future - an evaluation of currently available solutions is needed.
+Currently in Network Edge OpenNESS there is no mechanism to manage storage, the assumption is made that the default HDD/SSD of the Edge Node is used for storage. Additionally, various methods of optimizing storage (ie. by using various file system types etc.) for performance are not in scope of OpenNESS at this time. In Network Edge deployment when using K8s with local persistent volumes, there is a need to create a directory per each PV which will be used to store VMs' virtual disk. The creation of directories to store PV is automated from OpenNESS but the creation of the PV itself and keeping track of which PV corresponds to which VM is currently a responsibility of the user - this is due to the local volume plugin enabling local storage in K8s which does not provide dynamic PV creation when a PVC claim is made. A consideration of how to automate and simplify PV management for the user will be made in the future - an evaluation of currently available solutions is needed.
 
 ### Snapshot Creation
 
@@ -384,13 +384,13 @@ kubectl virt help               # See info about rest of virtctl commands
 ```
 ### Troubleshooting
 
-1. PVC image not being uploaded through CDI - check that the IP of cdi-upload-proxy is correct and that the Network Traffic policy for CDI is applied:
+1. PVC image not being uploaded through CDI - check that the IP address of cdi-upload-proxy is correct and that the Network Traffic policy for CDI is applied:
    ```shell
    kubectl get services -A | grep cdi-uploadproxy
    kubectl get networkpolicy | grep cdi-upload-proxy-policy
    ```
 
-2. Cannot SSH to stateful VM with Cloud Generic Image due to public key being denied - double check that the public key provided in `/opt/edgecontroller/kubevirt/examples/cloudGenericVM.yaml` is valid and correct format. Example of correct format:
+2. Cannot SSH to stateful VM with Cloud Generic Image due to public key being denied - double check that the public key provided in `/opt/edgecontroller/kubevirt/examples/cloudGenericVM.yaml` is valid and in a correct format. Example of a correct format:
    ```yaml
    # /opt/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
    users:
@@ -438,8 +438,6 @@ kubectl virt help               # See info about rest of virtctl commands
 ## Helpful Links
 
 - [KubeVirt](https://kubevirt.io/)
-
-- [Virtlet](https://docs.virtlet.cloud/)
 
 - [KubeVirt components](https://github.com/kubevirt/kubevirt/blob/master/docs/components.md)
 - [Container Storage Interface](https://kubernetes.io/blog/2019/01/15/container-storage-interface-ga/)
