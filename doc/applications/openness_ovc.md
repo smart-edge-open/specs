@@ -16,11 +16,11 @@ Copyright (c) 2019 Intel Corporation
   - [Conclusion](#conclusion)
 
 ## OpenNESS Introduction
-OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
+OpenNESS is an open source software toolkit that enables easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
 
-It leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to to downstream traffic safety applications.
+OpenNESS leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information, to operating a computer vision system that recognize pedestrians and cars, and forwards metadata from those objects to to downstream traffic safety applications.
 
-OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with regard to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
+OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, dataplane flows must be routed to edge nodes with respect to physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
 
 ## Open Visual Cloud Introduction
 The Open Visual Cloud is an open source project that offers a set of pre-defined reference pipelines for various target visual cloud use cases. These reference pipelines are based on optimized open source ingredients across four core building blocks (encode, decode, inference, and render), which are used to deliver visual cloud services.
@@ -36,7 +36,7 @@ OpenNESS provides the underpinning network edge infrastructure which comprises o
 
 ![Smart City Architecure Deployed with OpenNESS](ovc-images/smart-city-architecture.png)
 
-The Open Visual Cloud website is located at [Open Visual Cloud project](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available on [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample) and its integration with OpenNESS is available at this [branch](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness).
+The Open Visual Cloud website is located at [Open Visual Cloud project](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available on [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample) and its integration with OpenNESS is available at [OpenNESS branch](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness).
 
 ## The Smart City Building Blocks
 The Smart City sample consists of the following major building blocks:
@@ -58,16 +58,13 @@ Each building block is implemented as one or a set of container services that qu
 
 For example, the analytics service when launched queries the database for available camera and its service URI. Then the service connects to the camera and analyzes the camera feeds. The resulted analytics data is stored back to the database for any subsequent processing such as triggering alerts and actions.
 
-## Smart City App Deployment with OpenNESS 
+## Smart City App Deployment with OpenNESS
 
-For simplicity, the Smart City sample provides a deployment script that deploys all sample building blocks to a docker swarm cluster. Working with OpenNESS, we need to adapt the sample to deploy the building blocks to different networks:
+The Smart City application is deployed through the OpenNESS Network Edge architecture which required the application micro-services to be adapted in order to match the distributed nature of the telco network. The application micro-services are deployed across the following sub-networks:
+
 - **Cloud**: The UI and the database master run in the cloud, where the UI displays a summarization view of the active offices and the database master coordinates the database requests.
 - **Office**: Most processing logics (multiple containers) and a local database reside in a regional office. The services include camera discovery, object detection, and other maintenance tasks such as clean up and health check. There can be multiple offices.
 - **Camera**: A set of cameras, possibly connected through the wireless network, are hosted on a different camera network.
-
-The deployment solution is described as follows:
-
-![OVC Smart City Solution Deployment](ovc-images/setup.png)
 
 The three edge nodes (representing three regional offices) are connected to the OpenNESS controller. All the three nodes also have connectivity to the public/private cloud. The following are the typical steps involved in the deployment of the application using OpenNESS.
   1. The OpenNESS controller enrolls the three Edge nodes.
@@ -87,9 +84,9 @@ The **Cloud** and **Camera** parts of the Smart City Application are not part of
 
 ![Smart City Application UI](ovc-images/screenshot.gif)
 
-## Open Visual Cloud and OpenNESS Integration
+## Open Visual Cloud and OpenNESS Integration using Virtual Machines
 
-The integration of the Smart City application with the OpenNESS infrastructure presents unique challenges on both the application and the infrastructure.
+The integration of the Smart City application with the OpenNESS infrastructure presents unique challenges on both the application and the infrastructure. The following challenges were faced when packaging and deploying the Smart City application as Virtual Machines (VM) on OpenNESS: 
 
 ### The Infrastructure Challenges
 
@@ -104,6 +101,10 @@ The Smart City application initially assumed that each IP camera was standalone 
 OpenNESS limits service requests initiated from the cloud to the Edge nodes. The Smart City application however sometimes needs to communicate to the offices (for example, to retrieve Edge workloads.) As a workaround, the application creates and maintains a secure tunnel to the cloud at the office launch time to facilitate the requests coming from the cloud.
 
 The deployment script is also rewritten to separate the launch of the services into three networks: cloud, edge and camera. Using VM as a launch vehicle, we also have to develop automation scripts to bring up the containers within VM and to establish secure connections to the cloud for registration and service redirection.
+
+## Open Visual Cloud and OpenNESS Integration as cloud-native
+
+Integrating the [cloud-native Smart City application](https://github.com/OpenVisualCloud/Smart-City-Sample/blob/master/deployment/kubernetes/README.md) with OpenNESS was a seamless process due to the OpenNESS adoption of Kubernetes standard features such as: Namespaces, Services, DaemonSets and Network Policies. In one step, The Smart City application is deployed on the OpenNESS setup based on the reference deployment on vanilla Kubernetes. More details on onboarding the cloud-native Smart City application with OpenNESS is covered at the [application onboarding guide](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#onboarding-smart-city-sample-application).
 
 ## Conclusion
 
