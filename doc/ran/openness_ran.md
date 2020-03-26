@@ -120,7 +120,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
 4. Deploy the Kubernetes job to program the [FPGA](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
 6. Deploy the Kubernetes job to configure the Intel PAC N3000 FPGA `kubectl create -f /opt/edgecontroller/fpga/fpga-config-job.yaml`
-7. Deploy the FlexRAN Kubernetes pod `kubectl create -f flexran-va.yaml` - more info [here](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
+7. Deploy the FlexRAN Kubernetes pod `kubectl create -f flexran-va.yaml` - more info [here](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/flexran-va.yaml)
 8. `exec` into FlexRAN pod `kubectl exec -it flexran -- /bin/bash`
 9. Find the PCI Bus function device ID of the FPGA VF assigned to the pod:
 
