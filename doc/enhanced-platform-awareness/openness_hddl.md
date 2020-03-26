@@ -64,9 +64,11 @@ To run the OpenNESS package with HDDL-R functionality the feature needs to be en
 To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl role needs to be executed after openness/onprem/worker role):
 
 ```
-- role: hddl
+- role: hddl/onprem/worker
 ```
 Run setup script `deploy_onprem.sh nodes`.
+
+NOTE: For this release, HDDL only supports default OS kernel and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
 
 ### Building Docker image with HDDL only or dynamic CPU/VPU usage
 
