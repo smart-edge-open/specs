@@ -170,6 +170,9 @@ By default OVS-DPDK is enabled. To be able to disable it please set a flag:
 ```yaml
 ovs_dpdk: false
 ```
+
+>NOTE: This flag should be set in `roles/kubernetes/cni/kubeovn/common/defaults/main.ym` or either added to `group_vars/all.yml`.
+
 Additionally hugepages in ovs pod can be adjusted once default hugepage settings are changed.
 ```yaml
 ovs_dpdk_hugepage_size: "2Mi"
