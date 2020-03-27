@@ -69,10 +69,10 @@ Additionally manual configuration needs to be run from a terminal on the EdgeNod
 Configure DNS container's KNI interface:
 
 ```
-docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 arp off
-docker exec -it <Container_ID_of_mec-app-edgednssvr> ip a a 53.53.53.53/24 dev vEth0
-docker exec -it <Container_ID_of_mec-app-edgednssvr> ip link set dev vEth0 up
-docker exec -it <Container_ID_of_mec-app-edgednssvr> ip route add 192.168.200.0/24 dev vEth0
+docker exec -it <Container_ID_of_mec-app-edgednssvr> sudo ip link set dev vEth0 arp off
+docker exec -it <Container_ID_of_mec-app-edgednssvr> sudo ip a a 53.53.53.53/24 dev vEth0
+docker exec -it <Container_ID_of_mec-app-edgednssvr> sudo ip link set dev vEth0 up
+docker exec -it <Container_ID_of_mec-app-edgednssvr> sudo ip route add 192.168.200.0/24 dev vEth0
 ```
 
 Make a request on the DNS interface subnet to register the KNI interface with NTS client (press CTRL + C buttons as soon as a request is made (no expectation for hostname to resolve)):
