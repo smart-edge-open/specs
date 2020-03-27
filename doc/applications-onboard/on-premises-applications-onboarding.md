@@ -158,7 +158,8 @@ On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Tra
 ![Adding Traffic Policy To Interface 3](on-premises-app-onboarding-images/AddingTrafficPolicyToInterface3.png)
 
 # Building Applications
-User needs to prepare the applications that will be deployed on the OpenNESS platform in OnPromises mode. Applications should be built as Docker images and should be hosted on some HTTPS server that is available to the EdgeNode.
+User needs to prepare the applications that will be deployed on the OpenNESS platform in OnPremises mode. Applications should be built as Docker container images or VirtualBox vm images and should be hosted on some HTTPS server that is available to the EdgeNode. Format for a docker application image is .tar.gz, format for a VirtualBox one is qcow2.
+Currently the applications are limited to 4096 MB RAM and 8 cores. Memory limit can be rised up to 16384 in eva.json file.
 
 The OpenNESS [EdgeApps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. They should be downloaded on machine where docker is installed.
 
