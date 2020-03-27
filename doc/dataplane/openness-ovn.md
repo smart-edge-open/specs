@@ -60,6 +60,12 @@ To enable OVNCNI instead of NTS, "onprem_dataplane" variable needs to be set to 
 # group_vars/all.yml
 onprem_dataplane: "ovncni"
 ```
+OVS role used for _Inter App Communication_ with _nts_ dataplane has to be disabled(Disabled by default):
+```yaml
+# on_premises.yml
+# - role: ovs
+```
+
 The ansible scripts configure the OVN infrastructure to be used by OpenNNESS. OVN-OVS container is created on each controller and Edge node where OVS is installed and configured to use DPDK. Network connectivity is set for the controller and all the nodes in the OpenNESS cluster. On each Edge node the CNI plugin is built which can be later used to add and delete OVN ports to connect/dicsonnect Edge applications to/from the cluster.
 
 CNI configuration is retrieved from roles/openness/onprem/dataplane/ovncni/master/files/cni.conf file. Additional arguments used by CNI are stored in roles/openness/onprem/dataplane/ovncni/master/files/cni_args.json file. The user is not expected to modify the files.
