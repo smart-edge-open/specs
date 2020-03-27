@@ -11,6 +11,7 @@ externalDocs:
   url: 'http://www.3gpp.org/ftp/Specs/archive/29_series/29.522/'
 security:
   - {}
+  - oAuth2ClientCredentials: []
 servers:
   - url: '{apiRoot}/3gpp-traffic-influence/v1'
     variables:
@@ -117,7 +118,7 @@ paths:
           $ref: '#/components/responses/503'
         default:
           $ref: '#/components/responses/default'
-	  
+    
   /{afId}/subscriptions/{subscriptionId}:
     parameters:
       - name: afId
@@ -158,7 +159,7 @@ paths:
     put:
       summary: Updates/replaces an existing subscription resource
       tags:
-        - TrafficInfluence API subscription level PUT Operation
+        - TrafficInfluence API Subscription level PUT Operation
       requestBody:
         description: Parameters to update/replace the existing subscription
         required: true
@@ -190,7 +191,7 @@ paths:
     patch:
       summary: Updates/replaces an existing subscription resource
       tags:
-        - TrafficInfluence API subscription level PATCH Operation
+        - TrafficInfluence API Subscription level PATCH Operation
       requestBody:
         required: true
         content:
@@ -236,6 +237,14 @@ paths:
         default:
           $ref: '#/components/responses/default'
 components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '{tokenUrl}'
+          scopes: {}
+  
   schemas:
     TrafficInfluSub:
       type: object

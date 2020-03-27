@@ -28,7 +28,7 @@
       "get": {
         "summary": "read all of the active subscriptions for this AF",
         "tags": [
-          "Traffic Influence API, AF level GET operation"
+          "Traffic Influence API AF level GET operation"
         ],
         "responses": {
           "200": {
@@ -132,7 +132,7 @@
       "get": {
         "summary": "Reads an active subscriptions for the AF and for the subscription ID",
         "tags": [
-          "Traffic Influence API, subscription level GET operation"
+          "Traffic Influence API Subscription level GET operation"
         ],
         "responses": {
           "200": {
@@ -168,7 +168,7 @@
       "put": {
         "summary": "Replaces an existing subscription resource based on subscription ID",
         "tags": [
-          "Traffic Influence API, subscription level PUT operation"
+          "Traffic Influence API Subscription level PUT operation"
         ],
         "requestBody": {
           "description": "Parameters to replace the existing subscription",
@@ -218,7 +218,7 @@
       "patch": {
         "summary": "Updates an existing subscription resource based on subscription ID",
         "tags": [
-          "Traffic Influence API, subscription level PATCH operation"
+          "Traffic Influence API Subscription level PATCH operation"
         ],
         "requestBody": {
           "required": true,
@@ -267,7 +267,7 @@
       "delete": {
         "summary": "Deletes an already existing subscription based on subscription ID",
         "tags": [
-          "Traffic Influence API, subscription level DELETE operation"
+          "Traffic Influence API Subscription level DELETE operation"
         ],
         "responses": {
           "204": {
