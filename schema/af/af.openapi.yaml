@@ -26,7 +26,7 @@ paths:
     get:
       summary: read all of the active subscriptions for this AF
       tags:
-        - Traffic Influence API, AF level GET operation
+        - Traffic Influence API AF level GET operation
       responses:
         '200':
           description: OK.
@@ -93,7 +93,7 @@ paths:
     get:
       summary: Reads an active subscriptions for the AF and for the subscription ID
       tags:
-        - Traffic Influence API, subscription level GET operation
+        - Traffic Influence API Subscription level GET operation
       responses:
         '200':
           description: OK (Successful get the active subscription)
@@ -116,7 +116,7 @@ paths:
     put:
       summary: Replaces an existing subscription resource based on subscription ID
       tags:
-        - Traffic Influence API, subscription level PUT operation
+        - Traffic Influence API Subscription level PUT operation
       requestBody:
         description: Parameters to replace the existing subscription
         required: true
@@ -148,7 +148,7 @@ paths:
     patch:
       summary: Updates an existing subscription resource based on subscription ID
       tags:
-        - Traffic Influence API, subscription level PATCH operation
+        - Traffic Influence API Subscription level PATCH operation
       requestBody:
         required: true
         content:
@@ -179,7 +179,7 @@ paths:
     delete:
       summary: Deletes an already existing subscription based on subscription ID
       tags:
-        - Traffic Influence API, subscription level DELETE operation
+        - Traffic Influence API Subscription level DELETE operation
       responses:
         '204':
           description: No Content (Successful deletion of the existing subscription)
