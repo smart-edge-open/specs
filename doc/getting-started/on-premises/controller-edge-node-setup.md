@@ -20,6 +20,11 @@ Copyright (c) 2019-2020 Intel Corporation
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
       - [Configuring Interface](#configuring-interface)
       - [Starting NTS](#starting-nts)
+      - [Preparing set-up for Local Breakout Point (LBP)](#preparing-set-up-for-local-breakout-point-lbp)
+        - [Controller and Edge Node deployment](#controller-and-edge-node-deployment)
+        - [Network configuration](#network-configuration)
+        - [Configuration in Controller](#configuration-in-controller)
+        - [Verification](#verification)
     - [Configuring DNS](#configuring-dns)
 - [Q&A](#qa)
   - [Configuring time](#configuring-time)
@@ -221,6 +226,149 @@ Once the interfaces are configured accordingly the following steps need to be do
 4. Make sure that the **nts** and **edgednssvr** containers are running on an *Edge Node* machine:
 
 ![Starting NTS 3](controller-edge-node-setup-images/StartingNTS3.png)
+
+#### Preparing set-up for Local Breakout Point (LBP)
+
+It is possible in a set up with NTS used as dataplane to prepare following LBP configuration
+- LBP set-up requirements: five machines are used as following set-up elements
+  - Controller 
+  - Edge Node 
+  - UE 
+  - LBP
+  - EPC
+- Edge Node is connected via 10GB cards to UE, LBP, EPC
+- network configuration of all elements is given on the diagram:
+
+  ![LBP set-up ](controller-edge-node-setup-images/LBP_set_up.png "LBP set-up")
+
+- configuration of interfaces for each server is done in Controller
+- ARP configuration is done on servers
+- IP addresses 10.103.104.X are addresses of machines from local subnet used for building set-up
+- IP addresses 192.168.100.X are addresses given for LBP test purpose
+
+##### Controller and Edge Node deployment
+
+Build and deploy Controller and Edge Node using ansible scripts and instructions in this document.
+
+##### Network configuration
+
+Find interface with following commands
+-  `ifconfig` 
+or
+- `ip a`
+
+Command `ethtool -p <interface>` can be used to identify port (port on physical machine will start to blink and it will be possible to verify if it is valid port).
+
+Use following commands to configure network on servers in set up
+- UE
+  - `ifconfig <interface> 192.168.100.1/24 up`
+  - `arp -s 192.168.100.2 <mac address>` (e.g. `arp -s 192.168.100.2 3c:fd:fe:a7:c0:eb`)
+- LBP
+  - `ifconfig <interface> 192.168.100.2/24 up`
+  - `arp -s 192.168.100.1 <mac address>` (e.g. `arp -s 192.168.100.1 90:e2:ba:ac:6a:d5`)
+- EPC
+  - `ifconfig <interface> 192.168.100.3/24 up`
+
+
+Alternatively to using `ifconfig` configuration can be done with `ip` command:
+`ip address add <address> dev <interface>` (e.g.`ip address add 192.168.100.1/24 dev enp23s0f0`)
+
+##### Configuration in Controller
+
+Add traffic policy with rule for LBP:
+
+- Name: LBP rule
+- Priority: 99
+- IP filter:
+  - IP address: 192.168.100.2
+  - Mask: 32
+  - Protocol: all
+- Target:
+  - Action: accept
+- MAC Modifier
+  - MAC address: 3c:fd:fe:a7:c0:eb
+  
+![LBP rule adding](controller-edge-node-setup-images/LBP_rule.png)
+
+Update interfaces: 
+- edit interfaces to UE, LBP, EPC as shown on diagram (Interface set-up)
+- add Traffic policy (LBP rule) to LBP interface (0000:88.00.2)
+
+After configuring NTS send PING (it is needed by NTS) from UE to EPC (`ping 192.168.100.3`).
+
+##### Verification
+
+1. NES client
+  - SSH to UE machine and ping LBP (`ping 192.168.100.2`)
+  - SSH to Edge Node server
+    - Set following environment variable: `export NES_SERVER_CONF=/var/lib/appliance/nts/nts.cfg`
+    - Run NES client: `<path_to_edgenode_repoistory>/internal/nts/client/build/nes_client`
+      - connect to NTS using command `connect`
+      - use command `route list` to verify traffic rule for LBP
+      - use command `show all` to verify packet flow (received and sent packet should increase)
+      - use command `quit` to exit (use `help` for information on available commands)
+
+    ```shell
+    # connect
+    Connection is established.
+    # route list
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    | ID    | PRIO       | ENB IP             | EPC IP             | UE IP              | SRV IP             | UE PORT     | SRV PORT    | ENCAP  | Destination          |
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    | 0     | 99         | n/a                | n/a                | 192.168.100.2/32   | *                  | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+    | 1     | 99         | n/a                | n/a                | *                  | 192.168.100.2/32   | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+    | 2     | 5          | n/a                | n/a                | *                  | 53.53.53.53/32     | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+    | 3     | 5          | n/a                | n/a                | 53.53.53.53/32     | *                  | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+    | 4     | 5          | *                  | *                  | *                  | 53.53.53.53/32     | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
+    | 5     | 5          | *                  | *                  | 53.53.53.53/32     | *                  | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    # show all
+    ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+    0  0000:88:00.1                          1303 pkts                    776 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b1)                127432 bytes                 75820 bytes                     0 bytes
+    1  0000:88:00.2                          1261 pkts                   1261 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b2)                123578 bytes                123578 bytes                     0 bytes
+    2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+    3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+          (not registered)                       0 bytes                     0 bytes                     0 bytes
+    # show all
+    ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+    0  0000:88:00.1                          1304 pkts                    777 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b1)                127530 bytes                 75918 bytes                     0 bytes
+    1  0000:88:00.2                          1262 pkts                   1262 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b2)                123676 bytes                123676 bytes                     0 bytes
+    2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+    3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+          (not registered)                       0 bytes                     0 bytes                     0 bytes
+    ```
+
+2. Tcpdump
+
+- SSH to UE machine and ping LBP (`ping 192.168.100.2`)
+- SSH to LBP server. 
+  - Run tcpdump with name of interface connected to Edge Node, verify data flow, use Ctrl+c to stop.
+
+  ```shell
+  # tcpdump -i enp23s0f3
+  tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+  listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
+  10:29:14.678250 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 320, length 64
+  10:29:14.678296 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 320, length 64
+  10:29:15.678240 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 321, length 64
+  10:29:15.678283 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 321, length 64
+  10:29:16.678269 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 322, length 64
+  10:29:16.678312 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 322, length 64
+  10:29:17.678241 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 323, length 64
+  10:29:17.678285 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 323, length 64
+  10:29:18.678215 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 324, length 64
+  10:29:18.678258 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 324, length 64
+  ^C
+  10 packets captured
+  10 packets received by filter
+  0 packets dropped by kernel
+  ```
 
 ### Configuring DNS
 * [Instructions for configuring DNS](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
