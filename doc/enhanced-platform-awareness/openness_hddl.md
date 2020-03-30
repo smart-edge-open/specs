@@ -72,7 +72,7 @@ NOTE: For this release, HDDL only supports default OS kernel and need to set fla
 
 ### Building Docker image with HDDL only or dynamic CPU/VPU usage
 
-In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/openvino/producer](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
+In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/applications/openvino/producer](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
 
 ### Deploying application with HDDL support
 

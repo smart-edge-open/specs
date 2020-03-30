@@ -369,7 +369,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 ### Starting traffic from Client Simulator
 
 1. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images), before building the image, in `tx_video.sh` in the directory containing the image Dockerfile edit the RTP endpoint with IP address of OpenVINO consumer application pod (to get IP address of the pod run: `kubectl exec -it openvino-cons-app ip a`)
-2. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
+2. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observe the results of the returning video stream.
    ```
    ./run_docker.sh
    ```

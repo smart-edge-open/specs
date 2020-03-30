@@ -292,11 +292,11 @@ The purpose of this section is to guide the user on the complete process of onbo
 
 ## Deploying the Application
 
-1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
+1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
    ```
-2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./openvino/consumer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
+2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
    ```
@@ -396,7 +396,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
    dig openvino.openness
    ```
 3. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images)
-4. Run the following from [edgeapps/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
    ```
    ./run_docker.sh
    ```
