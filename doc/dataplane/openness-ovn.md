@@ -13,6 +13,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [CNI Implementation](#cni-implementation)
     - [The Network](#the-network)
     - [Cluster architecture](#cluster-architecture)
+    - [Additional physical ports](#additional-physical-ports)
     - [Traffic rules](#traffic-rules)
       - [Example: Block pod's ingress IP traffic but allow ICMP](#example-block-pods-ingress-ip-traffic-but-allow-icmp)
   - [Summary](#summary)
@@ -90,6 +91,33 @@ Following diagram contains overview on cluster architecture for OVN CNI dataplan
 * Machines in OpenNESS deployment are connected via `node-switch` switch. Each machine contains `br-int` OVS bridge which is accessible by `ovn-local` interface.
 * Deployed applications are attached to `cluster-switch` OVN switch which has `10.100.0.0/16` network.
 * Attaching other physical interfaces to OVN cluster is possible using `br-local` OVS bridge.
+
+### Additional physical ports
+To enable more physical port connections run the following once, from the controller:
+```
+NET="192.168.1.1/24"
+
+
+mac="0e:00:$(openssl rand -hex 4 | sed 's/\(..\)/\1:/g; s/:$//')"
+sw="local"
+swp="local-to-cluster-router"
+rp="cluster-router-to-local"
+docker exec -it ovs-ovn ovn-nbctl --may-exist lrp-add cluster-router "${rp}" "${mac}" "${NET}"
+docker exec -it ovs-ovn ovn-nbctl --may-exist lsp-add "${sw}" "${swp}" -- \
+    set logical_switch_port "${swp}" type=router -- \
+    set logical_switch_port "${swp}" options:router-port="${rp}" -- \
+    set logical_switch_port "${swp}" addresses=\""${mac}"\"
+```
+
+To add the desired interface run the following command on a specific node:
+```
+docker exec -it ovs-ovn ovs-vsctl add-port br-local <if_name>
+```
+Configure ovn routing for the externally connected interface:
+```
+docker exec -it ovs-ovn ovn-nbctl --may-exist --policy=dst-ip lr-route-add cluster-router <client_ip> 192.168.1.1
+```
+where `client_ip` is the IP address of a client connected to the new OVN port(192.168.1.0/24 subnet)
 
 ### Traffic rules
 For On Premises deployment with OVN CNI dataplane traffic rules are handled by OVN's ACL (Access-Control List).
