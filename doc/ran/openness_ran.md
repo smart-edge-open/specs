@@ -28,6 +28,8 @@ The diagram below shows FlexRAN DU (Real-time L1 and L2) deployed on the OpenNES
 
 This document aims to provide the steps involved in deploying FlexRAN 5G (gNb) on the OpenNESS platform. 
 
+> Note: This document covers both FlexRAN 4G and 5G. All the steps mentioned in this document uses 5G for reference. Please refer to the FlexRAN 4G document for minor updated needed in order to build, deploy and test FlexRAN 4G. 
+
 # Building the FlexRAN image 
 
 This section will explain the steps involved in building the FlexRAN image. Only L1 and L2-stub will be part of these steps. Real-time L2 (MAC and RLC) and non Real-time L2 and L3 is out of scope as it is a part of the third party component.  
