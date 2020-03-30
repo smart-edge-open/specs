@@ -40,6 +40,11 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-interface-service.md</b>: Using network interfaces management service](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-interface-service.md)
    * [<b>using-openness-cnca.md</b>: Steps for configuring 4G CUPS or 5G Application Function for Edge deployment for Network and OnPremises Edge](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/using-openness-cnca.md)
 
+## Radio Access Network (RAN)
+* [<b>ran</b>: Folder containing details of 4G and 5G RAN deployment support](https://github.com/otcshare/specs/tree/master/doc/ran)
+   * [<b>openness_ran.md</b>: Whitepaper detailing the 4G and 5G RAN deployment support on OpenNESS for Network Edge](https://github.com/otcshare/specs/blob/master/doc/ran/openness_ran.md)
+
+
 ## Core Network - 4G and 5G  
 
 * [<b>core-network</b>: Folder containing details of 4G CUPS and 5G edge cloud deployment support](https://github.com/otcshare/specs/tree/master/doc/core-network)
@@ -59,6 +64,8 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-topology-manager.md</b>: Resource Locality awareness support through Topology manager in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
    * [<b>openness-environment-variables.md</b>: Environment Variable configuration support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
    * [<b>openness-tunable-exec.md</b>: Configurable startup command support for containers in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
+   *  [<b>openness-port-forward.md</b>: Support for setting up port forwarding of a container in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-port-forward.md)
+   *  [<b>openness-shared-storage.md</b>: Shared storage for containers in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-shared-storage.md)
 
 ## Dataplane
 
@@ -66,6 +73,7 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-interapp.md</b>: InterApp Communication support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md)
    * [<b>openness-ovn.md</b>: OpenNESS Support for OVS as dataplane with OVN](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-ovn.md)
    * [<b>openness-nts.md</b>: Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-nts.md)
+   * [<b>openness-userspace-cni.md</b>: Userspace CNI - Container Network Interface Kubernetes plugin](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md)
 
 ## Edge Applications 
 
