@@ -67,7 +67,7 @@ OVS role used for _Inter App Communication_ with _nts_ dataplane has to be disab
 ```
 > NOTE: When deploying virtual machine with OVNCNI dataplane, `/etc/resolv.conf` must be edited to use `192.168.122.1` nameserver.
 
-The ansible scripts configure the OVN infrastructure to be used by OpenNNESS. OVN-OVS container is created on each controller and Edge node where OVS is installed and configured to use DPDK. Network connectivity is set for the controller and all the nodes in the OpenNESS cluster. On each Edge node the CNI plugin is built which can be later used to add and delete OVN ports to connect/dicsonnect Edge applications to/from the cluster.
+The ansible scripts configure the OVN infrastructure to be used by OpenNESS. OVN-OVS container is created on each controller and Edge node where OVS is installed and configured to use DPDK. Network connectivity is set for the controller and all the nodes in the OpenNESS cluster. On each Edge node the CNI plugin is built which can be later used to add and delete OVN ports to connect/disconnect Edge applications to/from the cluster.
 
 CNI configuration is retrieved from roles/openness/onprem/dataplane/ovncni/master/files/cni.conf file. Additional arguments used by CNI are stored in roles/openness/onprem/dataplane/ovncni/master/files/cni_args.json file. The user is not expected to modify the files.
 
@@ -244,16 +244,6 @@ PING 10.100.0.4 (10.100.0.4) 56(84) bytes of data.
 --- 10.100.0.4 ping statistics ---
 3 packets transmitted, 0 received, 100% packet loss, time 36ms
 ```
-
-OVNCNI plugin has been implemented as the CNI for OpenNESS in On-Premises mode. The plugin has been developed based on the specifications provided as part of the [CNCF](https://www.cncf.io/) project. OVNCNI provides network connectivity for Edge applications on the OpenNESS Edge nodes. The applications can be deployed as Docker containers or VMs and are exposed to client applications by Docker services.
-
-The OpenNESS platform supports OVN/OVS-DPDK as a dataplane. However, it is a work in progress. OVN dataplane implementation is not complete, thus, it is not the default networking infrastructure and [NTS](openness-nts.md) still works as such.
-
-OVN/OVS can be used as:
-- InterApp Interface: Communication infrastructure for applications to communicate
-- Default Interface: Interface for managing the application container and VM  (e.g. ssh to application container or VM)
-- Cloud/Internet Interface: Interface for Edge applications to communicate with the Cloud/Internet
-
 
 ## Summary
 OpenNESS is built with a microservices architecture. Depending on the deployment, there may be a requirement to service pure IP traffic and configure the dataplane using standard SDN based tools. OpenNESS demonstrates such a requirement this by providing OVS as a dataplane in the place of NTS without changing the APIs from an end user perspective.
