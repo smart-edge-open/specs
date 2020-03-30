@@ -72,6 +72,39 @@ Below are the list of minimal configuration parameters that one can think of for
 
 # How to start 
 
+Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` 
+  ```yaml
+  NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+  kube-ovn      kube-ovn-cni-8x5hc                        1/1     Running   17         7d19h
+  kube-ovn      kube-ovn-cni-p6v6s                        1/1     Running   1          7d19h
+  kube-ovn      kube-ovn-controller-578786b499-28lvh      1/1     Running   1          7d19h
+  kube-ovn      kube-ovn-controller-578786b499-d8d2t      1/1     Running   3          5d19h
+  kube-ovn      ovn-central-5f456db89f-l2gps              1/1     Running   0          7d19h
+  kube-ovn      ovs-ovn-56c4c                             1/1     Running   17         7d19h
+  kube-ovn      ovs-ovn-fm279                             1/1     Running   5          7d19h
+  kube-system   coredns-6955765f44-2lqm7                  1/1     Running   0          7d19h
+  kube-system   coredns-6955765f44-bpk8q                  1/1     Running   0          7d19h
+  kube-system   etcd-silpixa00394960                      1/1     Running   0          7d19h
+  kube-system   kube-apiserver-silpixa00394960            1/1     Running   0          7d19h
+  kube-system   kube-controller-manager-silpixa00394960   1/1     Running   0          7d19h
+  kube-system   kube-multus-ds-amd64-bpq6s                1/1     Running   17         7d18h
+  kube-system   kube-multus-ds-amd64-jf8ft                1/1     Running   0          7d19h
+  kube-system   kube-proxy-2rh9c                          1/1     Running   0          7d19h
+  kube-system   kube-proxy-7jvqg                          1/1     Running   17         7d19h
+  kube-system   kube-scheduler-silpixa00394960            1/1     Running   0          7d19h
+  kube-system   kube-sriov-cni-ds-amd64-crn2h             1/1     Running   17         7d19h
+  kube-system   kube-sriov-cni-ds-amd64-j4jnt             1/1     Running   0          7d19h
+  kube-system   kube-sriov-device-plugin-amd64-vtghv      1/1     Running   0          7d19h
+  kube-system   kube-sriov-device-plugin-amd64-w4px7      1/1     Running   0          4d21h
+  openness      eaa-78b89b4757-7phb8                      1/1     Running   3          5d19h
+  openness      edgedns-mdvds                             1/1     Running   16         7d18h
+  openness      interfaceservice-tkn6s                    1/1     Running   16         7d18h
+  openness      nfd-master-82dhc                          1/1     Running   0          7d19h
+  openness      nfd-worker-h4jlt                          1/1     Running   37         7d19h
+  openness      syslog-master-894hs                       1/1     Running   0          7d19h
+  openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
+  ```
+
 ## Deploy UPF POD from OpenNESS controller
 
 ```code
@@ -79,12 +112,27 @@ ne-controller# kubectl create -f 5g-upf.yaml
 ```
 
 ## To start UPF
-
-In this reference validation, UPF application will be started manually after UPF POD deployed successfully. 
-
+- In this reference validation, UPF application will be started manually after UPF POD deployed successfully. 
 ```code
 ne-controller# kubectl exec -it test1-app -- /bin/bash
 
 5g-upf# cd /root/upf
 5g-upf# ./start_upf.sh
+```
+
+- Verify UPF pod is up and running `kubectl get po`
+```code
+[root@ne-controller ~]#  kubectl get po
+NAME             READY   STATUS    RESTARTS   AGE
+udp-server-app   1/1     Running   0          6d19h
+upf              1/1     Running   0          6d19h
+```
+
+- Verify AF, NEF and OAM pods are running `kubectl get po -n ngc`
+```code
+[root@ne-controller ~]#  kubectl get po -n ngc
+NAME   READY   STATUS    RESTARTS   AGE
+af     1/1     Running   0          172m
+nef    1/1     Running   0          173m
+oam    1/1     Running   0          173m
 ```
