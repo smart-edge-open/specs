@@ -444,21 +444,23 @@ The OpenNESS must be installed before going forward with Smart City application 
 
 From the OpenNESS Controller, attach the physical ethernet interface to be used for dataplane traffic using the `interfaceservice` kubectl plugin by providing the office hostname and the PCI Function ID corresponding to the ethernet interface (the PCI ID below is just a sample and may vary on other setups):
 ```shell
-kubectl interfaceservice get <edge_node_host_name>
+kubectl interfaceservice get <officeX_host_name>
 ...
 0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
 ...
 
-kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
+kubectl interfaceservice attach <officeX_host_name> 0000:86:00.0
 ...
 Interface: 0000:86:00.0 successfully attached
 ...
 
-kubectl interfaceservice get <edge_node_host_name>
+kubectl interfaceservice get <officeX_host_name>
 ...
 0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  attached
 ...
 ```
+
+> **NOTE:** When adding office 2 and so on, attach their corresponding physical interfaces accordingly.
 
 ## Building Smart City ingredients
 
@@ -476,19 +478,19 @@ kubectl interfaceservice get <edge_node_host_name>
       route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office1_interface_name>
       ```
 
-      > **NOTE:** When adding office 2 and so on, change the provided CIDR (i.e: `192.168.1.0/24`) to its allocated subnet. This requires a  This can be checked by entering this command:
+      > **NOTE:** When adding office 2 and so on, change the CIDR (i.e: `192.168.1.0/24`) to corresponding subnet. Allocated subnets to individual offices can be retrieved by entering this command in the OpenNESS controller shell:
       > ```shell
       > kubectl get subnets
       > ```
       >
       > The subnet name represents the node which is allocated to it and appended with `-local`.
 
+
       On camera-sim2:
-      > To send traffic 
-      > ```shell
-      > ip a a 192.168.2.10/24 dev <office2_interface_name>
-      > route add -net 10.16.0.0/24 gw 192.168.2.1 dev <office2_interface_name>
-      > ```
+      ```shell
+      ip a a 192.168.2.10/24 dev <office2_interface_name>
+      route add -net 10.16.0.0/24 gw 192.168.2.1 dev <office2_interface_name>
+      ```
 
    2. On the Camera simulator machines, run the camera simulator containers
       ```shell
