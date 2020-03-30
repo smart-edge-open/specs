@@ -61,14 +61,44 @@ Further sections provide information on how to use the HDDL setup on OpenNESS On
 ### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
 To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
 
-To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl role needs to be executed after openness/onprem/worker role):
+To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl precheck and role needs to be executed after openness/onprem/worker role):
 
 ```
+- include_tasks: ./roles/hddl/common/tasks/precheck.yml
+
 - role: hddl/onprem/worker
 ```
 Run setup script `deploy_onprem.sh nodes`.
 
-NOTE: For this release, HDDL only supports default OS kernel and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
+NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
+NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
+
+To check HDDL service running status on the edgenode after deploy, docker logs should look like:
+```
+docker ps
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                                                                  NAMES
+ca7e9bf9e570        hddlservice:1.0                        "./start.sh"             20 hours ago        Up 20 hours                                                                                openvino-hddl-service
+ea82cbc0d84a        004fddc9c299                           "/usr/sbin/syslog-ng…"   21 hours ago        Up 21 hours         601/tcp, 514/udp, 6514/tcp                                             edgenode_syslog-ng_1
+3b4daaac1bc6        appliance:1.0                          "sudo -E ./entrypoin…"   21 hours ago        Up 21 hours         0.0.0.0:42101-42102->42101-42102/tcp, 192.168.122.1:42103->42103/tcp   edgenode_appliance_1
+2262b4fa875b        eaa:1.0                                "sudo ./entrypoint_e…"   21 hours ago        Up 21 hours         192.168.122.1:80->80/tcp, 192.168.122.1:443->443/tcp                   edgenode_eaa_1
+eedf4355ec98        edgednssvr:1.0                         "sudo ./edgednssvr -…"   21 hours ago        Up 19 hours         192.168.122.128:53->53/udp                                             mec-app-edgednssvr
+5c94f7203023        nts:1.0                                "sudo -E ./entrypoin…"   21 hours ago        Up 19 hours                                                                                nts
+docker logs --tail 20 ca7e9bf9e570
++-------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+
+| status      | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | RUNNING           | WAIT_TASK         | WAIT_TASK         |
+| fps         | 1.61              | 1.62              | 1.63              | 1.65              | 1.59              | 1.58              | 1.67              | 1.60              |
+| curGraph    | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 |
+| rPriority   | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 |
+| loadTime    | 20200330 05:34:34 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 |
+| runTime     | 00:00:41          | 00:00:41          | 00:00:41          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          |
+| inference   | 64                | 64                | 64                | 64                | 63                | 63                | 64                | 63                |
+| prevGraph   |                   |                   |                   |                   |                   |                   |                   |                   |
+| loadTime    |                   |                   |                   |                   |                   |                   |                   |                   |
+| unloadTime  |                   |                   |                   |                   |                   |                   |                   |                   |
+| runTime     |                   |                   |                   |                   |                   |                   |                   |                   |
+| inference   |                   |                   |                   |                   |                   |                   |                   |                   |
+```
+
 
 ### Building Docker image with HDDL only or dynamic CPU/VPU usage
 

@@ -178,6 +178,8 @@ To build sample application Docker images for testing OpenVINO consumer and prod
    ```
    ./build-image.sh
    ``` 
+    **Note**: Default consumer inference process is using 'CPU 8' to avoid conflicts with NTS. If the desired CPU is changed, environmental variable `OPENVINO_TASKSET_CPU` must be set within Dockerfile available in the directory
+    **NOTE**: fwd.sh is using 'CPU 1'. If the desired CPU is changed, user can change fwd.sh accordingly.
 3. Check that the images built successfully and are available in local Docker image registry:
    ```
    docker images | grep openvino-prod-app
