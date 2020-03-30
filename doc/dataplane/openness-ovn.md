@@ -65,6 +65,7 @@ OVS role used for _Inter App Communication_ with _nts_ dataplane has to be disab
 # on_premises.yml
 # - role: ovs
 ```
+> NOTE: When deploying virtual machine with OVNCNI dataplane, `/etc/resolv.conf` must be edited to use `192.168.122.1` nameserver.
 
 The ansible scripts configure the OVN infrastructure to be used by OpenNNESS. OVN-OVS container is created on each controller and Edge node where OVS is installed and configured to use DPDK. Network connectivity is set for the controller and all the nodes in the OpenNESS cluster. On each Edge node the CNI plugin is built which can be later used to add and delete OVN ports to connect/dicsonnect Edge applications to/from the cluster.
 

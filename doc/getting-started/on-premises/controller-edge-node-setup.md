@@ -95,6 +95,7 @@ In order to use OVS/OVN instead of NTS, `onprem_dataplane` variable must be edit
 ```yaml
 onprem_dataplane: "ovncni"
 ```
+> NOTE: When deploying virtual machine with OVNCNI dataplane, `/etc/resolv.conf` must be edited to use `192.168.122.1` nameserver.
 
 ## Manual steps
 
@@ -231,9 +232,9 @@ Once the interfaces are configured accordingly the following steps need to be do
 
 It is possible in a set up with NTS used as dataplane to prepare following LBP configuration
 - LBP set-up requirements: five machines are used as following set-up elements
-  - Controller 
-  - Edge Node 
-  - UE 
+  - Controller
+  - Edge Node
+  - UE
   - LBP
   - EPC
 - Edge Node is connected via 10GB cards to UE, LBP, EPC
@@ -253,7 +254,7 @@ Build and deploy Controller and Edge Node using ansible scripts and instructions
 ##### Network configuration
 
 Find interface with following commands
--  `ifconfig` 
+-  `ifconfig`
 or
 - `ip a`
 
@@ -287,10 +288,10 @@ Add traffic policy with rule for LBP:
   - Action: accept
 - MAC Modifier
   - MAC address: 3c:fd:fe:a7:c0:eb
-  
+
 ![LBP rule adding](controller-edge-node-setup-images/LBP_rule.png)
 
-Update interfaces: 
+Update interfaces:
 - edit interfaces to UE, LBP, EPC as shown on diagram (Interface set-up)
 - add Traffic policy (LBP rule) to LBP interface (0000:88.00.2)
 
@@ -347,7 +348,7 @@ After configuring NTS send PING (it is needed by NTS) from UE to EPC (`ping 192.
 2. Tcpdump
 
 - SSH to UE machine and ping LBP (`ping 192.168.100.2`)
-- SSH to LBP server. 
+- SSH to LBP server.
   - Run tcpdump with name of interface connected to Edge Node, verify data flow, use Ctrl+c to stop.
 
   ```shell
