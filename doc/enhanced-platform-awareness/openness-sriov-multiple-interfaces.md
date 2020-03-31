@@ -195,6 +195,7 @@ spec:
            intel.com/intel_sriov_netdevice: "1"
          limits:
            intel.com/intel_sriov_netdevice: "1"
+       command: ["sleep", "infinity"]
    ```
 
 2. To verify that the additional interface was configured run `ip a` in the deployed pod. The output should look similar to the following:
