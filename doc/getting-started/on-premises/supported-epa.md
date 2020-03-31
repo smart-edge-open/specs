@@ -19,8 +19,8 @@ Enhanced Platform Awareness features are supported in OnPremises using EVA APIs.
 ## Features 
 Following are the EPA features supported in OpenNESS OnPremises Edge
 1. [<b>openness_hddl.md</b>: Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness_hddl.md)
-2. [<b>openness-environment-variables.md</b>: Support for setting Environment Variables in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
+2. [<b>openness-environment-variables.md</b>: Support for setting Environment Variables in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-environment-variables.md)
 3. [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-dedicated-core.md)
-4. [<b>openness-tunable-exec.md</b>: Tunable executable command in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
-5. [<b>openness-sriov-mulitple-interfaces.md</b>: Multiple Interface and PCIe SRIOV support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
-6. [<b>openness-port-forward.md</b>: Support for setting up port forwarding of a container in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-port-forward.md)
+4. [<b>openness-tunable-exec.md</b>: Tunable executable command in OpenNESS On-Prem mode](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
+5. [<b>openness-sriov-mulitple-interfaces.md</b>: Multiple Interface and PCIe SRIOV support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
+6. [<b>openness-port-forward.md</b>: Support for setting up port forwarding of a container in OpenNESS On-Prem mode](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-port-forward.md)

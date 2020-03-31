@@ -57,7 +57,7 @@ This section will explain the steps involved in building the FlexRAN image. Only
    > Note: these environmental variables path has to be updated according to your installation and file/directory names  
 4. Build L1, WLS interface between L1 and L2 and L2-Stub (testmac)    
    `./flexran_build.sh -r 5gnr_sub6 -m testmac -m wls -m l1app -b -c`
-5. Once the build is successfully completed, copy the required binary files to the folder where docker image is built. The list of binary files that were used is documented in the [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
+5. Once the build is successfully completed, copy the required binary files to the folder where docker image is built. The list of binary files that were used is documented in the [dockerfile](https://github.com/open-ness/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
    - ICC, IPP mpi and mkl Runtime 
    - DPDK build target directory 
    - FlexRAN test vectors (optional) 
@@ -81,11 +81,11 @@ usbcore.autosuspend=-1 selinux=0 enforcing=0 nmi_watchdog=0 softlockup_panic=0 a
 
 Host kernel version - 3.10.0-1062.12.1.rt56.1042.el7.x86_64 
 
-Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 # Deploying and Running the FlexRAN pod
 
-1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge) .
+1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge) .
 2. Ensure there are no FlexRAN pods and FPGA configuration pods are not deployed using `kubectl get pods`
 3. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` 
   ```yaml
@@ -122,7 +122,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
 4. Deploy the Kubernetes job to program the [FPGA](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
 6. Deploy the Kubernetes job to configure the Intel PAC N3000 FPGA `kubectl create -f /opt/edgecontroller/fpga/fpga-config-job.yaml`
-7. Deploy the FlexRAN Kubernetes pod `kubectl create -f flexran-va.yaml` - more info [here](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/flexran-va.yaml)
+7. Deploy the FlexRAN Kubernetes pod `kubectl create -f flexran-va.yaml` - more info [here](https://github.com/open-ness/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/flexran-va.yaml)
 8. `exec` into FlexRAN pod `kubectl exec -it flexran -- /bin/bash`
 9. Find the PCI Bus function device ID of the FPGA VF assigned to the pod:
 

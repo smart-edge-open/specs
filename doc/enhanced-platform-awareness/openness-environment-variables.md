@@ -17,7 +17,7 @@ When using environment variables, the value should be either a static value or s
 
 ## Details of Environment Variable support in OpenNESS
 
-Setting environment variables is supported when deploying containers in OnPrem mode during application onboarding. Please refer to the [Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) for more details on onboarding an application in OpenNESS. The general steps outlined in the document should be performed with the following addition. When creating a new application to add to the controller's application library, the user should set the *EPA Feature Key* and *EPA Feature Value* settings. The key to be used for environment variables is `env_vars` and the value should be set as `VARIABLE_NAME=VARIABLE_VALUE`.
+Setting environment variables is supported when deploying containers in OnPrem mode during application onboarding. Please refer to the [Application Onboarding Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) for more details on onboarding an application in OpenNESS. The general steps outlined in the document should be performed with the following addition. When creating a new application to add to the controller's application library, the user should set the *EPA Feature Key* and *EPA Feature Value* settings. The key to be used for environment variables is `env_vars` and the value should be set as `VARIABLE_NAME=VARIABLE_VALUE`.
 
 ***Note:*** When setting environment variables, multiple variables can be provided in the *EPA Feature Value* field for a single `env_vars` key. To do so place a semi-colon (;) between each variable as follows:
 

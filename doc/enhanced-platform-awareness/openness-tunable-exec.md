@@ -15,4 +15,4 @@ To take advantage of this feature, all you have to do is add a new 'EPA Feature 
 with the value of the command you want to run instead of the default. OpenNESS will pass that information down to Docker, and assuming all goes well (for example your command is correct / the path is valid), next time you start this container your command will be run.
 
 For more details on the application onboarding (including other fields to set), please refer to 
-[Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
+[Application Onboarding Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
