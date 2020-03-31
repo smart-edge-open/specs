@@ -50,6 +50,7 @@ Below is the complete list of OpenNESS solution documentation
 * [<b>core-network</b>: Folder containing details of 4G CUPS and 5G edge cloud deployment support](https://github.com/otcshare/specs/tree/master/doc/core-network)
    * [<b>openness_epc.md</b>: Whitepaper detailing the 4G CUPS support for Edge cloud deployment in OpenNESS for Network and OnPremises Edge](https://github.com/otcshare/specs/blob/master/doc/core-network/openness_epc.md)
    * [<b>openness_ngc.md</b>: Whitepaper detailing the 5G Edge Cloud deployment support in OpenNESS for Network and OnPremises Edge](https://github.com/otcshare/specs/blob/master/doc/core-network/openness_ngc.md)
+   * [<b>openness_upf.md</b>: Whitepaper detailing the UPF, AF, NEF deployment support on OpenNESS for Network Edge](https://github.com/otcshare/specs/blob/master/doc/core-network/openness_upf.md)
 
 ## Enhanced Platform Awareness 
 
