@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 
-# Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS 
+# Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
 
 - [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](#using-intel%c2%ae-movidius%e2%84%a2-myriad%e2%84%a2-x-high-density-deep-learning-hddl-solution-in-openness)
   - [HDDL Introduction](#hddl-introduction)
@@ -16,7 +16,7 @@ Copyright (c) 2019 Intel Corporation
   - [Summary](#summary)
   - [Reference](#reference)
 
-Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload. 
+Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload.
 
 ## HDDL Introduction
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. It provides hardware and software reference for customers. The following figure shows the HDDL-R concept.
@@ -61,16 +61,48 @@ Further sections provide information on how to use the HDDL setup on OpenNESS On
 ### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
 To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
 
-To enable on the Edge Node set following in `onprem_node.yml` (Please note that the hddl role needs to be executed after openness/onprem/worker role):
+To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl precheck and role needs to be executed after openness/onprem/worker role):
 
 ```
-- role: hddl
+- include_tasks: ./roles/hddl/common/tasks/precheck.yml
+
+- role: hddl/onprem/worker
 ```
-Run setup script `deploy_onprem_node.sh`.
+Run setup script `deploy_onprem.sh nodes`.
+
+NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
+NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
+
+To check HDDL service running status on the edgenode after deploy, docker logs should look like:
+```
+docker ps
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                                                                  NAMES
+ca7e9bf9e570        hddlservice:1.0                        "./start.sh"             20 hours ago        Up 20 hours                                                                                openvino-hddl-service
+ea82cbc0d84a        004fddc9c299                           "/usr/sbin/syslog-ng…"   21 hours ago        Up 21 hours         601/tcp, 514/udp, 6514/tcp                                             edgenode_syslog-ng_1
+3b4daaac1bc6        appliance:1.0                          "sudo -E ./entrypoin…"   21 hours ago        Up 21 hours         0.0.0.0:42101-42102->42101-42102/tcp, 192.168.122.1:42103->42103/tcp   edgenode_appliance_1
+2262b4fa875b        eaa:1.0                                "sudo ./entrypoint_e…"   21 hours ago        Up 21 hours         192.168.122.1:80->80/tcp, 192.168.122.1:443->443/tcp                   edgenode_eaa_1
+eedf4355ec98        edgednssvr:1.0                         "sudo ./edgednssvr -…"   21 hours ago        Up 19 hours         192.168.122.128:53->53/udp                                             mec-app-edgednssvr
+5c94f7203023        nts:1.0                                "sudo -E ./entrypoin…"   21 hours ago        Up 19 hours                                                                                nts
+docker logs --tail 20 ca7e9bf9e570
++-------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+
+| status      | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | RUNNING           | WAIT_TASK         | WAIT_TASK         |
+| fps         | 1.61              | 1.62              | 1.63              | 1.65              | 1.59              | 1.58              | 1.67              | 1.60              |
+| curGraph    | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 |
+| rPriority   | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 |
+| loadTime    | 20200330 05:34:34 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 |
+| runTime     | 00:00:41          | 00:00:41          | 00:00:41          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          |
+| inference   | 64                | 64                | 64                | 64                | 63                | 63                | 64                | 63                |
+| prevGraph   |                   |                   |                   |                   |                   |                   |                   |                   |
+| loadTime    |                   |                   |                   |                   |                   |                   |                   |                   |
+| unloadTime  |                   |                   |                   |                   |                   |                   |                   |                   |
+| runTime     |                   |                   |                   |                   |                   |                   |                   |                   |
+| inference   |                   |                   |                   |                   |                   |                   |                   |                   |
+```
+
 
 ### Building Docker image with HDDL only or dynamic CPU/VPU usage
 
-In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/openvino/producer](https://github.com/open-ness/edgeapps/blob/master/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
+In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/applications/openvino/producer](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
 
 ### Deploying application with HDDL support
 
@@ -79,6 +111,5 @@ Application onboarding is out of scope of this document - please refer to [Appli
 ## Summary
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria.
 
-## Reference 
+## Reference
 - [HDDL-R: Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)
-

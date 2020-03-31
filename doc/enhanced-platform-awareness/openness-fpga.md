@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 # Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration
@@ -28,18 +28,18 @@ The FPGA Programmable Acceleration Card plays a key role in accelerating certain
 - Integration - Today’s FPGAs include on-die processors, transceiver I/O’s at 28 Gbps (or faster), RAM blocks, DSP engines, and more.
 - Total Cost of Ownership (TCO) - While ASICs may cost less per unit than an equivalent FPGA, building them requires a non-recurring expense (NRE), expensive software tools, specialized design teams, and long manufacturing cycles.
 
-Deployment of AI/ML applications at the edge is increasing the adoption of FPGA acceleration. This trend of devices performing machine learning at the edge locally versus relying solely on the cloud is driven by the need to lower latency, persistent availability, lower costs and address privacy concerns. 
+Deployment of AI/ML applications at the edge is increasing the adoption of FPGA acceleration. This trend of devices performing machine learning at the edge locally versus relying solely on the cloud is driven by the need to lower latency, persistent availability, lower costs and address privacy concerns.
 
-This paper explains how the FPGA resource can be used on the OpenNESS platform for accelerating Network Functions and Edge application workloads. We use the Intel® FPGA Programmable Acceleration Card (Intel FPGA PAC) N3000 as a reference FPGA and use LTE/5G Forward Error Correction (FEC) as an example workload that accelerates the 5G or 4G L1 Base station Network function. The same concept and mechanism is applicable for application acceleration workloads like AI/ML on FPGA for Inference applications. 
+This paper explains how the FPGA resource can be used on the OpenNESS platform for accelerating Network Functions and Edge application workloads. We use the Intel® FPGA Programmable Acceleration Card (Intel FPGA PAC) N3000 as a reference FPGA and use LTE/5G Forward Error Correction (FEC) as an example workload that accelerates the 5G or 4G L1 Base station Network function. The same concept and mechanism is applicable for application acceleration workloads like AI/ML on FPGA for Inference applications.
 
-The Intel® FPGA Programmable Acceleration Card (Intel FPGA PAC) N3000 is a full-duplex 100 Gbps in-system re-programmable acceleration card for multi-workload networking application acceleration. It has the right memory mixture designed for network functions, with integrated network interface card (NIC) in a small form factor that enables high throughput, low latency, low-power/bit for custom networking pipeline. 
+The Intel® FPGA Programmable Acceleration Card (Intel FPGA PAC) N3000 is a full-duplex 100 Gbps in-system re-programmable acceleration card for multi-workload networking application acceleration. It has the right memory mixture designed for network functions, with integrated network interface card (NIC) in a small form factor that enables high throughput, low latency, low-power/bit for custom networking pipeline.
 
-FlexRAN is a reference Layer 1 pipeline of 4G eNb and 5G gNb on Intel architecture. The FlexRAN reference pipeline consists of L1 pipeline, optimized L1 processing modules, BBU pooling framework, Cloud and Cloud native deployment support and accelerator support for hardware offload. Intel® PAC N3000 card is used by FlexRAN to offload FEC (Forward Error Correction) for 4G and 5G and IO for Fronthaul/Midhaul. 
+FlexRAN is a reference Layer 1 pipeline of 4G eNb and 5G gNb on Intel architecture. The FlexRAN reference pipeline consists of L1 pipeline, optimized L1 processing modules, BBU pooling framework, Cloud and Cloud native deployment support and accelerator support for hardware offload. Intel® PAC N3000 card is used by FlexRAN to offload FEC (Forward Error Correction) for 4G and 5G and IO for Fronthaul/Midhaul.
 
 ## Intel® PAC N3000 FlexRAN host interface overview
-The PAC N3000 card used in the FlexRAN solution exposes the following physical functions to the CPU host. 
-- 2x25G Ethernet interface that can be used for Fronthaul or Midhaul 
-- One FEC Interface that can be used of 4G or 5G FEC acceleration 
+The PAC N3000 card used in the FlexRAN solution exposes the following physical functions to the CPU host.
+- 2x25G Ethernet interface that can be used for Fronthaul or Midhaul
+- One FEC Interface that can be used of 4G or 5G FEC acceleration
   - The LTE FEC IP components have Turbo Encoder / Turbo decoder and rate matching / de-matching
   - The 5GNR FEC IP components have Low-density parity-check (LDPC) Encoder / LDPC Decoder, rate matching / de-matching, UL HARQ combining
 - Interface for managing and updating the FPGA Image – Remote system Update (RSU).
@@ -55,16 +55,16 @@ FlexRAN is the network function that implements the FEC and is a low latency net
 
 _Figure - Intel PAC N3000 Orchestration and deployment with OpenNESS Network Edge for FlexRAN_
 
-## Intel PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes 
-Remote System Update (RSU) of the FPGA is enabled through Open Programmable Acceleration Engine (OPAE). The OPAE package consists of a kernel driver and user space FPGA utils package that enables programming of the FPGA. OpenNESS automates the process of deploying the OPAE stack as a Kubernetes POD that detects the FPGA and programs it. There is a separate FPGA Configuration POD which is deployed as a Kubernetes job which configures the FPGA resources such as Virtual Functions and queues.  
+## Intel PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes
+Remote System Update (RSU) of the FPGA is enabled through Open Programmable Acceleration Engine (OPAE). The OPAE package consists of a kernel driver and user space FPGA utils package that enables programming of the FPGA. OpenNESS automates the process of deploying the OPAE stack as a Kubernetes POD that detects the FPGA and programs it. There is a separate FPGA Configuration POD which is deployed as a Kubernetes job which configures the FPGA resources such as Virtual Functions and queues.
 
 ![OpenNESS Network Edge Intel PAC N3000 RSU and resource allocation](fpga-images/openness-fpga3.png)
 
 _Figure - OpenNESS Network Edge Intel PAC N3000 RSU and resource allocation_
 
-## Using FPGA on OpenNESS - Details 
+## Using FPGA on OpenNESS - Details
 
-Further sections provide instructions on how to use all three FPGA features - Programming, Configuration and accessing from application on OpenNESS Network and OnPremises Edge. 
+Further sections provide instructions on how to use all three FPGA features - Programming, Configuration and accessing from application on OpenNESS Network and OnPremises Edge.
 
 When the PAC N3000 FPGA is programmed with a vRAN 5G FPGA image it exposes the Single Root I/O Virtualization (SRIOV) Virtual Function (VF) devices which can be used to accelerate the FEC in the vRAN workload. In order to take advantage of this functionality for a Cloud Native deployment the PF (Physical Function) of the device must be bound to DPDK IGB_UIO user-space driver in order to create a number of VFs (Virtual Functions). Once the VFs are created they must also be bound to a DPDK user-space driver in order to allocate them to specific K8s pods running the vRAN workload.
 
@@ -81,17 +81,26 @@ It is assumed that the FPGA is always used with OpenNESS Network Edge, paired wi
 ### FPGA (FEC) Ansible installation for OpenNESS Network Edge
 To run the OpenNESS package with FPGA (FEC) functionality the feature needs to be enabled on both Edge Controller and Edge Node.
 
-#### Edge Controller 
+#### Edge Controller
 
-To enable on Edge Controller set/uncomment following in `ne_controller.yml` in OpenNESS-Experience-Kits top level directory:
-```
+To enable on Edge Controller set/uncomment following in `network_edge.yml` in OpenNESS-Experience-Kits top level directory:
+```yaml
+# network_edge.yml
 - role: opae_fpga/master
-- role: multus
-- role: sriov/master
 ```
-Also enable/configure following options in `roles/sriov/common/defaults/main.yml`.
+
+Additionally SRIOV must be enabled in OpenNESS:
+```yaml
+# group_vars/all.yml
+kubernetes_cnis:
+- kubeovn
+- sriov
+```
+
+Also enable/configure following options in `roles/kubernetes/cni/sriov/common/defaults/main.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
-```
+```yaml
+# roles/kubernetes/cni/sriov/common/defaults/main.yml
 fpga_sriov_userspace:
   enabled: true
 fpga_userspace_vf:
@@ -100,17 +109,15 @@ fpga_userspace_vf:
   vf_device_id: "0d90"
   pf_device_id: "0d8f"
   vf_number: "2"
+  vf_driver: "vfio-pci"
 ```
 
-Run setup script `deploy_ne_controller.sh`.
+#### Edge Node
 
-#### Edge Node 
-
-To enable on the Edge Node set following in `ne_node.yml` (Please note that the `sriov/worker` role needs to be executed before `kubernetes/worker` role):
+To enable on the Edge Node set following in `network_edge.yml`:
 
 ```
 - role: opae_fpga/worker
-- role: sriov/worker
 ```
 
 The following packages need to be placed into specific directories in order for the feature to work:
@@ -121,7 +128,42 @@ The following packages need to be placed into specific directories in order for 
 
 3. Factory image configuration package `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` needs to be placed inside `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of PAC N3000 OPAE beta release (Please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616080 ) to obtain the package)
 
-Run setup script `deploy_ne_node.sh`.
+Run setup script `deploy_ne.sh`.
+
+On successful deployment following pods will be available in the cluster:
+```shell
+kubectl get pods -A
+
+NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+kube-ovn      kube-ovn-cni-hdgrl                        1/1     Running   0          3d19h
+kube-ovn      kube-ovn-cni-px79b                        1/1     Running   0          3d18h
+kube-ovn      kube-ovn-controller-578786b499-74vzm      1/1     Running   0          3d19h
+kube-ovn      kube-ovn-controller-578786b499-j22gl      1/1     Running   0          3d19h
+kube-ovn      ovn-central-5f456db89f-z7d6x              1/1     Running   0          3d19h
+kube-ovn      ovs-ovn-46k8f                             1/1     Running   0          3d18h
+kube-ovn      ovs-ovn-5r2p6                             1/1     Running   0          3d19h
+kube-system   coredns-6955765f44-mrc82                  1/1     Running   0          3d19h
+kube-system   coredns-6955765f44-wlvhc                  1/1     Running   0          3d19h
+kube-system   etcd-silpixa00394960                      1/1     Running   0          3d19h
+kube-system   kube-apiserver-silpixa00394960            1/1     Running   0          3d19h
+kube-system   kube-controller-manager-silpixa00394960   1/1     Running   0          3d19h
+kube-system   kube-multus-ds-amd64-2zdqt                1/1     Running   0          3d18h
+kube-system   kube-multus-ds-amd64-db8fd                1/1     Running   0          3d19h
+kube-system   kube-proxy-dd259                          1/1     Running   0          3d19h
+kube-system   kube-proxy-sgn9g                          1/1     Running   0          3d18h
+kube-system   kube-scheduler-silpixa00394960            1/1     Running   0          3d19h
+kube-system   kube-sriov-cni-ds-amd64-k9wnd             1/1     Running   0          3d18h
+kube-system   kube-sriov-cni-ds-amd64-pclct             1/1     Running   0          3d19h
+kube-system   kube-sriov-device-plugin-amd64-fhbv8      1/1     Running   0          3d18h
+kube-system   kube-sriov-device-plugin-amd64-lmx9k      1/1     Running   0          3d19h
+openness      eaa-78b89b4757-xzh84                      1/1     Running   0          3d18h
+openness      edgedns-dll9x                             1/1     Running   0          3d18h
+openness      interfaceservice-grjlb                    1/1     Running   0          3d18h
+openness      nfd-master-dd4ch                          1/1     Running   0          3d19h
+openness      nfd-worker-c24wn                          1/1     Running   0          3d18h
+openness      syslog-master-9x8hc                       1/1     Running   0          3d19h
+openness      syslog-ng-br92z                           1/1     Running   0          3d18h
+```
 
 ### FPGA Programming and telemetry on OpenNESS Network Edge
 In order to program the FPGA factory image (One Time Secure Upgrade) or the user image (5GN FEC vRAN) of the PAC N3000 via OPAE a `kubectl` plugin for K8s is provided. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs which will run to completion on desired host and display the logs/output of the command.
@@ -154,6 +196,19 @@ kubectl rsu program -f <signed_RTL_image> -n <hostname> -d <RSU_PCI_bus_function
 kubectl rsu get temp  -n <hostname>
 kubectl rsu get power  -n <hostname>
 kubectl rsu get fme  -n <hostname>
+
+
+# Sample output for correctly programmed card with `get fme` command
+//****** FME ******//
+Object Id : 0xED00000
+PCIe s\:b\:d.f : 0000:1b:00.0
+Device Id : 0x0b30
+Numa Node : 0
+Ports Num : 01
+Bitstream Id : 0x2145042A010304
+Bitstream Version : 0.2.1
+Pr Interface Id : a5d72a3c-c8b0-4939-912c-f715e5dc10ca
+Boot Page : user
 ```
 7. For more information on usage of each `kubectl rsu` plugin capability run each command with `-h` argument.
 
@@ -228,10 +283,14 @@ Expected: `Mode of operation = VF-mode FPGA_LTE PF [0000:xx:00.0] configuration 
 ### Requesting resources and running pods for OpenNESS Network Edge
 As part of OpenNESS Ansible automation a K8s device plugin to orchestrate the FPGA VFs bound to user-space driver is running. This will enable scheduling of pods requesting this device/devices. Number of devices available on the Edge Node can be checked from Edge Controller by running:
 
-`kubectl get node <node_name> -o json | jq '.status.allocatable'`
+```shell
+kubectl get node silpixa00400489 -o json | jq '.status.allocatable'
 
-To request the device as a resource in the pod add the request for the resource into the pod specification file, by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the amount of resources available, the pod status will be 'Pending' until the resource is available. 
-Note that the name of the resource must match the name specified in the configMap for the K8s devices plugin (`./fpga/configMap.yml`). 
+"intel.com/intel_fec_5g": "2"
+```
+
+To request the device as a resource in the pod add the request for the resource into the pod specification file, by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the amount of resources available, the pod status will be 'Pending' until the resource is available.
+Note that the name of the resource must match the name specified in the configMap for the K8s devices plugin (`./fpga/configMap.yml`).
 
 A sample pod requesting the FPGA (FEC) VF may look like this:
 
@@ -252,8 +311,8 @@ spec:
       requests:
         intel.com/intel_fec_5g: '1'
       limits:
-        intel.com/intel_fec_5g: '1' 
-``` 
+        intel.com/intel_fec_5g: '1'
+```
 
 In order to test the resource allocation to the pod, save the above snippet to the sample.yaml file and create the pod.
 
@@ -277,7 +336,7 @@ Navigate to:
 
 `edgeapps/fpga-sample-app`
 
-Copy the necessary `flexran-dpdk-bbdev-v19-10.patch` file into the directory. This patch is available as part of FlexRAN 19.10 release package. To obtain this FlexRAN patch allowing 5G functionality for BBDEV in DPDK please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743 )
+Copy the necessary `dpdk_19.11_new.patch` file into the directory. This patch is available as part of FlexRAN 20.02 release package. To obtain this FlexRAN patch allowing 5G functionality for BBDEV in DPDK please contact your Intel representative or visit [Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743 )
 
 Build image:
 
@@ -288,16 +347,53 @@ From the Edge Controller deploy the application pod, pod specification located a
 `kubectl create -f fpga-sample-app.yaml`
 
 Execute into the application pod and run the sample app:
-```
+```shell
+# enter the pod
 kubectl exec -it pod-bbdev-sample-app -- /bin/bash
 
+# run test application
 ./test-bbdev.py --testapp-path ./testbbdev -e="-w ${PCIDEVICE_INTEL_COM_INTEL_FEC_5G}" -i -n 1 -b 1 -l 1 -c validation -v ./test_vectors/ldpc_dec_v7813.data
+
+# sample output
+EAL: Detected 48 lcore(s)
+EAL: Detected 2 NUMA nodes
+EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+EAL: Selected IOVA mode 'VA'
+EAL: No available hugepages reported in hugepages-1048576kB
+EAL: Probing VFIO support...
+EAL: VFIO support initialized
+EAL: PCI device 0000:20:00.1 on NUMA socket 0
+EAL:   probe driver: 8086:d90 intel_fpga_5gnr_fec_vf
+EAL:   using IOMMU type 1 (Type 1)
+
+===========================================================
+Starting Test Suite : BBdev Validation Tests
+Test vector file = ./test_vectors/ldpc_dec_v7813.data
+mcp fpga_setup_queuesDevice 0 queue 16 setup failed
+Allocated all queues (id=16) at prio0 on dev0
+Device 0 queue 16 setup failed
+All queues on dev 0 allocated: 16
++ ------------------------------------------------------- +
+== test: validation/latency
+dev: 0000:20:00.1, burst size: 1, num ops: 1, op type: RTE_BBDEV_OP_LDPC_DEC
+Operation latency:
+        avg: 17744 cycles, 12.6743 us
+        min: 17744 cycles, 12.6743 us
+        max: 17744 cycles, 12.6743 us
+TestCase [ 0] : latency_tc passed
+ + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +
+ + Test Suite Summary : BBdev Validation Tests
+ + Tests Total :        1
+ + Tests Skipped :      0
+ + Tests Passed :       1
+ + Tests Failed :       0
+ + Tests Lasted :       95.2308 ms
+ + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +
 ```
 The output of the application should indicate total of ‘1’ tests and ‘1’ test passing, this concludes the validation of the FPGA VF working correctly inside K8s pod.
 
-## Reference 
+## Reference
 - [Intel® FPGA Programmable Acceleration Card N3000](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html)
 -  [FlexRAN 19.10 release - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/615743)
 - [PAC N3000 OPAE beta release - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616082)
-- [PAC N3000 OPAE beta release (2) - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616080) 
-
+- [PAC N3000 OPAE beta release (2) - Resource Design Centre](https://cdrdv2.intel.com/v1/dl/getContent/616080)

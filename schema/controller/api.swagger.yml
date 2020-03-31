@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2019 Intel Corporation
+# Copyright (c) 2019-2020 Intel Corporation
 
 openapi: 3.0.0
 info:
@@ -351,7 +351,7 @@ components:
     ipModifier:
       type: object
       properties:
-        address: 
+        address:
           oneOf:
             - $ref: '#/components/schemas/ipv4Address'
             - $ref: '#/components/schemas/ipv6Address'

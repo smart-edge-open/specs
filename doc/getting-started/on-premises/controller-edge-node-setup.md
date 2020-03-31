@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 # OpenNESS OnPremises: Controller and Edge node setup
@@ -11,18 +11,24 @@ Copyright (c) 2019 Intel Corporation
 - [Running playbooks](#running-playbooks)
   - [On Premise Playbooks](#on-premise-playbooks)
     - [Cleanup playbooks](#cleanup-playbooks)
+    - [Dataplanes](#dataplanes)
   - [Manual steps](#manual-steps)
     - [Enrolling Nodes with Controller](#enrolling-nodes-with-controller)
       - [First Login](#first-login)
-      - [Enrollment](#enrollment)
+      - [Manual enrollment](#manual-enrollment)
     - [NTS Configuration](#nts-configuration)
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
-      - [Creating Traffic Policy](#creating-traffic-policy)
-      - [Adding Traffic Policy to Interface](#adding-traffic-policy-to-interface)
       - [Configuring Interface](#configuring-interface)
       - [Starting NTS](#starting-nts)
-- [Q&amp;A](#qampa)
+      - [Preparing set-up for Local Breakout Point (LBP)](#preparing-set-up-for-local-breakout-point-lbp)
+        - [Controller and Edge Node deployment](#controller-and-edge-node-deployment)
+        - [Network configuration](#network-configuration)
+        - [Configuration in Controller](#configuration-in-controller)
+        - [Verification](#verification)
+    - [Configuring DNS](#configuring-dns)
+- [Q&A](#qa)
   - [Configuring time](#configuring-time)
+  - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
   - [Exchanging SSH keys with hosts](#exchanging-ssh-keys-with-hosts)
   - [Setting proxy](#setting-proxy)
@@ -30,6 +36,7 @@ Copyright (c) 2019 Intel Corporation
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
   - [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)
+  - [Customization of kernel, grub parameters and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
 # Purpose
 
@@ -40,6 +47,8 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 In order to use the playbooks several preconditions must be fulfilled:
 
 - Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
+
+- Hosts for Edge Controller and Edge Nodes must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
 
 - Inventory must be configured (refer to [Configuring inventory](#configuring-inventory))
 
@@ -52,10 +61,11 @@ In order to use the playbooks several preconditions must be fulfilled:
 # Running playbooks
 
 For convenience, playbooks can be played by running helper deploy scripts.
-Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for On Premise mode:
-  - `cleanup_onprem.sh`
-  - `deploy_onprem_controller.sh`
-  - `deploy_onprem_node.sh`
+Convention for the scripts is: `action_mode.sh [group]`. Following scripts are available for On Premise mode:
+  - `cleanup_onprem.sh [ controller | nodes ]`
+  - `deploy_onprem.sh [ controller | nodes ]`
+
+To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and `deploy_ne.sh controller` respectively.
 
 > NOTE: All nodes provided in the inventory might get rebooted during the installation.
 
@@ -65,7 +75,7 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
 
 ## On Premise Playbooks
 
-`onprem_controller.yml`, `onprem_node.yml` and `onprem_cleanup.yml` contain playbooks for On Premise mode. Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
+`on_premises.yml` and `on_premises_cleanup.yml` contain playbooks for On Premise mode. Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
 
 ### Cleanup playbooks
 
@@ -75,6 +85,17 @@ Teardown is made by going step by step in reverse order and undo the steps.
 For example, when installing Docker - RPM repository is added and Docker installed, when cleaning up - Docker is uninstalled and then repository is removed.
 
 Note that there might be some leftovers created by installed software.
+
+### Dataplanes
+OpenNESS' On Premises delivers two dataplanes to be used:
+* NTS (default)
+* OVS/OVN
+
+In order to use OVS/OVN instead of NTS, `onprem_dataplane` variable must be edited in `group_vars/all.yml` file before running the deployment scripts:
+```yaml
+onprem_dataplane: "ovncni"
+```
+> NOTE: When deploying virtual machine with OVNCNI dataplane, `/etc/resolv.conf` must be edited to use `192.168.122.1` nameserver.
 
 ## Manual steps
 
@@ -95,7 +116,7 @@ Prerequisites (*Ansible Controller*):
 The following steps need to be done for successful login:
 
 1. Open internet browser on *Ansible Controller*.
-2. Type in `http://<EDGE_CONTROLLER_HOSTNAME>:3000` in address bar.
+2. Type in `http://<LANDING_UI_URL>/` in address bar. `LANDING_UI_URL` can be retrieved from `.env` file.
 3. Click on "INFRASTRUCTURE MANAGER" button.
 
 ![Landing page](controller-edge-node-setup-images/controller_ui_landing.png)
@@ -103,9 +124,11 @@ The following steps need to be done for successful login:
 4. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all.yml*).
 5. Click on "SIGN IN" button.
 
-![Login screen](../../applications-onboard/howto-images/login.png)
+![Login screen](controller-edge-node-setup-images/login.png)
 
-#### Enrollment
+#### Manual enrollment
+
+> NOTE: Following steps are now part of Ansible automated platform setup. Manual steps are left for reference.
 
 In order for the Controller and Edge Node to work together the Edge Node needs to enroll with the Controller. The Edge Node will continuously try to connect to the controller until its serial key is recognized by the Controller.
 
@@ -119,17 +142,17 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 2. Navigate to 'NODES' tab.
 3. Click on 'ADD EDGE NODE' button.
 
-![Add Edge Node 1](../../applications-onboard/howto-images/Enroll1.png)
+![Add Edge Node 1](controller-edge-node-setup-images/Enroll1.png)
 
 4. Enter previously obtained Edge Node Serial Key into 'Serial*' field (Step 1).
 5. Enter the name and location of Edge Node.
 6. Press 'ADD EDGE NODE'.
 
-![Add Edge Node 2](../../applications-onboard/howto-images/Enroll2.png)
+![Add Edge Node 2](controller-edge-node-setup-images/Enroll2.png)
 
 7. Check that your Edge Node is visible under 'List of Edge Nodes'.
 
-![Add Edge Node 3](../../applications-onboard/howto-images/Enroll3.png)
+![Add Edge Node 3](controller-edge-node-setup-images/Enroll3.png)
 
 ### NTS Configuration
 OpenNESS data-plane interface configuration.
@@ -144,72 +167,12 @@ To check the interfaces available on the Edge Node execute following steps:
 2. Find you Edge Node on the list.
 3. Click 'EDIT'.
 
-![Check Edge Node Interfaces 1](../../applications-onboard/howto-images/CheckingNodeInterfaces.png)
+![Check Edge Node Interfaces 1](controller-edge-node-setup-images/CheckingNodeInterfaces.png)
 
 5. Navigate to 'INTERFACES' tab.
 6. Available interfaces are listed.
 
-![Check Edge Node Interfaces 2](../../applications-onboard/howto-images/CheckingNodeInterfaces1.png)
-
-#### Creating Traffic Policy
-Prerequisites:
-- Enrollment phase completed successfully.
-- User is logged in to UI.
-
-The steps to create a sample traffic policy are as follows:
-1. From UI navigate to 'TRAFFIC POLICIES' tab.
-2. Click 'ADD POLICY'.
-
-> Note: This specific traffic policy is only an example.
-
-![Creating Traffic Policy 1](../../applications-onboard/howto-images/CreatingTrafficPolicy.png)
-
-3. Give policy a name.
-4. Click 'ADD' next to 'Traffic Rules*' field.
-5. Fill in following fields:
-  - Description: "Sample Description"
-  - Priority: 99
-  - Source -> IP Filter -> IP Address: 1.1.1.1
-  - Source -> IP Filter -> Mask: 24
-  - Source -> IP Filter -> Begin Port: 10
-  - Source -> IP Filter -> End Port: 20
-  - Source -> IP Filter -> Protocol: all
-  - Target -> Description: "Sample Description"
-  - Target -> Action: accept
-6. Click on "CREATE".
-
-![Creating Traffic Policy 2](../../applications-onboard/howto-images/CreatingTrafficPolicy2.png)
-
-After creating Traffic Policy it will be visible under 'List of Traffic Policies' in 'TRAFFIC POLICIES' tab.
-
-![Creating Traffic Policy 3](../../applications-onboard/howto-images/CreatingTrafficPolicy3.png)
-
-#### Adding Traffic Policy to Interface
-Prerequisites:
-- Enrollment phase completed successfully.
-- User is logged in to UI.
-- Traffic Policy Created.
-
-To add a previously created traffic policy to an interface available on Edge Node the following steps need to be completed:
-1. From UI navigate to "NODES" tab.
-2. Find Edge Node on the 'List Of Edge Nodes'.
-3. Click "EDIT".
-
-> Note: This step is instructional only, users can decide if they need/want a traffic policy designated for their interface, or if they desire traffic policy designated per application instead.
-
-![Adding Traffic Policy To Interface 1](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface1.png)
-
-4. Navigate to "INTERFACES" tab.
-5. Find desired interface which will be used to add traffic policy.
-6. Click 'ADD' under 'Traffic Policy' column for that interface.
-7. A window titled 'Assign Traffic Policy to interface' will pop-up. Select a previously created traffic policy.
-8. Click on 'ASSIGN'.
-
-![Adding Traffic Policy To Interface 2](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface2.png)
-
-On success the user is able to see 'EDIT' and 'REMOVE POLICY' buttons under 'Traffic Policy' column for desired interface. These buttons can be respectively used for editing and removing traffic rule policy on that interface.
-
-![Adding Traffic Policy To Interface 3](../../applications-onboard/howto-images/AddingTrafficPolicyToInterface3.png)
+![Check Edge Node Interfaces 2](controller-edge-node-setup-images/CheckingNodeInterfaces1.png)
 
 #### Configuring Interface
 Prerequisites:
@@ -223,7 +186,9 @@ In order to configure interface available on the Edge Node for the NTS the follo
 | WARNING: do not modify a NIC which is used for Internet connection! |
 | --- |
 
-![Configuring Interface 1](../../applications-onboard/howto-images/AddingInterfaceToNTS.png)
+> Note: For adding traffic policy to interface refere to following section in on-premises-applications-onboarding.md: [Instruction to create Traffic Policy and assign it to Interface](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md#instruction-to-create-traffic-policy-and-assign-it-to-interface)
+
+![Configuring Interface 1](controller-edge-node-setup-images/AddingInterfaceToNTS.png)
 
 1. A window will pop-up titled "Edit Interface". The following fields need to be set:
   - Driver: userspace
@@ -232,11 +197,11 @@ In order to configure interface available on the Edge Node for the NTS the follo
   - In case of two interfaces being configured, one for 'Upstream' another for 'Downstream', the fallback interface for 'Upstream' is the 'Downstream' interface and vice versa.
 2. Click 'SAVE'.
 
-![Configuring Interface 2](../../applications-onboard/howto-images/AddingInterfaceToNTS1.png)
+![Configuring Interface 2](controller-edge-node-setup-images/AddingInterfaceToNTS1.png)
 
 3. The interface's 'Driver' and 'Type' columns will reflect changes made.
 
-![Configuring Interface 3](../../applications-onboard/howto-images/AddingInterfaceToNTS2.png)
+![Configuring Interface 3](controller-edge-node-setup-images/AddingInterfaceToNTS2.png)
 
 #### Starting NTS
 Prerequisite:
@@ -253,15 +218,161 @@ Once the interfaces are configured accordingly the following steps need to be do
 1. From UI navigate to 'INTERFACES' tab of the Edge Node.
 2. Click 'COMMIT CHANGES'
 
-![Starting NTS 1](../../applications-onboard/howto-images/StartingNTS.png)
+![Starting NTS 1](controller-edge-node-setup-images/StartingNTS.png)
 
 3. NTS will start
 
-![Starting NTS 2](../../applications-onboard/howto-images/StartingNTS2.png)
+![Starting NTS 2](controller-edge-node-setup-images/StartingNTS2.png)
 
 4. Make sure that the **nts** and **edgednssvr** containers are running on an *Edge Node* machine:
 
 ![Starting NTS 3](controller-edge-node-setup-images/StartingNTS3.png)
+
+#### Preparing set-up for Local Breakout Point (LBP)
+
+It is possible in a set up with NTS used as dataplane to prepare following LBP configuration
+- LBP set-up requirements: five machines are used as following set-up elements
+  - Controller
+  - Edge Node
+  - UE
+  - LBP
+  - EPC
+- Edge Node is connected via 10GB cards to UE, LBP, EPC
+- network configuration of all elements is given on the diagram:
+
+  ![LBP set-up ](controller-edge-node-setup-images/LBP_set_up.png "LBP set-up")
+
+- configuration of interfaces for each server is done in Controller
+- ARP configuration is done on servers
+- IP addresses 10.103.104.X are addresses of machines from local subnet used for building set-up
+- IP addresses 192.168.100.X are addresses given for LBP test purpose
+
+##### Controller and Edge Node deployment
+
+Build and deploy Controller and Edge Node using ansible scripts and instructions in this document.
+
+##### Network configuration
+
+Find interface with following commands
+-  `ifconfig`
+or
+- `ip a`
+
+Command `ethtool -p <interface>` can be used to identify port (port on physical machine will start to blink and it will be possible to verify if it is valid port).
+
+Use following commands to configure network on servers in set up
+- UE
+  - `ifconfig <interface> 192.168.100.1/24 up`
+  - `arp -s 192.168.100.2 <mac address>` (e.g. `arp -s 192.168.100.2 3c:fd:fe:a7:c0:eb`)
+- LBP
+  - `ifconfig <interface> 192.168.100.2/24 up`
+  - `arp -s 192.168.100.1 <mac address>` (e.g. `arp -s 192.168.100.1 90:e2:ba:ac:6a:d5`)
+- EPC
+  - `ifconfig <interface> 192.168.100.3/24 up`
+
+
+Alternatively to using `ifconfig` configuration can be done with `ip` command:
+`ip address add <address> dev <interface>` (e.g.`ip address add 192.168.100.1/24 dev enp23s0f0`)
+
+##### Configuration in Controller
+
+Add traffic policy with rule for LBP:
+
+- Name: LBP rule
+- Priority: 99
+- IP filter:
+  - IP address: 192.168.100.2
+  - Mask: 32
+  - Protocol: all
+- Target:
+  - Action: accept
+- MAC Modifier
+  - MAC address: 3c:fd:fe:a7:c0:eb
+
+![LBP rule adding](controller-edge-node-setup-images/LBP_rule.png)
+
+Update interfaces:
+- edit interfaces to UE, LBP, EPC as shown on diagram (Interface set-up)
+- add Traffic policy (LBP rule) to LBP interface (0000:88.00.2)
+
+After configuring NTS send PING (it is needed by NTS) from UE to EPC (`ping 192.168.100.3`).
+
+##### Verification
+
+1. NES client
+  - SSH to UE machine and ping LBP (`ping 192.168.100.2`)
+  - SSH to Edge Node server
+    - Set following environment variable: `export NES_SERVER_CONF=/var/lib/appliance/nts/nts.cfg`
+    - Run NES client: `<path_to_edgenode_repoistory>/internal/nts/client/build/nes_client`
+      - connect to NTS using command `connect`
+      - use command `route list` to verify traffic rule for LBP
+      - use command `show all` to verify packet flow (received and sent packet should increase)
+      - use command `quit` to exit (use `help` for information on available commands)
+
+    ```shell
+    # connect
+    Connection is established.
+    # route list
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    | ID    | PRIO       | ENB IP             | EPC IP             | UE IP              | SRV IP             | UE PORT     | SRV PORT    | ENCAP  | Destination          |
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    | 0     | 99         | n/a                | n/a                | 192.168.100.2/32   | *                  | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+    | 1     | 99         | n/a                | n/a                | *                  | 192.168.100.2/32   | *           | *           | IP     | 3c:fd:fe:a7:c0:eb    |
+    | 2     | 5          | n/a                | n/a                | *                  | 53.53.53.53/32     | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+    | 3     | 5          | n/a                | n/a                | 53.53.53.53/32     | *                  | *           | *           | IP     | 8a:68:41:df:fa:d5    |
+    | 4     | 5          | *                  | *                  | *                  | 53.53.53.53/32     | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
+    | 5     | 5          | *                  | *                  | 53.53.53.53/32     | *                  | *           | *           | GTPU   | 8a:68:41:df:fa:d5    |
+    +-------+------------+--------------------+--------------------+--------------------+--------------------+-------------+-------------+--------+----------------------+
+    # show all
+    ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+    0  0000:88:00.1                          1303 pkts                    776 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b1)                127432 bytes                 75820 bytes                     0 bytes
+    1  0000:88:00.2                          1261 pkts                   1261 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b2)                123578 bytes                123578 bytes                     0 bytes
+    2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+    3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+          (not registered)                       0 bytes                     0 bytes                     0 bytes
+    # show all
+    ID:          Name:                  Received:                       Sent:           Dropped(TX full):                Dropped(HW):                IP Fragmented(Forwarded):
+    0  0000:88:00.1                          1304 pkts                    777 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b1)                127530 bytes                 75918 bytes                     0 bytes
+    1  0000:88:00.2                          1262 pkts                   1262 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b2)                123676 bytes                123676 bytes                     0 bytes
+    2  0000:88:00.3                            40 pkts                     42 pkts                      0 pkts                      0 pkts                      0 pkts
+        (3c:fd:fe:b2:44:b3)                  3692 bytes                  3854 bytes                     0 bytes
+    3           KNI                             0 pkts                      0 pkts                      0 pkts                      0 pkts                      0 pkts
+          (not registered)                       0 bytes                     0 bytes                     0 bytes
+    ```
+
+2. Tcpdump
+
+- SSH to UE machine and ping LBP (`ping 192.168.100.2`)
+- SSH to LBP server.
+  - Run tcpdump with name of interface connected to Edge Node, verify data flow, use Ctrl+c to stop.
+
+  ```shell
+  # tcpdump -i enp23s0f3
+  tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+  listening on enp23s0f3, link-type EN10MB (Ethernet), capture size 262144 bytes
+  10:29:14.678250 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 320, length 64
+  10:29:14.678296 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 320, length 64
+  10:29:15.678240 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 321, length 64
+  10:29:15.678283 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 321, length 64
+  10:29:16.678269 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 322, length 64
+  10:29:16.678312 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 322, length 64
+  10:29:17.678241 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 323, length 64
+  10:29:17.678285 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 323, length 64
+  10:29:18.678215 IP 192.168.100.1 > twesolox-mobl.ger.corp.intel.com: ICMP echo request, id 9249, seq 324, length 64
+  10:29:18.678258 IP twesolox-mobl.ger.corp.intel.com > 192.168.100.1: ICMP echo reply, id 9249, seq 324, length 64
+  ^C
+  10 packets captured
+  10 packets received by filter
+  0 packets dropped by kernel
+  ```
+
+### Configuring DNS
+* [Instructions for configuring DNS](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
 
 # Q&A
 
@@ -312,6 +423,22 @@ Root delay      : 0.008066391 seconds
 Root dispersion : 0.003803928 seconds
 Update interval : 130.2 seconds
 Leap status     : Normal
+```
+
+## Setup static hostname
+
+In order to set some custom static hostname a command can be used:
+
+```
+hostnamectl set-hostname <host_name>
+```
+
+Make sure that static hostname provided is proper and unique.
+The hostname provided needs to be defined in /etc/hosts as well:
+
+```
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 <host_name>
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 <host_name>
 ```
 
 ## Configuring inventory
@@ -444,3 +571,7 @@ Alternatively to reading from /opt/edgenode/verification_key.txt Edge Node's ser
 ```bash
 openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform der | md5sum | xxd -r -p | openssl enc -a | tr -d '=' | tr '/+' '_-'
 ```
+
+## Customization of kernel, grub parameters and tuned profile
+
+OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).

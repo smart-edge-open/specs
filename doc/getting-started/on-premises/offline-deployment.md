@@ -147,7 +147,7 @@ In extracted offline package, in `openness-experience-kits` folder, you will fin
 9. Update `inventory.ini` file and enter IP address of this controller machine machine in `[all]` section. Do not use localhost or 127.0.0.1.
 10. Run deploy script:
    ```
-   ./deploy_onprem_controller.sh
+   ./deploy_onprem.sh controller
    ```
    This operation may take 40 minutes or more.<br>
    Controller functionality will be installed on this server as defined in `group_vars/all.yml` using its IP address obtained from `[all]` section.<br>
@@ -178,12 +178,12 @@ Steps to follow on each node from `[edgenode_group]`:
    ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 YOUR_NEW_HOSTNAME
    ```
 
-And finally, run `deploy_onprem_node.sh` script from controller:
+And finally, run `deploy_onprem.sh nodes` script from controller:
 1. Log into controller as root user.
 2. Go to extracted `openness_experience_kits` folder:
 3. Run deploy script for nodes:
    ```
-   ./deploy_onprem_node.sh
+   ./deploy_onprem.sh nodes
    ```
    Note: This operation may take one hour or more, depending on the amount of chosen hosts in inventory.<br>
    Node functionality will be installed on chosen list of hosts.<br>
@@ -219,7 +219,7 @@ Offline prepare and restore of the HDDL image is not enabled by default due to i
 
 In order to prepare and later restore the HDDL image, `- role: offline/prepare/hddl` line must be uncommented in `offline_prepare.yml` playbook before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
 
-During offline package restoration HDDL role must be enabled in order to finish the building. It is done by uncommenting `- role: hddl` line in `onprem_node.yml` before `deploy_onprem_node.sh` is executed.
+During offline package restoration HDDL role must be enabled in order to finish the building. It is done by uncommenting `- role: hddl` line in `on_premises.yml` before `deploy_onprem.sh nodes` is executed.
 
 # Troubleshooting
 Q: <br>

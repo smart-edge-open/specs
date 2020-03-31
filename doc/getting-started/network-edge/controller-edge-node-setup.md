@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 # OpenNESS Network Edge: Controller and Edge node setup
@@ -10,9 +10,13 @@ Copyright (c) 2019 Intel Corporation
   - [Network Edge Playbooks](#network-edge-playbooks)
     - [Cleanup playbooks](#cleanup-playbooks)
     - [Supported EPA features](#supported-epa-features)
+    - [VM support for Network Edge](#vm-support-for-network-edge)
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
-- [Q&amp;A](#qampa)
+  - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
+    - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
+    - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
+- [Q&A](#qa)
   - [Configuring time](#configuring-time)
   - [Setup static hostname](#setup-static-hostname)
   - [Configuring inventory](#configuring-inventory)
@@ -22,6 +26,7 @@ Copyright (c) 2019 Intel Corporation
     - [GitHub Token](#github-token)
     - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
   - [Installing Kubernetes Dashboard](#installing-kubernetes-dashboard)
+  - [Customization of kernel, grub parameters and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
 # Preconditions
 
@@ -45,11 +50,11 @@ For convenience, playbooks can be executed by running helper deployment scripts.
 
 > NOTE: All nodes provided in the inventory may reboot during the installation.
 
-Convention for the scripts is: `action_mode[_group].sh`. Following scripts are available for Network Edge mode:
-  - `deploy_ne.sh` - sets up cluster (first controller, then nodes)
-  - `cleanup_ne.sh`
-  - `deploy_ne_controller.sh`
-  - `deploy_ne_node.sh`
+Convention for the scripts is: `action_mode.sh [group]`. Following scripts are available for Network Edge mode:
+  - `deploy_ne.sh [ controller | nodes ]`
+  - `cleanup_ne.sh [ controller | nodes ] `
+
+To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and `deploy_ne.sh controller` respectively.
 
 > NOTE: Playbooks for Edge Controller/Kubernetes master must be executed before playbooks for Edge Nodes.
 
@@ -57,7 +62,7 @@ Convention for the scripts is: `action_mode[_group].sh`. Following scripts are a
 
 ## Network Edge Playbooks
 
-The `ne_controller.yml`, `ne_node.yml` and `ne_cleanup.yml` files contain playbooks for Network Edge mode.
+The `network_edge.yml` and `network_edge_cleanup.yml` files contain playbooks for Network Edge mode.
 Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
 
 ### Cleanup playbooks
@@ -72,6 +77,9 @@ Note that there might be some leftovers created by installed software.
 ### Supported EPA features
 A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [supported-epa.md](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md), the documents referenced in the list provide detailed description of the features and step by step instructions how to enable them. The user is advised to get familiarized with the features available before executing the deployment playbooks.
 
+### VM support for Network Edge
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. The user is advised to get familiarized with the VM support documentation before executing the deployment playbooks. Please see [openness-network-edge-vm-support.md](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md) for more information.
+
 ### Quickstart
 The following is a complete set of actions that need to be completed to successfully set up OpenNESS cluster.
 
@@ -85,6 +93,93 @@ The following is a complete set of actions that need to be completed to successf
 ### Application on-boarding
 
 Please refer to [network-edge-applications-onboarding.md](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+
+## Kubernetes cluster networking plugins (Network Edge)
+
+Kubernetes uses 3rd party networking plugins to provide [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
+These plugins are based on [CNI (Container Network Interface) specification](https://github.com/containernetworking/cni).
+
+OpenNESS Experience Kits provides several ready-to-use Ansible roles deploying CNIs.
+Following CNIs are currently supported:
+* [kube-ovn](https://github.com/alauda/kube-ovn)
+  * **Only as primary CNI**
+  * CIDR: 10.16.0.0/16
+* [flannel](https://github.com/coreos/flannel)
+  * IPAM: host-local
+  * CIDR: 10.244.0.0/16
+  * Network attachment definition: openness-flannel
+* [calico](https://github.com/projectcalico/cni-plugin)
+  * IPAM: host-local
+  * CIDR: 10.243.0.0/16
+  * Network attachment definition: openness-calico
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
+
+Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [Multus CNI](https://github.com/intel/multus-cni) is used.
+
+> NOTE: For guide on how to add new CNI role to the OpenNESS Experience Kits refer to [the OpenNESS Experience Kits guide](../openness-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge)
+
+### Selecting cluster networking plugins (CNI)
+
+> Note: When using non-default CNI (default is kube-ovn) remember to add CNI's networks (CIDR for pods and other CIDRs used by the CNI) to `proxy_os_noproxy` in `group_vars/all.yml`
+
+In order to customize which CNI are to be deployed for the Network Edge cluster edit `kubernetes_cnis` variable in `group_vars/all.yml` file.
+CNIs are applied in requested order.
+By default `kube-ovn` and `calico` are set up (with `multus` in between):
+```yaml
+kubernetes_cnis:
+- kubeovn
+- calico
+```
+
+For example, to add SR-IOV just add another item on the list. That'll result in following CNIs being applied: `kube-ovn`, `multus`, `calico` and `sriov`.
+```yaml
+kubernetes_cnis:
+- kubeovn
+- calico
+- sriov
+```
+
+### Adding additional interfaces to pods
+
+In order to add additional interface from secondary CNIs annotation is required.
+Below is an example pod yaml file for a scenario with `kube-ovn` as a primary CNI and `calico` and `flannel` as additional CNIs.
+Multus will create an interface named `calico` using network attachment definition `openness-calico` and interface `flannel` using network attachment definition `openness-flannel`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cni-test-pod
+  annotations:
+    k8s.v1.cni.cncf.io/networks: openness-calico@calico, openness-flannel@flannel
+spec:
+  containers:
+  - name: cni-test-pod
+    image: docker.io/centos/tools:latest
+    command:
+    - /sbin/init
+```
+
+Below is an output (some lines were cut out for readability) of `ip a` command executed in the pod.
+Following interfaces are available: `calico@if142`, `flannel@if143` and `eth0@if141` (`kubeovn`).
+```
+# kubectl exec -ti cni-test-pod ip a
+
+1: lo:
+    inet 127.0.0.1/8 scope host lo
+
+2: tunl0@NONE:
+    link/ipip 0.0.0.0 brd 0.0.0.0
+
+4: calico@if142:
+    inet 10.243.0.3/32 scope global calico
+
+6: flannel@if143:
+    inet 10.244.0.3/16 scope global flannel
+
+140: eth0@if141:
+    inet 10.16.0.5/16 brd 10.16.255.255 scope global eth0
+```
 
 # Q&A
 
@@ -258,7 +353,7 @@ proxy_os_ftp: "http://proxy.example.com:3128"
 proxy_os_noproxy: "localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ```
 > NOTE: Ensure the no_proxy environment variable in your profile is set
->  
+>
 >     export no_proxy="localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
 ## Setting Git
 
@@ -341,7 +436,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 
 7. Open the dashboard from the browser at `https://<controller-ip>:<port>/`, use the port that was noted in the previous steps
 
-> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue. 
+> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
 8. Capture the bearer token using this command
 
@@ -354,7 +449,7 @@ Paste the Token in the browser to log in as shown in this diagram
 ![Dashboard Login](controller-edge-node-setup-images/dashboard-login.png)
 _Figure - Kubernetes Dashboard Login_
 
-9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `INFRASTRUCTURE_UI_URL=https://<controller-ip>:<port>/#` in order to get it integrated with the OpenNESS controller UI (note the `#` symbole at the end of the URL)
+9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `INFRASTRUCTURE_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
 
     ```shell
     cd /opt/edgecontroller/
@@ -370,3 +465,8 @@ _Figure - Kubernetes Dashboard Login_
 
 11. The OpenNESS controller landing page is accessible at `http://<LANDING_UI_URL>/`.
     > **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
+
+
+## Customization of kernel, grub parameters and tuned profile
+
+OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).

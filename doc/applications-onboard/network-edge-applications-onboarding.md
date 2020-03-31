@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0       
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
 
 - [Introduction](#introduction)
@@ -23,8 +23,9 @@ Copyright (c) 2019 Intel Corporation
   - [Installing OpenNESS](#installing-openness)
   - [Building Smart City ingredients](#building-smart-city-ingredients)
   - [Running Smart City](#running-smart-city)
-- [Inter Application Communication](#inter-application-communication)
+  - [Inter Application Communication](#inter-application-communication)
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
+- [VM support for Network Edge](#vm-support-for-network-edge)
 - [Troubleshooting](#troubleshooting)
   - [Useful Commands:](#useful-commands)
 
@@ -255,6 +256,22 @@ The purpose of this section is to guide the user on the complete process of onbo
    ip a a 192.168.1.10/24 dev <client_interface_name>
    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <client_interface_name>
    ```
+
+   > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
+
+   > **NOTE:** To identify which subnet is allocated to which node, use this command:
+   >  ```shell
+   >  $ kubectl get subnets
+   >  NAME             PROTOCOL   CIDR             PRIVATE   NAT     DEFAULT   GATEWAYTYPE   USED   AVAILABLE
+   >  jfsdm001-local   IPv4       192.168.1.0/24   false     false   false     distributed   0      255
+   >  jfsdm002-local   IPv4       192.168.2.0/24   false     false   false     distributed   0      255
+   >  ...
+   >  ```
+   >
+   > The list presents which subnet (CIDR) is bridged to which edgenode, e.g: node `jfsdm001` is bridged to subnet `192.168.1.0/24` and node `jfsdm002` is bridged to subnet `192.168.2.0/24`
+
+   > **NOTE:** Ingress traffic originating from `192.168.1.0/24` can *only* reach the pods deployed on `jfsdm001`, and similarly for `192.168.2.0/24` can reach the pods deployed on `jfsdm002`.
+
 2. From the Edge Controller, set up the interface service to connect the Edge Node's physical interface used for the communication between Edge Node and traffic generating host to OVS. This allows the Client Simulator to communicate with the OpenVINO application K8s Pod located on the Edge Node (sample output separated by `"..."`, PCI Bus Function ID of the interface used my vary).
    ```
    kubectl interfaceservice get <edge_node_host_name>
@@ -275,11 +292,11 @@ The purpose of this section is to guide the user on the complete process of onbo
 
 ## Deploying the Application
 
-1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./openvino/producer/openvino-prod-app.yaml](https://github.com/open-ness/edgeapps/blob/master/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
+1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
    ```
-2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./build/openvino/producer/openvino-cons-app.yaml](https://github.com/open-ness/edgeapps/blob/master/openvino/producer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
+2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
    ```
@@ -379,7 +396,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
    dig openvino.openness
    ```
 3. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images)
-4. Run the following from [edgeapps/openvino/clientsim](https://github.com/open-ness/edgeapps/blob/master/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
    ```
    ./run_docker.sh
    ```
@@ -389,11 +406,16 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
 >  $ setenforce 0
 >  ```
 
-> **NOTE:**  If the video window is not popping up and/or an error like `Could not find codec parameters for stream 0` appears, add a rule in firewall to permit ingress traffic on port `5001`:
+> **NOTE:**  If the video window is not popping up and/or an error like `Could not find codec parameters for stream 0` appears, 1) check whether receive traffic on port `5001` via tcpdump 2) add a rule in firewall to permit ingress traffic on port `5001` if observe `host administratively prohibited`:
 >  ```shell
->  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --dport 5001 -j ACCEPT
+>  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p udp --dport 5001 -j ACCEPT
 >  firewall-cmd --reload
 >  ```
+> or directly shutdown firewall as
+>  ```shell
+>  systemctl stop firewalld.service
+>  ```
+
 
 # Onboarding Smart City Sample Application
 
@@ -401,7 +423,7 @@ Smart City sample application is a sample applications that is built on top of t
 
 The full pipeline of the Smart City sample application on OpenNESS is distributed across three regions:
 
- 1. Client-side Cameras Simulator
+ 1. Client-side Cameras Simulator(s)
  2. OpenNESS Cluster
  3. Smart City Cloud Cluster
 
@@ -415,74 +437,91 @@ _Figure - Smart City Setup with OpenNESS_
 ## Installing OpenNESS
 The OpenNESS must be installed before going forward with Smart City application deployment. Installation is performed through [OpenNESS playbooks](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
 
-> **NOTE**: At the time of writing this guide, there was no [Network Policy for Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/) defined yet for the Smart City application. So, it is advised to remove the default OpenNESS network policy using this command:
+> **NOTE**: At the time of writing this guide, there was no [Network Policy for Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/) defined yet for the Smart City application. So, it is advised to remove the default OpenNESS network policies using this command:
 > ```shell
-> kubectl delete netpol block-all-ingress
+> kubectl delete netpol block-all-ingress cdi-upload-proxy-policy
 > ```
 
 From the OpenNESS Controller, attach the physical ethernet interface to be used for dataplane traffic using the `interfaceservice` kubectl plugin by providing the office hostname and the PCI Function ID corresponding to the ethernet interface (the PCI ID below is just a sample and may vary on other setups):
 ```shell
-kubectl interfaceservice get <edge_node_host_name>
+kubectl interfaceservice get <officeX_host_name>
 ...
 0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
 ...
 
-kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
+kubectl interfaceservice attach <officeX_host_name> 0000:86:00.0
 ...
 Interface: 0000:86:00.0 successfully attached
 ...
 
-kubectl interfaceservice get <edge_node_host_name>
+kubectl interfaceservice get <officeX_host_name>
 ...
 0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  attached
 ...
 ```
 
+> **NOTE:** When adding office 2 and so on, attach their corresponding physical interfaces accordingly.
+
 ## Building Smart City ingredients
 
-1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machine, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to: (1) Camera simulator machines, (2) OpenNESS Controller machine, and (3) Smart City cloud master machine.
 
-2. Build the Smart City application on each of the 3 machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices must be installed on OpenNESS.
+   2. Build the Smart City application on all of the machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices (edge nodes) must be installed on OpenNESS.
 
 ## Running Smart City
 
-1. On the Camera simulator machine, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 node:
-    ```shell
-    ip a a 192.168.1.10/24 dev <office1_interface_name>
-    route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office_interface_name>
-    ```
+   1. On the Camera simulator machines, assign IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 & office2 nodes:
+   
+      On camera-sim1:
+      ```shell
+      ip a a 192.168.1.10/24 dev <office1_interface_name>
+      route add -net 10.16.0.0/24 gw 192.168.1.1 dev <office1_interface_name>
+      ```
 
-2. On the Camera simulator machine, run the camera simulator containers
-    ```shell
-    make start_openness_camera
-    ```
+      > **NOTE:** When adding office 2 and so on, change the CIDR (i.e: `192.168.1.0/24`) to corresponding subnet. Allocated subnets to individual offices can be retrieved by entering this command in the OpenNESS controller shell:
+      > ```shell
+      > kubectl get subnets
+      > ```
+      >
+      > The subnet name represents the node which is allocated to it and appended with `-local`.
 
-3. On the Smart City cloud master machine, run the Smart City cloud containers
-    ```shell
-    make start_openness_cloud
-    ```
 
-    > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the Camera simulator & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
-    > ```shell
-    > systemctl stop firewalld
-    > ```
+      On camera-sim2:
+      ```shell
+      ip a a 192.168.2.10/24 dev <office2_interface_name>
+      route add -net 10.16.0.0/24 gw 192.168.2.1 dev <office2_interface_name>
+      ```
 
-    > **NOTE**: Do not stop firewall on OpenNESS nodes.
+   2. On the Camera simulator machines, run the camera simulator containers
+      ```shell
+      make start_openness_camera
+      ```
 
-4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
-    ```shell
-    export CAMERA_HOST=192.168.1.10
-    export CLOUD_HOST=<cloud-master-node-ip>
+   3. On the Smart City cloud master machine, run the Smart City cloud containers
+       ```shell
+       make start_openness_cloud
+       ```
 
-    make
-    make update
-    make start_openness_office
-   ```
+       > **NOTE**: At the time of writing this guide, there was no firewall rules defined for the camera simulators & Smart City cloud containers. If none is defined, firewall must be stopped or disabled before continuing. All communication back to the office nodes will be blocked. Run the below on both machines.
+       > ```shell
+       > systemctl stop firewalld
+       > ```
 
-    > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+       > **NOTE**: Do not stop firewall on OpenNESS nodes.
 
-5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
+   4. On the OpenNESS Controller machine, build & run the Smart City cloud containers
+       ```shell
+       export CAMERA_HOSTS=192.168.1.10,192.168.2.10
+       export CLOUD_HOST=<cloud-master-node-ip>
 
+       make
+       make update
+       make start_openness_office
+      ```
+
+       > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+
+   5. From the web browser, launch the Smart City web UI at URL `https://<cloud-master-node-ip>/`
 
 ## Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
@@ -491,7 +530,10 @@ For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [docu
 # Enhanced Platform Awareness
 Enhanced platform awareness is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default please refer to the [NFD whitepaper](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
 
-Refer to [<b>supported-epa.md</b>](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge. 
+Refer to [<b>supported-epa.md</b>](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge.
+
+# VM support for Network Edge
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. For information on application deployment in VM please see [openness-network-edge-vm-support.md](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md).
 
 # Troubleshooting
 In this sections steps for debugging Edge applications in Network Edge will be covered.

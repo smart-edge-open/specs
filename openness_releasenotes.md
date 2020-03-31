@@ -23,6 +23,7 @@ This document provides high level system features, issues and limitations inform
 2. OpenNESS - 19.06.01 
 3. OpenNESS - 19.09 
 4. OpenNESS - 19.12
+5. OpenNESS - 20.03
 
 # Features for Release 
 1. <b>OpenNESS - 19.06 </b>
@@ -82,7 +83,7 @@ This document provides high level system features, issues and limitations inform
       - Open Visual Cloud Smart City Application on OpenNESS - Solution Overview
       - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
       - OpenNESS How-to Guide (update)
-3. <b>OpenNESS – 19.12 </b>
+3. <b>OpenNESS – 19.12</b>
     - Hardware
       - Support for Cascade lake 6252N
       - Support for Intel FPGA PAC N3000
@@ -118,15 +119,50 @@ This document provides high level system features, issues and limitations inform
       - Completely reorganized documentation structure for ease of navigation 
       - 5G NR Edge Cloud deployment Whitepaper
       - EPA application note for each of the features
+4. <b>OpenNESS – 20.03</b>
+    - OVN/OVS-DPDK support for dataplane 
+      - Network Edge: Support for kube-ovn CNI with OVS or OVS-DPDK as dataplane. Support for Calico as CNI. 
+      - OnPremises Edge: Support for OVS-DPDK CNI with OVS-DPDK as dataplane supporting application deployed in containers or VMs
+    - Support for VM deployments on Kubernetes mode
+      -  Kubevirt based VM deployment support 
+      -  EPA Support for SRIOV Virtual function allocation to the VMs deployed using K8s 
+    -  EPA support - OnPremises 
+      -  Support for dedicated core allocation to application running as VMs or Containers
+      -  Support for dedicated SRIOV VF allocation to application running in VM or containers
+      -  Support for system resource allocation into the application running as container
+         -  Mount point for shared storage
+         -  Pass environment variables
+         -  Configure the port rules  
+    - 5G Components  
+      - PFD Management API support (3GPP 23.502  Sec. 52.6.3  PFD Management service)
+        - AF:   Added support for PFD Northbound API
+        - NEF:  Added support for PFD southbound API, and Stubs to loopback the PCF calls.
+      - kubectl: Enhanced CNCA kubectl plugin to configure PFD parameters 
+      - WEB UI: Enhanced CNCA WEB UI to configure PFD params in OnPerm mode 
+      - Auth2 based authentication between 5G Network functions: (as per 3GPP Standard)
+        - Implemented oAuth2 based authentication and validation 
+        - AF and NEF communication channel is updated to authenticated based on oAuth2 JWT token in addition to HTTP2. 
+      - HTTPS support 
+        - Enhanced the 5G OAM, CNCA (web-ui and kube-ctl) to HTTPS interface 
+    - Modular Playbook 
+      - Support for customers to choose real-time or non-realtime kernel for a edge node
+      - Support for customer to choose CNIs - Validated with Kube-OVN and Calico 
+    - Edge Apps
+      - FlexRAN: dockerfile and pod specification for deployment of 4G or 5G FlexRAN 
+      - AF: dockerfile and pod specification 
+      - NEF: dockerfile and pod specification 
+      - UPF: dockerfile and pod specification 
 
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.09** There are no unsupported or discontinued features relevant to this release.
- - **OpenNESS 19.12** : 
+ - **OpenNESS 19.12** 
    - NTS Dataplane support for Network edge is discontinued. 
    - Controller UI for Network edge has be discontinued except for the CNCA configuration. Customers can optionally leverage Kubernetes dashboard to onboard applications. 
    - Edge node only supports non-realtime kernel. 
+ - **OpenNESS 20.03**  
+   - Support for HDDL-R only restricted to non-real-time or non-customized CentOS 7.6 default kernel. 
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
@@ -142,6 +178,9 @@ This document provides high level system features, issues and limitations inform
    - Application memory field is in MB
 - **OpenNESS 19.12**
   - Improved usability/automation in Ansible scripts 
+- **OpenNESS 20.03** 
+  - Realtime Kernel support for network edge with K8s.
+  - Modular playbooks  
 
 # Known Issues and Limitations
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -157,12 +196,19 @@ This document provides high level system features, issues and limitations inform
   - OpenNESS OnPremises: Can not remove a failed/disconnected the edge node information/state from the controller
   - The CNCA APIs (4G & 5G) supported in this release is an early access reference implementation and does not support authentication 
   - Realtime kernel support has been temporarily disabled to address the Kubernetes 1.16.2 and Realtime kernel instability. 
-  
+- **OpenNESS 20.03** 
+  - On-Premises edge installation takes more than 1.5hrs because of docker image build for OVS-DPDK 
+  - Network edge installation takes more than 1.5hrs because of docker image build for OVS-DPDK
+  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from master
+  - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
+  - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed.  
+    
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.09** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.12** OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications and Experience kit. 
+- **OpenNESS 20.03** OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications and Experience kit. 
   
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
@@ -205,5 +251,5 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 
 # Supported Operating Systems
-> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to make sure VNFs and Applications can co-exist. There is not requirement from OpenNESS software to run on a Pre-empt RT kernel.
+> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is not a requirement from OpenNESS software to run on a Pre-empt RT kernel.
 

@@ -1,0 +1,72 @@
+@startuml
+/' SPDX-License-Identifier: Apache-2.0
+   Copyright (c) 2020 Intel Corporation
+'/
+skinparam monochrome false
+skinparam roundcorner 20
+skinparam defaultFontName "Intel Clear"
+skinparam defaultFontSize 20
+skinparam maxmessagesize 300
+skinparam sequenceArrowThickness 3
+
+header Intel Corporation
+footer Proprietary and Confidential
+
+title PFD flow between Openness and 5G core
+
+
+actor Admin as user
+participant "UI/CLI" as UI 
+participant "Af Microservice" as AF 
+participant "NEF" as NEF
+participant "NGC CP Function" as 5GC
+
+box "OpenNESS Controller Components" #LightBlue
+	participant UI
+    participant AF
+end box
+
+box "5G Core Components" #LightGreen
+	participant NEF
+    note over NEF 
+        OpenNESS provided 
+        Core component with 
+        limited functionality
+    end note    
+    participant 5GC
+end box
+
+group Get all transactions with PFD
+    user -> UI : Request all PFD transactions 
+    UI -> AF : af/v1/pfd/transaction GET
+    AF -> NEF : 3gpp-pfd-management/v1/{scsAsId}/transactions/ GET
+    NEF -> NEF : NGC_STUB (UDR SMF)
+
+    NEF -> AF : OK: PFD information \ ERROR 
+    AF -> UI : OK: PFD information \ ERROR 
+    UI -> user : PFD details
+end
+
+group Get transactions with transactionId
+    user -> UI : Request transaction with transactionId
+    UI -> AF : af/v1/pfd/transactions/{transactionId} GET
+    AF -> NEF : 3gpp-pfd-management/v1/{scsAsId}/transactions/{transactionId} GET
+    NEF -> NEF : NGC_STUB (UDR SMF)
+
+    NEF -> AF : OK: PFD information \ ERROR 
+    AF -> UI : OK: PFD information \ ERROR 
+    UI -> user : PFD details
+end
+
+group Get transactions with applicationId
+    user -> UI : Request transactions with applicationId
+    UI -> AF : af/v1/pfd/transactions/{transactionId}/applications/{appId} GET
+    AF -> NEF : 3gpp-pfd-management/v1/{scsAsId}/transactions/{transactionId}/applications/{appId} GET
+    NEF -> NEF : NGC_STUB (UDR SMF)
+
+    NEF -> AF : OK: PFD information \ ERROR 
+    AF -> UI : OK: PFD information \ ERROR 
+    UI -> user : PFD details
+end
+
+@enduml

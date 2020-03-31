@@ -1,0 +1,1003 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Application Function PFD APIs",
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "3GPP TS 29.122 V15.3.0 T8 reference point for Northbound APIs",
+    "url": "http://www.3gpp.org/ftp/Specs/archive/29_series/29.122/"
+  },
+  "servers": [
+    {
+      "url": "{apiRoot}/af/v1/pfd",
+      "variables": {
+        "apiRoot": {
+          "default": "https://example.com",
+          "description": "apiRoot as defined in subclause 5.2.4 of 3GPP TS 29.122."
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/transactions": {
+      "get": {
+        "summary": "read all the PFD transactions for this AF",
+        "tags": [
+          "PFD Management API AF level GET operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. All transactions related to the request URI are returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PfdManagement"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a new PFD Management resource",
+        "tags": [
+          "PFD Management API Transaction level POST Operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PfdManagement"
+              }
+            }
+          },
+          "description": "Create a new transaction for PFD management."
+        },
+        "responses": {
+          "201": {
+            "description": "Created. The transaction was created successfully. The SCEF shall return the created transaction in the response payload body. PfdReport may be included to provide detailed failure information for some applications.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdManagement"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "Contains the URI of the newly created resource",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "description": "The PFDs for all applications were not created successfully. PfdReport is included with detailed information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PfdReport"
+                  },
+                  "minItems": 1
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}": {
+      "parameters": [
+        {
+          "name": "transactionId",
+          "in": "path",
+          "description": "Transaction ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Reads an active transaction for the AF based on the transaction ID",
+        "tags": [
+          "PFD Management API Transaction level GET Operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The transaction information related to the request URI is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdManagement"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replaces an active transaction based on the transaction ID",
+        "tags": [
+          "PFD Management API Transaction level PUT Operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PfdManagement"
+              }
+            }
+          },
+          "description": "Change information in PFD management transaction."
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The transaction was modified successfully. The SCEF shall return an updated transaction in the response payload body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdManagement"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "description": "The PFDs for all applications were not updated successfully. PfdReport is included with detailed information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PfdReport"
+                  },
+                  "minItems": 1
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes an already existing transaction based on transaction ID",
+        "tags": [
+          "PFD Management API Transaction level DELETE Operation"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content. The transaction was deleted successfully. The payload body shall be empty."
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}/applications/{appId}": {
+      "parameters": [
+        {
+          "name": "transactionId",
+          "in": "path",
+          "description": "Transaction ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "appId",
+          "in": "path",
+          "description": "Identifier of the application",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Reads PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level GET Operation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The application information related to the request URI is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdData"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "put": {
+        "summary": "Replaces PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level PUT Operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PfdData"
+              }
+            }
+          },
+          "description": "Change information in application."
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The application resource was modified successfully. The SCEF shall return an updated application resource in the response payload body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdData"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Updates PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level PATCH Operation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PfdData"
+              }
+            }
+          },
+          "description": "Change information in PFD management transaction."
+        },
+        "responses": {
+          "200": {
+            "description": "OK. The transaction was modified successfully. The SCEF shall return an updated transaction in the response payload body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdData"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "411": {
+            "$ref": "#/components/responses/411"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          },
+          "415": {
+            "$ref": "#/components/responses/415"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "description": "The PFDs for the application were not updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfdReport"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes PFD data for an application based on transaction ID and application ID",
+        "tags": [
+          "PFD Management API Application level DELETE Operation"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content. The application was deleted successfully. The payload body shall be empty."
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          },
+          "default": {
+            "$ref": "#/components/responses/default"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "406": {
+        "description": "Not Acceptable",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "411": {
+        "description": "Length Required",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "412": {
+        "description": "Precondition Failed",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "413": {
+        "description": "Payload Too Large",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "414": {
+        "description": "URI Too Long",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "415": {
+        "description": "Unsupported Media Type",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Too Many Requests",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service Unavailable",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProblemDetails"
+            }
+          }
+        }
+      },
+      "default": {
+        "description": "Generic Error"
+      }
+    },
+    "schemas": {
+      "DurationSec": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Unsigned integer identifying a period of time in units of seconds."
+      },
+      "DurationSecRm": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Unsigned integer identifying a period of time in units of seconds with \"nullable=true\" property.",
+        "nullable": true
+      },
+      "DurationSecRo": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Unsigned integer identifying a period of time in units of seconds with \"readOnly=true\" property.",
+        "readOnly": true
+      },
+      "SupportedFeatures": {
+        "type": "string",
+        "pattern": "^[A-Fa-f0-9]*$"
+      },
+      "Link": {
+        "type": "string",
+        "description": "string formatted according to IETF RFC 3986 identifying a referenced resource."
+      },
+      "Uri": {
+        "type": "string",
+        "description": "string providing an URI formatted according to IETF RFC 3986."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/Uri"
+          },
+          "title": {
+            "type": "string",
+            "description": "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem."
+          },
+          "status": {
+            "type": "integer",
+            "description": "The HTTP status code for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "$ref": "#/components/schemas/Uri"
+          },
+          "cause": {
+            "type": "string",
+            "description": "A machine-readable application error cause specific to this occurrence of the problem. This IE should be present and provide application-related error information, if available."
+          },
+          "invalidParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvalidParam"
+            },
+            "minItems": 1,
+            "description": "Description of invalid parameters, for a request rejected due to invalid parameters."
+          }
+        }
+      },
+      "InvalidParam": {
+        "type": "object",
+        "properties": {
+          "param": {
+            "type": "string",
+            "description": "Attribute's name encoded as a JSON Pointer, or header's name."
+          },
+          "reason": {
+            "type": "string",
+            "description": "A human-readable reason, e.g. \"must be a positive integer\"."
+          }
+        },
+        "required": [
+          "param"
+        ]
+      },
+      "PfdManagement": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/Link"
+          },
+          "supportedFeatures": {
+            "$ref": "#/components/schemas/SupportedFeatures"
+          },
+          "pfdDatas": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PfdData"
+            },
+            "minProperties": 1,
+            "description": "Each element uniquely identifies the PFDs for an external application identifier. Each element is identified in the map via an external application identifier as key. The response shall include successfully provisioned PFD data of application(s)."
+          },
+          "pfdReports": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PfdReport"
+            },
+            "minProperties": 1,
+            "description": "Supplied by the SCEF and contains the external application identifiers for which PFD(s) are not added or modified successfully. The failure reason is also included. Each element provides the related information for one or more external application identifier(s) and is identified in the map via the failure identifier as key.",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "pfdDatas"
+        ]
+      },
+      "PfdData": {
+        "type": "object",
+        "properties": {
+          "externalAppId": {
+            "type": "string",
+            "description": "Each element uniquely external application identifier"
+          },
+          "self": {
+            "$ref": "#/components/schemas/Link"
+          },
+          "pfds": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Pfd"
+            },
+            "description": "Contains the PFDs of the external application identifier. Each PFD is identified in the map via a key containing the PFD identifier."
+          },
+          "allowedDelay": {
+            "$ref": "#/components/schemas/DurationSecRm"
+          },
+          "cachingTime": {
+            "$ref": "#/components/schemas/DurationSecRo"
+          }
+        },
+        "required": [
+          "externalAppId",
+          "pfds"
+        ]
+      },
+      "Pfd": {
+        "type": "object",
+        "properties": {
+          "pfdId": {
+            "type": "string",
+            "description": "Identifies a PDF of an application identifier."
+          },
+          "flowDescriptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic. The content of the string has the same encoding as the IPFilterRule AVP value as defined in IETF RFC 6733."
+          },
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Indicates a URL or a regular expression which is used to match the significant parts of the URL."
+          },
+          "domainNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Indicates an FQDN or a regular expression as a domain name matching criteria."
+          }
+        },
+        "required": [
+          "pfdId"
+        ]
+      },
+      "PfdReport": {
+        "type": "object",
+        "properties": {
+          "externalAppIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Identifies the external application identifier(s) which PFD(s) are not added or modified successfully"
+          },
+          "failureCode": {
+            "$ref": "#/components/schemas/FailureCode"
+          },
+          "cachingTime": {
+            "$ref": "#/components/schemas/DurationSec"
+          }
+        },
+        "required": [
+          "externalAppIds",
+          "failureCode"
+        ]
+      },
+      "FailureCode": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "MALFUNCTION",
+              "RESOURCE_LIMITATION",
+              "SHORT_DELAY",
+              "APP_ID_DUPLICATED",
+              "OTHER_REASON"
+            ]
+          },
+          {
+            "type": "string",
+            "description": "This string provides forward-compatibility with future extensions to the enumeration but is not used to encode content defined in the present version of this API.\n"
+          }
+        ],
+        "description": "Possible values are - MALFUNCTION: This value indicates that something functions wrongly in PFD provisioning or the PFD provisioning does not function at all. - RESOURCE_LIMITATION: This value indicates there is resource limitation for PFD storage. - SHORT_DELAY: This value indicates that the allowed delay is too short and PFD(s) are not stored. - APP_ID_DUPLICATED: The received external application identifier(s) are already provisioned. - OTHER_REASON: Other reason unspecified.\n"
+      }
+    }
+  }
+}

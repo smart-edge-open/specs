@@ -1,0 +1,82 @@
+@startuml
+/' SPDX-License-Identifier: Apache-2.0
+   Copyright (c) 2020 Intel Corporation
+'/
+skinparam monochrome false
+skinparam roundcorner 20
+skinparam defaultFontName "Intel Clear"
+skinparam defaultFontSize 20
+skinparam maxmessagesize 400
+skinparam sequenceArrowThickness 3
+
+header "Intel Corporation"
+footer "Proprietary and Confidential"
+title "5G End to End Edge deployment flows"
+
+participant "UE" as ue
+
+box "5G Core NF components" #LightGreen
+participant "AMF" as amf
+participant "SMF" as smf
+participant "PCF/UDR" as pcf
+participant "NEF" as nef
+end box 
+
+box "Edge components" #LightBlue
+participant "OpenNESS\nAF" as af 
+participant "OSS" as oss
+end box
+
+box "Data path components"
+participant "UPF" as upf 
+participant "Edge" as edge
+participant "Cloud" as cloud
+end box
+
+== 5G CN pre-established ==
+
+group PFD Profile management in PCF/UDR by Operator or AF
+    note over nef 
+        PFD profiles/rules can be created
+        Network operator or can be pushed
+        an external NF.
+    end note
+af -> nef : Create PFD rules \n(as suggested in \n3GPP TS 29.502 Sec. 4.18)
+
+note over pcf
+    CP components are updated
+    with new UPF information. 
+end note
+
+nef --> pcf : 
+nef --> af  :
+smf --> nef : Fetch the added/modified PFD's
+
+note over upf
+    New UPF or UPF with new service 
+    is started to serve edge location.
+end note
+end
+
+group Traffic influence in UPF by AF
+oss -> af :  or traffic influence create action\n can be initiated by external component 
+af -> nef : Create traffic influence rule and \n Request for notification \n DNAI change \n (as suggested in \n3GPP TS 23.502 Sec. 4.3.6.2)
+nef --> pcf : configured to PCF or UDR \n based on traffic rule info.
+
+
+smf -> pcf :  UE initiated PDU Session Modification Request \n (as suggested in TS 23.502 Sec. 4.3.3.2.1)
+pcf --> pcf : or Network iniated PDU Session Modification Request
+pcf --> smf : Updated PFD rules (as suggested by AF)
+smf --> upf 
+smf -> nef : DNAI change notification \n (as suggested in TS 23.502 Sec. 4.3.6.3.1)
+end
+
+group Data traffic from UE
+ue -> upf : Edge traffic 
+upf --> edge : Based on updated PFD rules by AF
+
+ue -> upf : Traffic towards Cloud (or all other traffic)
+upf --> cloud : 
+end
+
+@enduml
