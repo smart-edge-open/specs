@@ -42,7 +42,7 @@ Ports assigned to OVS will be ignored by ELA, so it is not possible for them to 
 
 To enable OVS-DPDK for inter app communication follow the steps below.
 
-1. Enable `ovs` role in `openness-experience-kits/on_premises.yml`
+1. Change `onprem_iac_enable` variable in `group_vars/all.yml` to `true`
 2. Set the `ovs_ports` variable in `host_vars/node-name-in-inventory.yml`. Example:
 
     ```

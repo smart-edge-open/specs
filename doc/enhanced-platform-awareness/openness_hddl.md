@@ -61,17 +61,15 @@ Further sections provide information on how to use the HDDL setup on OpenNESS On
 ### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
 To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
 
-To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl precheck and role needs to be executed after openness/onprem/worker role):
-
-```
-- include_tasks: ./roles/hddl/common/tasks/precheck.yml
-
-- role: hddl/onprem/worker
+To enable, modify `onprem_hddl_enable` variable in `group_vars/all.yml` file:
+```yaml
+onprem_hddl_enable: true
 ```
 Run setup script `deploy_onprem.sh nodes`.
 
-NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
-NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
+> NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: `kernel_skip` as `true` in `group_vars/edgenode_group.yml` before running OpenNESS installation scripts.
+
+> NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
 
 To check HDDL service running status on the edgenode after deploy, docker logs should look like:
 ```

@@ -57,18 +57,21 @@ CMK documentation available on github includes:
 
 **Edge Controller / Kubernetes master**
 
-1. Configure Edge Controller in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/master`, `kubernetes/cni` (both enabled by default) and `cmk/master` (disabled by default).
-2. CMK is enabled with following default values of parameters in `roles/cmk/master/defaults/main.yml` (adjust the values if needed):
-
-- `cmk_num_exclusive_cores` set to `4`
-- `cmk_num_shared_cores` set to `1`
-- `cmk_host_list` set to `node01,node02` (it should contain comma separated list of nodes' hostnames).
-
-3. Deploy the controller with `deploy_ne.sh controller`.
+1. In `group_vars/all.yml` change `ne_cmk_enable` to `true` and adjust the settings if needed.
+   CMK default settings are:
+   ```yaml
+   # CMK - Number of cores in exclusive pool
+   cmk_num_exclusive_cores: "4"
+   # CMK - Number of cores in shared pool
+   cmk_num_shared_cores: "1"
+   # CMK - Comma separated list of nodes' hostnames
+   cmk_host_list: "node01,node02"
+   ```
+2. Deploy the controller with `deploy_ne.sh controller`.
 
 **Edge Node / Kubernetes worker**
 
-1. Configure Edge Node in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/worker`, `kubernetes/cni` (both enabled by default) and `cmk/worker` (disabled by default).
+1. In `group_vars/all.yml` change `ne_cmk_enable` to `true`
 2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
 3. Deploy the node with `deploy_ne.sh node`.
 

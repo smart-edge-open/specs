@@ -55,16 +55,22 @@ Offline package mentioned in this document, means that user can compile product,
    ```
    tar xf <oek_repository_tar_file>
    ```
-5. Modify `github_token` variable in `<oek_repository>/group_vars/all.yml` file and put your github token there.
+5. Modify `git_repo_token` variable in `<oek_repository>/group_vars/all.yml` file and put your github token there.
 6. If proxy is used to access the internet, modify file `<oek_repository>/group_vars/all.yml` and change below variables, giving real ones instead of defaults listed:
-   ```
-   proxy_yum_url: http://proxy.example.org:3128
-   proxy_os_enable: true
-   proxy_os_remove_old: true
-   proxy_os_http: "http://proxy.example.org:3128"
-   proxy_os_https: "http://proxy.example.org:3129"
-   proxy_os_ftp: "http://proxy.example.org:3128"
-   proxy_os_noproxy: "localhost,127.0.0.1,10.244.0.0/16,10.96.0.0/24,10.16.0.0/16"
+   ```yaml
+   # Setup proxy on the machine - required if the Internet is accessible via proxy
+   proxy_enable: true
+   # Clear previous proxy settings
+   proxy_remove_old: true
+   # Proxy URLs to be used for HTTP, HTTPS and FTP
+   proxy_http: "http://proxy.example.org:3128"
+   proxy_https: "http://proxy.example.org:3129"
+   proxy_ftp: "http://proxy.example.org:3128"
+   # Proxy to be used by YUM (/etc/yum.conf)
+   proxy_yum: "{{ proxy_http }}"
+   # No proxy setting contains addresses and networks that should not be accessed using proxy (e.g. local network, Kubernetes CNI networks)
+   # NOTE - VCA: 172.32.1.0/24 is used for VCA node.
+   proxy_noproxy: "localhost,virt-api,kubevirt.svc,virt-api.kubevirt.svc,cdi-api,cdi.svc,127.0.0.1,10.244.0.0/16,10.96.0.0/16,10.16.0.0/16,10.32.0.0/12,172.32.1.0/24,192.168.0.1/24"
    ```
 7. Additionally, if using proxy, modify `/etc/yum.conf` file and add proxy line there, too:
    ```
@@ -160,7 +166,7 @@ Each server that will have node role installed, needs to have a private IP addre
 Assuming that no separate control server is used, and all nodes are deployed directly from Edge Controller server, follow these steps:
 1. Log into controller as root user.
 2. Go to `openness_experience_kits/group_vars` folder.
-3. Modify file `all.yml` and add required hosts to `[edenode_group]`. Use names here obtained from `[all]` section.
+3. Modify file `all.yml` and add required hosts to `[edenode_group]` in `inventory.ini`. Use names here obtained from `[all]` section.
 4. Make sure you are able to at least ping one host (by IP address) from this group from this controller machine.
 5. Because controller deploys nodes via SSH protocol using ssh keys, controller public key needs to be copied to each node.
 6. For each node defined in `[edgenode_group]`, copy SSH public key.
@@ -196,6 +202,7 @@ This is an example only, on how to set up proxy on CentOS operating system.
 To initially configure OS proxy, two files need to be configured and contain below variables. Change defaults given below and use settings obtained from your network administrator.
 
 ## /etc/environment
+```
 http_proxy=http://proxy.example.com:3128
 https_proxy=http://proxy.example.com:3128
 ftp_proxy=http://proxy.example.com:3128
@@ -204,22 +211,23 @@ HTTP_PROXY=http://proxy.example.com:3128
 HTTPS_PROXY=http://proxy.example.com:3128
 FTP_PROXY=http://proxy.example.com:3128
 NO_PROXY=localhost,127.0.0.1
+```
 
 ## /etc/yum.conf
+```
 proxy=http://proxy.example.com:3128
+```
 
-```
-Note: please log out and log in again, to make sure your environment loads then automatically.
-```
-Note: for build server, both files need to be configured and for server where offline package is being extracted, only `/etc/yum.conf`.
+> Note: please log out and log in again, to make sure your environment loads then automatically.
+
+> Note: for build server, both files need to be configured and for server where offline package is being extracted, only `/etc/yum.conf`.
 
 # HDDL
 
 Offline prepare and restore of the HDDL image is not enabled by default due to its size.
 
-In order to prepare and later restore the HDDL image, `- role: offline/prepare/hddl` line must be uncommented in `offline_prepare.yml` playbook before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
-
-During offline package restoration HDDL role must be enabled in order to finish the building. It is done by uncommenting `- role: hddl` line in `on_premises.yml` before `deploy_onprem.sh nodes` is executed.
+In order to prepare the HDDL image, variable `onprem_hddl_enable` in `group_var/all.yml` must be set to `true` before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
+When restoring Offline package, make sure the variable `onprem_hddl_enable` in `group_var/all.yml` is set to `true` before running `deploy_onprem.sh`.
 
 # Troubleshooting
 Q: <br>

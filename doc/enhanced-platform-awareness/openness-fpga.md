@@ -13,7 +13,6 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Using FPGA on OpenNESS - Details](#using-fpga-on-openness---details)
     - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
       - [Edge Controller](#edge-controller)
-      - [Edge Node](#edge-node)
     - [FPGA Programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
     - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
     - [Requesting resources and running pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
@@ -83,10 +82,10 @@ To run the OpenNESS package with FPGA (FEC) functionality the feature needs to b
 
 #### Edge Controller
 
-To enable on Edge Controller set/uncomment following in `network_edge.yml` in OpenNESS-Experience-Kits top level directory:
+To enable on Edge Controller, change variable `ne_opae_fpga_enable` in `group_vars/all.yml` to `true`:
 ```yaml
-# network_edge.yml
-- role: opae_fpga/master
+# group_vars/all.yml
+ne_opae_fpga_enable: true
 ```
 
 Additionally SRIOV must be enabled in OpenNESS:
@@ -97,12 +96,14 @@ kubernetes_cnis:
 - sriov
 ```
 
-Also enable/configure following options in `roles/kubernetes/cni/sriov/common/defaults/main.yml`.
+Also enable/configure following options in `group_vars/all.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
 ```yaml
-# roles/kubernetes/cni/sriov/common/defaults/main.yml
+# group_var/all.yml
+
 fpga_sriov_userspace:
   enabled: true
+
 fpga_userspace_vf:
   enabled: true
   vendor_id: "8086"
@@ -110,14 +111,6 @@ fpga_userspace_vf:
   pf_device_id: "0d8f"
   vf_number: "2"
   vf_driver: "vfio-pci"
-```
-
-#### Edge Node
-
-To enable on the Edge Node set following in `network_edge.yml`:
-
-```
-- role: opae_fpga/worker
 ```
 
 The following packages need to be placed into specific directories in order for the feature to work:
