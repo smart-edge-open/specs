@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Npcf_PolicyAuthorization Service API",
-    "version": "1.0.1",
+    "title": "PolicyAuthorization Service API",
+    "version": "1.0.0",
     "description": "This is the Policy Authorization Service"
   },
   "externalDocs": {
@@ -11,21 +11,13 @@
   },
   "servers": [
     {
-      "url": "’{apiRoot}/npcf-policyauthorization/v1’",
+      "url": "’{apiRoot}/af/v1/policy-authorization’",
       "variables": {
         "apiRoot": {
           "default": "https://example.com",
           "description": "apiRoot as defined in subclause 4.4 of 3GPP TS 29.501"
         }
       }
-    }
-  ],
-  "security": [
-    {},
-    {
-      "oAuth2ClientCredentials": [
-        "npcf-policyauthorization"
-      ]
     }
   ],
   "paths": {
