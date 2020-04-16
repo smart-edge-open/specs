@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: "Npcf_PolicyAuthorization Service API"
-  version: "1.0.1"
+  title: "PolicyAuthorization Service API"
+  version: "1.0.0"
   description: "This is the Policy Authorization Service"
 
 externalDocs:
@@ -547,17 +547,17 @@ components:
         afAppId:
           $ref: '#/components/schemas/AfAppId'
         afRoutReq:
-          $ref: '#/components/schemas/AfRoutingRequirementRm'
+          $ref: '#/components/schemas/AfRoutingRequirement'
         aspId:
           $ref: '#/components/schemas/AspId'
         bdtRefId:
           $ref: '#/components/schemas/BdtReferenceId'
         evSubsc:
-          $ref: '#/components/schemas/EventsSubscReqDataRm'
+          $ref: '#/components/schemas/EventsSubscReqData'
         medComponents:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/MediaComponentRm'
+            $ref: '#/components/schemas/MediaComponent'
           minProperties: 1
         mpsId:
           description: indication of MPS service request
@@ -581,21 +581,6 @@ components:
           $ref: '#/components/schemas/Uri'
         usgThres:
           $ref: '#/components/schemas/UsageThreshold'
-    EventsSubscReqDataRm:
-      description: this data type is defined in the same way as the EventsSubscReqData data type, but with the OpenAPI nullable property set to true.
-      type: object
-      required:
-        - events
-      properties:
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/AfEventSubscription'
-        notifUri:
-          $ref: '#/components/schemas/Uri'
-        usgThres:
-          $ref: '#/components/schemas/UsageThresholdRm'
-      nullable: true
     MediaComponent:
       description: Identifies a media component.
       type: object
@@ -635,46 +620,6 @@ components:
           $ref: '#/components/schemas/BitRate'
         resPrio:
           $ref: '#/components/schemas/ReservPriority'
-    MediaComponentRm:
-      description: This data type is defined in the same way as the MediaComponent data type, but with the OpenAPI nullable property set to true
-      type: object
-      required:
-        - medCompN
-      properties:
-        afAppId:
-          $ref: '#/components/schemas/AfAppId'
-        afRoutReq:
-          $ref: '#/components/schemas/AfRoutingRequirementRm'
-        contVer:
-          $ref: '#/components/schemas/ContentVersion'
-        codecs:
-          type: array
-          items:
-            $ref: '#/components/schemas/CodecData'
-          minItems: 1
-          maxItems: 2
-        fStatus:
-          $ref: '#/components/schemas/FlowStatus'
-        marBwDl:
-          $ref: '#/components/schemas/BitRateRm'
-        marBwUl:
-          $ref: '#/components/schemas/BitRateRm'
-        medCompN:
-          type: integer
-        medSubComps:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/MediaSubComponentRm'
-          minProperties: 1
-        medType:
-          $ref: '#/components/schemas/MediaType'
-        mirBwDl:
-          $ref: '#/components/schemas/BitRateRm'
-        mirBwUl:
-          $ref: '#/components/schemas/BitRateRm'
-        resPrio:
-          $ref: '#/components/schemas/ReservPriority'
-      nullable: true
     MediaSubComponent:
       description: Identifies a media subcomponent
       type: object
@@ -705,39 +650,6 @@ components:
           $ref: '#/components/schemas/TosTrafficClass'
         flowUsage:
           $ref: '#/components/schemas/FlowUsage'
-    MediaSubComponentRm:
-      description: This data type is defined in the same way as the MediaSubComponent data type, but with the OpenAPI nullable property set to true. Removable attributes marBwDland marBwUl are defined with the corresponding removable data type.
-      type: object
-      required:
-        - fNum
-      properties:
-        ethfDescs:
-          type: array
-          items:
-            $ref: '#/components/schemas/EthFlowDescription'
-          minItems: 1
-          maxItems: 2
-          nullable: true
-        fNum:
-          type: integer
-        fDescs:
-          type: array
-          items:
-            $ref: '#/components/schemas/FlowDescription'
-          minItems: 1
-          maxItems: 2
-          nullable: true
-        fStatus:
-          $ref: '#/components/schemas/FlowStatus'
-        marBwDl:
-          $ref: '#/components/schemas/BitRateRm'
-        marBwUl:
-          $ref: '#/components/schemas/BitRateRm'
-        tosTrCl:
-          $ref: '#/components/schemas/TosTrafficClassRm'
-        flowUsage:
-          $ref: '#/components/schemas/FlowUsage'
-      nullable: true
     EventsNotification:
       description: describes the notification of a matched event
       type: object
@@ -837,41 +749,6 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/PresenceInfo'
           minProperties: 1
-    SpatialValidityRm:
-      description: this data type is defined in the same way as the SpatialValidity data type, but with the OpenAPI nullable property set to true
-      type: object
-      required:
-        - presenceInfoList
-      properties:
-        presenceInfoList:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/PresenceInfo'
-          minProperties: 1
-      nullable: true
-    AfRoutingRequirementRm:
-      description: this data type is defined in the same way as the AfRoutingRequirement data type, but with the OpenAPI nullable property set to true and the spVal and tempVals attributes defined as removable.
-      type: object
-      properties:
-        appReloc:
-          type: boolean
-        routeToLocs:
-          type: array
-          items:
-            $ref: '#/components/schemas/RouteToLocation'
-          minItems: 1
-          nullable: true
-        spVal:
-          $ref: '#/components/schemas/SpatialValidityRm'
-        tempVals:
-          type: array
-          items:
-            $ref: '#/components/schemas/TemporalValidity'
-          minItems: 1
-          nullable: true
-        upPathChgSub:
-          $ref: '#/components/schemas/UpPathChgEvent'
-      nullable: true
     AnGwAddress:
       description: describes the address of the access network gateway control node
       type: object
@@ -984,10 +861,6 @@ components:
     TosTrafficClass:
       description: 2-octet string, where each octet is encoded in hexadecimal representation. The first octet contains the IPv4 Type-of-Service or the IPv6 Traffic-Class field and the second octet contains the ToS/Traffic Class mask field.
       type: string
-    TosTrafficClassRm:
-      description: this data type is defined in the same way as the TosTrafficClass data type, but with the OpenAPI nullable property set to true
-      type: string
-      nullable: true
     ProblemDetails:
         type: object
         properties:
@@ -1067,10 +940,6 @@ components:
     BitRate:
       type: string
       pattern: '^\d+(\.\d+)? (bps|Kbps|Mbps|Gbps|Tbps)$'
-    BitRateRm:
-      type: string
-      pattern: '^\d+(\.\d+)? (bps|Kbps|Mbps|Gbps|Tbps)$'
-      nullable: true
     AccessType:
       type: string
       enum:
@@ -1324,17 +1193,6 @@ components:
     BdtReferenceId:
       type: string
       description: string identifying a BDT Reference ID as defined in subclause 5.3.3 of 3GPP TS 29.154.
-    DurationSecRm:
-      type: integer
-      minimum: 0
-      description: Unsigned integer identifying a period of time in units of seconds with "nullable=true" property.
-      nullable: true
-    VolumeRm:
-      type: integer
-      format: int64
-      minimum: 0
-      description: Unsigned integer identifying a volume in units of bytes with "nullable=true" property.
-      nullable: true
     AccumulatedUsage:
       type: object
       properties:
@@ -1346,19 +1204,6 @@ components:
           $ref: '#/components/schemas/Volume'
         uplinkVolume:
           $ref: '#/components/schemas/Volume'
-    UsageThresholdRm:
-      type: object
-      properties:
-        duration:
-          $ref: '#/components/schemas/DurationSecRm'
-        totalVolume:
-          $ref: '#/components/schemas/VolumeRm'
-        downlinkVolume:
-          $ref: '#/components/schemas/VolumeRm'
-        uplinkVolume:
-          $ref: '#/components/schemas/VolumeRm'
-      nullable: true
-      
 #
 # ENUMERATIONS DATA TYPES
 #
