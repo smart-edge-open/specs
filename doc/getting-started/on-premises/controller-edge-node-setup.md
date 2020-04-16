@@ -16,6 +16,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Enrolling Nodes with Controller](#enrolling-nodes-with-controller)
       - [First Login](#first-login)
       - [Manual enrollment](#manual-enrollment)
+      - [Deleting node](#deleting-node)
     - [NTS Configuration](#nts-configuration)
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
       - [Configuring Interface](#configuring-interface)
@@ -154,6 +155,26 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 7. Check that your Edge Node is visible under 'List of Edge Nodes'.
 
 ![Add Edge Node 3](controller-edge-node-setup-images/Enroll3.png)
+
+#### Deleting node
+
+> In order to delete node, all deployed apps and applied configuration should be deleted first.
+
+To delete enrolled node please use the button 'DELETE' located on the node's panel.
+
+![Delete Edge Node 1](controller-edge-node-setup-images/Delete1.png)
+
+This will be followed by confirmation dialog.
+
+![Delete Edge Node 2](controller-edge-node-setup-images/Delete2.png)
+
+If you are sure you want to delete the node please select `DELETE` and wait for node's removal. However, please remember that all apps, traffic policies, and DNS configurations added to the node should be deleted previously. If an error will occur during the node's removal (e.g. node will be offline or some app will be still deployed) you will see an error's description on the screen together with question if you want to force the node's removal.
+
+![Delete Edge Node 3](controller-edge-node-setup-images/Delete3.png)
+
+**Please always remember, that if you will force-remove node, it may be not possible to reuse it without reinstallation.**
+
+If you are sure that you want to remove the node please click `YES` and wait till it disappear from the list of nodes.
 
 ### NTS Configuration
 OpenNESS data-plane interface configuration.
