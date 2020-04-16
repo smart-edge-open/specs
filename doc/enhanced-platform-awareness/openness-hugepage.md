@@ -11,7 +11,6 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Examples](#examples)
       - [Changing size and amount of the hugepages for both controller and nodes](#changing-size-and-amount-of-the-hugepages-for-both-controller-and-nodes)
       - [Customizing hugepages for specific machine](#customizing-hugepages-for-specific-machine)
-      - [Setting different hugepage amount for Edge Nodes in On Premises mode](#setting-different-hugepage-amount-for-edge-nodes-in-on-premises-mode)
   - [Reference](#reference)
 
 ## Overview
@@ -32,14 +31,14 @@ By default, these variables have values:
 | Network Edge | Controller   |      `1024`       |      `2M`       |                                              |
 |              | Node         |      `1024`       |      `2M`       |                                              |
 | On-Premises  | Controller   |      `1024`       |      `2M`       | For OVNCNI dataplane, otherwise no hugepages |
-|              | Node         |      `5000`       |      `2M`       |                                              |
+|              | Node         |      `1024`       |      `2M`       |                                              |
 
 Guide on changing these values is below. Customizations must be made before OpenNESS deployment.
 
 Variables for hugepage customization can be placed in several files:
 * `group_vars/controller_group.yml` and `group_vars/edgenode_group.yml` will affect Edge Controller and Edge Nodes respectively in every mode
 * `host_vars/<inventory_host_name>.yml` will only affect `<inventory_host_name>` host present in `inventory.ini` (in all modes)
-* Hugepages can be also specified for mode and machine type, e.g. hugepages for On-Premises Edge Node is set in `on_premises.yml` in a play for Edge Nodes:
+* Hugepages can be also specified for mode and machine type, e.g. hugepages for On-Premises Edge Node can be set in `on_premises.yml` in a play for Edge Nodes:
   ```yaml
   # on_premises.yml
 
@@ -47,9 +46,7 @@ Variables for hugepage customization can be placed in several files:
     vars:
       hugepage_amount: "5000"
   ```
-  > NOTE: Due to Ansible's variable precedence configuring hugepages in `on_premises.yml` and `network_edge.yml` is not recommended as overrides customization via `group_vars` and `host_vars`
-  >
-  > For guide on how to customize On-Premises Edge Node's hugepages refer to [Setting different hugepage amount for Edge Nodes in On Premises mode](#setting-different-hugepage-amount-for-edge-nodes-in-on-premises-mode)
+  > NOTE: Due to Ansible's variable precedence, configuring hugepages in `on_premises.yml` and `network_edge.yml` is not recommended because it overrides customization in `group_vars` and `host_vars`
 
 This is summarized in a following table:
 
@@ -62,7 +59,7 @@ This is summarized in a following table:
 | `on_premises.yml`                     |              |     yes     | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
 
 Note that variables have a precedence:
-1. `network_edge.yml` and `on_premises.yml` will always take precedence for files from this list (override every var)
+1. **not recommended:** `network_edge.yml` and `on_premises.yml` will always take precedence for files from this list (overrides every other var)
 2. `host_vars/`
 3. `group_vars/edgenode_group.yml` and `group_vars/controller_group.yml`
 4. `group_vars/all.yml`
@@ -96,20 +93,6 @@ To specify size or amount only for specific machine, `hugepage_size` and/or `hug
 hugepage_size: "2M"
 hugepage_amount: "1500"
 ```
-
-#### Setting different hugepage amount for Edge Nodes in On Premises mode
-
-To configure hugepage amount on per-host basis for Edge Nodes, first remove the `hugepage_amount` variable from `on_premises.yml`:
-```yaml
-# on_premises.yml
-
-- hosts: edgenode_group
-  vars:
-    hugepage_amount: "5000"    # this line should be removed
-```
-
-Then, you can put host specific settings in `host_vars/_inventory_host_name_.yml` according to the [Customizing hugepages for specific machine](#customizing-hugepages-for-specific-machine) section
-or Edge Node group specific settings in `group_vars/edgenode_group.yml` according to the [Changing size and amount of the hugepages for both controller and nodes](#changing-size-and-amount-of-the-hugepages-for-both-controller-and-nodes) section.
 
 ## Reference
 - [Hugepages support in Kubernetes](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/)
