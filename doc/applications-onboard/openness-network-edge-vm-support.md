@@ -32,9 +32,9 @@ Copyright (c) 2020 Intel Corporation
 
 This document explores the support of `VM` (Virtual machine) deployment in OpennNESS for Network Edge. Items covered include but are not limited to: design considerations and currently available solutions, limitations, configuration of the environment for OpenNESS, deployment of VMs with various requirements for storage and SRIOV support, and lastly troubleshooting.
 
-When designing support for VM deployment for Network Edge, a key consideration was how this support will fit into a `K8s` (Kubernetes) based solution. Two popular open source projects allowing VM deployments within a K8s environment were identified; `KubeVirt` and `Virtlet`, both of these projects support deployment of the VMs running inside pods. 
+When designing support for VM deployment for Network Edge, a key consideration was how this support will fit into a `K8s` (Kubernetes) based solution. Two popular open source projects allowing VM deployments within a K8s environment were identified; `KubeVirt` and `Virtlet`, both of these projects support deployment of the VMs running inside pods.
 
-Virtlet VMs are treated as ordinary pods and can be controlled from `kubectl` natively but the deployment requires the introduction of an additional CRI (Container Runtime Interface) and CRI proxy into the cluster. In comparison KubeVirt VMs are enabled by extending the functionality of K8s via CRDs (Custom Resource Definition) and easy to deploy KubeVirt agents and controllers - no CRI proxy introduction is necessary in the cluster. 
+Virtlet VMs are treated as ordinary pods and can be controlled from `kubectl` natively but the deployment requires the introduction of an additional CRI (Container Runtime Interface) and CRI proxy into the cluster. In comparison KubeVirt VMs are enabled by extending the functionality of K8s via CRDs (Custom Resource Definition) and easy to deploy KubeVirt agents and controllers - no CRI proxy introduction is necessary in the cluster.
 
 Due to easy deployment and no impact on the existing OpenNESS architecture, KubeVirt is the solution of choice in OpenNESS.
 
@@ -46,10 +46,10 @@ Due to easy deployment and no impact on the existing OpenNESS architecture, Kube
 
 The types of VM deployments can be split into two categories based on the storage required by the workload. Stateless VMs are backed by ephemeral storage - meaning that the data will disappear with VM restart/reboot. Stateful VMs are backed by persistent storage - meaning that data will persist after VM restart/reboot. The type of storage required will be determined based on the use-case. In OpenNESS support for both types of VM is available with aid of KubeVirt.
 
-### VMs with ephemeral storage 
+### VMs with ephemeral storage
 These are VMs with ephemeral storage, such as ContainerDisk storage that would be deployed in similar manner to ordinary container pods. The data contained in the VM would be erased on each VM deletion/restart thus it is suitable for stateless applications running inside the pods. Although usually a better fit for such application would be running the workload in container pod, for various reasons such as a Legacy application a user may not want to containerize their workload. The advantage of this deployment from an K8s/OpenNESS perspective is that there is no additional storage configuration and the user only needs to have a cluster with KubeVirt deployed and a dockerized version of a VM image in order to spin up the VM.
 
-### VMs with persistent Local Storage 
+### VMs with persistent Local Storage
 These are VMs which require persistent storage, the data of this kind of VM stays persistent between restarts of the VM. In case of local storage, Kubernetes provides ‘local volume plugin' which can be used to define a `PV` (Persistent Volume). In the case of the local volume plugin there is no support for dynamic creation (k8s 1.17.0) and the PVs must be created by a user before a Persistent Volume Claim (`PVC`) can be claimed by the pod/VM. This manual creation of PVs must be taken into consideration for an OpenNESS deployment as a PV will need to be created per each VM per each node as the storage is local to the Edge Node. In case of persistent storage the VM image must be loaded to the PVC, this can be done via use of KubeVirt's Container Data Importer (CDI). This kind of storage is meant for use with stateful workloads, and being local to the node is suitable for Edge deployments.
 
 ### VMs with Cloud Storage
@@ -70,7 +70,7 @@ docker build -t centosimage:1.0 .
 The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the OpenNESS experience kit via Ansible automation. In this default state it does not support SRIOV in a VM so additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in BIOS of the Edge Node.
 
  1. Configure Ansible for KubeVirt:
-
+    KubeVirt is deployed by default but to provide SR-IOV support configure following settings:
       - Enable kubeovn CNI and SRIOV:
          ```yaml
          # group_vars/all.yml
@@ -80,10 +80,10 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
          ```
       - Enable SRIOV for KubeVirt:
           ```yaml
-          # roles/kubernetes/cni/sriov/common/defaults/main.yml
-          # VM support
-          kubevirt:
-            enabled: true
+          # group_vars/all.yml
+
+          # SR-IOV support for kube-virt based Virtual Machines
+          sriov_kubevirt_enable: true
           ```
       - Enable necessary Network Interfaces with SRIOV:
           ```yaml
@@ -91,23 +91,15 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           sriov:
             network_interfaces: {<interface_name>: 1}
           ```
-      - Make sure the kubevirt role is enabled:
-          ```yaml
-          # "network_edge.yml"
-          roles:
-            - role: kubevirt/master
-          roles:
-            - role: kubevirt/worker
-          ```
       - Set up the maximum number of stateful VMs and directory where the Virtual Disks will be stored on Edge Node:
           ```yaml
-          # roles/kubevirt/worker/defaults/main.yml
-          default_pv_dir: /var/vd/
-          default_pv_vol_name: vol
-          pv_vm_max_num:  64
+          # group_vars/all.yml
+          kubevirt_default_pv_dir: /var/vd/
+          kubevirt_default_pv_vol_name: vol
+          kubevirt_pv_vm_max_num:  64
           ```
  2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy_ne.sh` script in OpenNESS experience kit top level directory.
-   
+
  3. On successful deployment the following pods will be in running state:
     ```shell
         [root@controller ~]# kubectl get pods -n kubevirt
@@ -207,7 +199,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
       Processing completed successfully
       Uploading /root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 completed successfully
       ```
-  5. Check that PV, DV, PVC are correctly created: 
+  5. Check that PV, DV, PVC are correctly created:
       ```shell
       [root@controller ~]# kubectl get pv
        pv0    15Gi       RWO            Retain           Bound      default/centos-dv           local-storage            2m48s
@@ -314,7 +306,7 @@ To deploy a VM requesting SRIOV VF of NIC:
      #restart networking service
      [root@vm ~]# sudo /etc/init.d/networking restart
      ```
-     
+
   8.  Check the SRIOV interface has an assigned IP address.
       ```shell
       [root@vm ~]# ip addr
@@ -434,7 +426,7 @@ kubectl virt help               # See info about rest of virtctl commands
       ```shell
       [controller]# ./cleanup_ne.sh
       ```
-    
+
 ## Helpful Links
 
 - [KubeVirt](https://kubevirt.io/)

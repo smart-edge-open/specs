@@ -15,7 +15,7 @@ Userspace CNI is a Container Network Interface Kubernetes plugin that was design
 
 ## Setup Userspace CNI
 
-OpenNESS for Network Edge has been integrated with Userspace CNI to allow user to easily run DPDK based applications inside Kubernetes pods. To install OpenNESS Network Edge with Userspace CNI support, please add value `userspace` to variable `kubernetes_cnis` in `group_vars/all.yml` and set value of the variable `ovs_dpdk` in `roles/kubernetes/cni/kubeovn/common/defaults/main.yml` to `true`:
+OpenNESS for Network Edge has been integrated with Userspace CNI to allow user to easily run DPDK based applications inside Kubernetes pods. To install OpenNESS Network Edge with Userspace CNI support, please add value `userspace` to variable `kubernetes_cnis` in `group_vars/all.yml` and set value of the variable `kubeovn_dpdk` in `group_vars/all.yml` to `true`:
 
 ```yaml
 # group_vars/all.yml
@@ -25,8 +25,8 @@ kubernetes_cnis:
 ```
 
 ```yaml
-# roles/kubernetes/cni/kubeovn/common/defaults/main.yml
-ovs_dpdk: true
+# group_vars/all.yml
+kubeovn_dpdk: true
 ```
 
 ## HugePages configuration
@@ -34,27 +34,23 @@ ovs_dpdk: true
 Please be aware that DPDK apps will require specific amount of HugePages enabled. By default the ansible scripts will enable 1024 of 2M HugePages in system, and then start OVS-DPDK with 1Gb of those HugePages. If you would like to change this settings to reflect your specific requirements please set ansible variables as defined in the example below. This example enables 4 of 1GB HugePages and appends 1 GB to OVS-DPDK leaving 3 pages for DPDK applications that will be running in the pods.
 
 ```yaml
-# network_edge.yml
-- hosts: controller_group
-  vars:
-    hugepage_amount: "4"
-
-- hosts: edgenode_group
-  vars:
-    hugepage_amount: "4"
-```
-
-```yaml
-# roles/machine_setup/grub/defaults/main.yml
+# group_vars/controller_group.yml
 hugepage_size: "1G"
+hugepage_amount: "4"
 ```
 
->The variable `hugepage_amount` that can be found in `roles/machine_setup/grub/defaults/main.yml` can be left at default value of `5000` as this value will be overridden by values of `hugepage_amount` variables that were set earlier in `network_edge.yml`.
+```yaml
+# group_vars/edgenode_group.yml
+hugepage_size: "1G"
+hugepage_amount: "4"
+```
 
 ```yaml
-# roles/kubernetes/cni/kubeovn/common/defaults/main.yml
-ovs_dpdk_hugepage_size: "1Gi" # This is the size of single hugepage to be used by DPDK. Can be 1Gi or 2Mi.
-ovs_dpdk_hugepages: "1Gi" # This is overall amount of hugepags available to DPDK.
+# group_vars/all.yml
+# Hugepage size to be used with DPDK: 2Mi or 1Gi
+kubeovn_dpdk_hugepage_size: "1Gi"
+# Overall amount of hugepages available to DPDK
+kubeovn_dpdk_hugepages: "1Gi"
 ```
 
 ## Pod deployment

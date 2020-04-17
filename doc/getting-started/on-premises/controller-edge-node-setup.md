@@ -16,6 +16,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Enrolling Nodes with Controller](#enrolling-nodes-with-controller)
       - [First Login](#first-login)
       - [Manual enrollment](#manual-enrollment)
+      - [Deleting node](#deleting-node)
     - [NTS Configuration](#nts-configuration)
       - [Displaying Edge Node's Interfaces](#displaying-edge-nodes-interfaces)
       - [Configuring Interface](#configuring-interface)
@@ -34,7 +35,7 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Setting proxy](#setting-proxy)
   - [Setting Git](#setting-git)
     - [GitHub Token](#github-token)
-    - [Customize tag/commit/sha to checkout](#customize-tagcommitsha-to-checkout)
+    - [Customize tag/branch/sha to checkout](#customize-tagbranchsha-to-checkout)
   - [Obtaining Edge Node's serial with command](#obtaining-edge-nodes-serial-with-command)
   - [Customization of kernel, grub parameters and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
@@ -75,7 +76,8 @@ To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and
 
 ## On Premise Playbooks
 
-`on_premises.yml` and `on_premises_cleanup.yml` contain playbooks for On Premise mode. Playbooks can be customized by (un)commenting roles that are optional and by customizing variables where needed.
+`on_premises.yml` and `on_premises_cleanup.yml` contain playbooks for On Premise mode.
+Playbooks can be customized by enabling and configuring features in `group_var/all.yml` file.
 
 ### Cleanup playbooks
 
@@ -153,6 +155,26 @@ In order to enroll and add new Edge Node to be managed by the Controller the fol
 7. Check that your Edge Node is visible under 'List of Edge Nodes'.
 
 ![Add Edge Node 3](controller-edge-node-setup-images/Enroll3.png)
+
+#### Deleting node
+
+> In order to delete node, all deployed apps and applied configuration should be deleted first.
+
+To delete enrolled node please use the button 'DELETE' located on the node's panel.
+
+![Delete Edge Node 1](controller-edge-node-setup-images/Delete1.png)
+
+This will be followed by confirmation dialog.
+
+![Delete Edge Node 2](controller-edge-node-setup-images/Delete2.png)
+
+If you are sure you want to delete the node please select `DELETE` and wait for node's removal. However, please remember that all apps, traffic policies, and DNS configurations added to the node should be deleted previously. If an error will occur during the node's removal (e.g. node will be offline or some app will be still deployed) you will see an error's description on the screen together with question if you want to force the node's removal.
+
+![Delete Edge Node 3](controller-edge-node-setup-images/Delete3.png)
+
+**Please always remember, that if you will force-remove node, it may be not possible to reuse it without reinstallation.**
+
+If you are sure that you want to remove the node please click `YES` and wait till it disappear from the list of nodes.
 
 ### NTS Configuration
 OpenNESS data-plane interface configuration.
@@ -387,42 +409,15 @@ By default CentOS ships with [chrony](https://chrony.tuxfamily.org/) NTP client.
 ```
 OpenNESS requires the time to be synchronized between all of the nodes and controllers to allow for correct certificate verification.
 
-To change the default servers run the following commands:
-```
-# Remove previously set NTP servers
-sed -i '/^server /d' /etc/chrony.conf
-
-# Allow significant time difference
-# More info: https://chrony.tuxfamily.org/doc/3.4/chrony.conf.html
-echo 'maxdistance 999999' >> /etc/chrony.conf
-
-# Add new NTP server(s)
-echo 'server <ntp-server-address> iburst' >> /etc/chrony.conf
-
-# Restart chrony service
-systemctl restart chronyd
+OpenNESS provides possibility to synchronize machine's time with NTP server.
+To enable NTP synchronization change `ntp_enable` in `group_var/all.yml`:
+```yaml
+ntp_enable: true
 ```
 
-To verify that the time is synchronized correctly run the following command:
-```
-chronyc tracking
-```
-
-Sample output:
-```
-Reference ID    : 0A800239
-Stratum         : 3
-Ref time (UTC)  : Mon Dec 16 09:10:51 2019
-System time     : 0.000015914 seconds fast of NTP time
-Last offset     : -0.000002627 seconds
-RMS offset      : 0.000229037 seconds
-Frequency       : 4.792 ppm fast
-Residual freq   : -0.001 ppm
-Skew            : 0.744 ppm
-Root delay      : 0.008066391 seconds
-Root dispersion : 0.003803928 seconds
-Update interval : 130.2 seconds
-Leap status     : Normal
+Servers to be used instead of default ones can be provided using `ntp_servers` variable in `group_var/all.yml`:
+```yaml
+ntp_servers: ["ntp.local.server"]
 ```
 
 ## Setup static hostname
@@ -456,7 +451,7 @@ OpenNESS' inventory contains three groups: `all`, `edgenode_group`, and `control
 In `all` group you can specify all of your hosts for usage in other groups.
 Example `all` group looks like:
 
-```
+```ini
 [all]
 ctrl ansible_ssh_user=root ansible_host=192.168.0.2
 node1 ansible_ssh_user=root ansible_host=192.168.0.3
@@ -467,7 +462,7 @@ node2 ansible_ssh_user=root ansible_host=192.168.0.4
 
 Then you can use those hosts in `edgenode_group` and `controller_group`, i.e.:
 
-```
+```ini
 [edgenode_group]
 node1
 node2
@@ -532,20 +527,25 @@ To make sure key is copied successfully, try to SSH to the host: `ssh 'root@host
 ## Setting proxy
 
 If proxy is required in order to connect to the Internet it can be configured in `group_vars/all.yml` file.
-Just provide values for `proxy_` variables and set `proxy_os_enable` to `true`.
-Also append your network CIDR (e.g. `192.168.0.1/24`) to the `proxy_os_noproxy`.
+To enable proxy provide values for `proxy_` variables and set `proxy_enable` to `true`.
+Also append your network CIDR (e.g. `192.168.0.1/24`) to the `proxy_noproxy`.
 
-Settings can look like this:
+Sample configuration:
 
-```
-proxy_yum_url: "http://proxy.example.com:3128/"
-
-proxy_os_enable: true
-proxy_os_remove_old: true
-proxy_os_http: "http://proxy.example.com:3128"
-proxy_os_https: "http://proxy.example.com:3128"
-proxy_os_ftp: "http://proxy.example.com:3128"
-proxy_os_noproxy: "localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
+```yaml
+# Setup proxy on the machine - required if the Internet is accessible via proxy
+proxy_enable: true
+# Clear previous proxy settings
+proxy_remove_old: true
+# Proxy URLs to be used for HTTP, HTTPS and FTP
+proxy_http: "http://proxy.example.org:3128"
+proxy_https: "http://proxy.example.org:3129"
+proxy_ftp: "http://proxy.example.org:3128"
+# Proxy to be used by YUM (/etc/yum.conf)
+proxy_yum: "{{ proxy_http }}"
+# No proxy setting contains addresses and networks that should not be accessed using proxy (e.g. local network, Kubernetes CNI networks)
+# NOTE - VCA: 172.32.1.0/24 is used for VCA node.
+proxy_noproxy: "localhost,virt-api,kubevirt.svc,virt-api.kubevirt.svc,cdi-api,cdi.svc,127.0.0.1,10.244.0.0/16,10.96.0.0/16,10.16.0.0/16,10.32.0.0/12,172.32.1.0/24,192.168.0.1/24"
 ```
 
 ## Setting Git
@@ -560,9 +560,17 @@ To generate GitHub token refer to [GitHub help - Creating a personal access toke
 
 To provide the token, edit value of `git_repo_token` variable in in `group_vars/all.yml`.
 
-### Customize tag/commit/sha to checkout
+### Customize tag/branch/sha to checkout
 
-Specific tag, commit or sha can be checked out by setting `git_repo_branch` variable in `group_vars/edgenode_group.yml` for Edge Nodes and `groups_vars/controller_group.yml` for Kubernetes master / Edge Controller.
+Specific tag, branch or commit SHA can be checked out by setting `controller_repository_branch` and `edgenode_repository_branch` variables in `group_vars/all.yml` for Edge Nodes and Kubernetes master / Edge Controller respectively.
+
+```yaml
+controller_repository_branch: master
+edgenode_repository_branch: master
+# or
+controller_repository_branch: openness-20.03
+edgenode_repository_branch: openness-20.03
+```
 
 ## Obtaining Edge Node's serial with command
 
