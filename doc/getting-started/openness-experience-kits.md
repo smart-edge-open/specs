@@ -86,8 +86,8 @@ additional_grub_params: ""
 # --- machine_setup/configure_tuned
 tuned_skip: false   # use this variable to skip tuned profile configuration for host
 tuned_packages:
-- http://linuxsoft.cern.ch/cern/centos/7/updates/x86_64/Packages/tuned-2.11.0-5.el7_7.1.noarch.rpm
-- http://linuxsoft.cern.ch/scientific/7x/x86_64/updates/fastbugs/tuned-profiles-realtime-2.11.0-5.el7_7.1.noarch.rpm
+- http://linuxsoft.cern.ch/scientific/7x/x86_64/os/Packages/tuned-2.11.0-8.el7.noarch.rpm
+- http://linuxsoft.cern.ch/scientific/7x/x86_64/os/Packages/tuned-profiles-realtime-2.11.0-8.el7.noarch.rpm
 tuned_profile: realtime
 tuned_vars: |
   isolated_cores=2-3
@@ -116,7 +116,7 @@ dpdk_kernel_devel: ""  # kernel-devel is in the repository, no need for url with
 
 # Since, we're not using rt kernel, we don't need a tuned-profiles-realtime but want to keep the tuned 2.11
 tuned_packages:
-- http://linuxsoft.cern.ch/cern/centos/7/updates/x86_64/Packages/tuned-2.11.0-5.el7_7.1.noarch.rpm
+- http://linuxsoft.cern.ch/scientific/7x/x86_64/os/Packages/tuned-2.11.0-8.el7.noarch.rpm
 tuned_profile: balanced
 tuned_vars: ""
 ```
@@ -134,7 +134,7 @@ kernel_skip: true     # skip kernel customization altogether
 
 # update tuned to 2.11, but don't install tuned-profiles-realtime since we're not using rt kernel
 tuned_packages:
-- http://linuxsoft.cern.ch/cern/centos/7/updates/x86_64/Packages/tuned-2.11.0-5.el7_7.1.noarch.rpm
+- http://linuxsoft.cern.ch/scientific/7x/x86_64/os/Packages/tuned-2.11.0-8.el7.noarch.rpm
 tuned_profile: balanced
 tuned_vars: ""
 ```
