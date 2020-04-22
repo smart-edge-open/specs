@@ -101,8 +101,7 @@ The following device config is the default config for the PAC N3000 with 5GNR vR
 ```yaml
 # group_var/all.yml
 
-fpga_sriov_userspace:
-  enabled: true
+fpga_sriov_userspace_enable: true
 
 fpga_userspace_vf:
   enabled: true
