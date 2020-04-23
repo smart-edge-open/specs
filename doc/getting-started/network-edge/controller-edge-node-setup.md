@@ -13,6 +13,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [VM support for Network Edge](#vm-support-for-network-edge)
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
+    - [Single-node Network Edge cluster](#single-node-network-edge-cluster)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -93,6 +94,34 @@ The following is a complete set of actions that need to be completed to successf
 ### Application on-boarding
 
 Please refer to [network-edge-applications-onboarding.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+
+### Single-node Network Edge cluster
+
+Network Edge can be deployed on just a single machine working as a master & worker.<br>
+In order to deploy Network Edge in single-node cluster scenario follow the steps:
+1. Modify `inventory.ini`<br>
+   > Rules for inventory:
+   > - IP address (`ansible_host`) for both controller and node must be the same
+   > - `edgenode_group` and `controller_group` groups must contain exactly one host
+
+   Example of a valid inventory:
+   ```ini
+   [all]
+   controller ansible_ssh_user=root ansible_host=192.168.0.11
+   node01     ansible_ssh_user=root ansible_host=192.168.0.11
+
+   [controller_group]
+   controller
+
+   [edgenode_group]
+   node01
+
+   [edgenode_vca_group]
+   ```
+2. Features can be enabled in `group_vars/all.yml` file by tweaking the configuration variables.
+3. Settings regarding the kernel, grub, hugepages & tuned can be customized in `group_vars/edgenode_group.yml`.
+   > Default settings in single-node cluster mode are those of the Edge Node, i.e. kernel & tuned customization enabled.
+4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
 
 ## Kubernetes cluster networking plugins (Network Edge)
 
