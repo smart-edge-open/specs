@@ -168,25 +168,29 @@ additional_grub_params: "debug"
 ### Configure OVS-DPDK in kube-ovn
 By default OVS-DPDK is enabled. To be able to disable it please set a flag:
 ```yaml
-ovs_dpdk: false
+kubeovn_dpdk: false
 ```
 
 >NOTE: This flag should be set in `roles/kubernetes/cni/kubeovn/common/defaults/main.ym` or either added to `group_vars/all.yml`.
 
 Additionally hugepages in ovs pod can be adjusted once default hugepage settings are changed.
 ```yaml
-ovs_dpdk_hugepage_size: "2Mi"
-ovs_dpdk_hugepages: "1Gi"
+kubeovn_dpdk_socket_mem: "1024,0" # Amount of hugepages reserved for OVS per NUMA node (node 0, node 1, ...) in MB
+kubeovn_dpdk_hugepage_size: "2Mi" # Default size of hugepages, can be 2Mi or 1Gi
+kubeovn_dpdk_hugepages: "1Gi"     # Total amount of hugepages that can be used by OVS-OVN pod
 ```
+
+> NOTE: If `kubeovn_dpdk_socket_mem` is being changed, please set `kubeovn_dpdk_hugepages` value to be equal or greater that sum of `kubeovn_dpdk_socket_mem` values. E.g. for `kubeovn_dpdk_socket_mem: "1024,1024"` please set `kubeovn_dpdk_hugepages` to at least `2Gi` (which is equal to 2048 MB).
+
 OVS pods limits are configured by:
 ```yaml
-ovs_dpdk_resources_requests: "1Gi"
-ovs_dpdk_resources_limits: "1Gi"
+kubeovn_dpdk_resources_requests: "1Gi" # OVS-OVN pod RAM memory (requested)
+kubeovn_dpdk_resources_limits: "1Gi"   # OVS-OVN pod RAM memory (limit)
 ```
 CPU settings can be configured using:
 ```yaml
-ovs_dpdk_pmd_cpu_mask: "0x4"
-ovs_dpdk_lcore_mask: "0x2"
+kubeovn_dpdk_pmd_cpu_mask: "0x4" # DPDK PMD CPU mask
+kubeovn_dpdk_lcore_mask: "0x2"   # DPDK lcore mask
 ```
 
 ## Adding new CNI plugins for Kubernetes (Network Edge)
