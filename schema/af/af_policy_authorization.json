@@ -34,7 +34,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AfappSessionContext"
+                "$ref": "#/components/schemas/AppSessionContext"
               }
             }
           }
@@ -45,7 +45,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AfappSessionContext"
+                  "$ref": "#/components/schemas/AppSessionContext"
                 }
               }
             },
@@ -278,7 +278,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AfappSessionContext"
+                  "$ref": "#/components/schemas/AppSessionContext"
                 }
               }
             }
@@ -335,7 +335,7 @@
           "content": {
             "application/merge-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/AfappSessionContextUpdateData"
+                "$ref": "#/components/schemas/AppSessionContextUpdateData"
               }
             }
           }
@@ -346,7 +346,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AfappSessionContext"
+                  "$ref": "#/components/schemas/AppSessionContext"
                 }
               }
             }
@@ -527,7 +527,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AfappSessionContext"
+                  "$ref": "#/components/schemas/AppSessionContext"
                 }
               }
             }
@@ -789,22 +789,22 @@
   },
   "components": {
     "schemas": {
-      "AfappSessionContext": {
+      "AppSessionContext": {
         "description": "Represents an Individual Application Session Context resource.",
         "type": "object",
         "properties": {
           "ascReqData": {
-            "$ref": "#/components/schemas/AfappSessionContextReqData"
+            "$ref": "#/components/schemas/AppSessionContextReqData"
           },
           "ascRespData": {
-            "$ref": "#/components/schemas/AfappSessionContextRespData"
+            "$ref": "#/components/schemas/AppSessionContextRespData"
           },
           "evsNotif": {
             "$ref": "#/components/schemas/EventsNotification"
           }
         }
       },
-      "AfappSessionContextReqData": {
+      "AppSessionContextReqData": {
         "description": "Identifies the service requirements of an Individual Application Session Context.",
         "type": "object",
         "required": [
@@ -896,7 +896,7 @@
           }
         }
       },
-      "AfappSessionContextRespData": {
+      "AppSessionContextRespData": {
         "description": "Describes the authorization data of an Individual Application Session Context created by the PCF.",
         "type": "object",
         "properties": {
@@ -908,7 +908,7 @@
           }
         }
       },
-      "AfappSessionContextUpdateData": {
+      "AppSessionContextUpdateData": {
         "description": "Identifies the modifications to an Individual Application Session Context and may include the modifications to the sub-resource Events Subscription.",
         "type": "object",
         "properties": {

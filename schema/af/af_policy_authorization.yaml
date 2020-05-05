@@ -34,14 +34,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AfappSessionContext'
+              $ref: '#/components/schemas/AppSessionContext'
       responses:
         '201':
           description: Successful creation of the resource
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AfappSessionContext'
+                $ref: '#/components/schemas/AppSessionContext'
           headers:
             Location:
               description: 'Contains the URI of the created individual application session context resource, according to the structure: {apiRoot}/npcf-policyauthorization/v1/app-sessions/{appSessionId} or the URI of the created events subscription sub-resource, according to the structure: {apiRoot}/npcf-policyauthorization/v1/app-sessions/{appSessionId}/events-subscription}'
@@ -185,7 +185,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AfappSessionContext'
+                $ref: '#/components/schemas/AppSessionContext'
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -222,14 +222,14 @@ paths:
         content:
           application/merge-patch+json:
             schema:
-              $ref: '#/components/schemas/AfappSessionContextUpdateData'
+              $ref: '#/components/schemas/AppSessionContextUpdateData'
       responses:
         '200':
           description: successful modification of the resource and a representation of that resource is returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AfappSessionContext'
+                $ref: '#/components/schemas/AppSessionContext'
         '204':
           description: The successful modification
         '400':
@@ -342,7 +342,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AfappSessionContext'
+                $ref: '#/components/schemas/AppSessionContext'
         '204':
           description: The deletion is confirmed without returning additional data.
         '400':
@@ -503,17 +503,17 @@ paths:
           $ref: '#/components/responses/default'
 components:
   schemas:
-    AfappSessionContext:
+    AppSessionContext:
       description: Represents an Individual Application Session Context resource.
       type: object
       properties:
         ascReqData:
-          $ref: '#/components/schemas/AfappSessionContextReqData'
+          $ref: '#/components/schemas/AppSessionContextReqData'
         ascRespData:
-          $ref: '#/components/schemas/AfappSessionContextRespData'
+          $ref: '#/components/schemas/AppSessionContextRespData'
         evsNotif:
           $ref: '#/components/schemas/EventsNotification'
-    AfappSessionContextReqData:
+    AppSessionContextReqData:
       description: Identifies the service requirements of an Individual Application Session Context.
       type: object
       required:
@@ -568,7 +568,7 @@ components:
           $ref: '#/components/schemas/MacAddr48'
         afwebsockNotifConfig:
           $ref: '#/components/schemas/AfwebsockNotifConfig'
-    AfappSessionContextRespData:
+    AppSessionContextRespData:
       description: Describes the authorization data of an Individual Application Session Context created by the PCF.
       type: object
       properties:
@@ -576,7 +576,7 @@ components:
           $ref: '#/components/schemas/ServAuthInfo'
         suppFeat:
           $ref: '#/components/schemas/SupportedFeatures'
-    AfappSessionContextUpdateData:
+    AppSessionContextUpdateData:
       description: Identifies the modifications to an Individual Application Session Context and may include the modifications to the sub-resource Events Subscription.
       type: object
       properties:
