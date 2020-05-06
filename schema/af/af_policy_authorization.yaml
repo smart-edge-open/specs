@@ -723,7 +723,7 @@ components:
         usgRep:
           $ref: '#/components/schemas/AccumulatedUsage'
     AfwebsockNotifConfig:
-      description: describes the webscoket configuration for AF notifications
+      description: describes the websocket configuration for AF notifications
       type: object
       properties:
         websocketUri:
