@@ -7,13 +7,13 @@ Copyright (c) 2019 Intel Corporation
 - [OpenNESS Application development and porting guide](#openness-application-development-and-porting-guide)
   - [Introduction](#introduction)
   - [OpenNESS Edge Node Applications](#openness-edge-node-applications)
-    - [<b>Producer Application</b>](#bproducer-applicationb)
-    - [<b>Consumer Application</b>](#bconsumer-applicationb)
+    - [Producer Application](#producer-application)
+    - [Consumer Application](#consumer-application)
     - [Example of Producer and Consumer Applications](#example-of-producer-and-consumer-applications)
       - [OpenVINO Producer Application](#openvino-producer-application)
       - [OpenVINO Consumer Application](#openvino-consumer-application)
       - [Execution Flow Between EAA, Producer and Consumer](#execution-flow-between-eaa-producer-and-consumer)
-    - [<b> Cloud Adapter Edge compute Application </b>](#b-cloud-adapter-edge-compute-application-b)
+    - [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
   - [Application On-boarding](#application-on-boarding)
     - [OpenNESS-aware Applications](#openness-aware-applications)
       - [Authentication](#authentication)
@@ -53,13 +53,13 @@ OpenNESS application can be categorised in different ways depending on the scena
   - Producer Application
   - Consumer Application 
 
-### <b>Producer Application</b>
+### Producer Application
 OpenNESS Producer application are edge compute application that provide services to other applications running on the edge compute platform. Producer applications do not serve end users traffic directly. They are sometime also referred to as Edge services. Here are some of the characteristics of a producer app.
 - It is mandatory for all producer apps to authenticate and acquire TLS 
 - All producer apps need to activate if the service provided by them needs to be discoverable by other edge applications 
 - A producer application can have one or more fields for which it will provide notification update 
 
-### <b>Consumer Application</b>
+### Consumer Application
 OpenNESS Consumer application are edge compute application that serve end users traffic directly. Consumer applications might or might not subscribe to the services from other producer applications on the edge node. Here are some of the characteristics of a consumer app.
 - It is not mandatory for consumer apps to authenticate if they don't wish to call EAA APIs.  
 - A consumer application can subscribe to any number of services from producer apps. Future extension can implement entitlements to consumer apps to create access control lists. 
@@ -109,7 +109,7 @@ The simplified execution flow of the consumer & producer applications with EAA i
 
 _Figure - OpenVINO Application Execution Flow_
 
-### <b> Cloud Adapter Edge compute Application </b>
+### Cloud Adapter Edge compute Application
 All the major Cloud Service providers are implementing frameworks to deploy edge applications that link back to their cloud via connectors. For example, Amazon Greengrass enables lambda functions to be deployed on the edge and connecting to the AWS cloud using the GreenGrass service. While it was originally intended to host this type of edge software on IoT gateways, the same framework can be utilized by Service Providers and Enterprises, to implement a multi-cloud strategy for their Edge Nodes.  
 
 OpenNESS enables this approach by running the Greengrass Core (with the Edge software) as Edge applications on the Edge Node. They can run unchanged, or modified to utilize the EAA APIs to serve as Producer or Consumer apps on the edge Node. By running multiple cloud connector instances from different cloud service providers on the same edge node, a multi-cloud experience can be easily implemented. 
