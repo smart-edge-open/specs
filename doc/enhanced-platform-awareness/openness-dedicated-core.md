@@ -53,6 +53,8 @@ CMK documentation available on github includes:
 - [operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md)
 - [user manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).
 
+CPU Manager for Kubernetes can be deployed using [Helm chart](https://helm.sh/). CMK Helm chart used in OpenNESS deployment is available on github repository [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/cmk-install).
+
 ### Setup
 
 **Edge Controller / Kubernetes master**
