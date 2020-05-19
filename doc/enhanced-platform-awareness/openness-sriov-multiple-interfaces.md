@@ -33,6 +33,8 @@ To address this we need to enable two key networking features:
 
 To enable multiple interface support in PODs, OpenNESS Network Edge uses the Multus container network interface. Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables the attachment of multiple network interfaces to pods. Typically, in Kubernetes each pod only has one network interface (apart from a loopback) – with Multus you can create a multi-homed pod that has multiple interfaces. This is accomplished by Multus acting as a “meta-plugin”, a CNI plugin that can call multiple other CNI plugins. Multus CNI follows the Kubernetes Network Custom Resource Definition De-facto Standard to provide a standardized method by which to specify the configurations for additional network interfaces. This standard is put forward by the Kubernetes Network Plumbing Working Group.
 
+Multus CNI is deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/master/files/multus-cni). Multus image is pulled by ansible Multus role and pushed to local Docker registry on Edge Controller.
+
 Below is an illustration of the network interfaces attached to a pod, as provisioned by the Multus CNI. The diagram shows the pod with three interfaces: eth0, net0 and net1. eth0 connects to the Kubernetes cluster network to connect with the Kubernetes server/services (e.g. kubernetes api-server, kubelet and so on). net0 and net1 are additional network attachments and connect to other networks by using other CNI plugins (e.g. vlan/vxlan/ptp).
 
 ![Multus overview](multussriov-images/multus-pod-image.svg)
