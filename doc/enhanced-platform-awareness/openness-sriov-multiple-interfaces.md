@@ -67,6 +67,8 @@ kubernetes_cnis:
 
 ### Multus usage
 
+Multus CNI is deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/master/files/multus-cni). Multus image is pulled by ansible Multus role and pushed to local Docker registry on Edge Controller.
+
 [Custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-resources) (CRD) is used to define additional network that can be used by Multus.
 
 1. The following example creates a `NetworkAttachmentDefinition` that can be used to provide an additional macvlan interface to a POD:
