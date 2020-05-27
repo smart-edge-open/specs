@@ -136,6 +136,8 @@ kubernetes_cnis:
 - sriov
 ```
 
+SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/sriov/master/files/sriov). Additional chart templates for SR-IOV device plugin are downloaded from [container-experience-kits repository](https://github.com/intel/container-experience-kits/tree/master/roles/sriov-dp-install/charts/sriov-net-dp/templates). SR-IOV images are built from source by ansible SR-IOV role and pushed to local Docker registry on Edge Controller.
+
 #### Edge Node SRIOV interfaces configuration
 
 For the installer to turn on the specified number of SR-IOV VFs for selected network interface of node, please provide that information in format `{interface_name: VF_NUM, ...}` in `sriov.network_interfaces` variable inside config files in `host_vars` ansible directory.
