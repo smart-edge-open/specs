@@ -57,6 +57,8 @@ Node Feature Discovery is enabled by default. It does not require any configurat
 
 Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
 
+Node Feature Discovery is deployed in OpenNESS using Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
+
 #### Usage
 
 NFD is working automatically and does not require any user action to collect the features from nodes. Features found by NFD and labeled in Kubernetes can be shown by command: `kubectl get no -o json | jq '.items[].metadata.labels'`.
