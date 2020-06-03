@@ -64,7 +64,7 @@ To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and
 ## Network Edge Playbooks
 
 The `network_edge.yml` and `network_edge_cleanup.yml` files contain playbooks for Network Edge mode.
-Playbooks can be customized by enabling and configuring features in `group_var/all.yml` file.
+Playbooks can be customized by enabling and configuring features in `group_var/all/10-default.yml` file.
 
 ### Cleanup playbooks
 
@@ -118,8 +118,8 @@ In order to deploy Network Edge in single-node cluster scenario follow the steps
 
    [edgenode_vca_group]
    ```
-2. Features can be enabled in `group_vars/all.yml` file by tweaking the configuration variables.
-3. Settings regarding the kernel, grub, hugepages & tuned can be customized in `group_vars/edgenode_group.yml`.
+2. Features can be enabled in `group_vars/all/10-default.yml` file by tweaking the configuration variables.
+3. Settings regarding the kernel, grub, hugepages & tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
    > Default settings in single-node cluster mode are those of the Edge Node, i.e. kernel & tuned customization enabled.
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
 
@@ -149,9 +149,9 @@ Multiple CNIs can be requested to be set up for the cluster. To provide such fun
 
 ### Selecting cluster networking plugins (CNI)
 
-> Note: When using non-default CNI (default is kube-ovn) remember to add CNI's networks (CIDR for pods and other CIDRs used by the CNI) to `proxy_os_noproxy` in `group_vars/all.yml`
+> Note: When using non-default CNI (default is kube-ovn) remember to add CNI's networks (CIDR for pods and other CIDRs used by the CNI) to `proxy_os_noproxy` in `group_vars/all/10-default.yml`
 
-In order to customize which CNI are to be deployed for the Network Edge cluster edit `kubernetes_cnis` variable in `group_vars/all.yml` file.
+In order to customize which CNI are to be deployed for the Network Edge cluster edit `kubernetes_cnis` variable in `group_vars/all/10-default.yml` file.
 CNIs are applied in requested order.
 By default `kube-ovn` and `calico` are set up (with `multus` in between):
 ```yaml
@@ -224,12 +224,12 @@ By default CentOS ships with [chrony](https://chrony.tuxfamily.org/) NTP client.
 OpenNESS requires the time to be synchronized between all of the nodes and controllers to allow for correct certificate verification.
 
 OpenNESS provides possibility to synchronize machine's time with NTP server.
-To enable NTP synchronization change `ntp_enable` in `group_var/all.yml`:
+To enable NTP synchronization change `ntp_enable` in `group_var/all/10-default.yml`:
 ```yaml
 ntp_enable: true
 ```
 
-Servers to be used instead of default ones can be provided using `ntp_servers` variable in `group_var/all.yml`:
+Servers to be used instead of default ones can be provided using `ntp_servers` variable in `group_var/all/10-default.yml`:
 ```yaml
 ntp_servers: ["ntp.local.server"]
 ```
@@ -338,7 +338,7 @@ To make sure key is copied successfully, try to SSH to the host: `ssh 'root@host
 
 ## Setting proxy
 
-If proxy is required in order to connect to the Internet it can be configured in `group_vars/all.yml` file.
+If proxy is required in order to connect to the Internet it can be configured in `group_vars/all/10-default.yml` file.
 To enable proxy provide values for `proxy_` variables and set `proxy_enable` to `true`.
 Also append your network CIDR (e.g. `192.168.0.1/24`) to the `proxy_noproxy`.
 
@@ -372,11 +372,11 @@ In order to clone private repositories GitHub token must be provided.
 
 To generate GitHub token refer to [GitHub help - Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
 
-To provide the token, edit value of `git_repo_token` variable in in `group_vars/all.yml`.
+To provide the token, edit value of `git_repo_token` variable in in `group_vars/all/10-default.yml`.
 
 ### Customize tag/branch/sha to checkout
 
-Specific tag, branch or commit SHA can be checked out by setting `controller_repository_branch` and `edgenode_repository_branch` variables in `group_vars/all.yml` for Edge Nodes and Kubernetes master / Edge Controller respectively.
+Specific tag, branch or commit SHA can be checked out by setting `controller_repository_branch` and `edgenode_repository_branch` variables in `group_vars/all/10-default.yml` for Edge Nodes and Kubernetes master / Edge Controller respectively.
 
 ```yaml
 controller_repository_branch: master

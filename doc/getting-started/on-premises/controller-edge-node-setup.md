@@ -77,7 +77,7 @@ To run deploy of only Edge Nodes or Edge Controller use `deploy_ne.sh nodes` and
 ## On Premise Playbooks
 
 `on_premises.yml` and `on_premises_cleanup.yml` contain playbooks for On Premise mode.
-Playbooks can be customized by enabling and configuring features in `group_var/all.yml` file.
+Playbooks can be customized by enabling and configuring features in `group_var/all/10-default.yml` file.
 
 ### Cleanup playbooks
 
@@ -93,7 +93,7 @@ OpenNESS' On Premises delivers two dataplanes to be used:
 * NTS (default)
 * OVS/OVN
 
-In order to use OVS/OVN instead of NTS, `onprem_dataplane` variable must be edited in `group_vars/all.yml` file before running the deployment scripts:
+In order to use OVS/OVN instead of NTS, `onprem_dataplane` variable must be edited in `group_vars/all/10-default.yml` file before running the deployment scripts:
 ```yaml
 onprem_dataplane: "ovncni"
 ```
@@ -123,7 +123,7 @@ The following steps need to be done for successful login:
 
 ![Landing page](controller-edge-node-setup-images/controller_ui_landing.png)
 
-4. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all.yml*).
+4. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all/10-default.yml*).
 5. Click on "SIGN IN" button.
 
 ![Login screen](controller-edge-node-setup-images/login.png)
@@ -206,7 +206,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 2. Find the interface to be used in the interface list and click 'EDIT' button under 'Action' column for that interface.
 
 | WARNING: do not modify a NIC which is used for Internet connection! |
-| --- |
+| ------------------------------------------------------------------- |
 
 > Note: For adding traffic policy to interface refere to following section in on-premises-applications-onboarding.md: [Instruction to create Traffic Policy and assign it to Interface](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md#instruction-to-create-traffic-policy-and-assign-it-to-interface)
 
@@ -410,12 +410,12 @@ By default CentOS ships with [chrony](https://chrony.tuxfamily.org/) NTP client.
 OpenNESS requires the time to be synchronized between all of the nodes and controllers to allow for correct certificate verification.
 
 OpenNESS provides possibility to synchronize machine's time with NTP server.
-To enable NTP synchronization change `ntp_enable` in `group_var/all.yml`:
+To enable NTP synchronization change `ntp_enable` in `group_var/all/10-default.yml`:
 ```yaml
 ntp_enable: true
 ```
 
-Servers to be used instead of default ones can be provided using `ntp_servers` variable in `group_var/all.yml`:
+Servers to be used instead of default ones can be provided using `ntp_servers` variable in `group_var/all/10-default.yml`:
 ```yaml
 ntp_servers: ["ntp.local.server"]
 ```
@@ -526,7 +526,7 @@ To make sure key is copied successfully, try to SSH to the host: `ssh 'root@host
 
 ## Setting proxy
 
-If proxy is required in order to connect to the Internet it can be configured in `group_vars/all.yml` file.
+If proxy is required in order to connect to the Internet it can be configured in `group_vars/all/10-default.yml` file.
 To enable proxy provide values for `proxy_` variables and set `proxy_enable` to `true`.
 Also append your network CIDR (e.g. `192.168.0.1/24`) to the `proxy_noproxy`.
 
@@ -558,11 +558,11 @@ In order to clone private repositories GitHub token must be provided.
 
 To generate GitHub token refer to [GitHub help - Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
 
-To provide the token, edit value of `git_repo_token` variable in in `group_vars/all.yml`.
+To provide the token, edit value of `git_repo_token` variable in in `group_vars/all/10-default.yml`.
 
 ### Customize tag/branch/sha to checkout
 
-Specific tag, branch or commit SHA can be checked out by setting `controller_repository_branch` and `edgenode_repository_branch` variables in `group_vars/all.yml` for Edge Nodes and Kubernetes master / Edge Controller respectively.
+Specific tag, branch or commit SHA can be checked out by setting `controller_repository_branch` and `edgenode_repository_branch` variables in `group_vars/all/10-default.yml` for Edge Nodes and Kubernetes master / Edge Controller respectively.
 
 ```yaml
 controller_repository_branch: master

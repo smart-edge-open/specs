@@ -27,7 +27,7 @@ OpenNESS deployment enables the hugepages by default and provides parameters for
 
 By default, these variables have values:
 | Mode         | Machine type | `hugepage_amount` | `hugepage_size` | Comments                                     |
-|--------------|--------------|:-----------------:|:---------------:|----------------------------------------------|
+| ------------ | ------------ | :---------------: | :-------------: | -------------------------------------------- |
 | Network Edge | Controller   |      `1024`       |      `2M`       |                                              |
 |              | Node         |      `1024`       |      `2M`       |                                              |
 | On-Premises  | Controller   |      `1024`       |      `2M`       | For OVNCNI dataplane, otherwise no hugepages |
@@ -36,7 +36,7 @@ By default, these variables have values:
 Guide on changing these values is below. Customizations must be made before OpenNESS deployment.
 
 Variables for hugepage customization can be placed in several files:
-* `group_vars/controller_group.yml` and `group_vars/edgenode_group.yml` will affect Edge Controller and Edge Nodes respectively in every mode
+* `group_vars/controller_group/10-default.yml` and `group_vars/edgenode_group/10-default.yml` will affect Edge Controller and Edge Nodes respectively in every mode
 * `host_vars/<inventory_host_name>.yml` will only affect `<inventory_host_name>` host present in `inventory.ini` (in all modes)
 * Hugepages can be also specified for mode and machine type, e.g. hugepages for On-Premises Edge Node can be set in `on_premises.yml` in a play for Edge Nodes:
   ```yaml
@@ -50,28 +50,28 @@ Variables for hugepage customization can be placed in several files:
 
 This is summarized in a following table:
 
-| File                                  | Network Edge | On Premises |            Edge Controller             |                     Edge Node                     |                                     Comment                                     |
-|---------------------------------------|:------------:|:-----------:|:--------------------------------------:|:-------------------------------------------------:|:-------------------------------------------------------------------------------:|
-| `group_vars/controller_group.yml`     |     yes      |     yes     |                  yes                   |                                                   |                                                                                 |
-| `group_vars/edgenode_group.yml`       |     yes      |     yes     |                                        |                 yes - every node                  |                                                                                 |
-| `host_vars/<inventory_host_name>.yml` |     yes      |     yes     |                  yes                   |                        yes                        | affects machine specified in `inventory.ini` with name  `<inventory_host_name>` |
-| `network_edge.yml`                    |     yes      |             | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
-| `on_premises.yml`                     |              |     yes     | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
+| File                                         | Network Edge | On Premises |            Edge Controller             |                     Edge Node                     |                                     Comment                                     |
+| -------------------------------------------- | :----------: | :---------: | :------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------------------------------------: |
+| `group_vars/controller_group/10-default.yml` |     yes      |     yes     |                  yes                   |                                                   |                                                                                 |
+| `group_vars/edgenode_group/10-default.yml`   |     yes      |     yes     |                                        |                 yes - every node                  |                                                                                 |
+| `host_vars/<inventory_host_name>.yml`        |     yes      |     yes     |                  yes                   |                        yes                        | affects machine specified in `inventory.ini` with name  `<inventory_host_name>` |
+| `network_edge.yml`                           |     yes      |             | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
+| `on_premises.yml`                            |              |     yes     | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
 
 Note that variables have a precedence:
 1. **not recommended:** `network_edge.yml` and `on_premises.yml` will always take precedence for files from this list (overrides every other var)
 2. `host_vars/`
-3. `group_vars/edgenode_group.yml` and `group_vars/controller_group.yml`
-4. `group_vars/all.yml`
+3. `group_vars/edgenode_group/10-default.yml` and `group_vars/controller_group/10-default.yml`
+4. `group_vars/all/10-default.yml`
 5. `default/main.yml` in roles' directory
 
 ### Examples
 
 #### Changing size and amount of the hugepages for both controller and nodes
-Change following lines in the `group_vars/edgenode_group.yml` or `group_vars/controller_group.yml`:
+Change following lines in the `group_vars/edgenode_group/10-default.yml` or `group_vars/controller_group/10-default.yml`:
 * To set 1500 of the hugepages with the page size of 2 MB (which is default value) for the Edge Controller:
   ```yaml
-  # group_vars/controller_group.yml
+  # group_vars/controller_group/10-default.yml
 
   hugepage_size: "2M"
   hugepage_amount: "1500"
@@ -79,7 +79,7 @@ Change following lines in the `group_vars/edgenode_group.yml` or `group_vars/con
 
 * To set 10 of the hugepages with the page size of 1GB for the Edge Nodes:
   ```yaml
-  # group_vars/edgenode_group.yml
+  # group_vars/edgenode_group/10-default.yml
 
   hugepage_size: "1G"
   hugepage_amount: "10"

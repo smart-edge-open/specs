@@ -58,7 +58,7 @@ _Figure - SR-IOV Device plugin_
 
 ## Details - Multiple Interface and PCIe SRIOV support in OpenNESS
 
-In Network Edge mode Multus CNI, which provides possibility for attaching multiple interfaces to the pod, is deployed automatically when `kubernetes_cnis` variable list (in the `group_vars/all.yml` file) contains at least two elements, e.g.:
+In Network Edge mode Multus CNI, which provides possibility for attaching multiple interfaces to the pod, is deployed automatically when `kubernetes_cnis` variable list (in the `group_vars/all/10-default.yml` file) contains at least two elements, e.g.:
 ```yaml
 kubernetes_cnis:
 - kubeovn
@@ -129,7 +129,7 @@ EOF
 
 ### SRIOV for Network-Edge
 
-To deploy the OpenNESS' Network Edge with SR-IOV `sriov` must be added to the `kubernetes_cnis` list in `group_vars/all.yml`:
+To deploy the OpenNESS' Network Edge with SR-IOV `sriov` must be added to the `kubernetes_cnis` list in `group_vars/all/10-default.yml`:
 ```yaml
 kubernetes_cnis:
 - kubeovn

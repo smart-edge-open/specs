@@ -73,14 +73,14 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
     KubeVirt is deployed by default but to provide SR-IOV support configure following settings:
       - Enable kubeovn CNI and SRIOV:
          ```yaml
-         # group_vars/all.yml
+         # group_vars/all/10-default.yml
          kubernetes_cnis:
          - kubeovn
          - sriov
          ```
       - Enable SRIOV for KubeVirt:
           ```yaml
-          # group_vars/all.yml
+          # group_vars/all/10-default.yml
 
           # SR-IOV support for kube-virt based Virtual Machines
           sriov_kubevirt_enable: true
@@ -93,7 +93,7 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           ```
       - Set up the maximum number of stateful VMs and directory where the Virtual Disks will be stored on Edge Node:
           ```yaml
-          # group_vars/all.yml
+          # group_vars/all/10-default.yml
           kubevirt_default_pv_dir: /var/vd/
           kubevirt_default_pv_vol_name: vol
           kubevirt_pv_vm_max_num:  64

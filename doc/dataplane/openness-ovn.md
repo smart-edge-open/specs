@@ -59,12 +59,12 @@ OVN/OVS can be used as:
 To enable OVNCNI instead of NTS, "onprem_dataplane" variable needs to be set to "ovncni", before executing deploy_onprem.yml file to start OpenNESS installation.
 
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 onprem_dataplane: "ovncni"
 ```
 OVS-based Inter-App Communication is intended to be used with _nts_ dataplane, therefore it has to be disabled:
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 onprem_iac_enable: false
 ```
 
@@ -76,7 +76,7 @@ CNI configuration is retrieved from roles/openness/onprem/dataplane/ovncni/maste
 
 ### OVS-DPDK Parameters
 The following parameters are used to configure DPDK within OVS.
-They can be customized in `group_vars/all.yml` file.
+They can be customized in `group_vars/all/10-default.yml` file.
 
 `ovncni_dpdk_lcore_mask` parameter is used to set core bitmask that is used for DPDK initialization. Its default value is "0x2" to select core 1.
 
