@@ -129,7 +129,7 @@ In order to deploy Network Edge in single-node cluster scenario follow the steps
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
 ## Docker Registry 
 
-Docker registry is a storage and distribution system for Docker Images. On OpenNess environment, Docker registry service deployed as a pod on Master Node. Docker Registry authentication enabled with self-signed certificates and all worker  and master node will have access to docker registy.
+Docker registry is a storage and distribution system for Docker Images. On OpenNESS environment, Docker registry service deployed as a pod on Master Node. Docker Registry authentication enabled with self-signed certificates and all worker and master node will have access to docker registry.
 
 ## Deploy Docker Registry:
 
@@ -139,26 +139,26 @@ Ansible “docker_registry” roles created on openness-experience-kits. For dep
   role: docker_registry/master
   role: docker_registry/worker
    ```
-Following steps are processed during the docker registry deploy on openness setup :
+Following steps are processed during the docker registry deploy on openness setup.
 
 * Generate a self-signed certificate on Kubernetes Master Node.
 * Build and Deploy docker-registry pod on the Master Node.
 * Generate client.key and client.csr key on the worker node
 * Authenticate client.csr for server access.
 * Share public key and client.cert on trusted Worker Node and ansible build Host location
-  /etc/docker/ certs.d/<Kubernetes_Master_IP: port>
+  /etc/docker/certs.d/<Kubernetes_Master_IP: port>
 * After the docker registry deploy successfully Worker Node and Ansible host can access the private docker registry.
 * IP address of docker registry will be: “Kubernetes_Master_IP”
-* Port no of  docker registry will be: 5000
+* Port no of docker registry will be: 5000
 
 ## Docker registry image push
-Use the docker tag to create an alias of the image with the fully qualified path to your docker registry after tag success push image on docker registry
+Use the docker tag to create an alias of the image with the fully qualified path to your docker registry after tag success push image on docker registry.
 
  ```ini
-  docker tag nginx:latest  Kubernetes_Master_IP:5000/nginx:latest
+  docker tag nginx:latest Kubernetes_Master_IP:5000/nginx:latest
   docker push Kubernetes_Master_IP:5000/nginx:latest
    ```
-Now image tag with the fully qualified path to your private registry, you can push the image  to the registry using docker push command
+Now image tag with the fully qualified path to your private registry, you can push the image to the registry using docker push command.
 
 ## Docker registry image pull
 Use the docker pull command to pull the image from docker registry:
