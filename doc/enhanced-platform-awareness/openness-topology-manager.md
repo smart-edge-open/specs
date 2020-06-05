@@ -34,7 +34,7 @@ Topology Manager is a Kubelet component that aims to co-ordinate the set of comp
 
 ## Details - Topology manager support in OpenNESS
 
-Topology Manager is enabled by default with `best-effort` policy. You can change the settings before OpenNESS installation simply editing the `group_vars/all.yml` file:
+Topology Manager is enabled by default with `best-effort` policy. You can change the settings before OpenNESS installation simply editing the `group_vars/all/10-default.yml` file:
 
 ```yaml
 ### Kubernetes Topology Manager configuration (for worker)

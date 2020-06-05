@@ -82,24 +82,24 @@ To run the OpenNESS package with FPGA (FEC) functionality the feature needs to b
 
 #### Edge Controller
 
-To enable on Edge Controller, change variable `ne_opae_fpga_enable` in `group_vars/all.yml` to `true`:
+To enable on Edge Controller, change variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` to `true`:
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
 ```
 
 Additionally SRIOV must be enabled in OpenNESS:
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 kubernetes_cnis:
 - kubeovn
 - sriov
 ```
 
-Also enable/configure following options in `group_vars/all.yml`.
+Also enable/configure following options in `group_vars/all/10-default.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
 ```yaml
-# group_var/all.yml
+# group_var/all/10-default.yml
 
 fpga_sriov_userspace_enable: true
 

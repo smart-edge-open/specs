@@ -53,9 +53,11 @@ _Figure - CDN app deployment with NFD Features_
 
 ### Node Feature Discovery support in OpenNESS Network Edge
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `ne_nfd_enable` variable to `false` in the `group_vars/all.yml` before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `ne_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
 
 Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
+
+Node Feature Discovery is deployed in OpenNESS using Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
 
 #### Usage
 
@@ -118,7 +120,7 @@ spec:
 
 ### Node Feature Discovery support in OpenNESS On Premises
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `onprem_nfd_enable` variable to `false` in the `group_vars/all.yml` before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `onprem_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
 
 NFD service in OpenNESS On Premises consists of two software components:
 

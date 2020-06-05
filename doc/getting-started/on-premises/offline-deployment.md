@@ -55,8 +55,8 @@ Offline package mentioned in this document, means that user can compile product,
    ```
    tar xf <oek_repository_tar_file>
    ```
-5. Modify `git_repo_token` variable in `<oek_repository>/group_vars/all.yml` file and put your github token there.
-6. If proxy is used to access the internet, modify file `<oek_repository>/group_vars/all.yml` and change below variables, giving real ones instead of defaults listed:
+5. Modify `git_repo_token` variable in `<oek_repository>/group_vars/all/10-default.yml` file and put your github token there.
+6. If proxy is used to access the internet, modify file `<oek_repository>/group_vars/all/10-default.yml` and change below variables, giving real ones instead of defaults listed:
    ```yaml
    # Setup proxy on the machine - required if the Internet is accessible via proxy
    proxy_enable: true
@@ -156,7 +156,7 @@ In extracted offline package, in `openness-experience-kits` folder, you will fin
    ./deploy_onprem.sh controller
    ```
    This operation may take 40 minutes or more.<br>
-   Controller functionality will be installed on this server as defined in `group_vars/all.yml` using its IP address obtained from `[all]` section.<br>
+   Controller functionality will be installed on this server as defined in `group_vars/all/10-default.yml` using its IP address obtained from `[all]` section.<br>
    Once script completes successfully (it runs Ansible roles one by one), you may proceed to the subchapter for installing/deploying nodes using different script.
 
 ## Deploy nodes
@@ -166,7 +166,7 @@ Each server that will have node role installed, needs to have a private IP addre
 Assuming that no separate control server is used, and all nodes are deployed directly from Edge Controller server, follow these steps:
 1. Log into controller as root user.
 2. Go to `openness_experience_kits/group_vars` folder.
-3. Modify file `all.yml` and add required hosts to `[edenode_group]` in `inventory.ini`. Use names here obtained from `[all]` section.
+3. Modify file `all/10-default.yml` and add required hosts to `[edenode_group]` in `inventory.ini`. Use names here obtained from `[all]` section.
 4. Make sure you are able to at least ping one host (by IP address) from this group from this controller machine.
 5. Because controller deploys nodes via SSH protocol using ssh keys, controller public key needs to be copied to each node.
 6. For each node defined in `[edgenode_group]`, copy SSH public key.
@@ -226,8 +226,8 @@ proxy=http://proxy.example.com:3128
 
 Offline prepare and restore of the HDDL image is not enabled by default due to its size.
 
-In order to prepare the HDDL image, variable `onprem_hddl_enable` in `group_var/all.yml` must be set to `true` before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
-When restoring Offline package, make sure the variable `onprem_hddl_enable` in `group_var/all.yml` is set to `true` before running `deploy_onprem.sh`.
+In order to prepare the HDDL image, variable `onprem_hddl_enable` in `group_var/all/10-default.yml` must be set to `true` before running `prepare_offline_package.sh` script. This will result in OpenVINO (tm) toolkit being downloaded and the intermediate HDDL Docker image being built.
+When restoring Offline package, make sure the variable `onprem_hddl_enable` in `group_var/all/10-default.yml` is set to `true` before running `deploy_onprem.sh`.
 
 # Troubleshooting
 Q: <br>
