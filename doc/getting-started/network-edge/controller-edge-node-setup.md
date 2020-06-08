@@ -506,7 +506,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 
 7. Open the dashboard from the browser at `https://<controller-ip>/`. If the port was changed according to the OPTIONAL note at step 5, then use `https://<controller-ip>:<port>/` instead.
 
-> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
+    > **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
 8. Capture the bearer token using this command
 
