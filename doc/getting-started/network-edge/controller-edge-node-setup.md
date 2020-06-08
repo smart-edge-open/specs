@@ -517,6 +517,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 Paste the Token in the browser to log in as shown in this diagram
 
 ![Dashboard Login](controller-edge-node-setup-images/dashboard-login.png)
+
 _Figure - Kubernetes Dashboard Login_
 
 9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `INFRASTRUCTURE_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
