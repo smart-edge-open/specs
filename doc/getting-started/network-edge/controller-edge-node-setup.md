@@ -496,15 +496,15 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
       - <controller-ip>
     ```
 
-> **OPTIONAL**: By default the dashboard is accessible at port 443, it can be changed by changing the port value `- port: <port>` in the service spec.
+    > **OPTIONAL**: By default the dashboard is accessible at port 443, it can be changed by editing the port value `- port: <port>` in the service spec.
 
-1. Verify that the `kubernetes-dashboard` service has `EXTERNAL-IP` assigned, 
+6. Verify that the `kubernetes-dashboard` service has `EXTERNAL-IP` assigned, 
 
     ```shell
     kubectl -n kubernetes-dashboard get service kubernetes-dashboard
     ```
 
-2. Open the dashboard from the browser at `https://<controller-ip>/`. If the port was changed according to the OPTIONAL note at step 5, then use `https://<controller-ip>:<port>/` instead.
+7. Open the dashboard from the browser at `https://<controller-ip>/`. If the port was changed according to the OPTIONAL note at step 5, then use `https://<controller-ip>:<port>/` instead.
 
 > **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
