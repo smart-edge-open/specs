@@ -14,6 +14,11 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
     - [Single-node Network Edge cluster](#single-node-network-edge-cluster)
+  - [Docker registry](#Docker-registry)
+    - [Deploy Docker Registry](#Deploy-Docker-Registry)
+    - [Docker registry image push](#Docker-registry-image-push)
+    - [Docker registry image pull](#Docker-registry-image-pull)
+
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -122,6 +127,47 @@ In order to deploy Network Edge in single-node cluster scenario follow the steps
 3. Settings regarding the kernel, grub, hugepages & tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
    > Default settings in single-node cluster mode are those of the Edge Node, i.e. kernel & tuned customization enabled.
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
+## Docker Registry 
+
+Docker registry is a storage and distribution system for Docker Images. On OpenNESS environment, Docker registry service deployed as a pod on Master Node. Docker Registry authentication enabled with self-signed certificates and all worker and master node will have access to docker registry.
+
+## Deploy Docker Registry:
+
+Ansible “docker_registry” roles created on openness-experience-kits. For deploying docker registry on Kubernetes master node roles are enabled on openness-experience-kits “network_edge.yml” file.
+
+ ```ini
+  role: docker_registry/master
+  role: docker_registry/worker
+   ```
+Following steps are processed during the docker registry deploy on openness setup.
+
+* Generate a self-signed certificate on Kubernetes Master Node.
+* Build and Deploy docker-registry pod on the Master Node.
+* Generate client.key and client.csr key on the worker node
+* Authenticate client.csr for server access.
+* Share public key and client.cert on trusted Worker Node and ansible build Host location
+  /etc/docker/certs.d/<Kubernetes_Master_IP: port>
+* After the docker registry deploy successfully Worker Node and Ansible host can access the private docker registry.
+* IP address of docker registry will be: “Kubernetes_Master_IP”
+* Port no of docker registry will be: 5000
+
+## Docker registry image push
+Use the docker tag to create an alias of the image with the fully qualified path to your docker registry after tag success push image on docker registry.
+
+ ```ini
+  docker tag nginx:latest Kubernetes_Master_IP:5000/nginx:latest
+  docker push Kubernetes_Master_IP:5000/nginx:latest
+   ```
+Now image tag with the fully qualified path to your private registry, you can push the image to the registry using docker push command.
+
+## Docker registry image pull
+Use the docker pull command to pull the image from docker registry:
+
+ ```ini
+  docker pull Kubernetes_Master_IP:5000/nginx:latest
+   ```
+> NOTE: <Kubernetes_Master_IP> should be replaced as per our docker registry IP address.
+
 
 ## Kubernetes cluster networking plugins (Network Edge)
 
