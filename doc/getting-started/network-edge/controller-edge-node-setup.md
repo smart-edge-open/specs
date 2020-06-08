@@ -14,11 +14,10 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Quickstart](#quickstart)
     - [Application on-boarding](#application-on-boarding)
     - [Single-node Network Edge cluster](#single-node-network-edge-cluster)
-  - [Docker registry](#Docker-registry)
-    - [Deploy Docker Registry](#Deploy-Docker-Registry)
-    - [Docker registry image push](#Docker-registry-image-push)
-    - [Docker registry image pull](#Docker-registry-image-pull)
-
+  - [Docker Registry](#docker-registry)
+    - [Deploy Docker Registry:](#deploy-docker-registry)
+    - [Docker registry image push](#docker-registry-image-push)
+    - [Docker registry image pull](#docker-registry-image-pull)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -127,11 +126,12 @@ In order to deploy Network Edge in single-node cluster scenario follow the steps
 3. Settings regarding the kernel, grub, hugepages & tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
    > Default settings in single-node cluster mode are those of the Edge Node, i.e. kernel & tuned customization enabled.
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
+
 ## Docker Registry 
 
 Docker registry is a storage and distribution system for Docker Images. On OpenNESS environment, Docker registry service deployed as a pod on Master Node. Docker Registry authentication enabled with self-signed certificates and all worker and master node will have access to docker registry.
 
-## Deploy Docker Registry:
+### Deploy Docker Registry:
 
 Ansible “docker_registry” roles created on openness-experience-kits. For deploying docker registry on Kubernetes master node roles are enabled on openness-experience-kits “network_edge.yml” file.
 
@@ -151,7 +151,7 @@ Following steps are processed during the docker registry deploy on openness setu
 * IP address of docker registry will be: “Kubernetes_Master_IP”
 * Port no of docker registry will be: 5000
 
-## Docker registry image push
+### Docker registry image push
 Use the docker tag to create an alias of the image with the fully qualified path to your docker registry after tag success push image on docker registry.
 
  ```ini
@@ -160,7 +160,7 @@ Use the docker tag to create an alias of the image with the fully qualified path
    ```
 Now image tag with the fully qualified path to your private registry, you can push the image to the registry using docker push command.
 
-## Docker registry image pull
+### Docker registry image pull
 Use the docker pull command to pull the image from docker registry:
 
  ```ini
@@ -443,7 +443,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 1. Deploy the dashboard using `kubectl`
 
     ```shell
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml
     ```
 
 2. Grep all the pods & namespaces
@@ -483,19 +483,28 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
     kubectl apply -f dashboard-admin-user.yaml
     ```
 
-5. Edit kubernetes-dashboard service and change `type: ClusterIP` to `type: NodePort` and save the file
+5. Edit kubernetes-dashboard service through the following command,
 
     ```shell
     kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
     ```
 
-6. Note the port on which the dashboard is exposed
+    Add `externalIPs` to the service spec — replace `<controller-ip>` with the actual controller IP address,
+    ```yaml
+    spec:
+      externalIPs:
+      - <controller-ip>
+    ```
+
+> **OPTIONAL**: By default the dashboard is accessible at port 443, it can be changed by changing the port value `- port: <port>` in the service spec.
+
+1. Verify that the `kubernetes-dashboard` service has `EXTERNAL-IP` assigned, 
 
     ```shell
     kubectl -n kubernetes-dashboard get service kubernetes-dashboard
     ```
 
-7. Open the dashboard from the browser at `https://<controller-ip>:<port>/`, use the port that was noted in the previous steps
+2. Open the dashboard from the browser at `https://<controller-ip>/`. If the port was changed according to the OPTIONAL note at step 5, then use `https://<controller-ip>:<port>/` instead.
 
 > **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
