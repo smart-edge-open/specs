@@ -445,7 +445,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 1. Deploy the dashboard using `kubectl`
 
     ```shell
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml
     ```
 
 2. Grep all the pods & namespaces
@@ -485,21 +485,30 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
     kubectl apply -f dashboard-admin-user.yaml
     ```
 
-5. Edit kubernetes-dashboard service and change `type: ClusterIP` to `type: NodePort` and save the file
+5. Edit kubernetes-dashboard service through the following command,
 
     ```shell
     kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
     ```
 
-6. Note the port on which the dashboard is exposed
+    Add `externalIPs` to the service spec — replace `<controller-ip>` with the actual controller IP address,
+    ```yaml
+    spec:
+      externalIPs:
+      - <controller-ip>
+    ```
+
+    > **OPTIONAL**: By default the dashboard is accessible at port 443, it can be changed by editing the port value `- port: <port>` in the service spec.
+
+6. Verify that the `kubernetes-dashboard` service has `EXTERNAL-IP` assigned, 
 
     ```shell
     kubectl -n kubernetes-dashboard get service kubernetes-dashboard
     ```
 
-7. Open the dashboard from the browser at `https://<controller-ip>:<port>/`, use the port that was noted in the previous steps
+7. Open the dashboard from the browser at `https://<controller-ip>/`. If the port was changed according to the OPTIONAL note at step 5, then use `https://<controller-ip>:<port>/` instead.
 
-> **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
+    > **NOTE**: Firefox browser can be an alternative to Chrome and Internet Explorer in case the dashboard web page is blocked due to certification issue.
 
 8. Capture the bearer token using this command
 
@@ -510,6 +519,7 @@ Follow the below steps to get the Kubernetes dashboard installed after OpenNESS 
 Paste the Token in the browser to log in as shown in this diagram
 
 ![Dashboard Login](controller-edge-node-setup-images/dashboard-login.png)
+
 _Figure - Kubernetes Dashboard Login_
 
 9. Go to the OpenNESS Controller installation directory and edit the `.env` file with the dashboard link `INFRASTRUCTURE_UI_URL=https://<controller-ip>:<port>/` in order to get it integrated with the OpenNESS controller UI
