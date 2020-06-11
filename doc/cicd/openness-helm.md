@@ -69,6 +69,6 @@ Besides that, OpenNESS also provides helm charts for sample applications and ser
 The usage of invididual helm chart can refer to [OpenNESS specs repos](https://github.com/otcshare/specs). 
 
 # References
-- [Helm Website]: <https://helm.sh> 
-- [Container Experience Kits]: <https://github.com/intel/container-experience-kits>
-- [Helm Github Repo]: <https://github.com/helm/charts>
+- [Helm Website](https://helm.sh)
+- [Container Experience Kits](https://github.com/intel/container-experience-kits)
+- [Helm Github Repo](https://github.com/helm/charts)
