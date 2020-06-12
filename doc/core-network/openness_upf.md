@@ -67,7 +67,7 @@ upf-cnf     1.0                 e0ce467c13d0        15 hours ago        490MB
 
 To keep the bring-up setup simple and to the point, UPF configuration can be provided through the helm-charts.A reference helm-chart is available at  [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
-Below are the list of minimal configuration parameters that one can think of for a VPP based applications like UPF. 
+Below are the list of minimal configuration parameters that one can think of for a VPP based applications like UPF.
 
 ## Platform specific information
 
@@ -273,7 +273,7 @@ Here's an example which configures the following information
 - hugePageSize=hugepages-1Gi # hugepage size
 - hugePageAmount=4Gi        # Amount of hugepages to be reserved for the pod
 - upf.pci_bus_addr=af:0a.1  # full format of the PCI bus addr of the VF interface the UPF needs to be attached
-- upf.uio_driver=vfi_pcio   # UIO driver used
+- upf.uio_driver=igb_uio   # UIO driver used vfio-pci or igb_uio
 - upf.main_core=2           # main core
 - upf.worker_cores="3\,4"   # worker cores
 - upf.pfcp_thread.cores=5   # core for the pfcp thread
@@ -284,11 +284,11 @@ Here's an example which configures the following information
 - upf.n6_gw_addr=192.168.1.1      # the N6 gateway IP address
 
 
-helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=af:0a.1 --set upf.uio_driver=vfi_pcio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
 ```
 
 ## To start UPF
-- In this reference validation, UPF application will be started manually after UPF POD deployed successfully. 
+- In this reference validation, UPF application will be started manually after UPF POD deployed successfully.
 
 ```code
 ne-controller# kubectl exec -it upf-cnf -- /bin/bash
