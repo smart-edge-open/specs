@@ -67,6 +67,7 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-tunable-exec.md</b>: Configurable startup command support for containers in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-tunable-exec.md)
    *  [<b>openness-port-forward.md</b>: Support for setting up port forwarding of a container in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-port-forward.md)
    *  [<b>openness-shared-storage.md</b>: Shared storage for containers in OpenNESS On-Prem mode](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-shared-storage.md)
+   *  [<b>openness-vca.md</b>: Visual Compute Accelerator Card - Analytics (VCAC-A)](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md)
 
 ## Dataplane
 
