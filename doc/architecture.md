@@ -2,56 +2,55 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Architecture and Solution overview
-- [OpenNESS Architecture and Solution overview](#openness-architecture-and-solution-overview)
-  - [Introduction](#introduction)
-    - [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
-  - [Overview](#overview)
-    - [OpenNESS Controller Community Edition](#openness-controller-community-edition)
-      - [Details of Edge Controller Microservices functionality in Native deployment mode](#details-of-edge-controller-microservices-functionality-in-native-deployment-mode)
-      - [Details of Edge Controller Microservices functionality in Infrastructure deployment mode](#details-of-edge-controller-microservices-functionality-in-infrastructure-deployment-mode)
-      - [Edge Application Onboarding](#edge-application-onboarding)
-        - [Application onboarding in OpenNESS Native deployment mode](#application-onboarding-in-openness-native-deployment-mode)
-        - [Application onboarding in OpenNESS Infrastructure deployment mode](#application-onboarding-in-openness-infrastructure-deployment-mode)
-    - [OpenNESS Edge Node](#openness-edge-node)
-      - [Edge Node Microservices](#edge-node-microservices)
-        - [Edge Node Microservices OpenNESS Native deployment mode](#edge-node-microservices-openness-native-deployment-mode)
-        - [Edge Node Microservices OpenNESS Infrastructure deployment mode](#edge-node-microservices-openness-infrastructure-deployment-mode)
-      - [Edge Application API support](#edge-application-api-support)
-      - [Edge Compute Applications: Native on the Edge Node](#edge-compute-applications-native-on-the-edge-node)
-      - [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
-    - [Multi Access Support](#multi-access-support)
-  - [Deployment Scenarios](#deployment-scenarios)
-    - [On-Premises Edge Deployment Scenario](#on-premises-edge-deployment-scenario)
-    - [Network Edge Deployment Scenario](#network-edge-deployment-scenario)
-  - [OpenNESS Support for Deployment flavors](#openness-support-for-deployment-flavors)
-    - [RAN node flavor](#ran-node-flavor)
-    - [Core node flavor](#core-node-flavor)
-    - [Application node flavor](#application-node-flavor)
-    - [OnPremises application node flavor](#onpremises-application-node-flavor)
-    - [OnPremises all-in-one node - CERA](#onpremises-all-in-one-node---cera)
-  - [Enhanced Platform Awareness through OpenNESS](#enhanced-platform-awareness-through-openness)
-  - [OpenNESS Edge Node Applications](#openness-edge-node-applications)
-    - [Producer Application](#producer-application)
-    - [Consumer Application](#consumer-application)
-    - [Example of Producer and Consumer Applications](#example-of-producer-and-consumer-applications)
-    - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
-    - [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
-  - [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
-    - [Edge Application APIs](#edge-application-apis)
-    - [Edge Application Authentication APIs](#edge-application-authentication-apis)
-    - [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
-    - [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
-    - [Core Network Configuration APIs for edge compute](#core-network-configuration-apis-for-edge-compute)
-    - [Core Network Configuration API for 5G](#core-network-configuration-api-for-5g)
-    - [Core Network Configuration API for 4G CUPS](#core-network-configuration-api-for-4g-cups)
-    - [OpenNESS Controller APIs](#openness-controller-apis)
-  - [OpenNESS OS environment](#openness-os-environment)
-  - [OpenNESS steps to get started](#openness-steps-to-get-started)
-  - [OpenNESS Repository Structure](#openness-repository-structure)
-  - [Other References](#other-references)
-  - [List of Abbreviations](#list-of-abbreviations)
+- [Introduction](#introduction)
+  - [Key Terminologies defining OpenNESS](#key-terminologies-defining-openness)
+- [Overview](#overview)
+  - [OpenNESS Controller Community Edition](#openness-controller-community-edition)
+    - [Details of Edge Controller Microservices functionality in Native deployment mode](#details-of-edge-controller-microservices-functionality-in-native-deployment-mode)
+    - [Details of Edge Controller Microservices functionality in Infrastructure deployment mode](#details-of-edge-controller-microservices-functionality-in-infrastructure-deployment-mode)
+    - [Edge Application Onboarding](#edge-application-onboarding)
+      - [Application onboarding in OpenNESS Native deployment mode](#application-onboarding-in-openness-native-deployment-mode)
+      - [Application onboarding in OpenNESS Infrastructure deployment mode](#application-onboarding-in-openness-infrastructure-deployment-mode)
+  - [OpenNESS Edge Node](#openness-edge-node)
+    - [Edge Node Microservices](#edge-node-microservices)
+      - [Edge Node Microservices OpenNESS Native deployment mode](#edge-node-microservices-openness-native-deployment-mode)
+      - [Edge Node Microservices OpenNESS Infrastructure deployment mode](#edge-node-microservices-openness-infrastructure-deployment-mode)
+    - [Edge Application API support](#edge-application-api-support)
+    - [Edge Compute Applications: Native on the Edge Node](#edge-compute-applications-native-on-the-edge-node)
+    - [Edge Compute Applications: Local Breakout](#edge-compute-applications-local-breakout)
+  - [Multi Access Support](#multi-access-support)
+- [Deployment Scenarios](#deployment-scenarios)
+  - [On-Premises Edge Deployment Scenario](#on-premises-edge-deployment-scenario)
+  - [Network Edge Deployment Scenario](#network-edge-deployment-scenario)
+- [OpenNESS Support for Deployment flavors](#openness-support-for-deployment-flavors)
+  - [RAN node flavor](#ran-node-flavor)
+  - [Core node flavor](#core-node-flavor)
+  - [Application node flavor](#application-node-flavor)
+  - [OnPremises application node flavor](#onpremises-application-node-flavor)
+  - [OnPremises all-in-one node - CERA](#onpremises-all-in-one-node---cera)
+- [Enhanced Platform Awareness through OpenNESS](#enhanced-platform-awareness-through-openness)
+- [OpenNESS Edge Node Applications](#openness-edge-node-applications)
+  - [Producer Application](#producer-application)
+  - [Consumer Application](#consumer-application)
+  - [Example of Producer and Consumer Applications](#example-of-producer-and-consumer-applications)
+  - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
+  - [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
+- [OpenNESS Microservices and APIs](#openness-microservices-and-apis)
+  - [Edge Application APIs](#edge-application-apis)
+  - [Edge Application Authentication APIs](#edge-application-authentication-apis)
+  - [Edge Lifecycle Management APIs](#edge-lifecycle-management-apis)
+  - [Edge Virtualization Infrastructure APIs](#edge-virtualization-infrastructure-apis)
+  - [Core Network Configuration APIs for edge compute](#core-network-configuration-apis-for-edge-compute)
+  - [Core Network Configuration API for 5G](#core-network-configuration-api-for-5g)
+  - [Core Network Configuration API for 4G CUPS](#core-network-configuration-api-for-4g-cups)
+  - [OpenNESS Controller APIs](#openness-controller-apis)
+- [OpenNESS OS environment](#openness-os-environment)
+- [OpenNESS steps to get started](#openness-steps-to-get-started)
+- [OpenNESS Repository Structure](#openness-repository-structure)
+- [Other References](#other-references)
+- [List of Abbreviations](#list-of-abbreviations)
 
 ## Introduction
 OpenNESS is an open source software toolkit to enable easy orchestration of edge services and network functions across diverse network platform and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
@@ -356,7 +355,11 @@ In this mode OVN/OVS can support:
 _Figure - Network Edge Deployment Scenario with OVS as dataplane_
 
 ## OpenNESS Support for Deployment flavors  
-Having looked at the Deployment scenarios let us now look a the individual Deployment flavors supported by OpenNESS. Deployment flavors here refers to the types of nodes that typically are deployed at the edge using OpenNESS. Flavors are mainly categorized by the workloads that is running on the node. Below are the example of Flavors supported on the network edge:
+Having looked at the Deployment scenarios let us now look a the individual Deployment flavors supported by OpenNESS. Deployment flavors here refers to the types of nodes that typically are deployed at the edge using OpenNESS. Flavors are mainly categorized by the workloads that is running on the node.
+
+The [OpenNESS Deployment Flavors](flavors.md) document covers the details of the supported deployment flavors by OpenNESS and their installation steps using the OpenNESS Experience Kits.
+
+Below are the example of Flavors supported on the network edge:
 
 ### RAN node flavor 
 RAN node here typically refers to RAN DU and CU 4G/5G nodes deployed on the edge or far edge. In some cases DU might be integrated in to the radio. The example RAN deployment flavor uses FlexRAN as reference DU. 
