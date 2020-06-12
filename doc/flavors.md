@@ -3,8 +3,8 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
-# OpenNESS Deployment Flavors  
-
+# OpenNESS Deployment Flavors
+This document introduces the supported deployment flavors that are deployable through the OpenNESS Experience Kits (OEK).
 - [Minimal Flavor](#minimal-flavor)
 - [FlexRAN Flavor](#flexran-flavor)
 - [Media Analytics Flavor](#media-analytics-flavor)
@@ -13,7 +13,19 @@ Copyright (c) 2020 Intel Corporation
 - [CDN Caching Flavor](#cdn-caching-flavor)
 
 ## Minimal Flavor
-<todo>
+The pre-defined *minimal* deployment flavor provisions the minimal set of configurations for bringing up the OpenNESS network edge deployment.
+
+The steps to get it installed are as the following:
+1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+2. Run OEK deployment script:
+    ```shell
+    $ deploy_ne.sh -f minimal
+    ```
+
+This deployment flavor enables the following ingredients:
+* Node Feature Discovery
+* The default Kubernetes CNI: `kube-ovn`
+* Telemetry
 
 ## FlexRAN Flavor 
 <todo>
