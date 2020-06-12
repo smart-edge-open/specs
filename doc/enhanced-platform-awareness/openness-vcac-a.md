@@ -22,7 +22,7 @@ The Visual Cloud Accelerator Card - Analytics (VCAC-A) equips 2nd Generation Int
 Being equipped with its own CPU, VCAC-A card is installed with a standalone operating system apart from the host server. Thereby, the VCAC-A card can be topologically regarded as a standalone "worker node" with VPU/GPU capabilities. The VCAC-A card is connected to the host Intel Xeon server over PCI-Express non-transparent bridge (NTB) – over a virtual ethernet network `172.32.x.1/24`. The host kernel must be patched in order to enable, inter alia, virtual ethernet over PCIe.
 
 > **Terminology** 
-> * *Edge worker node* and *VCA host* terms will be used interchangeably throughout this document to represent the physical node where the VCAC-A cards are plugged in.
+> * *Edge worker node* and *VCA host* terms will be used interchangeably throughout this document to represent the physical node where the VCAC-A cards are connected to.
 > * *VCA node* term represents the worker node in the OpenNESS cluster – the VCAC-A card is the incarnation of the VCA node.
 > * The full acronym *VCAC-A* is loosely used when talking about the PCIe card.
 
@@ -53,7 +53,7 @@ Another construct used when deploying OpenNESS is the `VCA pool` which is a simi
 
 On a related note, the VCA nodes follows a special naming convention such that they are assigned the name of their host nodes appended with *vca* keyword and a number, i.e: `<vca-host-name>-vcaX`. The number is an incremental index to discriminate between multiple VCAC-A cards installed.
 
-In the example below, this is a cluster composed of 1 master `silpixa00399671`, 1 VCA host `silpixa00400194` and 3 VCAC-A cards: `silpixa00400194-vca1`, `silpixa00400194-vca2` and `silpixa00400194-vca3`. The 3 VCAC-A cards are plugged in node `silpixa00400194`.
+In the example below, this is a cluster composed of 1 master `silpixa00399671`, 1 VCA host `silpixa00400194` and 3 VCAC-A cards: `silpixa00400194-vca1`, `silpixa00400194-vca2` and `silpixa00400194-vca3`. The 3 VCAC-A cards are connected to node `silpixa00400194`.
 ```shell
 $ kubectl get nodes
 NAME                   STATUS   ROLES    AGE   VERSION
@@ -66,7 +66,7 @@ silpixa00400194-vca3   Ready    worker   31h   v1.18.2
 
 For the example above, the 3 VCA nodes are grouped into VCA pool labelled as `vcac-pool=silpixa00400194`.
 
-> **NOTE:** All the VCA hosts and nodes are labelled with `vcac-zone=yes`, i.e: from the example above, the VCA host `silpixa00400194` and the 3 VCA nodes are labelled with `vcac-zone=yes`.
+> **NOTE:** All the VCA hosts and nodes are labelled with `vcac-zone=yes`, i.e: back to the example above, the VCA host `silpixa00400194` and the 3 VCA nodes are labelled with `vcac-zone=yes`.
 
 ## Node Feature Discovery (NFD)
 Kubernetes NFD files are pre-packaged within the vcad image of the VCAC-A card and is located at `/opt/intel/openvino/k8s-nfd/nfd-vca-features` file. This file is mounted to `/etc/kubernetes/node-feature-discovery/features.d/` during the VCAC-A installation sequence and accordingly the VCA node is labeled by *nfd-master* with these features.
@@ -92,7 +92,7 @@ $ kubectl get no -o json | jq '.items[].metadata.labels'
 ## VPU, GPU Device Plugins & HDDL Daemonset
 Kubernetes provides the [Device Plugins framework](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/) that is used to advertise system hardware resources. The device plugins of interest for VCAC-A are: [VPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/vpu_plugin/README.md) and [GPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/gpu_plugin/README.md) that are installed as part of the VCAC-A installation sequence that is performed by OEK.
 
-Another ingredient involved in the inference execution through VCAC-A VPUs is the *HDDL-daemon* that acts as an arbiter for the various applications/Pods trying to gain access to VPU resources, is deployed as a [Kubernetes Daemonset](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/script/setup_hddl_daemonset.yaml). Thereby, the OpenNESS cluster is ready for onboarding application availing the VCAC-A acceleration without worrying about other dependencies.
+Another ingredient involved in the inference execution through VCAC-A VPUs is the *HDDL-daemon* that is deployed as a [Kubernetes Daemonset](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/script/setup_hddl_daemonset.yaml) – it acts as an arbiter for the various applications/Pods trying to gain access to VPU resources,. Thereby, the OpenNESS cluster is ready for onboarding application availing the VCAC-A acceleration without worrying about other dependencies.
 
 ```shell
 $ kubectl get daemonsets -A
@@ -114,7 +114,7 @@ The VCAC-A VPU metrics are exported by the *NodeExporter* that integrates with P
 ```
 $ /opt/intel/vcaa/vpu_metric/run.sh start
 ```
-> The VPU metrics NodeExporter script is executed as part of the VCAC-A installation sequence that is performed by OEK.
+> The VPU metrics exporter script is executed as part of the VCAC-A installation sequence that is performed by OEK.
 
 Telemetry-Aware Scheduling (TAS) is the mechanism of defining policies so that the controller aims to fulfil at run-time based on the collected real-time metrics. A sample VCAC-A VPU telemetry policy file is given below that is applied by default as part of the installation sequence performed by OEK,
 
@@ -151,23 +151,25 @@ The pre-define OpenNESS flavor *media-analytics-vca* is provided to provision an
 
 The VCAC-A installation process involves:
 1. Pulling the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies
-2. Apply kernel patches and build kernel RPM
+2. Apply CentOS 7.6 kernel patches and build kernel RPM
 3. Apply module patches and build driver RPM
 4. Build daemon utilities RPM
-5. Pull Ubuntu docker image for building the VCAC-A system image
-6. Download the required package from website for the VCAC-A system image
-7. Apply kernel patches and build kernel deb for the VCAC-A system image
-8. Apply module patches and build driver deb for the VCAC-A system image
-9.  Generate VCAD base image for VCAC-A system image
-10. Install the dependency and components (MSS, OpenCL, OpenVINO)
-11. Boot up the VCAC-A system image
-12. Configure the firewall to allow VCAC-A NATting
-13. Install docker-ce & kubernetes
-14. Join the cluster
-15. Attach VCA NFD to kubernetes
-16. Deploy VPU, GPU device plugins and HDDL Daemonset
-17. Start VPU metrics exporter
-18. Deploy VPU VCAC-A TAS policy
+5. Install docker-ce & kubernetes on the VCA host
+6. Join the VCA host to the OpenNESS cluster
+7. Pull Ubuntu docker image for building the VCAC-A system image
+8. Download the required package from website for the VCAC-A system image
+9. Apply Ubuntu 18.04 kernel patches and build kernel deb for the VCAC-A system image
+10. Apply module patches and build driver deb for the VCAC-A system image
+11. Generate VCAD base image for VCAC-A system image
+12. Install the dependency and components (MSS, OpenCL, OpenVINO)
+13. Boot up the VCAC-A system image
+14. Configure the firewall to allow VCAC-A NATting
+15. Install docker-ce & kubernetes on the VCA node
+16. Join the VCA node to the OpenNESS cluster
+17. Attach VCA NFD to kubernetes
+18. Deploy VPU, GPU device plugins and HDDL Daemonset
+19. Start VPU metrics exporter
+20. Deploy VPU VCAC-A TAS policy
 
 ## References
 - [Intel(R) Visual Cloud](https://www.intel.in/content/www/in/en/cloud-computing/visual-cloud.html)
