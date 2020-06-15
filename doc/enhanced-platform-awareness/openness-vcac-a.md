@@ -120,9 +120,9 @@ $ /opt/intel/vcaa/vpu_metric/run.sh start
 ```
 > The VPU metrics exporter script is executed as part of the VCAC-A install sequence that is performed by the OEK.
 
-![Smart City Setup](vcaca-images/telemetry-vcac-a.png)
+![Exporting VCAC-A VPU Metrics to OpenNESS Telemetry](vcaca-images/vcac-a-vpu-metrics.png)
 
-_Figure - VCAC-A Telemetry with OpenNESS_
+_Figure - Exporting VCAC-A VPU Metrics to OpenNESS Telemetry_
 
 Telemetry-Aware Scheduling (TAS) is the mechanism of defining policies that the controller aims to fulfil at run-time based on the collected real-time metrics. A sample VCAC-A VPU telemetry policy is given below that is applied by default as part of the install sequence performed by the OEK,
 
@@ -153,6 +153,17 @@ spec:
         operator: LessThan
 ```
 > The above telemetry policy is applied by default as part of the VCAC-A install sequence that is performed by OEK.
+
+The diagram below demonstrates an example use of the VCAC-A telemetry within the OpenNESS context:
+
+![Using VCAC-A Telemetry with OpenNESS](vcaca-images/using-vcac-a-telemetry.png)
+
+_Figure - Using VCAC-A Telemetry with OpenNESS_
+
+1. The default VCAC-A VPU telemetry policy `TASPolicy` is defined and applied to the OpenNESS cluster at deployment time.
+2. The `GStreamer pipeline` Pods get scheduled on VCA node (VCA pool A in the given example) based on the reported metrics.
+3. The `Media Analytics Applications` get scheduled on VCA pool A according to their Pod specs and are able to consume the services produced by the `GStreamer pipeline` Pods.
+4. Now that the VPU device usage became 60, when the `OpenVINO` application turns up, it gets scheduled on VCA pool B in fulfillment of the policy.
 
 ## Media-Analytics-VCA Flavor
 The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [OpenNESS Flavors](../flavors.md) document. Applying this deployment flavors encompasses the VCAC-A installation.
