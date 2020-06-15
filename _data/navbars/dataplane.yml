@@ -1,0 +1,23 @@
+title: "Dataplane"
+path: /dataplane/
+order: 6
+section:
+  - title: OpenNESS InterAPP
+    path: /doc/dataplane/openness-interapp
+    meta_title: InterApp Communication Support in OpenNESS
+    meta_description: OpenNESS provides InterApp Communication support for both the On-Premises and Network edge modes of OpenNESS.
+    
+  - title: OpenNESS OVN
+    path: /doc/dataplane/openness-ovn
+    meta_title: OpenNESS Support for OVS as Dataplane with OVN
+    meta_description: The primary objective of supporting OVN/OVS in OpenNESS is to demonstrate the capability of using a standard dataplane like OVS for an Edge Compute platform. 
+    
+  - title: OpenNESS NTS
+    path: /doc/dataplane/openness-nts
+    meta_title: OpenNESS NTS - Dataplane support for Edge Cloud between ENB and EPC Deployment
+    meta_description: OpenNESS NTS is a Dataplane component that provides a network traffic control service and a data forwarding service to mobile edge applications, specifically for S1-U deployments.
+    
+  - title: OpenNESS Userspace CNI
+    path: /doc/dataplane/openness-userspace-cni
+    meta_title: OpenNESS Userspace CNI, Setup Userspace CNI
+    meta_description: Userspace CNI is a Container Network Interface Kubernetes plugin that was designed to simplify the process of deployment of DPDK based applications in Kubernetes pods.
