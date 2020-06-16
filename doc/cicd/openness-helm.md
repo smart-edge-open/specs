@@ -24,7 +24,7 @@ Helm 3 is used for OpenNESS, since it is more simple to use and secure than helm
    ```yaml
    - role: kubernetes/helm
    ```
-To check whether helm is installed successfully, on the master run:
+To check whether helm is installed successfully, on the OpenNESS controller run:
    ```bash
    $ helm version
    version.BuildInfo{Version:"v3.1.2", GitCommit:"d878d4d45863e42fd5cff6743294a11d28a9abce", GitTreeState:"clean", GoVersion:"go1.13.8"}
@@ -47,18 +47,35 @@ For the platform related helm charts, [OpenNESS Experience Kits](https://github.
 After completion of OpenNESS OEK, check the directory:
    ```bash
    $ ls /opt/openness-helm-charts/
-   vpu-plugin gpu-plugin collectd  otel_collector  prometheus
+   vpu-plugin gpu-plugin node-feature-discovery prometheus
    ```
 
 To check helm releases, run:
    ```bash
-   $ helm list
-   NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                                           APP VERSION
-   prometheus-adapter      default         1               2020-06-10 16:05:46.435712274 +0800 CST deployed        prometheus_custom_metrics_helm_chart-0.1.0      1.0
-   intel-gpu-plugin        default         1               2020-05-08 03:10:05.464149345 +0800 CST deployed        intel-gpu-plugin-0.1.0                          0.17.0
-   intel-vpu-plugin        default         1               2020-05-08 03:23:44.595413394 +0800 CST deployed        intel-vpu-plugin-0.1.0                          0.17.0
+   $ helm list -A
+   NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                                APP VERSION
+   nfd-release             openness        1               2020-05-08 05:13:54.900713372 +0800 CST deployed        node-feature-discovery-0.5.0         0.5.0
+   prometheus              telemetry       1               2020-05-08 05:12:09.346590474 +0800 CST deployed        prometheus-11.1.6                    2.16.0
+   intel-gpu-plugin        default         1               2020-05-08 03:10:05.464149345 +0800 CST deployed        intel-gpu-plugin-0.1.0               0.17.0
+   intel-vpu-plugin        default         1               2020-05-08 03:23:44.595413394 +0800 CST deployed        intel-vpu-plugin-0.1.0               0.17.0
    ```
 > **Note:**  Different OpenNESS flavors contain different platform features. So above is just an example for the helm charts.
+
+To see the values that took effect for a specific release (For example: nfd-release), run:
+   ```bash
+   $ helm get values nfd-release -n openness
+   USER-SUPPLIED VALUES:
+   image:
+      repository: 10.240.224.84:5000/node-feature-discovery
+      tag: v0.5.0
+   serviceAccount:
+      name: nfd-master
+   weavenet_cidr: 10.32.0.0/12
+   weavenet_cidr_enabled: false
+   ```
+
+To customize values and upgrade, user can modify values.yaml file of the helm charts and use `helm upgrade`. (More details refer to [Helm Commands Guidance](https://helm.sh/docs/helm/))
+
 
 - Sample applications, network functions and services that can be deployed and verified on the OpenNESS platform:
   - Applications
