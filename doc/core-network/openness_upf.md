@@ -50,13 +50,13 @@ These scripts are validated through a reference UPF solution (implementation bas
 
 1. To keep the build and deploy process simple for reference, docker build and image are stored on the Edge node itself.
 
-```code
+```bash
 ne-node# cd <5g-upf-binary-package>
 ```
 
-2. Copy the docker files to the node and build the docker image. A reference docker files and helm-chart for deploying the upf is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+2. Copy the docker files to the node and build the docker image. Reference docker files and helm-chart for deploying the upf is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
 
-```code
+```bash
 ne-node# ./build_image.sh
 
 ne-node# docker image ls | grep upf
@@ -81,7 +81,9 @@ Below are the list of minimal configuration parameters that one can think of for
 # How to start
 
 1. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` . Make sure that **multus**, **sriov-cni** and **sriov-device-plugin** pods are alive on controller and the node. Additionally on the node the **interface service** pod should be alive.
-  ```yaml
+  ```bash
+  ne-controller# kubectl get po --all-namespaces
+
   NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
   kube-ovn      kube-ovn-cni-8x5hc                        1/1     Running   17         7d19h
   kube-ovn      kube-ovn-cni-p6v6s                        1/1     Running   1          7d19h
@@ -115,19 +117,19 @@ Below are the list of minimal configuration parameters that one can think of for
 
 2.  Make sure that the VF to the mentioned interface on node host is created. You should see a new interface type “Ethernet Virtual Function“. In the below example for the configuration where 2 VF's(Virtual Functions Interfaces) have been requested for 1 PF (Physical functional interface), the output shows for the PF "af:00.0" the corresponding two VF's are "af:0a.0" and "af:0a.1"
 
-```yaml
-lspci | grep Eth
+```bash
+ne-node# lspci | grep Eth
 af:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
 af:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
 af:0a.0 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
 af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
 ```
-3. enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
+3. Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
 
-```yaml
-/opt/dpdk-18.11.2/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
-/opt/dpdk-18.11.2/usertools/dpdk-devbind.py --status
+```bash
+ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
+ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --status
 Network devices using DPDK-compatible driver
 ============================================
 0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
@@ -140,11 +142,11 @@ Network devices using kernel driver
 
 4. Check the configmaps has the resource name as intel_sriov_dpdk along with the devices and drivers. In example below the devices **154c** and the driver **igb_uio** are part of the configmaps. If the device and driver are not present in the configmap they need to be added.
 
-```yaml
-kubectl get configmaps -n kube-system | grep sriov
+```bash
+ne-controller# kubectl get configmaps -n kube-system | grep sriov
 sriov-release-sriovdp-config         1      55m
 
-kubectl describe configmap sriov-release-sriovdp-config -n kube-system
+ne-controller# kubectl describe configmap sriov-release-sriovdp-config -n kube-system
 Name:         sriov-release-sriovdp-config
 Namespace:    kube-system
 Labels:       <none>
@@ -179,12 +181,12 @@ Events:  <none>
 
 5. Check and change the network attachment from sriov_netdevice to sriov_dpdk
 
-```yaml
-- kubectl get network-attachment-definitions
+```bash
+ne-controller# kubectl get network-attachment-definitions
   NAME             AGE
   sriov-openness   59m
 
-- kubectl describe network-attachment-definitions sriov-openness
+ne-controller# kubectl describe network-attachment-definitions sriov-openness
   Name:         sriov-openness
   Namespace:    default
   Labels:       <none>
@@ -201,7 +203,7 @@ Events:  <none>
     Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
   Events:    <none>
 
-- kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_netdevice": "2",
 
 - kubectl delete network-attachment-definitions sriov-openness
@@ -228,7 +230,7 @@ Events:  <none>
   }'
   EOF
 
-  - kubectl describe network-attachment-definitions sriov-openness
+ne-controller# kubectl describe network-attachment-definitions sriov-openness
   Name:         sriov-openness
   Namespace:    default
   Labels:       <none>
@@ -248,22 +250,23 @@ Events:  <none>
 
 6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of node and it will restart automatically in about 20 seconds
 
-```yaml
-kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
+```bash
+ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
 ```
 
 7. Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
-```yaml
-kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+
+```bash
+ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_dpdk": "1",
   "intel.com/intel_sriov_netdevice": "1",
 ```
 
 ## Deploy UPF POD from OpenNESS controller
-- In this reference validation, UPF will be deployed using helm charts
 
-```yaml
-ne-controller# helm install <pod-name> <path to the upf helm chart> <list of configuration values>
+In this reference validation, UPF will be deployed using helm charts. Reference helm chart for upf is available at [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
+
+helm install \<pod-name\> \<path to the upf helm chart\> \<list of configuration values\>
 
 Here's an example which configures the following information
 - image.repository=upf-cnf  # image repository to upf-cnf i.e. local image on the node
@@ -283,28 +286,30 @@ Here's an example which configures the following information
 - upf.n6_addr=192.168.1.170/24    # the N6 I/f ip address along with subnet info
 - upf.n6_gw_addr=192.168.1.1      # the N6 gateway IP address
 
-
-helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+```bash
+ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
 ```
 
 ## To start UPF
 - In this reference validation, UPF application will be started manually after UPF POD deployed successfully.
 
-```code
+```bash
 ne-controller# kubectl exec -it upf-cnf -- /bin/bash
 upf-cnf# ./run_upf.sh
 ```
 
 - Verify UPF pod is up and running `kubectl get po`
-```code
-[root@ne-controller ~]#  kubectl get po
+
+```bash
+ne-controller# kubectl get po
 NAME             READY   STATUS    RESTARTS   AGE
 upf-cnf          1/1     Running   0          6d19h
 ```
 
 - Verify AF, NEF and OAM pods are running `kubectl get po -n ngc`
-```code
-[root@ne-controller ~]#  kubectl get po -n ngc
+
+```bash
+ne-controller# kubectl get po -n ngc
 NAME   READY   STATUS    RESTARTS   AGE
 af     1/1     Running   0          172m
 nef    1/1     Running   0          173m
