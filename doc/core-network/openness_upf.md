@@ -206,8 +206,9 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
 ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_netdevice": "2",
 
-- kubectl delete network-attachment-definitions sriov-openness
-- cat <<EOF | kubectl create -f -
+ne-controller# kubectl delete network-attachment-definitions sriov-openness
+
+ne-controller# cat <<EOF | kubectl create -f -
   apiVersion: "k8s.cni.cncf.io/v1"
   kind: NetworkAttachmentDefinition
   metadata:
