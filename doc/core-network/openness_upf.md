@@ -10,6 +10,7 @@ Copyright (c) 2020 Intel Corporation
 - [How to start](#how-to-start)
   - [Deploy UPF POD from OpenNESS controller](#deploy-upf-pod-from-openness-controller)
   - [To start UPF](#to-start-upf)
+  - [Uninstall UPF POD from OpenNESS controller](#uninstall-upf-pod-from-openness-controller)
 
 # Introduction
 
@@ -276,7 +277,7 @@ Here's an example which configures the following information
 - upf.vf_if_name=VirtualFunctionEthernetaf/a/0 # VF interface name
 - hugePageSize=hugepages-1Gi # hugepage size
 - hugePageAmount=4Gi        # Amount of hugepages to be reserved for the pod
-- upf.pci_bus_addr=af:0a.1  # full format of the PCI bus addr of the VF interface the UPF needs to be attached
+- upf.pci_bus_addr=0000:af:0a.1  # full format of the PCI bus addr of the VF interface the UPF needs to be attached
 - upf.uio_driver=igb_uio   # UIO driver used vfio-pci or igb_uio
 - upf.main_core=2           # main core
 - upf.worker_cores="3\,4"   # worker cores
@@ -288,31 +289,47 @@ Here's an example which configures the following information
 - upf.n6_gw_addr=192.168.1.1      # the N6 gateway IP address
 
 ```bash
-ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180/24 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
 ```
 
 ## To start UPF
-- In this reference validation, UPF application will be started manually after UPF POD deployed successfully.
-
-```bash
-ne-controller# kubectl exec -it upf-cnf -- /bin/bash
-upf-cnf# ./run_upf.sh
-```
+In this reference validation, UPF application will be started manually after UPF POD deployed successfully.
 
 - Verify UPF pod is up and running `kubectl get po`
-
 ```bash
 ne-controller# kubectl get po
 NAME             READY   STATUS    RESTARTS   AGE
 upf-cnf          1/1     Running   0          6d19h
 ```
 
-- Verify AF, NEF and OAM pods are running `kubectl get po -n ngc`
+- Exec into  UPF pod and start the UPF. 
 
+Note: The command **groupadd vpp** needs to be given only for the first execution.
+  
 ```bash
-ne-controller# kubectl get po -n ngc
-NAME   READY   STATUS    RESTARTS   AGE
-af     1/1     Running   0          172m
-nef    1/1     Running   0          173m
-oam    1/1     Running   0          173m
+ne-controller# groupadd vpp
+ne-controller# kubectl exec -it upf-cnf -- /bin/bash
+upf-cnf# ./run_upf.sh
+```
+## Uninstall UPF POD from OpenNESS controller
+
+In this reference validation, UPF can be deleted/uninstalled using the upf helm chart
+
+- Get the helm chart release name for the upf
+  
+```bash
+ne-controller# helm list | grep upf
+upf-cnf         default         1               2020-06-16 12:37:53.40562176 +0530 IST  deployed        upf-0.1.0               0.1.0
+```
+
+- Uninstall the upf-cnf helm chart
+```bash
+ne-controller# helm uninstall upf-cnf
+release "upf-cnf" uninstalled
+```
+
+- List of pods should not show the upf pod now.
+```bash
+ne-controller# kubectl get po | grep upf
+No resources found in default namespace.
 ```
