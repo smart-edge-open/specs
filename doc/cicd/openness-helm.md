@@ -37,14 +37,28 @@ OpenNESS provides helm charts:
   - CNI plugins including Multus and SRIOV CNI.
   - video analytics service. 
   - 5G control plane pods. (For 5G helm chart list, more details in OpenNESS Enhanced Repo) 
-> **Note:**  NFD, CMK, Prometheus, NodeExporter and Grafana leverage existing third-party helm charts: [Container Experience Kits](https://github.com/intel/container-experience-kits) and [Helm Github Repo](https://github.com/helm/charts)
+> **Note:**  NFD, CMK, Prometheus, NodeExporter and Grafana leverage existing third-party helm charts: [Container Experience Kits](https://github.com/intel/container-experience-kits) and [Helm Github Repo](https://github.com/helm/charts). For other helm charts, [OpenNESS Experience Kits](https://github.com/otcshare/openness-experience-kits) ansible playbooks perform automatic charts generation and deployment.
 
-For the platform related helm charts, [OpenNESS Experience Kits](https://github.com/otcshare/openness-experience-kits) ansible playbooks perform automatic charts generation and deploy the platform pods via the charts. All the helm chart files will be saved in the specific directly on OpenNESS controller. To modify the directory, change variable `ne_helm_charts_default_dir` in `group_vars/all/10-default.yml` file:
+- Sample applications, network functions and services that can be deployed and verified on the OpenNESS platform:
+  - Applications
+    - [CDN Caching Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/cdn-caching)
+    - CDN-Transcode Application Helm Charts.(Leverage OpenVisualCloud [CDN-Transcode-Sample Helm Charts](https://github.com/OpenVisualCloud/CDN-Transcode-Sample/tree/master/deployment/kubernetes/helm))
+    - Smart-City Application Helm Charts. (Leverage OpenVisualCloud [SmartCity Helm Charts](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/master/deployment/kubernetes/helm))
+    - [Telemetry Sample Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/telemetry-sample-app)
+    - [EIS Sample Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/eis-experience-kit)
+  - Network Functions
+    - [FlexRAN Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/ran/charts/flexran)
+    - [xRAN Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/xran/helmcharts/xranchart)
+    - [UPF Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
+> **Note:** Those helm charts are stored in the seperated repository as above.
+
+
+The EPA, Telemetry and k8s plugins helm chart files will be saved in the specific directly on OpenNESS controller. To modify the directory, change variable `ne_helm_charts_default_dir` in `group_vars/all/10-default.yml` file:
    ```yaml
    ne_helm_charts_default_dir: /opt/openness-helm-charts/
    ```
 
-After completion of OpenNESS OEK, check the directory:
+After completion of OpenNESS Experience Kits, check the directory on the controller:
    ```bash
    $ ls /opt/openness-helm-charts/
    vpu-plugin gpu-plugin node-feature-discovery prometheus
@@ -76,18 +90,6 @@ To see the values that took effect for a specific release (For example: nfd-rele
 
 To customize values and upgrade, user can modify values.yaml file of the helm charts and use `helm upgrade`. (More details refer to [Helm Commands Guidance](https://helm.sh/docs/helm/))
 
-
-- Sample applications, network functions and services that can be deployed and verified on the OpenNESS platform:
-  - Applications
-    - [CDN Caching Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/cdn-caching)
-    - CDN-Transcode Application Helm Charts.(Leverage OpenVisualCloud [CDN-Transcode-Sample Helm Charts](https://github.com/OpenVisualCloud/CDN-Transcode-Sample/tree/master/deployment/kubernetes/helm))
-    - Smart-City Application Helm Charts. (Leverage OpenVisualCloud [SmartCity Helm Charts](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/master/deployment/kubernetes/helm))
-    - [Telemetry Sample Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/telemetry-sample-app)
-    - [EIS Sample Application Helm Charts](https://github.com/otcshare/edgeapps/tree/master/applications/eis-experience-kit)
-  - Network Functions
-    - [FlexRAN Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/ran/charts/flexran)
-    - [xRAN Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/xran/helmcharts/xranchart)
-    - [UPF Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
 # References
 - [Helm Website](https://helm.sh)
