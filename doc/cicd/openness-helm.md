@@ -30,7 +30,7 @@ To check whether helm is installed successfully, on the OpenNESS controller run:
    version.BuildInfo{Version:"v3.1.2", GitCommit:"d878d4d45863e42fd5cff6743294a11d28a9abce", GitTreeState:"clean", GoVersion:"go1.13.8"}
    ```
 # Helm Charts   
-OpenNESS provides helm charts: 
+OpenNESS provides the following helm charts: 
 - EPA, Telemetry and k8s plugins: 
   - CMK, NFD, FPGA Config, SRIOV, VPU and GPU Device Plugins
   - Prometheus, NodeExporter, Cadvisor, Collectd, Opentelemetry, PCM and Grafana.
@@ -86,7 +86,7 @@ To see the values that took effect for a specific release (For example: nfd-rele
    weavenet_cidr_enabled: false
    ```
 
-To customize values and upgrade, user can modify values.yaml file of the helm charts and use `helm upgrade`. (More details refer to [Helm Commands Guidance](https://helm.sh/docs/helm/))
+To customize values and upgrade, users can modify the values.yaml file for the helm charts and use `helm upgrade`. (More details refer to [Helm Commands Guidance](https://helm.sh/docs/helm/))
 
 
 # References
