@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 module Jekyll
    module Drops
      class BreadcrumbItem < Liquid::Drop

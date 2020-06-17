@@ -1,9 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 title: "Introduction"
 path: /architecture/
 order: 0
 section:
-- title: Architecture
+- title: OpenNESS Architecture & Solution Overview
   path: /doc/architecture
   meta_title: OpenNESS Architecture And Solution Overview
   meta_description: OpenNESS is an open source software to enable easy orchestration of edge services and network functions across diverse network platform in multi-cloud environments.
-  

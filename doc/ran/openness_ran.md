@@ -1,5 +1,7 @@
+```text
 SPDX-License-Identifier: Apache-2.0     
 Copyright © 2020 Intel Corporation
+```
 
 - [Introduction](#introduction)
 - [Building the FlexRAN image](#building-the-flexran-image)

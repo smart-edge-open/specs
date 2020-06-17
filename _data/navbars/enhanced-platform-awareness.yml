@@ -1,63 +1,66 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 title: "Enhanced Platform Awareness"
 path: /enhanced-platform-awareness/
 order: 5
 section:
-      - title: OpenNESS Hugepage
+      - title: Hugepage Support
         path: /doc/enhanced-platform-awareness/openness-hugepage
         meta_title: OpenNESS Enhanced Platform Awareness - Hugepage Support on OpenNESS
         meta_description: Huge page support openness, added to Kubernetes v1.8, enables the discovery, scheduling, and allocation of huge pages as a native first-class resource.
         
-      - title: OpenNESS Node Feature Discovery
+      - title: Node Feature Discovery Support
         path: /doc/enhanced-platform-awareness/openness-node-feature-discovery
         meta_title: Enhanced Platform Awareness - Node Feature Discovery Support in OpenNESS
         meta_description: OpenNESS Node Feature Discovery is one of the Intel technologies that supports targeting of intelligent configuration and capacity consumption of platform capabilities.
         
-      - title: OpenNESS SRIOV Multiple Interfaces
+      - title: Multiple Interface And PCIe SRIOV Support
         path: /doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces
         meta_title: Enhanced Platform Awareness - Multiple Interface And PCIe SRIOV Support in OpenNESS
         meta_description: Multiple Interface and PCIe SRIOV support in OpenNESS, OpenNESS Network Edge uses the Multus container network interface is a container network interface plugin for Kubernetes.
         
-      - title: OpenNESS Dedicated Core
+      - title: Dedicated CPU Core
         path: /doc/enhanced-platform-awareness/openness-dedicated-core
-        meta_title: Dedicated CPU Core for Workload Support in OpenNESS - Enhanced Platform Awareness
+        meta_title: Enhanced Platform Awareness - Dedicated CPU Core for Workload Support in OpenNESS
         meta_description: Multi-core COTS platforms are typical in any cloud or Cloudnative deployment. Parallel processing on multiple cores helps achieve better density.
         
-      - title: OpenNESS BIOS
+      - title: BIOS and Firmware Configuration
         path: /doc/enhanced-platform-awareness/openness-bios
         meta_title: BIOS and Firmware Configuration on OpenNESS Platform
         meta_description: BIOS and Firmware are the fundamental platform configurations of a typical Commercial off-the-shelf (COTS) platform. 
         
-      - title: OpenNESS FPGA
+      - title: FPGA Support
         path: /doc/enhanced-platform-awareness/openness-fpga
-        meta_title: FPGA in OpenNESS- Programming, Resource Allocation and Configuration
+        meta_title: FPGA in OpenNESS - Programming, Resource Allocation and Configuration
         meta_description: The FPGA Programmable acceleration card plays a key role in accelerating certain types of workloads which in-turn increases the overall compute capacity of a COTS platform.
         
-      - title: OpenNESS HDDL
+      - title: Intel® Movidius™ Myriad™ X HDDL Support
         path: /doc/enhanced-platform-awareness/openness_hddl
         meta_title: Intel® Movidius™ Myriad™ X HDDL Solution in OpenNESS
         meta_description: Intel® Movidius™ Myriad™ X HDDL solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution.
         
-      - title: OpenNESS Topology Manager
+      - title: Topology Manager Support
         path: /doc/enhanced-platform-awareness/openness-topology-manager
         meta_title: Topology Manager Support in OpenNESS, Resource Locality Awareness
         meta_description: Topology Manager is a solution permitting k8s components like CPU Manager and Device Manager, to coordinate the resources allocated to a workload.
         
-      - title: OpenNESS Environment Variables
+      - title: Environment Variables Support
         path: /doc/enhanced-platform-awareness/openness-environment-variables
         meta_title: Environment Variable Support in OpenNESS
         meta_description: Environment variables can be configured when creating a new Docker container. Once the container is running, any application located in that container can detect and use the variable.
         
-      - title: OpenNESS Tunable EXEC
+      - title: Tunable Execution
         path: /doc/enhanced-platform-awareness/openness-tunable-exec
-        meta_title: OpenNESS Tunable Exec - Overriding the Startup Command for Container
+        meta_title: Tunable Execution - Overriding the Startup Command for Container
         meta_description: This feature enables you to override the start-up command for a container, thus removing the need to rebuild it just to make this change. 
         
-      - title: OpenNESS Port Forward
+      - title: Port Forward
         path: /doc/enhanced-platform-awareness/openness-port-forward
-        meta_title: OpenNESS Port Forward  - Setting Up Port Forwarding of Container
+        meta_title: Port Forward - Setting Up Port Forwarding of Container
         meta_description: This feature enables the user to set up external network ports for their application (container) so that applications running on other hosts can connect.
         
-      - title: OpenNESS Shared Storage
+      - title: Shared Storage for Containers
         path: /doc/enhanced-platform-awareness/openness-shared-storage
         meta_title: Shared Storage for Containers in Openness On-Prem Mode
         meta_description: OpenNESS On-Prem mode provides possibility to use volume and bind mount storage models known from docker.

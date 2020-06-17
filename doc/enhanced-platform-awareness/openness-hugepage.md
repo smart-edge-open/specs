@@ -26,6 +26,7 @@ OpenNESS deployment enables the hugepages by default and provides parameters for
 * `hugepage_amount` - amount
 
 By default, these variables have values:
+
 | Mode         | Machine type | `hugepage_amount` | `hugepage_size` | Comments                                     |
 | ------------ | ------------ | :---------------: | :-------------: | -------------------------------------------- |
 | Network Edge | Controller   |      `1024`       |      `2M`       |                                              |

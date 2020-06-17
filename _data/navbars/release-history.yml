@@ -1,9 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 title: "Release history"
 path: /openness_releasenotes/
 order: 9
 section:
-- title: OpenNESS Release Notes
+- title: Release Notes
   path: /openness_releasenotes
   meta_title: OpenNESS Release Notes
   meta_description: OpenNESS Release Notes provides high level system features, issues, and limitations information for OpenNESS.
-  

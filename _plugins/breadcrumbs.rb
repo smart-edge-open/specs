@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 require_relative 'drops/breadcrumb_item.rb'
 
 module Jekyll
