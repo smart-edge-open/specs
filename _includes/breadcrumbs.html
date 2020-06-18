@@ -1,0 +1,15 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+{%- assign pagePath = page.path | remove: ".md" | prepend: "/" -%}
+{%- for breadcrumb in include.section -%}
+    {%- if breadcrumb.section -%}
+        {%- include breadcrumbs.html section=breadcrumb.section -%}
+    {%- else -%}
+        {%- if pagePath == breadcrumb.path -%}
+            > {{breadcrumb.title}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}

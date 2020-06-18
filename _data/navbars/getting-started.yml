@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Getting Started"
+path: /getting-started/
+order: 1
+section:
+  - title: OpenNESS Experience Kits
+    path: /doc/getting-started/openness-experience-kits
+    meta_title: OpenNESS Experience Kits Easy Setup of OpenNESS in Network Edge
+    meta_description: OpenNESS Experience Kits repository contains easy setup of OpenNESS in Network Edge, On-Premises modes, and playbooks deployment of the offline package.
+    
+  - title: Network Edge
+    path: 
+    section:
+    - title: Controller & Edge Node Setup
+      path: /doc/getting-started/network-edge/controller-edge-node-setup
+      meta_title: Controller and Edge Node Setup
+      meta_description: OpenNESS Network Edge Controller and Edge nodes must be set up on different machines and provided in the inventory may reboot during the installation.
+      
+    - title: Enhanced Platform Awareness Features Supported
+      path: /doc/getting-started/network-edge/supported-epa
+      meta_title: OpenNESS Network Edge - Enhanced Platform Awareness Features Supported
+      meta_description: Enhanced Platform Awareness features supported for network edge is to expose capability to edge cloud orchestrator for better performance, consistency, and reliability.
+      
+  - title: OnPremises
+    path: 
+    section:
+    - title: Controller & Edge Node Setup
+      path: /doc/getting-started/on-premises/controller-edge-node-setup
+      meta_title: Controller and Edge Node Setup
+      meta_description: OpenNESS Controller and Edge Node to work together the Edge Node needs to enroll with the Controller until it is serial key recognized by the Controller.
+      
+    - title: Gateway Feature
+      path: /doc/getting-started/on-premises/openness-gateway
+      meta_title: Gateway Feature - Supported Mode of Operation
+      meta_description: OpenNESS gateway features to the supported mode of operation in this case still, the only requirement being the controller is on a publicly accessible network.
+      
+    - title: Enhanced Platform Awareness Features Supported
+      path: /doc/getting-started/on-premises/supported-epa
+      meta_title: Enhanced Platform Awareness Features Supported
+      meta_description: Enhanced Platform Awareness features are supported in OpenNESS OnPremises Edge using EVA APIs. OpenNESS controller UI user would use create the HTTP REST POST API.
