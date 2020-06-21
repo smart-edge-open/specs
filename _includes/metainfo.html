@@ -1,0 +1,28 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+{%- assign pagePath = page.path | remove: ".md" | prepend: "/" -%}
+{%- assign title = page.name | replace: "-"," " | replace: "_"," " | split: ".md" | first -%}
+{%- assign pageTitle = title | split: ' ' -%}
+{%- capture pageTitleUpper -%}{%- for word in pageTitle -%}{{ word | capitalize }} {%- endfor -%}{%- endcapture -%}
+
+{%- for metainfo in include.meta -%}
+    {%- if metainfo.section -%}
+        {%- include metainfo.html meta=metainfo.section -%}
+    {%- else -%}
+        {%- if pagePath == metainfo.path -%}
+           {% if metainfo.meta_description != nil %}
+               <meta name="description" content="{{metainfo.meta_description}}" />
+           {% else %}
+               <meta name="description" content="{{pageTitleUpper}}: This document provides high level system features, issues and limitations information for OpenNESS." />
+           {%- endif -%}
+           {% if metainfo.meta_title != nil %}
+               <title>{{metainfo.meta_title}}</title>
+           {% else %}
+               <title>OpenNESS Documentation - {{pageTitleUpper}}</title>
+           {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}

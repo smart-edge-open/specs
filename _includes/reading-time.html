@@ -1,0 +1,13 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+{% assign words = content | number_of_words %}
+{% assign readTime = words | divided_by:180 | round %}
+
+{% if readTime == 0 %}
+{{ ' LESS THAN 1 MINUTE READ ' }}
+{% else %}
+{{ readTime | append: ' MINUTE READ ' }}
+{% endif %}
