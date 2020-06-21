@@ -89,6 +89,8 @@ _Figure - VAS Activation and Discovery through EAA_
 
 To get started with deploying VAS through OEK, refer to [Media Analytics Flavor](../flavors.md#media-analytics-flavor) and to [Media Analytics Flavor with VCAC-A](../flavors.md#media-analytics-flavor-with-vcac-a).
 
+If creating a customized flavor, the VAS can be deployed when setting the flag `video_analytics_serving_enable: true` in Ansible playbook.
+
 ## References
 * [Video Analytics Serving](https://github.com/intel/video-analytics-serving)
 * [Edge Application API](https://www.openness.org/api-documentation/?api=eaa)
