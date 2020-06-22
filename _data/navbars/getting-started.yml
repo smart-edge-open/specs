@@ -8,7 +8,7 @@ section:
   - title: OpenNESS Experience Kits
     path: /doc/getting-started/openness-experience-kits
     meta_title: OpenNESS Experience Kits Easy Setup of OpenNESS in Network Edge
-    meta_description: OpenNESS Experience Kits repository contains easy setup of OpenNESS in Network Edge, On-Premises modes, and playbooks deployment of the offline package.
+    meta_description: OpenNESS Experience Kits repository contains easy setup of OpenNESS in Network Edge and On-Premises modes.
     
   - title: Network Edge
     path: 
