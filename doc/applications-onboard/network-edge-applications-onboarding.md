@@ -4,6 +4,7 @@ Copyright (c) 2019-2020 Intel Corporation
 ```
 
 - [Introduction](#introduction)
+- [Installing OpenNESS](#installing-openness)
 - [Building Applications](#building-applications)
   - [Building Sample Application images](#building-sample-application-images)
   - [Building the OpenVINO Application images](#building-the-openvino-application-images)
@@ -20,7 +21,7 @@ Copyright (c) 2019-2020 Intel Corporation
   - [Setting up Edge DNS](#setting-up-edge-dns)
   - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
 - [Onboarding Smart City Sample Application](#onboarding-smart-city-sample-application)
-  - [Installing OpenNESS](#installing-openness)
+  - [Setting up Networking Interfaces](#setting-up-networking-interfaces-1)
   - [Building Smart City ingredients](#building-smart-city-ingredients)
   - [Running Smart City](#running-smart-city)
   - [Inter Application Communication](#inter-application-communication)
@@ -31,6 +32,9 @@ Copyright (c) 2019-2020 Intel Corporation
 
 # Introduction
 The aim of this document is to familiarize the user with the OpenNESS application on-boarding process for the Network Edge. This guide will provide instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller via the Kubernetes `kubectl` command line utility, sample specification files for application onboarding will also be provided.
+
+# Installing OpenNESS
+The following application onboarding steps assumes that OpenNESS were installed through [OpenNESS playbooks](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
 
 # Building Applications
 It is the responsibility of the user to provide the application to be deployed on the OpenNESS platform for Network Edge. The application must be provided in a format of Docker image available either from an external Docker repository (ie. Docker Hub) or a locally build/imported Docker image - the image must be available on the Edge Node which the application will be deployed on.
@@ -419,7 +423,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
 
 # Onboarding Smart City Sample Application
 
-Smart City sample application is a sample applications that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The application is deployed across multiple regional offices (OpenNESS edge nodes). Each office is an aggregation point of multiple IP cameras (simulated) with their analytics. The media processing and analytics workloads are running on the OpenNESS edge nodes for latency consideration.
+The Smart City sample application is built on the OpenVINO and Open Visual Cloud (OVC) software stacks for media processing and analytics. It simulates regional offices which aggregate multiple (simulated) IP cameras and associated analytics. Each simulated office is deployed on an edge node. The sample app demonstrates the ability to reduce latency by running the media processing and analytics workloads on edge nodes.
 
 The full pipeline of the Smart City sample application on OpenNESS is distributed across three regions:
 
@@ -434,8 +438,7 @@ The Smart City setup with OpenNESS should typically deployed as shown in this Fi
 _Figure - Smart City Setup with OpenNESS_
 
 
-## Installing OpenNESS
-The OpenNESS must be installed before going forward with Smart City application deployment. Installation is performed through [OpenNESS playbooks](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
+## Setting up Networking Interfaces
 
 > **NOTE**: At the time of writing this guide, there was no [Network Policy for Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/) defined yet for the Smart City application. So, it is advised to remove the default OpenNESS network policies using this command:
 > ```shell

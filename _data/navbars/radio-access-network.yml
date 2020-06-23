@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Radio Access Network (RAN)"
+path: /ran/
+order: 3
+section:
+  - title: OpenNESS Radio Access Network
+    path: /doc/ran/openness_ran
+    meta_title: OpenNESS Radio Access Network is the Edge of Wireless Network
+    meta_description: OpenNESS Radio Access Network is the edge of the wireless network. OpenNESS Intel FlexRAN uses as a reference 4G and 5G base station for 4G and 5G end-to-end testing.

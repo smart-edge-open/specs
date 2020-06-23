@@ -119,12 +119,8 @@ The following steps need to be done for successful login:
 
 1. Open internet browser on *Ansible Controller*.
 2. Type in `http://<LANDING_UI_URL>/` in address bar. `LANDING_UI_URL` can be retrieved from `.env` file.
-3. Click on "INFRASTRUCTURE MANAGER" button.
-
-![Landing page](controller-edge-node-setup-images/controller_ui_landing.png)
-
-4. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all/10-default.yml*).
-5. Click on "SIGN IN" button.
+3. Enter you username and password (default username: admin) (the password to be used is the password provided during Controller bring-up with the **cce_admin_password** in *openness-experience-kits/group_vars/all/10-default.yml*).
+4. Click on "SIGN IN" button.
 
 ![Login screen](controller-edge-node-setup-images/login.png)
 
