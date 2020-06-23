@@ -74,7 +74,32 @@ This deployment flavor enables the following ingredients:
 * Telemetry
 
 ## CDN Transcode Flavor
-<todo>
+The pre-defined *cdn-transcode* deployment flavor provisions an optimized system configuration for cdn transcode sample workloads on Intel Xeon servers. 
+
+Steps to install this flavor are as follows:
+1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+2. Run OEK deployment script:
+    ```shell
+    $ deploy_ne.sh -f cdn-transcode
+    ```
+
+This deployment flavor enables the following ingredients:
+* Node Feature Discovery
+* The default Kubernetes CNI: `kube-ovn`
+* Telemetry
 
 ## CDN Caching Flavor
-<todo>
+The pre-defined *cdn-caching* deployment flavor provisions an optimized system configuration for cdn content delivery workloads on Intel Xeon servers. 
+
+Steps to install this flavor are as follows:
+1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+2. Run OEK deployment script:
+    ```shell
+    $ deploy_ne.sh -f cdn-caching
+    ```
+
+This deployment flavor enables the following ingredients:
+* Node Feature Discovery
+* The `kube-ovn` and `sriov` Kubernetes CNI
+* Telemetry
+* Kubernetes Topology Manager policy: `single-numa-node`
