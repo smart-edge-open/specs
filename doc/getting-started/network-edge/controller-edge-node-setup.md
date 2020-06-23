@@ -424,7 +424,7 @@ proxy_noproxy: ""
 Sample definition of `no_proxy` environmental variable for Ansible host (to allow Ansible host to connect to other hosts):
 
 ```shell
-export no_proxy="localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.1/24"
+export no_proxy="localhost,127.0.0.1,10.244.0.0/24,10.96.0.0/12,192.168.0.0/24"
 ```
 
 ## Obtaining Installation Files
