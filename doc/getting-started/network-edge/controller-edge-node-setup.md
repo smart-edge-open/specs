@@ -98,14 +98,14 @@ For example, when installing Docker, the RPM repository is added and Docker inst
 Note that there might be some leftovers created by installed software; for example, DPDK and Golang installations, found in `/opt`, are not rolled back.
 
 ### Supported EPA features
-A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [supported-epa.md](supported-epa.md). The documents referenced in this list provide detailed description of the features, and step by step instructions for to enabling them. The user is advised to become familiar with the features available before executing the deployment playbooks.
+A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [Enhanced Platform Awareness Features supported](supported-epa). The documents referenced in this list provide detailed description of the features, and step by step instructions for to enabling them. The user is advised to become familiar with the features available before executing the deployment playbooks.
 
 ### VM support for Network Edge
-Support for VM deployment on OpenNESS for Network Edge is available and enabled by default. Certain configurations and pre-requisites may need to be satisfied in order to use all VM capabilities. The user is advised to become familiar with the VM support documentation before executing the deployment playbooks. Please see [openness-network-edge-vm-support.md](../../applications-onboard/openness-network-edge-vm-support.md) for more information.
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default. Certain configurations and pre-requisites may need to be satisfied in order to use all VM capabilities. The user is advised to become familiar with the VM support documentation before executing the deployment playbooks. Please see [openness-network-edge-vm-support.md](../../applications-onboard/openness-network-edge-vm-support) for more information.
 
 ### Application on-boarding
 
-Please refer to [network-edge-applications-onboarding.md](../../applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+Please refer to [network-edge-applications-onboarding.md](../../applications-onboard/network-edge-applications-onboarding) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
 
 ### Single-node Network Edge cluster
 
@@ -198,12 +198,12 @@ The following CNIs are currently supported:
   * Network attachment definition: openness-calico
 * [weavenet](https://github.com/weaveworks/weave)
   * CIDR: 10.32.0.0/12
-* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
-* [Userspace](https://github.com/intel/userspace-cni-network-plugin) (cannot be used as a standalone or primary CNI - [Userspace CNI setup](doc/dataplane/openness-userspace-cni.md)
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces))
+* [Userspace](https://github.com/intel/userspace-cni-network-plugin) (cannot be used as a standalone or primary CNI - [Userspace CNI setup](../../../doc/dataplane/openness-userspace-cni)
 
 Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [the Multus CNI](https://github.com/intel/multus-cni) is used.
 
-> NOTE: For a guide on how to add new CNI role to the OpenNESS Experience Kits refer to [the OpenNESS Experience Kits guide](../openness-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge)
+> NOTE: For a guide on how to add new CNI role to the OpenNESS Experience Kits refer to [the OpenNESS Experience Kits guide](../openness-experience-kits#adding-new-cni-plugins-for-kubernetes-network-edge)
 
 ### Selecting cluster networking plugins (CNI)
 
@@ -564,4 +564,4 @@ _Figure - Kubernetes Dashboard Login_
 
 ## Customization of kernel, grub parameters and tuned profile
 
-OpenNESS Experience Kits provide an easy way to customize the kernel version, grub parameters and tuned profile. For more information, refer to [the OpenNESS Experience Kits guide](../openness-experience-kits.md).
+OpenNESS Experience Kits provide an easy way to customize the kernel version, grub parameters and tuned profile. For more information, refer to [the OpenNESS Experience Kits guide](../openness-experience-kits).
