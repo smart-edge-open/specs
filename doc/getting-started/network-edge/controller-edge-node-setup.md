@@ -198,7 +198,7 @@ The following CNIs are currently supported:
   * Network attachment definition: openness-calico
 * [weavenet](https://github.com/weaveworks/weave)
   * CIDR: 10.32.0.0/12
-* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces))
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](../../../doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces))
 * [Userspace](https://github.com/intel/userspace-cni-network-plugin) (cannot be used as a standalone or primary CNI - [Userspace CNI setup](../../../doc/dataplane/openness-userspace-cni)
 
 Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [the Multus CNI](https://github.com/intel/multus-cni) is used.
