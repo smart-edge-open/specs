@@ -1,0 +1,55 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+<footer id="footer" style="position: static;">
+      <div class="container">
+        <div class="col-md-12">
+          <div class="footer-link">
+            <ul class="nav menu openness_footer mod-list">
+              <li class="divider"><span class="separator ">&copy; OpenNESS</span></li>
+              <li><a href="http://www.intel.com/content/www/us/en/legal/terms-of-use.html" rel="noopener noreferrer nofollow" target="_blank">Terms of Use</a></li>
+              <li><a href="https://www.intel.com/content/www/us/en/privacy/intel-privacy-notice.html" rel="noopener noreferrer nofollow" target="_blank">Privacy</a></li>
+              <li><a href="http://www.intel.com/content/www/us/en/privacy/intel-cookie-notice.html" rel="noopener noreferrer nofollow" target="_blank">Cookies</a></li>
+              <li><a href="https://www.openness.org/contact-us">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/23e98bc57b.js" crossorigin="anonymous"></script>
+    <script src="{{ '/js/custom.js' | prepend: site.baseurl | prepend: site.siteurl  }}?{{ site.time | date: '%s%N' }}" defer></script>
+    
+    <script>
+    jQuery(document).ready(function(){  
+            jQuery('.rightSection .contentArea img').each(function(e){
+            var alt = jQuery(this).attr('alt');
+           /* var imageSrc = jQuery(this).attr('src');
+            var imagePath = '{{site.siteurl}}'+imageSrc;
+            jQuery(this).attr('src',imagePath); */
+            if(alt == ''){
+                var imgName = jQuery(this).attr('src');
+                if(typeof imgName != 'undefined' && imgName != ''){
+                    var last = imgName.substring(imgName.lastIndexOf("/") + 1, imgName.length);
+                    var rest = last.substring(0, last.lastIndexOf(".") + 0);
+                    var createAlt = rest.replace(/\_/g, ' ');
+                    var a = camelize(createAlt);
+                    if(typeof a != 'undefined'){
+                        jQuery(this).attr('alt',a);
+                    }
+                }
+            } 
+        });
+    });
+        
+        function camelize(str) {
+            return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+              return word.toUpperCase();
+            }).replace(/\s+/g, ' ');
+        }
+    
+    </script>
+    
