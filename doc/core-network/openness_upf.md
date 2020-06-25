@@ -250,7 +250,7 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
   Events:    <none>
 ```
 
-6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of node and it will restart automatically in about 20 seconds
+6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of **ne-node** and it will restart automatically in about 20 seconds
 
 ```bash
 ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
@@ -259,7 +259,7 @@ ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-devic
 7. Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
 
 ```bash
-ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_dpdk": "1",
   "intel.com/intel_sriov_netdevice": "1",
 ```
@@ -307,8 +307,8 @@ upf-cnf          1/1     Running   0          6d19h
 Note: The command **groupadd vpp** needs to be given only for the first execution.
   
 ```bash
-ne-controller# groupadd vpp
 ne-controller# kubectl exec -it upf-cnf -- /bin/bash
+upf-cnf# groupadd vpp
 upf-cnf# ./run_upf.sh
 ```
 ## Uninstall UPF POD from OpenNESS controller
