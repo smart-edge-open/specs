@@ -128,9 +128,9 @@ af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Ser
 3. Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
 
 ```bash
-ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
+ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
-ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --status
+ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --status
 Network devices using DPDK-compatible driver
 ============================================
 0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci

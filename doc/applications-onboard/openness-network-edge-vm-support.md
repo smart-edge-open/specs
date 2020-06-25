@@ -253,11 +253,11 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
 To deploy a VM requesting SRIOV VF of NIC:
   1. Bind SRIOV interface to VFIO driver on Edge Node:
      ```shell
-     [root@worker ~]# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
+     [root@worker ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
      ```
   2. Delete/Restart SRIOV device plugin on the node:
      ```shell
-     [root@controller ~]# kubectl delete pod kube-sriov-device-plugin-amd64-<podID> -n kube-system
+     [root@controller ~]# kubectl delete pod sriov-release-kube-sriov-device-plugin-amd64-<podID> -n kube-system
      ```
   3. Check that the SRIOV VF for VM is available as allocatable resource for DP (wait a few seconds after restart):
      ```
