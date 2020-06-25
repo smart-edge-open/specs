@@ -36,6 +36,8 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 
 OpenNESS Experience Kits allows user to customize kernel, grub parameters, and tuned profile by leveraging Ansible's feature of host_vars.
 
+> NOTE: `groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in host_vars to change on per node basis while `group_vars/all` contains cluster wide variables.
+
 OpenNESS Experience Kits contains `host_vars/` directory that can be used to place a YAML file (`nodes-inventory-name.yml`, e.g. `node01.yml`). The file would contain variables that would override roles' default values.
 
 To override the default value, place the variable's name and new value in the host's vars file, e.g. contents of `host_vars/node01.yml` that would result in skipping kernel customization on that node:
