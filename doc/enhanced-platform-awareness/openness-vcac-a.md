@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
-# Visual Compute Accelerator Card - Analytics (VCAC-A)
+# Using Visual Compute Accelerator Card - Analytics (VCAC-A) in OpenNESS
 
 - [Overview](#overview)
 - [Architecture](#architecture)
@@ -73,7 +73,7 @@ silpixa00400194-vca3   Ready    worker   31h   v1.18.2
 For the example above, the 3 VCA nodes are grouped into VCA pool labelled as `vcac-pool=silpixa00400194`.
 
 ## Node Feature Discovery (NFD)
-Kubernetes NFD files are pre-packaged within the VCAD image of the VCAC-A card and is located at `/opt/intel/openvino/k8s-nfd/nfd-vca-features` file. This file is mounted to `/etc/kubernetes/node-feature-discovery/features.d/` during the VCAC-A install sequence and accordingly the VCA node is labeled by *nfd-master* with these features.
+VCAC-A NFD manifest file `/opt/intel/openvino/k8s-nfd/nfd-vca-features` is pre-packaged in the VCAC-A system image. This file is mounted to `/etc/kubernetes/node-feature-discovery/features.d/` during the VCAC-A install sequence and accordingly the VCA node is labeled by *nfd-master* with these features.
 
 VCAC-A features that are discovered by NFD and labeled in Kubernetes can be shown when running the command:
 ```shell
@@ -166,29 +166,29 @@ _Figure - Using VCAC-A Telemetry with OpenNESS_
 4. Now that the VPU device usage became 60, when the `OpenVINO` application turns up, it gets scheduled on VCA pool B in fulfillment of the policy.
 
 ## Media-Analytics-VCA Flavor
-The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [OpenNESS Flavors](../flavors.md) document. Applying this deployment flavors encompasses the VCAC-A installation.
+The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [OpenNESS Flavors](../flavors) document and encompasses the VCAC-A installation.
 
-The VCAC-A installation process involves:
-1. Pulling the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies
-2. Apply CentOS 7.6 kernel patches and build kernel RPM
-3. Apply module patches and build driver RPM
-4. Build daemon utilities RPM
-5. Install docker-ce & kubernetes on the VCA host
-6. Join the VCA host to the OpenNESS cluster
-7. Pull Ubuntu docker image for building the VCAC-A system image
-8. Download the required package from website for the VCAC-A system image
-9. Apply Ubuntu 18.04 kernel patches and build kernel deb for the VCAC-A system image
-10. Apply module patches and build driver deb for the VCAC-A system image
-11. Generate VCAD base image for VCAC-A system image
-12. Install the dependency and components (MSS, OpenCL, OpenVINO)
-13. Boot up the VCAC-A system image
-14. Configure the firewall to allow VCAC-A NATting
-15. Install docker-ce & kubernetes on the VCA node
-16. Join the VCA node to the OpenNESS cluster
-17. Attach VCA NFD to kubernetes
-18. Deploy VPU, GPU device plugins and HDDL Daemonset
-19. Start VPU metrics exporter
-20. Deploy VPU VCAC-A TAS policy
+The VCAC-A installation in OEK performs the following tasks:
+- Pulling the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies
+- Apply CentOS 7.6 kernel patches and build kernel RPM
+- Apply module patches and build driver RPM
+- Build daemon utilities RPM
+- Install docker-ce & kubernetes on the VCA host
+- Join the VCA host to the OpenNESS cluster
+- Pull Ubuntu docker image for building the VCAC-A system image
+- Download the required package from website for the VCAC-A system image
+- Apply Ubuntu 18.04 kernel patches and build kernel deb for the VCAC-A system image
+- Apply module patches and build driver deb for the VCAC-A system image
+- Generate VCAD base image for VCAC-A system image
+- Install the dependency and components (MSS, OpenCL, OpenVINO)
+- Boot up the VCAC-A system image
+- Configure the firewall to allow VCAC-A NATting
+- Install docker-ce & kubernetes on the VCA node
+- Join the VCA node to the OpenNESS cluster
+- Attach VCA NFD to kubernetes
+- Deploy VPU, GPU device plugins and HDDL Daemonset
+- Start VPU metrics exporter
+- Deploy VPU VCAC-A TAS policy
 
 ## References
 - [Intel® Visual Cloud](https://www.intel.in/content/www/in/en/cloud-computing/visual-cloud.html)
