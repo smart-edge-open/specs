@@ -67,9 +67,8 @@ onprem_hddl_enable: true
 ```
 Run setup script `deploy_onprem.sh nodes`.
 
-> NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: `kernel_skip` as `true` in `group_vars/edgenode_group/10-default.yml` before running OpenNESS installation scripts.
-
-> NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
+> NOTE: For this release, HDDL verifed with default CentOS Minimal No-RT-kernel(3.10.0-957.el7.x86_64) and Customized RT-kernel(3.10.0-1062.12.1.rt56.1042.el7.x86_64).
+> NOTE: For the hardware platforms with ASMedia PCIe Gen3 switch need to upgrade firmware. otherwise there will be potential system hang issue for some small network models such as squeenzenet1.1...etc.
 
 To check HDDL service running status on the edgenode after deploy, docker logs should look like:
 ```

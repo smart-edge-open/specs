@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Core Network - 4G and 5G"
+path: /core-network/
+order: 4
+section:
+  - title: Evolved Packet Core (EPC)
+    path: /doc/core-network/openness_epc
+    meta_title: Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC
+    meta_description: OpenNESS is an open source edge computing platform that enables Service Providers and Enterprises to deploy applications and services on a network edge.
+    
+  - title: Next-Gen Core (NGC)
+    path: /doc/core-network/openness_ngc
+    meta_title: Edge Cloud Deployment with 3GPP 5G Stand Alone
+    meta_description: OpenNESS NGC provides reference REST-based APIs along with 3GPP standard traffic influencing APIs to address some of these major challenges in 5G edge deployments.
+    
+  - title: User Plane Function (UPF)
+    path: /doc/core-network/openness_upf
+    meta_title: User Plane Function (UPF)
+    meta_description: User Plane Function is the evolution of Control and User Plane Separation which part of the Rel.14 in Evolved Packet core. CUPS enabled PGW to be split into PGW-C and PGW-U.

@@ -1,0 +1,48 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+{%- for item in include.sidebar -%}
+
+  {%- if item.section -%}
+    {%- capture href -%}javascript:void(0){%- endcapture -%}
+  {%- else -%}
+    {%- capture href -%}{{ site.baseurl }}{{ item.path }}{%- endcapture -%}
+  {%- endif -%}
+
+  
+  {%- if item.section -%}
+  
+  <li class="with-section">
+        <i class="fas fa-angle-right" aria-hidden="true"></i>
+        <a data-title="{{ item.title }}" href="{{href}}">{{item.title}}</a>
+        <ul class="parent">
+            {%- include sideNavigation.html sidebar=item.section -%}
+        </ul>
+    </li>
+  {%- else -%}
+    {%- assign pageName = page.path | prepend: "/" | replace: ".md","" -%}
+    
+    {%- if pageName ==  item.path -%}
+        {%- assign activeClass = 'active' -%}
+    {%- else -%}
+        {%- assign activeClass = '' -%}
+    {%- endif -%}      
+    
+    {%- assign lastElement = href | split: "/" | last -%}
+    {%- assign pageUrl = href | remove: lastElement -%}
+    {%- assign pageUrl = pageUrl | split: "/" | last -%}
+    {%- assign pageTitle = page.path | remove: ".md" | split: "/" -%}    
+    
+    {%- if pageTitle[2] == pageUrl -%}
+        {%- assign style = "display:block" -%}
+    {%- else -%}
+        {%- assign style = "display:none" -%}
+    {%- endif -%}
+    
+  <li class="without-section {{pageUrl}} {{activeClass}}" style="{{style}}">
+        <a data-title="{{ item.title }}" href="{{href}}">{{item.title}}</a>
+    </li>
+   {%- endif -%}
+{%- endfor -%}

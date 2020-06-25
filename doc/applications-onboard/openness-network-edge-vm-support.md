@@ -60,7 +60,7 @@ In order to create a Docker image for a stateless VM, the VM image needs to be w
 ```
 #Dockerfile
 FROM scratch
-ADD CentOS-7-x86_64-GenericCloud.qcow2 /disk
+ADD CentOS-7-x86_64-GenericCloud.qcow2 /disk/
 ```
 ```shell
 docker build -t centosimage:1.0 .
@@ -159,7 +159,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
       - Edit the sample yaml with hostname of the worker node:
          ```yaml
          # /opt/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
-         # For both pv0 and pv1 enter correct hostname
+         # For both kv-pv0 and kv-pv1 enter correct hostname
          - key: kubernetes.io/hostname
                   operator: In
                   values:
@@ -173,8 +173,8 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
          ```shell
          [root@controller ~]# kubectl get pv
          NAME   CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS    REASON   AGE
-         pv0    15Gi       RWO            Retain           Available           local-storage            7s
-         pv1    15Gi       RWO            Retain           Available           local-storage            7s
+         kv-pv0    15Gi       RWO            Retain           Available           local-storage            7s
+         kv-pv1    15Gi       RWO            Retain           Available           local-storage            7s
          ```
   2. Download the Generic Cloud qcow image for CentOS 7
       ```shell
@@ -202,12 +202,12 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
   5. Check that PV, DV, PVC are correctly created:
       ```shell
       [root@controller ~]# kubectl get pv
-       pv0    15Gi       RWO            Retain           Bound      default/centos-dv           local-storage            2m48s
-       pv1    15Gi       RWO            Retain           Released   default/   centos-dv-scratch   local-storage            2m48s
+       kv-pv0    15Gi       RWO            Retain           Bound      default/centos-dv           local-storage            2m48s
+       kv-pv1    15Gi       RWO            Retain           Released   default/   centos-dv-scratch   local-storage            2m48s
       [root@controller ~]# kubectl get dv
       centos-dv   Succeeded              105s
       [root@controller ~]# kubectl get pvc
-      centos-dv   Bound    pv0      15Gi       RWO            local-storage   109s
+      centos-dv   Bound    kv-pv0      15Gi       RWO            local-storage   109s
       ```
   6. Create ssh key:
       ```shell
@@ -253,11 +253,11 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
 To deploy a VM requesting SRIOV VF of NIC:
   1. Bind SRIOV interface to VFIO driver on Edge Node:
      ```shell
-     [root@worker ~]# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
+     [root@worker ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
      ```
   2. Delete/Restart SRIOV device plugin on the node:
      ```shell
-     [root@controller ~]# kubectl delete pod kube-sriov-device-plugin-amd64-<podID> -n kube-system
+     [root@controller ~]# kubectl delete pod sriov-release-kube-sriov-device-plugin-amd64-<podID> -n kube-system
      ```
   3. Check that the SRIOV VF for VM is available as allocatable resource for DP (wait a few seconds after restart):
      ```

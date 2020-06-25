@@ -2,158 +2,145 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-# Industrial Edge Insights Application on OpenNESS - Solution Overview
+# Industrial Edge Insights Application on OpenNESS — Solution Overview
 
-  - [OpenNESS Introduction](#openness-introduction)
-  - [Industrial Edge Insights Introduction](#industrial-edge-insights-introduction)    
-  - [PCB Demo Introduction](#pcb-demo-introduction)        
-    - [Etcd](#etcd)        
-    - [Camera Stream](#camera-stream)        
-    - [Video Injection](#video-injection)        
-    - [Video Analytics](#video-analytics)        
-    - [Visualizer](#visualizer)    
-  - [PCB image flow through the system](#pcb-image-flow-through-the-system)    
-  - [PCB detection results](#pcb-detection-results)    
-  - [EIS Applications Integrated With OpenNESS](#eis-applications-integrated-with-openness)        
-    - [Cloud Native Approach](#cloud-native-approach)        
-    - [Challenges](#challenges)   
-  - [Conclusion](#conclusion)
+ - [Edge Insights Software Introduction](#edge-insights-software-introduction)
+  - [EIS PCB Defects Detection](#eis-pcb-defects-detection) 
+    - [Etcd](#etcd)
+    - [Camera Stream](#camera-stream)
+    - [Video Ingestion](#video-ingestion)
+    - [Video Analytics](#video-analytics) 
+    - [Visualizer](#visualizer)
+  - [PCB image processing flow through the system](#pcb-image-processing-flow-through-the-system)
+  - [PCB defects detection results](#pcb-defects-detection-results) 
+  - [EIS Applications Integrated With OpenNESS](#eis-applications-integrated-with-openness) 
+  - [Cloud Native Approach](#cloud-native-approach) 
+     
+ - [Conclusion](#conclusion)
+ - [Reference](#reference)
 
-## OpenNESS Introduction
+## Edge Insights Software Introduction
 
-OpenNESS is an open-source software toolkit that enables easy orchestration of edge services across diverse network platforms and access technologies in multi-cloud environments. It is inspired by the edge computing architecture defined by the ETSI Multi-access Edge Computing standards (e.g., [ETSI_MEC 003]), as well as the 5G network architecture ([3GPP_23501]).
-OpenNESS leverages major industry edge orchestration frameworks, such as Kubernetes and OpenStack, to implement a cloud-native architecture that is multi-platform, multi-access, and multi-cloud. It goes beyond these frameworks, however, by providing the ability for applications to publish their presence and capabilities on the platform, and for other applications to subscribe to those services. Services may be very diverse, from providing location and radio network information to operating a computer vision system that recognizes pedestrians and cars, and forwards metadata from those objects to downstream traffic safety applications.
-OpenNESS is access network agnostic, as it provides an architecture that interoperates with LTE, 5G, WiFi, and wired networks. In edge computing, data plane flows must be routed to edge nodes with respect to the physical location (e.g., proximity to the endpoint, system load on the edge node, special hardware requirements). OpenNESS provides APIs that allow network orchestrators and edge computing controllers to configure routing policies in a uniform manner.
+Intel’s Edge Insights Software(EIS) for Industrial use case brings ease of AI deployment in industrial environment through a set of integrated key capabilities, such as video data ingestion, processing and transmission, which optimize edge analytics that lead to improved industrial product quality, operational performance, prediction of downtime and automated operational flows.
 
-## Industrial Edge Insights Introduction
+## EIS PCB Defects Detection
 
-Intel's Edge Insights for Industrial offers a validated solution to easily integrate customers' data, devices, and processes in manufacturing applications, which helps enable near-real-time intelligence at the edge, greater operational efficiency, and security in factories.
-Intel's Edge Insights for Industrial takes advantage of modern microservices architecture. This approach helps OEMs, device manufacturers, and solution providers integrate data from sensor networks, operational sources, external providers, and industrial systems more rapidly. The modular, product-validated software enables the extraction of machine data at the edge. It also allows that data to be communicated securely across protocols and operating systems managed cohesively, and analyzed quickly.
-Allowing machines to communicate interchangeably across different protocols and operating systems eases the process of data ingestion, analysis, storage, and management. Doing so also helps industrial companies build powerful analytics and machine learning models easily and generate actionable predictive insights at the edge.
-Edge computing software deployments occupy a middle layer between the operating system and applications built upon it. Intel's Edge Insights for Industrial is created and optimized for Intel architecture-based platforms and validated for underlying operating systems. Its capability supports multiple edge-critical Intel hardware components like CPUs, FPGAs, accelerators, and Intel Movidius Vision Processing Unit (VPU). Also, its modular architecture offers OEMs, solution providers, and ISVs the flexibility to pick and choose the features and capabilities they wish to include or expand upon for customized solutions. As a result, they can bring solutions to market fast and accelerate customer deployments.
-
-## PCB Demo Introduction
-
-The Printed Circuit Board(PCB) Demo is a sample application enabled for board quality check.
-All boards will move on a conveyor belt where the IP camera will capture PCB imagines one by one, these images will be sent through the RTSP stream for further processing where the EIS application is running on the OpenNESS Node. The main objective of this demo is for the EIS OpenNESS Edge Node to detect a defect on the PCB image, currently, there are two types of defects being detected on this demo i.e a missing component and any short on the board.
-The video file used in this demo application is `pcb_d2000.avi` which is sent from the camera stream pod as RTSP stream.
-Currently, the PCB demo deployed on OpenNESS edge node.
-For this EIS PCB demo, five different types of pods are deployed on our OpenNESS edge node.
+The Printed Circuit Board(PCB) defects detection is a sample demo application enabled for detection of defects in the components assembly in a factory environment.
+The IP Camera will record the video of the assembled boards moving over a conveyor belt. These IP cameras will stream the video to EIS video processing applications namely Video Ingestion, Video Analytics, Time Series analysis etc. using the RTSP streaming protocol. The captured video is analyzed and filters out selected images for further defect analysis. The [OpenNESS](https://www.openness.org/) platform infrastructure is used to deploy the application pods of EIS performing image processing functionality. The purpose of this demo is to show case the EIS application on OpenNESS platform. There are two types of defects detection supported in this demo i.e. missing component detection and short circuit due to solder bridge formed during the assembly process. The video file used in this demo application is `pcb_d2000.avi` which is sent from the camera stream pod as RTSP stream.
+This EIS PCB defects detection will have five types of application pods in the OpenNESS edge nodes.
 
 - Etcd
-- Camera-Stream
-- Video-Injection
-- Video-Analytics
+- Camera Stream
+- Video Ingestion
+- Video Analytics
 - Visualizer
 
 ### Etcd
 
-Etcd pod stores the key, value of Injection, Analysis, and Visualizer pod access information.
+Etcd pod stores the key, value of Video-Ingestion, Video-Analytics, and Visualizer pod access information. It manages the configuration data, state data, and metadata for Kubernetes.
 
 ### Camera Stream
 
-Camera stream pod deployed for sending PCB demo file “pcb_d2000.avi” as RTSP stream.
+Camera Stream pod simulates IP cameras in the real environment, it is used to send recorded video “pcb_d2000.avi” file as RTSP stream like an IP camera. On LTE/5G Network real-time deployment replace Camera Stream pod by real IP camera.
 
-*NOTE: `On LTE/5G Network real-time deployment camera stream pod would be replaced by a real IP camera.`*
+### Video Ingestion
 
-### Video Injection
-
-The Video-Ingestion pod is mainly responsible for ingesting the video frames
-coming from the camera-stream pod as RTSP stream into the EIS stack for further processing. 
+The Video Ingestion pod is mainly responsible converting the video received from camera stream into frames, it filters the frames and ingests these video frames into the EIS stack for further processing and defect analysis. 
 
 ### Video Analytics
 
-The Video-Analytics pod is mainly responsible for receiving frames from the Injection pod and running the classifier Universal Disk Format (UDF)
-and doing the required inferencing on the chosen Intel(R) Hardware
-(CPU, GPU, VPU, HDDL) using openVINO. On this PCB demo, udfs filter configured as `pcb.pcb_filter` which will detect a defect on the board has any short or missing part.
+The Video Analytics pod is mainly responsible for receiving frames from the Video Ingestion pod and performs classifier converting to Universal Disk Format (UDF) and does the required inferencing on the chosen/support Intel(R) Hardware
+ (CPU, GPU, VPU, HDDL) using OpenVINO. In this PCB demo, udfs filter configured as `pcb.pcb_filter` which will detect a defect on the board has any solder short or missing part. The Video Analytics identifies the defects and marks the defect on the images.
 
 ### Visualizer
 
-The Visualizer pod is mainly responsible for receiving frames from Video-Analytics pod and display on GUI.
+The Visualizer pod is mainly displays the frames on GUI display received from Video Analytics pod.
 
-## PCB image flow through the system 
+## PCB image processing flow through the system 
 
-![PCB image flow](eis-images/pcb-image-flow.png)
+The block diagram provided here shows the video/image flow through the application.
+<p align="center">
+  <img width="700" src="eis-images/pcb-image-flow.png"
+</p>
 
-## PCB detection results
+## PCB defects detection results
 
+Following are the reference input and output Videos of PCB defect detection demo.
 - **`Input PCB rtsp stream:`**
-   This video file pcb_d2000.avi shows 3 PCBs rotating through the screen are sent from the camera stream pod, from these 3 boards, 2 are defective.
+   This video file pcb_d2000.avi shows three PCBs rotating through the screen are sent from the camera stream pod, two of these boards are defective out of three.
 
-![PCB image input](eis-images/pcb-input.gif)
+<p align="center">
+  <img  src="eis-images/pcb-input.gif"
+</p>
 
--  **`Output defect detection on PCB:`**
-  On Visualizer pod we can view the output of defect detection on PCB image i.e with red square box defect detection marked as PCB board missing and short component.
+- **`Output defect detection on PCB:`**
+  The Visualizer pod showing the output of defect detection on PCB image i.e with red square box defect detection marked as PCB board missing component and solder bridge causing a short circuit.
 
-![PCB image output](eis-images/pcb-output.gif)
+<p align="center">
+  <img  src="eis-images/pcb-output.gif"
+</p>
 
 ## EIS Applications Integrated With OpenNESS
 
-OpenNESS eis-experience-kit is developed for deploying EIS applications on OpenNESS Network Edge.
+An eis-experience-kit is developed to integrate and deploy EIS applications on OpenNESS architecture.
 
-Integration of EIS with OpenNESS involved the following:
+Following are the major activities involved in integrating the EIS with OpenNESS to show case this demo:
 
-- Automated the EIS codebase build and deploy process using eis-experience-kit.
-- Added new camera stream pod for sending PCB demo camera stream.
-- Generated Etcd, VideoIngestion, VideoAnalytics, and Visualizer docker container spec to OpenNESS pod spec.
-- All EIS related pods are deployed on the same namespace i.e "eis".
-- For data secure connection all certificates are generated using OpenSSL.
-- All generated certificates are kept on Kubernetes secrets.
-- Added Kubernetes service for accessing pod port.
-- Enabled EIS pod messaged exchange using TCP mode.
-- EIS pod interface connected with kube-ovs dpdk interface.
-- Enabled EIS pod deployment through helm chart.
-- Integrated pod image pulls from local docker-registry.
+- Automation of EIS codebase build and deploy process using eis-experience-kit.
+- Develop new Camera Stream pod for sending RTSP PCB demo camera stream
+- Create pod specification for Etcd, Video-Ingestion, Video-Analytics and Visualizer to deploy in OpenNESS framework.
+- Generate Certificate from OpenSSL for secure connection between pod.
+- Enable Kubernetes secrets for certificate secret store.
+- Enable Kubernetes service for accessing EIS pod port.
+- Configure EIS message exchange trough TCP mode to support pods on multiple nodes.
+- Created helm chart for easy deploying of EIS pod in OpenNESS environment.
+- Integrate EIS image pull process from local docker-registry.
 
-![setup](eis-images/setup.png)
+<p align="center">
+  <img width="700" src="eis-images/setup.png"
+</p>
 
-The EIS application can be deployed through the OpenNESS Network Edge architecture which requires the application micro-services to be adapted in order to match the distributed nature of the telco network. The application micro-services are deployed across the following sub-networks:
+The EIS application can be deployed through the OpenNESS architecture which requires the application micro-services to be adapted in order to match the distributed nature of the telco network. The application micro-services are deployed across the following sub-networks:
 
-- **Cloud**: The UI and the database master run in the cloud, where the UI displays a summarization view of the defect on the board which is received from different IP cameras.
+- **Cloud**: The UI and database master run in the cloud, where UI displays a summarized view of the defect on the board which is received from different IP cameras.
 
-- **EdgeNode**: Image processing will occur on the edge node, receive the image from multiple cameras, filter unwanted images, analyze the image, and send for display
+- **EdgeNode**: Image processing will occur on the edge node, receive the image from multiple cameras, filter unwanted images, analyze the image, and send for display.
 
 - **Camera**: A set of cameras connected through the wireless network.
 
-- Steps involved in the deployment of the EIS application using OpenNESS.
+- Steps involves in the deployment of the EIS application using OpenNESS.
 
-  1. The OpenNESS controller enrolls the edge nodes.
-  1. The edge node sends the request for interface configuration.
-  1. The OpenNESS controller configures the interface policy for node upstream and downstream.
-  1. The OpenNESS controller deploys the EIS application on the edge node.
-  1. The OpenNESS controller configures the DNS and traffic policy for the applications on Node.
-  1. Deploy EIS application on the edge node and launches the EIS PCB demo application.
+  1. The Controller node enrolls the edge nodes.
+  1. The Edge node send request for interface configuration.
+  1. The Controller node configures the interface policy for node upstream and downstream.
+  1. The Controller node deploy the EIS application on Edge node.
+  1. The Controller configures the DNS and traffic policy for the applications on node.
+  1. Deploy EIS application on the Edge node and launches the EIS PCB demo application.
 
 The **Cloud** and **Camera** parts of the PCB demo Application are not part of the deployment and are assumed already running. 
 
-EIS installation and deployment on the OpenNESS Network Edge environment is available at: 
-https://github.com/otcshare/edgeapps/blob/master/applications/eis-experience-kit/README.md
+EIS installation and deployment on the OpenNESS Network Edge environment is available at [eis-experience-kit](https://github.com/otcshare/edgeapps/blob/master/applications/eis-experience-kit/README.md)
 
 *NOTE: `In the above diagram, the PCB video stream pod is used for sending the RTSP stream. But in LTE/5G Network real-time deployment, the camera stream will come from real IP camera as per below diagram`*
 
-![setup](eis-images/eis-lte-5g-nw.png)
+<p align="center">
+  <img width="700" src="eis-images/eis-lte-5g-nw.png"
+</p>
 
 ### Cloud Native Approach 
 
-With a Cloud Native approach, the EIS application can be deployed on multiple nodes, EIS different pod can be scaled as per the multi-stream requirement. Using Kubernetes service name pod communication will happen.
+With a Cloud Native approach, the EIS application can be deployed on multiple nodes, EIS pods can be scaled as per the multi-stream requirement. Using Kubernetes service name pod communication will happen.
 
-![EIS Scaling with OpenNESS](eis-images/eis-namespace.png)
 
-### Challenges
-
-Some challenges observed during integration time :
-
-- EIS OpenNESS pod connection with Etcd pod.
-- Pod interconnects from IPC mode to TCP mode.
-- Certificate migration from the hardcoded path to Kubernetes secret function
-- RTSP stream access from hardcode IP to the service name.
-- Performance measurement on EIS on TCP mode.
+<p align="center">
+  <img width="700" src="eis-images/eis-namespace.png"
+</p>
 
 ## Conclusion
 
-EIS experience kit integrated and deployed on OpenNESS edge node on Kubernetes setup successfully. Now on OpenNESS setup running a few scripts, we can deploy EIS Domo successfully Network Edge. Also, we can scale up/down the EIS pod deployment as per multiple stream traffic requirements. 
+The PCB demo sample application when deployed on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS and EIS.
 
-
-
- 
+## Reference
+- [OpenNESS Architecture]( https://github.com/open-ness/specs/blob/master/doc/architecture.md)
+- [Intel’s Edge Insights for Industrial](https://www.intel.com/content/www/us/en/internet-of-things/industrial-iot/edge-insights-industrial.html)
 

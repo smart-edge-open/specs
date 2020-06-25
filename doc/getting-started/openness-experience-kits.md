@@ -8,7 +8,6 @@ Copyright (c) 2019 Intel Corporation
 - [OpenNESS Experience Kits](#openness-experience-kits)
   - [Purpose](#purpose)
   - [OpenNESS setup playbooks](#openness-setup-playbooks)
-  - [Playbooks for OpenNESS offline deployment](#playbooks-for-openness-offline-deployment)
   - [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
     - [Default values](#default-values)
     - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
@@ -25,27 +24,19 @@ Copyright (c) 2019 Intel Corporation
 
 ## Purpose
 
-OpenNESS Experience Kits repository contains set of Ansible playbooks for:
+OpenNESS Experience Kits repository contains set of Ansible playbooks for easy setup of OpenNESS in **Network Edge** and **On-Premise** modes
 
-- easy setup of OpenNESS in **Network Edge** and **On-Premise** modes
-- preparation and deployment of the **offline package** (i.e. package for OpenNESS offline deployment in On-Premise mode)
 
 ## OpenNESS setup playbooks
 
 
 
-## Playbooks for OpenNESS offline deployment
-
-When Edge Controller and Edge Node machines have no internet access and the networking between them is only local, it is possible to deploy OpenNESS using **offline package**. Following ansible playbooks are provided:
-
-- playbooks that download all the packages and dependencies to the local folder and create offline package archive file;
-- playbooks that unpack the archive file and install packages.
-
 ## Customizing kernel, grub parameters, and tuned profile & variables per host.
 
->NOTE: Following per-host customizations in host_vars files are not currently supported in Offline On-Premises mode.
 
 OpenNESS Experience Kits allows user to customize kernel, grub parameters, and tuned profile by leveraging Ansible's feature of host_vars.
+
+> NOTE: `groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in host_vars to change on per node basis while `group_vars/all` contains cluster wide variables.
 
 OpenNESS Experience Kits contains `host_vars/` directory that can be used to place a YAML file (`nodes-inventory-name.yml`, e.g. `node01.yml`). The file would contain variables that would override roles' default values.
 
@@ -181,6 +172,8 @@ kubeovn_dpdk_hugepages: "1Gi"     # Total amount of hugepages that can be used b
 ```
 
 > NOTE: If `kubeovn_dpdk_socket_mem` is being changed, please set `kubeovn_dpdk_hugepages` value to be equal or greater that sum of `kubeovn_dpdk_socket_mem` values. E.g. for `kubeovn_dpdk_socket_mem: "1024,1024"` please set `kubeovn_dpdk_hugepages` to at least `2Gi` (which is equal to 2048 MB).
+
+> NOTE: Variables above will be used on all of the nodes and the controller. Currently per node setting is not supported.
 
 OVS pods limits are configured by:
 ```yaml

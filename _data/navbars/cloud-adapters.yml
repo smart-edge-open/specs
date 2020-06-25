@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Cloud Adapters"
+path: /cloud-adapters/
+order: 8
+section:
+  - title: AWS Greengrass
+    path: /doc/cloud-adapters/openness_awsgreengrass
+    meta_title: OpenNESS Integration with AWS Greengrass
+    meta_description: OpenNESS is an open source software platform that enables easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments.
+    
+  - title: Baidu Cloud
+    path: /doc/cloud-adapters/openness_baiducloud
+    meta_title: OpenNESS Integration with Baidu OpenEdge
+    meta_description: OpenNESS can integrate with Baidu Cloud Connector, OpenEdge which is Edge IoT Gateway. Baidu Edge solution is called as Baidu® IntelliEdge.

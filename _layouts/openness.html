@@ -1,0 +1,233 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+{%- assign pageName = page.path | split: "/"  -%}
+
+{%- if pageName[1] -%}
+{%- assign pageName = pageName[1] | prepend: "/" | append: "/" | replace: ".md","" -%}
+{%- else -%}
+{%- assign pageName = pageName[0] | prepend: "/" | append: "/" | replace: ".md","" -%}
+{%- endif -%}
+
+
+{%- assign navigations = "" | split:"|" -%}
+{%- for navbars_data in site.data.navbars -%}
+  {%- assign nav = navbars_data[1] -%}
+  {%- assign navigations = navigations | push: nav -%}
+  {%- if pageName == nav.path -%}
+    {% assign this_pages_navbar = nav %}
+    {%- else -%}
+    {% assign not_this_page = nav %}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign navbars = navigations | sort:"order" -%}
+
+{%- assign title = page.name | replace: "-"," " | replace: "_"," " | split: ".md" | first -%}
+{%- assign pageTitle = title | split: ' ' -%}
+{%- capture pageTitleUpper -%}{%- for word in pageTitle -%}{{ word | capitalize }} {%- endfor -%}{%- endcapture -%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- for navbar in navbars -%}
+        {%- include metainfo.html meta=navbar.section -%}
+    {%- endfor -%}  
+    <link href="{{ '/templates/openness/favicon.ico' | prepend: site.siteurl }}" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    {% if site.siteurl != 'https://openness.org' %}
+        <meta name="robots" content="noindex, nofollow" />
+    {% endif %}
+    <link href="{{ page.url | prepend: site.baseurl | prepend: site.siteurl }}" rel="canonical" />
+    
+    <link rel="stylesheet" href="{{ 'css/bootstrap.min.css' | prepend: site.CDNurl }}?{{ site.time | date: '%s%N' }}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" type="text/css" />
+    <link rel="stylesheet" href="{{ '/css/custom.css' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}" type="text/css" />
+    <link rel="stylesheet" href="{{ '/css/instantsearch.min.css' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}" type="text/css" />
+    <script src="{{ '/js/instantsearch.min.js' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}"></script>
+    
+    
+    <script>
+        //configure tms
+        var wapLocalCode = 'us-en'; //dynamically set per localized site, see mapping table for values
+        var wapSection = "open-ness"; //section, specific for each site
+        //load tms
+        (function() {
+             var host = (window.document.location.protocol == 'http:') ? "http://www.intel.com" : "https://www.intel.com";
+             var url = host+"/content/dam/www/global/wap/tms-loader.js"; //wap file url
+             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;  po.src = url;
+             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+         })(); 
+    </script>
+
+    <script src="https://www.googletagmanager.com/gtag/js?id=UA-134913728-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-134913728-1');
+    </script>
+
+
+
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-56HQ28L');</script>
+    <!-- End Google Tag Manager -->
+    
+  </head>
+  <body>
+    {%- include header.html -%}
+    <div class="container">
+      <div class="leftSection">  
+          <div class="searchBar-section">   
+            <div class="input-section" data-toggle="popover" data-placement="bottom"></div>
+            <div class="output-section">
+                <div id="search-result"></div>
+                <div id="search-result-pagination"></div>
+            </div>
+          </div>
+          
+       <div class="quickLinkBtn" style="display:none;">Quick Links</div>
+        <ul class="collapseArea">
+         {%- for navbar in navbars -%}
+         {%- assign navbar_id = navbar.path | replace: "/", "-" | remove_first: "-" -%}
+         <li class="{{navbar_id}}">
+            <div class="collaspeHead">{{ navbar.title }}</div>
+            {%- assign availableMenus = navbar.section | where_exp: "item", "item.title != navbar.title" -%}
+            {%- assign childMenu = navbar_id | append: "menu" -%}
+            {%- if availableMenus -%}
+            <div class="collaspeContent {{childMenu}}"  {% if this_pages_navbar == navbar %} {% else %}  style="display:none;" {% endif %} >
+              <ul>                
+                {%- include sideNavigation.html sidebar=availableMenus prefix=childMenu -%}                
+              </ul>
+            </div>
+            {%- endif -%}
+          </li>
+           {%- endfor -%}
+        </ul>      
+      </div>
+        
+      <div class="rightSection">
+        <div class="rightHead">
+          <div class="breadcrumbList pull-left">
+            <a href="{{ site.baseurl | append: "/" }}" class="noCrossRef productSubtitle"> Home </a>
+            {%- if pageTitleUpper != 'index.html' -%}
+                {%- for navbar in navbars -%}
+                    {%- include breadcrumbs.html section=navbar.section -%}
+                {%- endfor -%}
+            {%- endif -%}
+          </div>
+          
+          <div class="editLink pull-right">
+              <a data-proofer-ignore href="https://github.com/open-ness/specs/blob/master/{{page.path}}" rel="nofollow" class="edit-page-link" target="_blank">
+                <i class="fa fa-github" aria-hidden="true"></i>
+                Edit this page
+            </a>
+          </div>         
+        </div>
+        <div class="clearfix"></div>
+        
+        <div>
+            <div class="read-time pull-left">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {% include reading-time.html %}
+            </div>
+            <!--<div class="download-pdf pull-right">
+                <a href="javascript:void(0)" class="download_page">
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    Download this page
+                </a>
+            </div>-->
+        </div>
+        
+        <div class="contentArea" id="contentArea" style="margin-top: 80px;">
+            {{ content }}
+        </div>
+      </div>
+    </div>
+    {%- include footer.html -%}
+    
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="{{ '/js/searchConfig.js' | prepend: site.baseurl | prepend: site.siteurl  }}?{{ site.time | date: '%s%N' }}"></script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+
+<script>
+      jQuery('.download_page').click('on', function(){
+            
+            var HTML_Width = jQuery(".contentArea").width();
+            var HTML_Height = $(".contentArea").height();
+            var top_left_margin = 15;
+            var PDF_Width = HTML_Width+(top_left_margin*2);
+            var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+            var canvas_image_width = HTML_Width;
+            var canvas_image_height = HTML_Height;
+
+            var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;             
+            
+            
+            html2canvas($(".contentArea")[0],{allowTaint:true, imageTimeout: 50000}).then(function(canvas) {
+                canvas.getContext('2d');
+                var imgData = canvas.toDataURL("image/png");
+            //alert(JSON.stringify(canvas));
+		var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+                //alert(imgData);
+                
+		pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+			
+		for (var i = 1; i <= totalPDFPages; i++) { 
+                    pdf.addPage(PDF_Width, PDF_Height);                    
+                    pdf.addImage(imgData, 'PNG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+		}
+			
+		pdf.save("HTML-Document.pdf"); 
+                
+        }); 
+      });
+  
+      </script> -->
+<script>
+/* jQuery('.download_page').click('on', function(){
+        var doc = new jsPDF('p', 'pt', 'a4', true);
+        doc.fromHTML(jQuery('.contentArea').html(), 15, 15,           
+        {
+            'width': 500
+        },
+        function(){
+            doc.save('thisMotion.pdf');
+        });
+    
+    }); */
+
+</script>
+    <script>
+        jQuery('.rightSection .contentArea a').each(function(e){
+            var url = jQuery(this).attr('href');
+            if(typeof url != 'undefined'){
+                var urlFound = url.indexOf('{{site.siteurl}}');
+                var httpUrl = url.indexOf('http://');
+                var httpsUrl = url.indexOf('https://');
+                
+                if(urlFound != '-1'){
+                    jQuery(this).attr('rel','nofollow');
+                }else if(httpUrl != '-1' || httpsUrl != '-1'){
+                    jQuery(this).attr('rel','nofollow');
+                }
+            }
+        });
+        
+        jQuery(document).ready(function() {
+            window.initializeSearch('master', '.input-section', '.output-section', '#search-result', '#search-result-pagination');
+        });
+        
+        
+  </script>
+    
+  </body>  
+</html>

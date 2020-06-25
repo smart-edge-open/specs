@@ -298,10 +298,11 @@ Add traffic policy with rule for LBP:
 
 - Name: LBP rule
 - Priority: 99
-- IP filter:
-  - IP address: 192.168.100.2
-  - Mask: 32
-  - Protocol: all
+- Destination:
+  - IP filter:
+    - IP address: 192.168.100.2
+    - Mask: 32
+    - Protocol: all
 - Target:
   - Action: accept
 - MAC Modifier

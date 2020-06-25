@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Edge Applications"
+path: /applications/
+order: 7
+section:
+  - title: Application Development & Porting Guide
+    path: /doc/applications/openness_appguide
+    meta_title: Application Development and Porting Guide
+    meta_description: OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. 
+    
+  - title: OVC Smart City Application
+    path: /doc/applications/openness_ovc
+    meta_title: Open Visual Cloud Smart City Application on OpenNESS
+    meta_description: The Open Visual Cloud is an open source project that offers a set of pre-defined reference pipelines for various target visual cloud use cases.
+    
+  - title: Intel OpenVINO Sample Application
+    path: /doc/applications/openness_openvino
+    meta_title: OpenVINO Sample Application in OpenNESS
+    meta_description: OpenVINO toolkit, short for Open Visual Inference and Neural network Optimization toolkit, provides improved neural network performance on Intel processors.
