@@ -204,7 +204,7 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
     Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
   Events:    <none>
 
-ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_netdevice": "2",
 
 ne-controller# kubectl delete network-attachment-definitions sriov-openness
