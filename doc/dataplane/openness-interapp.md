@@ -2,14 +2,12 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # InterApp Communication support in OpenNESS
-
-- [InterApp Communication support in OpenNESS](#interapp-communication-support-in-openness)
-  - [Overview](#overview)
-  - [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
-    - [Setup](#setup)
-  - [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
+- [Overview](#overview)
+- [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
+  - [Setup](#setup)
+- [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
 
 ## Overview
 

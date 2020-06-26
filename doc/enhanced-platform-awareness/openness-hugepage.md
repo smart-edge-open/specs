@@ -2,16 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
-# Hugepage support on OpenNESS
-
-- [Hugepage support on OpenNESS](#hugepage-support-on-openness)
-  - [Overview](#overview)
-  - [Details of Hugepage support on OpenNESS](#details-of-hugepage-support-on-openness)
-    - [Examples](#examples)
-      - [Changing size and amount of the hugepages for both controller and nodes](#changing-size-and-amount-of-the-hugepages-for-both-controller-and-nodes)
-      - [Customizing hugepages for specific machine](#customizing-hugepages-for-specific-machine)
-  - [Reference](#reference)
+<!-- omit in toc -->
+# Hugepage support in OpenNESS
+- [Overview](#overview)
+- [Details of Hugepage support on OpenNESS](#details-of-hugepage-support-on-openness)
+  - [Examples](#examples)
+    - [Changing size and amount of the hugepages for both controller and nodes](#changing-size-and-amount-of-the-hugepages-for-both-controller-and-nodes)
+    - [Customizing hugepages for specific machine](#customizing-hugepages-for-specific-machine)
+- [Reference](#reference)
 
 ## Overview
 

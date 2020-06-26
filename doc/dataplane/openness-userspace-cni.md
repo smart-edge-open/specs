@@ -2,14 +2,15 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
-- [Userspace CNI](#userspace-cni)
-  - [Setup Userspace CNI](#setup-userspace-cni)
-  - [HugePages configuration](#hugepages-configuration)
-  - [Pod deployment](#pod-deployment)
-  - [Virtual interface usage](#virtual-interface-usage)
-
+<!-- omit in toc -->
 # Userspace CNI
+- [Overview](#overview)
+- [Setup Userspace CNI](#setup-userspace-cni)
+- [HugePages configuration](#hugepages-configuration)
+- [Pod deployment](#pod-deployment)
+- [Virtual interface usage](#virtual-interface-usage)
+
+## Overview
 
 Userspace CNI is a Container Network Interface Kubernetes plugin that was designed to simplify the process of deployment of DPDK based applications in Kubernetes pods. The plugin uses Kubernetes and Multus CNI's CRD to provide pod with virtual DPDK-enabled ethernet port. In this document you can find details about how to install OpenNESS with Userspace CNI support and how to use it's main features.
 

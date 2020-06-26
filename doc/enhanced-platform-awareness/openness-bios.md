@@ -2,16 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # BIOS and Firmware Configuration on OpenNESS Platform
-
-- [BIOS and Firmware Configuration on OpenNESS Platform](#bios-and-firmware-configuration-on-openness-platform)
-  - [Overview](#overview)
-  - [Usecase for edge](#usecase-for-edge)
-  - [Details: BIOS and Firmware Configuration on OpenNESS Network Edge](#details-bios-and-firmware-configuration-on-openness-network-edge)
-    - [Setup](#setup)
-    - [Usage](#usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+- [Usecase for edge](#usecase-for-edge)
+- [Details: BIOS and Firmware Configuration on OpenNESS Network Edge](#details-bios-and-firmware-configuration-on-openness-network-edge)
+  - [Setup](#setup)
+  - [Usage](#usage)
+- [Reference](#reference)
 
 ## Overview
 

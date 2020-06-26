@@ -2,31 +2,29 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
-# VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations.
-
-- [VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations.](#vm-support-in-openness-for-network-edge---setup-deployment-and-management-considerations)
-  - [Overview](#overview)
-  - [KubeVirt](#kubevirt)
-  - [Stateless vs Stateful VMs](#stateless-vs-stateful-vms)
-    - [VMs with ephemeral storage](#vms-with-ephemeral-storage)
-    - [VMs with persistent Local Storage](#vms-with-persistent-local-storage)
-    - [VMs with Cloud Storage](#vms-with-cloud-storage)
-    - [Creating Docker image for stateless VM](#creating-docker-image-for-stateless-vm)
-  - [Enabling in OpenNESS](#enabling-in-openness)
-  - [VM deployment](#vm-deployment)
-    - [Stateless VM deployment](#stateless-vm-deployment)
-    - [Stateful VM deployment](#stateful-vm-deployment)
-    - [VM deployment with SRIOV NIC support](#vm-deployment-with-sriov-nic-support)
-    - [VM snapshot](#vm-snapshot)
-  - [Limitations](#limitations)
-    - [Cloud Storage](#cloud-storage)
-    - [Storage Orchestration and PV/PVC management](#storage-orchestration-and-pvpvc-management)
-    - [Snapshot Creation](#snapshot-creation)
-  - [Useful Commands and Troubleshooting](#useful-commands-and-troubleshooting)
-    - [Commands](#commands)
-    - [Troubleshooting](#troubleshooting)
-  - [Helpful Links](#helpful-links)
+<!-- omit in toc -->
+# VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations
+- [Overview](#overview)
+- [KubeVirt](#kubevirt)
+- [Stateless vs Stateful VMs](#stateless-vs-stateful-vms)
+  - [VMs with ephemeral storage](#vms-with-ephemeral-storage)
+  - [VMs with persistent Local Storage](#vms-with-persistent-local-storage)
+  - [VMs with Cloud Storage](#vms-with-cloud-storage)
+  - [Creating Docker image for stateless VM](#creating-docker-image-for-stateless-vm)
+- [Enabling in OpenNESS](#enabling-in-openness)
+- [VM deployment](#vm-deployment)
+  - [Stateless VM deployment](#stateless-vm-deployment)
+  - [Stateful VM deployment](#stateful-vm-deployment)
+  - [VM deployment with SRIOV NIC support](#vm-deployment-with-sriov-nic-support)
+  - [VM snapshot](#vm-snapshot)
+- [Limitations](#limitations)
+  - [Cloud Storage](#cloud-storage)
+  - [Storage Orchestration and PV/PVC management](#storage-orchestration-and-pvpvc-management)
+  - [Snapshot Creation](#snapshot-creation)
+- [Useful Commands and Troubleshooting](#useful-commands-and-troubleshooting)
+  - [Commands](#commands)
+  - [Troubleshooting](#troubleshooting)
+- [Helpful Links](#helpful-links)
 
 ## Overview
 

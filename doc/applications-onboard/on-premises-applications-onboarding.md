@@ -2,7 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# On-Premises Edge Applications Onboarding
 - [Introduction](#introduction)
   - [Instructions to setup HTTPD server for images](#instructions-to-setup-httpd-server-for-images)
     - [Automatic deployment](#automatic-deployment)

@@ -2,15 +2,13 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Resource Locality awareness support through Topology manager in OpenNESS
-
-- [Resource Locality awareness support through Topology manager in OpenNESS](#resource-locality-awareness-support-through-topology-manager-in-openness)
-  - [Overview](#overview)
-    - [Edge usecase](#edge-usecase)
-  - [Details - Topology manager support in OpenNESS](#details---topology-manager-support-in-openness)
-    - [Usage](#usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+  - [Edge usecase](#edge-usecase)
+- [Details - Topology manager support in OpenNESS](#details---topology-manager-support-in-openness)
+  - [Usage](#usage)
+- [Reference](#reference)
 
 ## Overview
 

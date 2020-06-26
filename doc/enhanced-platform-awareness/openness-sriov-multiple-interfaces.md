@@ -2,24 +2,22 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Multiple Interface and PCIe SRIOV support in OpenNESS
-
-- [Multiple Interface and PCIe SRIOV support in OpenNESS](#multiple-interface-and-pcie-sriov-support-in-openness)
-  - [Overview](#overview)
-    - [Overview of Multus](#overview-of-multus)
-    - [Overview of SR-IOV CNI](#overview-of-sr-iov-cni)
-    - [Overview of SR-IOV Device Plugin](#overview-of-sr-iov-device-plugin)
-  - [Details - Multiple Interface and PCIe SRIOV support in OpenNESS](#details---multiple-interface-and-pcie-sriov-support-in-openness)
-    - [Multus usage](#multus-usage)
-    - [SRIOV for Network-Edge](#sriov-for-network-edge)
-      - [Edge Node SRIOV interfaces configuration](#edge-node-sriov-interfaces-configuration)
-      - [Usage](#usage)
-    - [SRIOV for On-Premises](#sriov-for-on-premises)
-      - [Edgenode Setup](#edgenode-setup)
-      - [Docker Container Deployment Usage](#docker-container-deployment-usage)
-      - [Virtual Machine Deployment Usage](#virtual-machine-deployment-usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+  - [Overview of Multus](#overview-of-multus)
+  - [Overview of SR-IOV CNI](#overview-of-sr-iov-cni)
+  - [Overview of SR-IOV Device Plugin](#overview-of-sr-iov-device-plugin)
+- [Details - Multiple Interface and PCIe SRIOV support in OpenNESS](#details---multiple-interface-and-pcie-sriov-support-in-openness)
+  - [Multus usage](#multus-usage)
+  - [SRIOV for Network-Edge](#sriov-for-network-edge)
+    - [Edge Node SRIOV interfaces configuration](#edge-node-sriov-interfaces-configuration)
+    - [Usage](#usage)
+  - [SRIOV for On-Premises](#sriov-for-on-premises)
+    - [Edgenode Setup](#edgenode-setup)
+    - [Docker Container Deployment Usage](#docker-container-deployment-usage)
+    - [Virtual Machine Deployment Usage](#virtual-machine-deployment-usage)
+- [Reference](#reference)
 
 ## Overview
 

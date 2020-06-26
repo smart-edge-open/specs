@@ -28,7 +28,7 @@ This deployment flavor enables the following ingredients:
 * Telemetry
 
 ## FlexRAN Flavor 
-<todo>
+
 
 ## Media Analytics Flavor
 The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel Xeon servers. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.

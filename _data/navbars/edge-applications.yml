@@ -9,13 +9,23 @@ section:
     path: /doc/applications/openness_appguide
     meta_title: Application Development and Porting Guide
     meta_description: OpenNESS is an open source software toolkit to enable easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments. 
-    
+
   - title: OVC Smart City Application
     path: /doc/applications/openness_ovc
     meta_title: Open Visual Cloud Smart City Application on OpenNESS
     meta_description: The Open Visual Cloud is an open source project that offers a set of pre-defined reference pipelines for various target visual cloud use cases.
-    
+
   - title: Intel OpenVINO Sample Application
     path: /doc/applications/openness_openvino
     meta_title: OpenVINO Sample Application in OpenNESS
     meta_description: OpenVINO toolkit, short for Open Visual Inference and Neural network Optimization toolkit, provides improved neural network performance on Intel processors.
+
+  - title: OpenNESS Video Analytics Services
+    path: /doc/applications/openness_va_services
+    meta_title: OpenNESS Video Analytics Services
+    meta_description: The Video Analytics Services provided by OpenNESS to enable third party edge application to deploy and use hardware optimized video analytics pipelines.
+
+  - title: Industrial Edge Insights Application on OpenNESS
+    path: /doc/applications/openness_eis
+    meta_title: Industrial Edge Insights Application on OpenNESS — Solution Overview
+    meta_description: Intel Edge Insights Software (EIS) that brings ease of AI deployment in industrial environment through a set of integrated key capabilities.

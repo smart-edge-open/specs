@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Support for setting up port forwarding of a container in OpenNESS On-Prem mode
-
-- [Support for setting up port forwarding of a container in OpenNESS On-Prem mode](#support-for-setting-up-port-forwarding-of-a-container-in-openness-on-prem-mode)
-  - [Overview](#overview)
-  - [Usage](#usage)
+- [Overview](#overview)
+- [Usage](#usage)
 
 ## Overview
 
