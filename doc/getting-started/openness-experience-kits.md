@@ -171,7 +171,7 @@ kubeovn_dpdk_hugepages: "1Gi"     # Total amount of hugepages that can be used b
 
 > NOTE: If `kubeovn_dpdk_socket_mem` is being changed, please set `kubeovn_dpdk_hugepages` value to be equal or greater that sum of `kubeovn_dpdk_socket_mem` values. E.g. for `kubeovn_dpdk_socket_mem: "1024,1024"` please set `kubeovn_dpdk_hugepages` to at least `2Gi` (which is equal to 2048 MB).
 
-> NOTE: Variables above will be used on all of the nodes and the controller. Currently per node setting is not supported.
+> NOTE: `kubeovn_dpdk_socket_mem`, `kubeovn_dpdk_pmd_cpu_mask` and `kubeovn_dpdk_lcore_mask` can be set on per node basis but the hugepage amount allocated with `kubeovn_dpdk_socket_mem` cannot be greater than `kubeovn_dpdk_hugepages` which is the same for the whole cluster.
 
 OVS pods limits are configured by:
 ```yaml
