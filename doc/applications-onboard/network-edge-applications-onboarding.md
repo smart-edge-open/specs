@@ -2,7 +2,8 @@
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# Network Edge Applications Onboarding
 - [Introduction](#introduction)
 - [Installing OpenNESS](#installing-openness)
 - [Building Applications](#building-applications)

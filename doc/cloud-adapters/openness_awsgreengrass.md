@@ -2,18 +2,16 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Integration with AWS Greengrass
-
-- [OpenNESS Integration with AWS Greengrass](#openness-integration-with-aws-greengrass)
-  - [Overview](#overview)
-  - [Run Greengrass on OpenNESS](#run-greengrass-on-openness)
-    - [Running AWS IoT Greengrass in a Docker Container](#running-aws-iot-greengrass-in-a-docker-container)
-      - [Download Dockerfile from AWS](#download-dockerfile-from-aws)
-      - [AWS IoT Greengrass](#aws-iot-greengrass)
-      - [Modify Dockerfile and docker-compose file](#modify-dockerfile-and-docker-compose-file)
-      - [Build a docker container image with credentials](#build-a-docker-container-image-with-credentials)
-    - [Greengrass Deployment on AWS IoT](#greengrass-deployment-on-aws-iot)
+- [Overview](#overview)
+- [Run Greengrass on OpenNESS](#run-greengrass-on-openness)
+  - [Running AWS IoT Greengrass in a Docker Container](#running-aws-iot-greengrass-in-a-docker-container)
+    - [Download Dockerfile from AWS](#download-dockerfile-from-aws)
+    - [AWS IoT Greengrass](#aws-iot-greengrass)
+    - [Modify Dockerfile and docker-compose file](#modify-dockerfile-and-docker-compose-file)
+    - [Build a docker container image with credentials](#build-a-docker-container-image-with-credentials)
+  - [Greengrass Deployment on AWS IoT](#greengrass-deployment-on-aws-iot)
 
 ## Overview
 This application note will provide guidelines and examples on:

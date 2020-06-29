@@ -1,8 +1,9 @@
 ```text
 SPDX-License-Identifier: Apache-2.0     
-Copyright © 2020 Intel Corporation
+Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# OpenNESS Radio Access Network
 - [Introduction](#introduction)
 - [Building the FlexRAN image](#building-the-flexran-image)
 - [FlexRAN hardware platform configuration](#flexran-hardware-platform-configuration)
@@ -67,9 +68,20 @@ This section will explain the steps involved in building the FlexRAN image. Only
    - FlexRAN SDK modules 
    - FlexRAN WLS share library 
    - FlexRAN CPA libraries 
-6. `cd` to the folder where docker image is built and start the docker build ` docker build -t flexran-va:1.0 .` 
+6. `cd` to the folder where docker image is built and start the docker build ` docker build -t <name of image>:<tag> .`, see the following example which reflects the docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
+   
+   ```shell
+   docker build -t flexran5g:3.10.0-1062.12.1.rt56 .
+   ```
+7. Tag the image and push to local Docker registry (Docker registry deployed as part of OpenNESS Experience Kit)
+   
+   ```shell
+   docker tag flexran5g <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
 
-By the end of step 5 the FlexRAN docker image will be created. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel PACN3000 FPGA. Please refer to [Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) document for further details for setting up Intel PACN3000 vRAN FPGA. 
+   docker push <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
+   ```
+
+By the end of step 7 the FlexRAN docker image will be created and available in Docker registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel PACN3000 FPGA. Please refer to [Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) document for further details for setting up Intel PACN3000 vRAN FPGA. 
 
 # FlexRAN hardware platform configuration 
 ## BIOS 
@@ -121,10 +133,15 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
   openness      syslog-master-894hs                       1/1     Running   0          7d19h
   openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
   ```
-4. Deploy the Kubernetes job to program the [FPGA](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
+4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
-6. Deploy the Kubernetes job to configure the Intel PAC N3000 FPGA `kubectl create -f /opt/edgecontroller/fpga/fpga-config-job.yaml`
-7. Deploy the FlexRAN Kubernetes pod `kubectl create -f flexran-va.yaml` - more info [here](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/flexran-va.yaml)
+6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
+7. Deploy the FlexRAN Kubernetes pod using Helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
+
+   ```shell
+   helm install flexran-pod flexran
+   ```
+
 8. `exec` into FlexRAN pod `kubectl exec -it flexran -- /bin/bash`
 9. Find the PCI Bus function device ID of the FPGA VF assigned to the pod:
 
@@ -132,7 +149,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
    printenv | grep FEC
    ```
 
-10. Edit `phycfg_timer.xml` used for configuration of L1 application with the PCI Bus function device ID from previous step in order to offload FEC to this device:
+11. Edit `phycfg_timer.xml` used for configuration of L1 application with the PCI Bus function device ID from previous step in order to offload FEC to this device:
 
     ```xml
     <!--  DPDK FEC BBDEV to use             [0 - SW, 1 - FPGA, 2 - Both] -->
@@ -140,7 +157,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
     <!--  DPDK BBDev name added to the whitelist. The argument format is <[domain:]bus:devid.func> -->
     <dpdkBasebandDevice>0000:1d:00.1</dpdkBasebandDevice>
     ```
-11. Once in the FlexRAN pod L1 and test-L2 (testmac) can be started.
+12. Once in the FlexRAN pod L1 and test-L2 (testmac) can be started.
 
 # Setting up 1588 - PTP based Time synchronization 
 This section provides an overview of setting up PTP based Time synchronization in a cloud Native Kubernetes/docker environment. For FlexRAN specific xRAN Front haul tests and configuration please refer to the xRAN specific document in the reference section.

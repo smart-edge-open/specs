@@ -2,25 +2,23 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Experience Kits
-
-- [OpenNESS Experience Kits](#openness-experience-kits)
-  - [Purpose](#purpose)
-  - [OpenNESS setup playbooks](#openness-setup-playbooks)
-  - [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
-    - [Default values](#default-values)
-    - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
-    - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
-    - [Use tuned 2.9](#use-tuned-29)
-    - [Default kernel and configure tuned](#default-kernel-and-configure-tuned)
-    - [Change amount of hugepages](#change-amount-of-hugepages)
-    - [Change the size of hugepages](#change-the-size-of-hugepages)
-    - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
-    - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
-    - [Add custom GRUB parameter](#add-custom-grub-parameter)
-    - [Configure OVS-DPDK in kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
-  - [Adding new CNI plugins for Kubernetes (Network Edge)](#adding-new-cni-plugins-for-kubernetes-network-edge)
+- [Purpose](#purpose)
+- [OpenNESS setup playbooks](#openness-setup-playbooks)
+- [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+  - [Default values](#default-values)
+  - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
+  - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
+  - [Use tuned 2.9](#use-tuned-29)
+  - [Default kernel and configure tuned](#default-kernel-and-configure-tuned)
+  - [Change amount of hugepages](#change-amount-of-hugepages)
+  - [Change the size of hugepages](#change-the-size-of-hugepages)
+  - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
+  - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
+  - [Add custom GRUB parameter](#add-custom-grub-parameter)
+  - [Configure OVS-DPDK in kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
+- [Adding new CNI plugins for Kubernetes (Network Edge)](#adding-new-cni-plugins-for-kubernetes-network-edge)
 
 ## Purpose
 
@@ -35,6 +33,8 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 
 
 OpenNESS Experience Kits allows user to customize kernel, grub parameters, and tuned profile by leveraging Ansible's feature of host_vars.
+
+> NOTE: `groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in host_vars to change on per node basis while `group_vars/all` contains cluster wide variables.
 
 OpenNESS Experience Kits contains `host_vars/` directory that can be used to place a YAML file (`nodes-inventory-name.yml`, e.g. `node01.yml`). The file would contain variables that would override roles' default values.
 
@@ -170,6 +170,8 @@ kubeovn_dpdk_hugepages: "1Gi"     # Total amount of hugepages that can be used b
 ```
 
 > NOTE: If `kubeovn_dpdk_socket_mem` is being changed, please set `kubeovn_dpdk_hugepages` value to be equal or greater that sum of `kubeovn_dpdk_socket_mem` values. E.g. for `kubeovn_dpdk_socket_mem: "1024,1024"` please set `kubeovn_dpdk_hugepages` to at least `2Gi` (which is equal to 2048 MB).
+
+> NOTE: `kubeovn_dpdk_socket_mem`, `kubeovn_dpdk_pmd_cpu_mask` and `kubeovn_dpdk_lcore_mask` can be set on per node basis but the hugepage amount allocated with `kubeovn_dpdk_socket_mem` cannot be greater than `kubeovn_dpdk_hugepages` which is the same for the whole cluster.
 
 OVS pods limits are configured by:
 ```yaml

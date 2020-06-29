@@ -2,10 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS OnPremises: Controller and Edge node setup
-
-- [OpenNESS OnPremises: Controller and Edge node setup](#openness-onpremises-controller-and-edge-node-setup)
 - [Purpose](#purpose)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -298,10 +296,11 @@ Add traffic policy with rule for LBP:
 
 - Name: LBP rule
 - Priority: 99
-- IP filter:
-  - IP address: 192.168.100.2
-  - Mask: 32
-  - Protocol: all
+- Destination:
+  - IP filter:
+    - IP address: 192.168.100.2
+    - Mask: 32
+    - Protocol: all
 - Target:
   - Action: accept
 - MAC Modifier

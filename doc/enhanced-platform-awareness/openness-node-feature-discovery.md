@@ -2,17 +2,15 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Node Feature Discovery support in OpenNESS
-
-- [Node Feature Discovery support in OpenNESS](#node-feature-discovery-support-in-openness)
-  - [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
-  - [Details](#details)
-    - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
-      - [Usage](#usage)
-    - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
-      - [Usage](#usage-1)
-  - [Reference](#reference)
+- [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
+- [Details](#details)
+  - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
+    - [Usage](#usage)
+  - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
+    - [Usage](#usage-1)
+- [Reference](#reference)
 
 ## Overview of NFD and Edge usecase
 

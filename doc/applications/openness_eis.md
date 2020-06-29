@@ -2,22 +2,21 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
+<!-- omit in toc -->
 # Industrial Edge Insights Application on OpenNESS — Solution Overview
-
- - [Edge Insights Software Introduction](#edge-insights-software-introduction)
-  - [EIS PCB Defects Detection](#eis-pcb-defects-detection) 
+- [Edge Insights Software Introduction](#edge-insights-software-introduction)
+- [EIS PCB Defects Detection](#eis-pcb-defects-detection)
     - [Etcd](#etcd)
     - [Camera Stream](#camera-stream)
     - [Video Ingestion](#video-ingestion)
-    - [Video Analytics](#video-analytics) 
+    - [Video Analytics](#video-analytics)
     - [Visualizer](#visualizer)
-  - [PCB image processing flow through the system](#pcb-image-processing-flow-through-the-system)
-  - [PCB defects detection results](#pcb-defects-detection-results) 
-  - [EIS Applications Integrated With OpenNESS](#eis-applications-integrated-with-openness) 
-  - [Cloud Native Approach](#cloud-native-approach) 
-     
- - [Conclusion](#conclusion)
- - [Reference](#reference)
+- [PCB image processing flow through the system](#pcb-image-processing-flow-through-the-system)
+- [PCB defects detection results](#pcb-defects-detection-results)
+- [EIS Applications Integrated With OpenNESS](#eis-applications-integrated-with-openness)
+- [Cloud Native Approach](#cloud-native-approach)
+- [Conclusion](#conclusion)
+- [Reference](#reference)
 
 ## Edge Insights Software Introduction
 

@@ -2,6 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
+<!-- omit in toc -->
+# User Plane Function (UPF)
 - [Introduction](#introduction)
 - [How to build](#how-to-build)
 - [UPF configure](#upf-configure)
@@ -128,9 +130,9 @@ af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Ser
 3. Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
 
 ```bash
-ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
+ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
-ne-node# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --status
+ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --status
 Network devices using DPDK-compatible driver
 ============================================
 0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
@@ -204,7 +206,7 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
     Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
   Events:    <none>
 
-ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_netdevice": "2",
 
 ne-controller# kubectl delete network-attachment-definitions sriov-openness
@@ -250,7 +252,7 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
   Events:    <none>
 ```
 
-6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of node and it will restart automatically in about 20 seconds
+6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of **ne-node** and it will restart automatically in about 20 seconds
 
 ```bash
 ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
@@ -259,7 +261,7 @@ ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-devic
 7. Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
 
 ```bash
-ne-controller# kubectl get node esi15 -o json | jq '.status.allocatable' | grep sriov
+ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
   "intel.com/intel_sriov_dpdk": "1",
   "intel.com/intel_sriov_netdevice": "1",
 ```
@@ -307,8 +309,8 @@ upf-cnf          1/1     Running   0          6d19h
 Note: The command **groupadd vpp** needs to be given only for the first execution.
   
 ```bash
-ne-controller# groupadd vpp
 ne-controller# kubectl exec -it upf-cnf -- /bin/bash
+upf-cnf# groupadd vpp
 upf-cnf# ./run_upf.sh
 ```
 ## Uninstall UPF POD from OpenNESS controller

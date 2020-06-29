@@ -2,8 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Support for overriding the startup command of a container in OpenNESS On-Prem mode
+- [Overview](#overview)
+- [Usage](#usage)
 
 ## Overview
 

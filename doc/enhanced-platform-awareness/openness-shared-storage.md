@@ -2,13 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Shared storage for containers in OpenNESS On-Prem mode
-
-
-- [Shared storage for containers in OpenNESS On-Prem mode](#shared-storage-for-containers-in-openness-on-prem-mode)
-	- [Overview](#overview)
-	- [Usage](#usage)
+- [Overview](#overview)
+- [Usage](#usage)
 
 ## Overview
 

@@ -2,31 +2,29 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
-# VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations.
-
-- [VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations.](#vm-support-in-openness-for-network-edge---setup-deployment-and-management-considerations)
-  - [Overview](#overview)
-  - [KubeVirt](#kubevirt)
-  - [Stateless vs Stateful VMs](#stateless-vs-stateful-vms)
-    - [VMs with ephemeral storage](#vms-with-ephemeral-storage)
-    - [VMs with persistent Local Storage](#vms-with-persistent-local-storage)
-    - [VMs with Cloud Storage](#vms-with-cloud-storage)
-    - [Creating Docker image for stateless VM](#creating-docker-image-for-stateless-vm)
-  - [Enabling in OpenNESS](#enabling-in-openness)
-  - [VM deployment](#vm-deployment)
-    - [Stateless VM deployment](#stateless-vm-deployment)
-    - [Stateful VM deployment](#stateful-vm-deployment)
-    - [VM deployment with SRIOV NIC support](#vm-deployment-with-sriov-nic-support)
-    - [VM snapshot](#vm-snapshot)
-  - [Limitations](#limitations)
-    - [Cloud Storage](#cloud-storage)
-    - [Storage Orchestration and PV/PVC management](#storage-orchestration-and-pvpvc-management)
-    - [Snapshot Creation](#snapshot-creation)
-  - [Useful Commands and Troubleshooting](#useful-commands-and-troubleshooting)
-    - [Commands](#commands)
-    - [Troubleshooting](#troubleshooting)
-  - [Helpful Links](#helpful-links)
+<!-- omit in toc -->
+# VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations
+- [Overview](#overview)
+- [KubeVirt](#kubevirt)
+- [Stateless vs Stateful VMs](#stateless-vs-stateful-vms)
+  - [VMs with ephemeral storage](#vms-with-ephemeral-storage)
+  - [VMs with persistent Local Storage](#vms-with-persistent-local-storage)
+  - [VMs with Cloud Storage](#vms-with-cloud-storage)
+  - [Creating Docker image for stateless VM](#creating-docker-image-for-stateless-vm)
+- [Enabling in OpenNESS](#enabling-in-openness)
+- [VM deployment](#vm-deployment)
+  - [Stateless VM deployment](#stateless-vm-deployment)
+  - [Stateful VM deployment](#stateful-vm-deployment)
+  - [VM deployment with SRIOV NIC support](#vm-deployment-with-sriov-nic-support)
+  - [VM snapshot](#vm-snapshot)
+- [Limitations](#limitations)
+  - [Cloud Storage](#cloud-storage)
+  - [Storage Orchestration and PV/PVC management](#storage-orchestration-and-pvpvc-management)
+  - [Snapshot Creation](#snapshot-creation)
+- [Useful Commands and Troubleshooting](#useful-commands-and-troubleshooting)
+  - [Commands](#commands)
+  - [Troubleshooting](#troubleshooting)
+- [Helpful Links](#helpful-links)
 
 ## Overview
 
@@ -253,11 +251,11 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
 To deploy a VM requesting SRIOV VF of NIC:
   1. Bind SRIOV interface to VFIO driver on Edge Node:
      ```shell
-     [root@worker ~]# /opt/dpdk-18.11.2/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
+     [root@worker ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
      ```
   2. Delete/Restart SRIOV device plugin on the node:
      ```shell
-     [root@controller ~]# kubectl delete pod kube-sriov-device-plugin-amd64-<podID> -n kube-system
+     [root@controller ~]# kubectl delete pod sriov-release-kube-sriov-device-plugin-amd64-<podID> -n kube-system
      ```
   3. Check that the SRIOV VF for VM is available as allocatable resource for DP (wait a few seconds after restart):
      ```
