@@ -14,3 +14,8 @@ section:
     path: /doc/flavors
     meta_title: OpenNESS Deployment Flavors
     meta_description: Pre-defined deployment flavors using OpenNESS that are available in the OpenNESS Experience Kits.
+
+  - title: OpenNESS Helm
+    path: /doc/orchestration/openness-helm
+    meta_title: OpenNESS Helm
+    meta_description: OpenNESS supports Helm for user to package, configure, and deploy applications and services onto Kubernetes clusters.
