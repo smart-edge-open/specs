@@ -2,33 +2,31 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Telemetry support in OpenNESS
-
-- [Telemetry support in OpenNESS](#telemetry-support-in-openness)
-  - [Overview](#overview)
-  - [Architecture](#architecture)
-  - [Flavors and configuration](#flavors-and-configuration)
-  - [Telemetry features](#telemetry-features)
-    - [Prometheus](#prometheus)
-      - [Usage](#usage)
-    - [Grafana](#grafana)
-      - [Usage](#usage-1)
-    - [Node Exporter](#node-exporter)
-      - [Usage](#usage-2)
-      - [VCAC-A](#vcac-a)
-    - [cAdvisor](#cadvisor)
-      - [Usage](#usage-3)
-    - [CollectD](#collectd)
-      - [Plugins](#plugins)
-      - [Usage](#usage-4)
-    - [OpenTelemetry](#opentelemetry)
-      - [Usage](#usage-5)
-    - [PCM](#pcm)
-      - [Usage](#usage-6)
-    - [TAS](#tas)
-      - [Usage](#usage-7)
-  - [Summary](#summary)
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Flavors and configuration](#flavors-and-configuration)
+- [Telemetry features](#telemetry-features)
+  - [Prometheus](#prometheus)
+    - [Usage](#usage)
+  - [Grafana](#grafana)
+    - [Usage](#usage-1)
+  - [Node Exporter](#node-exporter)
+    - [Usage](#usage-2)
+    - [VCAC-A](#vcac-a)
+  - [cAdvisor](#cadvisor)
+    - [Usage](#usage-3)
+  - [CollectD](#collectd)
+    - [Plugins](#plugins)
+    - [Usage](#usage-4)
+  - [OpenTelemetry](#opentelemetry)
+    - [Usage](#usage-5)
+  - [PCM](#pcm)
+    - [Usage](#usage-6)
+  - [TAS](#tas)
+    - [Usage](#usage-7)
+- [Summary](#summary)
 
 ## Overview
 
