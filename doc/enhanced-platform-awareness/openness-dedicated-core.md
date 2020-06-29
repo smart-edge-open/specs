@@ -72,7 +72,7 @@ CPU Manager for Kubernetes can be deployed using [Helm chart](https://helm.sh/).
 **Edge Node / Kubernetes worker**
 
 1. In `group_vars/all/10-default.yml` change `ne_cmk_enable` to `true`
-2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
+2. To change core isolation set isolated cores in `group_vars/edgenode_group/10-default.yml` as `additional_grub_params` for your node e.g. in `group_vars/edgenode_group/10-default.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
 3. Deploy the node with `deploy_ne.sh node`.
 
 Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
