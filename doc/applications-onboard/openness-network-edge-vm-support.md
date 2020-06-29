@@ -21,6 +21,7 @@ Copyright (c) 2020 Intel Corporation
   - [Cloud Storage](#cloud-storage)
   - [Storage Orchestration and PV/PVC management](#storage-orchestration-and-pvpvc-management)
   - [Snapshot Creation](#snapshot-creation)
+  - [CDI image upload fails when CMK is enabled](#cdi-image-upload-fails-when-cmk-is-enabled)
 - [Useful Commands and Troubleshooting](#useful-commands-and-troubleshooting)
   - [Commands](#commands)
   - [Troubleshooting](#troubleshooting)
@@ -183,6 +184,7 @@ To deploy a sample stateful VM with persistent storage and additionally use Gene
       [root@controller ~]# kubectl get services -A | grep cdi-uploadproxy
       ```
   4. Create and upload the image to PVC via CDI
+      > Note: There is currently a limitation when using the CDI together with CMK (Intel's CPU Manager for Kubernetes), the CDI upload pod will fail to deploy on the node due to K8s node taint provided by CMK, for a workaround please see the [limitations section](#cdi-image-upload-fails-when-cmk-is-enabled).
       ```shell
       [root@controller ~]# kubectl virt image-upload dv centos-dv --image-path=/root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443
 
@@ -353,6 +355,30 @@ Currently in Network Edge OpenNESS there is no mechanism to manage storage, the 
 ### Snapshot Creation
 
 Currently snapshot creation of the stateful VM is to be done by the user manually using the QEMU utility. K8s does provide a Volume Snapshot and Volume Snapshot Restore functionality but at time of writing it is only available for out-off tree K8s device storage plugins supporting CSI driver - the local volume plugin used in this implementation is not yet supported as a CSI plugin. A consideration of how to automate and simplify a VM snapshot for the user will be made in the future.
+
+### CDI image upload fails when CMK is enabled
+
+There is an issue with using CDI when uploading VM images when CMK is enabled due to missing CMK taint toleration. The CDI upload pod does not get deployed and the `virtctl` plugin command times out waiting for the action to complete. A workaround for the issue is to invoke the CDI upload command, edit the taint toleration for the CDI upload to tolerate CMK, update the pod, create the PV and let the pod run to completion. The following script is an example of how to perform the above steps:
+
+```shell
+#!/bin/bash
+
+kubectl virt image-upload dv centos-dv --image-path=/root/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi  --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443 &
+
+sleep 5
+
+kubectl get pod cdi-upload-centos-dv -o yaml --export > cdiUploadCentosDv.yaml
+
+kubectl get pods
+
+awk 'NR==314{print "  - effect: NoSchedule"}NR==314{print "    key: cmk"}NR==314{print "    operator: Exists"}1' cdiUploadCentosDv.yaml > cdiUploadCentosDvToleration.yaml
+
+kubectl apply -f cdiUploadCentosDvToleration.yaml
+
+sleep 5
+
+kubectl create -f /opt/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
+```
 
 ## Useful Commands and Troubleshooting
 
