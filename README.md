@@ -110,3 +110,51 @@ Below is the complete list of OpenNESS solution documentation
 * [<b>OpenNESS Website - Developers </b>: Website containing developer resources](https://www.openness.org/developers) 
 * [<b>Intel Network Builders OpenNESS training </b>](https://builders.intel.com/university/networkbuilders/coursescategory/open-network-edge-services-software-openness)
  
+## List of Abbreviations
+- 3GPP: Third Generation Partnership Project
+- CUPS: Control and User Plane Separation of EPC Nodes
+- AF: Application Function
+- API: Application Programming Interface
+- APN: Access Point Name
+- EPC: Evolved Packet Core
+- ETSI: European Telecommunications Standards Institute
+- FQDN: Fully Qualified Domain Name
+- HTTP: Hyper Text Transfer Protocol
+- IMSI: International Mobile Subscriber Identity
+- JSON:	JavaScript Object Notation
+- MEC: Multi-Access Edge Computing
+- OpenNESS: Open Network Edge Services Software
+- LTE: Long-Term Evolution
+- MCC: Mobile Country Code
+- MME: Mobility Management Entity
+- MNC: Mobile Network Code
+- NEF: Network Exposure Function
+- OAM: Operations, Administration and Maintenance
+- PDN: Packet Data Network
+- PFCP: Packet Forwarding Control Protocol- SGW: Serving Gateway- PGW: PDN Gateway
+- PGW-C: PDN Gateway - Control Plane Function
+- PGW-U: PDN Gateway - User Plane Function
+- REST: REpresentational State Transfer
+- SGW-C: Serving Gateway - Control Plane Function
+- SGW-U: Serving Gateway - User Plane Function
+- TAC: Tracking Area Code
+- UE: User Equipment (in the context of LTE)
+- VIM: Virtual Infrastructure Manager 
+- UUID: Universally Unique IDentifier 
+- AMF: Access and Mobility Mgmt Function
+- SMF: Session Management Function
+- AUSF: Authentication Server Function
+- NEF: Network Exposure Function
+- NRF: Network function Repository Function
+- UDM: Unified Data Management
+- PCF: Policy Control Function
+- UPF: User Plane Function
+- DN: Data Network
+- AF: Application Function
+- SR-IOV: Single Root I/O Virtualization
+- NUMA: Non-Uniform Memory Access
+- COTS: Commercial Off-The-Shelf 
+- DU: Distributed Unit of RAN
+- CU: Centralized Unit of RAN
+- OEK: OpenNESS Experience Kit 
+- IDO: Intel Distribution of OpenNESS 
