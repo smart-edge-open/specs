@@ -220,12 +220,6 @@ spec:
 Support for providing SR-IOV interfaces to containers and virtual machines is also available for OpenNESS On-Premises deployments.
 
 #### Edgenode Setup
-To install the OpenNESS node with SR-IOV support, the option `role: sriov_device_init/onprem` must be uncommented in the `edgenode_group` in `on_premises.yml` of the ansible scripts.
-
-```yaml
-- role: sriov_device_init/onprem
-```
-
 In order to configure the number of SR-IOV VFs on the node, the `network_interfaces` variable located under `sriov` in `host_vars/node01.yml` needs to be updated with the physical network interfaces on the node where the VFs should be created, along with the number of VFs to be created for each interface. The format this information should be provided in is `{interface_name: number_of_vfs, ...}`.
 
 > Note: Remember that each node must be added to the ansible inventory file `inventory.ini` if they are to be deployed by the ansible scripts.
