@@ -4,6 +4,7 @@ Copyright (c) 2019 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
+- [Overview](#overview)
 - [HDDL Introduction](#hddl-introduction)
 - [HDDL OpenNESS Integration](#hddl-openness-integration)
   - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
@@ -14,6 +15,7 @@ Copyright (c) 2019 Intel Corporation
 - [Summary](#summary)
 - [Reference](#reference)
 
+## Overview
 Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload.
 
 ## HDDL Introduction

@@ -69,3 +69,8 @@ section:
         path: /doc/enhanced-platform-awareness/openness-shared-storage
         meta_title: Shared Storage for Containers in Openness On-Premises Mode
         meta_description: OpenNESS On-Prem mode provides possibility to use volume and bind mount storage models known from docker.
+
+      - title: Telemetry support in OpenNESS
+        path: /doc/enhanced-platform-awareness/openness-telemetry
+        meta_title: Telemetry support in OpenNESS
+        meta_description: OpenNESS supports platform and application telemetry allowing users to retrieve information about the platform, the underlying hardware, cluster and applications deployed.

@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 <!-- omit in toc -->
-# OpenNESS Network Edge - Enhanced Platform Awareness Features supported 
+# OpenNESS Network Edge - Enhanced Platform Awareness Features supported
 - [Overview](#overview)
 - [Features](#features)
 
