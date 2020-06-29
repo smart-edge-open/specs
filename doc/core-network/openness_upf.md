@@ -2,6 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
+<!-- omit in toc -->
+# User Plane Function (UPF)
 - [Introduction](#introduction)
 - [How to build](#how-to-build)
 - [UPF configure](#upf-configure)

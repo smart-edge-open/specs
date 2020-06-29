@@ -2,19 +2,18 @@
 SPDX-License-Identifier: Apache-2.0     
 Copyright © 2019 Intel Corporation  
 ```
-
+<!-- omit in toc -->
 # OpenVINO Sample Application in OpenNESS
-- [OpenVINO Sample Application in OpenNESS](#openvino-sample-application-in-openness)
-	- [Introduction](#introduction)
-	- [Accelerating OpenVINO execution through Intel Movidius VPUs](#accelerating-openvino-execution-through-intel-movidius-vpus)
-	- [Components](#components)
-		- [Client Simulator](#client-simulator)
-		- [OpenVINO Producer Application](#openvino-producer-application)
-		- [OpenVINO Consumer Application](#openvino-consumer-application)
-	- [Execution Flow Between EAA, Producer &amp; Consumer](#execution-flow-between-eaa-producer-amp-consumer)
-	- [Build &amp; Deployment of OpenVINO Applications](#build-amp-deployment-of-openvino-applications)
-		- [Docker Images Creation](#docker-images-creation)
-		- [Streaming &amp; Displaying the Augmented Video](#streaming-amp-displaying-the-augmented-video)
+- [Introduction](#introduction)
+- [Accelerating OpenVINO execution through Intel Movidius VPUs](#accelerating-openvino-execution-through-intel-movidius-vpus)
+- [Components](#components)
+	- [Client Simulator](#client-simulator)
+	- [OpenVINO Producer Application](#openvino-producer-application)
+	- [OpenVINO Consumer Application](#openvino-consumer-application)
+- [Execution Flow Between EAA, Producer & Consumer](#execution-flow-between-eaa-producer--consumer)
+- [Build & Deployment of OpenVINO Applications](#build--deployment-of-openvino-applications)
+	- [Docker Images Creation](#docker-images-creation)
+	- [Streaming & Displaying the Augmented Video](#streaming--displaying-the-augmented-video)
 
 ## Introduction
 OpenVINO toolkit, short for Open Visual Inference and Neural network Optimization toolkit, provides improved neural network performance on Intel processors and enables development of cost-effective and real-time vision applications. The toolkit enables deep learning inference and easy heterogeneous execution across multiple Intel platforms (Intel CPUs, Intel Integrated Graphics, Intel FPGA, Intel Movidius Neural Compute Stick, Intel Neural Compute Stick 2 and Intel Vision Accelerator Design with Intel Movidius VPUs) - providing implementations across cloud architectures to edge devices.

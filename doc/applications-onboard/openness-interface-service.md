@@ -1,20 +1,21 @@
+```text
 SPDX-License-Identifier: Apache-2.0
-Copyright © 2019-2020 Intel Corporation
-
+Copyright (c) 2019-2020 Intel Corporation
+```
+<!-- omit in toc -->
 # OpenNESS Interface Service
-
-  - [Overview](#overview)
-  - [Traffic from external host](#traffic-from-external-host)
-  - [Usage](#usage)
-  - [Default parameters](#default-parameters)
-  - [Supported drivers](#supported-drivers)
-  - [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
-  - [Hugepages (DPDK)](#hugepages-dpdk)
-  - [Examples](#examples)
-    - [Getting information about node's interfaces](#getting-information-about-nodes-interfaces)
-    - [Attaching kernel interfaces](#attaching-kernel-interfaces)
-    - [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
-    - [Detaching interfaces](#detaching-interfaces)
+- [Overview](#overview)
+- [Traffic from external host](#traffic-from-external-host)
+- [Usage](#usage)
+- [Default parameters](#default-parameters)
+- [Supported drivers](#supported-drivers)
+- [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
+- [Hugepages (DPDK)](#hugepages-dpdk)
+- [Examples](#examples)
+  - [Getting information about node's interfaces](#getting-information-about-nodes-interfaces)
+  - [Attaching kernel interfaces](#attaching-kernel-interfaces)
+  - [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
+  - [Detaching interfaces](#detaching-interfaces)
 
 ## Overview
 

@@ -2,22 +2,20 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Support for OVS as dataplane with OVN
-
-- [OpenNESS Support for OVS as dataplane with OVN](#openness-support-for-ovs-as-dataplane-with-ovn)
-  - [OVN Introduction](#ovn-introduction)
-  - [OVN/OVS support in OpenNESS Network Edge](#ovnovs-support-in-openness-network-edge)
-  - [OVS/OVN support in OpenNESS On Premises (OVN CNI)](#ovsovn-support-in-openness-on-premises-ovn-cni)
-    - [Enable OVNCNI](#enable-ovncni)
-    - [OVS-DPDK Parameters](#ovs-dpdk-parameters)
-    - [CNI Implementation](#cni-implementation)
-    - [The Network](#the-network)
-    - [Cluster architecture](#cluster-architecture)
-    - [Additional physical ports](#additional-physical-ports)
-    - [Traffic rules](#traffic-rules)
-      - [Example: Block pod's ingress IP traffic but allow ICMP](#example-block-pods-ingress-ip-traffic-but-allow-icmp)
-  - [Summary](#summary)
+- [OVN Introduction](#ovn-introduction)
+- [OVN/OVS support in OpenNESS Network Edge](#ovnovs-support-in-openness-network-edge)
+- [OVS/OVN support in OpenNESS On Premises (OVN CNI)](#ovsovn-support-in-openness-on-premises-ovn-cni)
+  - [Enable OVNCNI](#enable-ovncni)
+  - [OVS-DPDK Parameters](#ovs-dpdk-parameters)
+  - [CNI Implementation](#cni-implementation)
+  - [The Network](#the-network)
+  - [Cluster architecture](#cluster-architecture)
+  - [Additional physical ports](#additional-physical-ports)
+  - [Traffic rules](#traffic-rules)
+    - [Example: Block pod's ingress IP traffic but allow ICMP](#example-block-pods-ingress-ip-traffic-but-allow-icmp)
+- [Summary](#summary)
 
 ## OVN Introduction
 Open Virtual Network (OVN) is an open source solution based on the Open vSwitch-based (OVS) software-defined networking (SDN) solution for providing network services to instances. OVN adds to the capabilities of OVS to provide native support for virtual network abstractions, such as virtual L2 and L3 overlays and security groups. Further information about the OVN architecture can be found [here](https://www.openvswitch.org/support/dist-docs/ovn-architecture.7.html)

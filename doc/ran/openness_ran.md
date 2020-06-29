@@ -1,8 +1,9 @@
 ```text
 SPDX-License-Identifier: Apache-2.0     
-Copyright © 2020 Intel Corporation
+Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# OpenNESS Radio Access Network
 - [Introduction](#introduction)
 - [Building the FlexRAN image](#building-the-flexran-image)
 - [FlexRAN hardware platform configuration](#flexran-hardware-platform-configuration)

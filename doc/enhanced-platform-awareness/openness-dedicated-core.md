@@ -2,16 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Dedicated CPU core for workload support in OpenNESS
-
-- [Dedicated CPU core for workload support in OpenNESS](#dedicated-cpu-core-for-workload-support-in-openness)
-  - [Overview](#overview)
-  - [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
-    - [Setup](#setup)
-    - [Usage](#usage)
-    - [OnPremises Usage](#onpremises-usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+- [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
+  - [Setup](#setup)
+  - [Usage](#usage)
+  - [OnPremises Usage](#onpremises-usage)
+- [Reference](#reference)
 
 ## Overview
 

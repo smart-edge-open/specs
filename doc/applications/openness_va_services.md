@@ -16,7 +16,7 @@ OpenNESS furnishes the Video Analytics Services to enable third party edge appli
 
 ## Getting Started with Video Analytics Services
 
-To get started with deploying Video Analytics Services through OpenNESS Experience Kits (OEK), refer to [Media Analytics Flavor](../flavors#media-analytics-flavor) and to [Media Analytics Flavor with VCAC-A](../flavors#media-analytics-flavor-with-vcac-a).
+To get started with deploying Video Analytics Services through OpenNESS Experience Kits (OEK), refer to [Media Analytics Flavor](../flavors.md#media-analytics-flavor) and to [Media Analytics Flavor with VCAC-A](../flavors.md#media-analytics-flavor-with-vcac-a).
 
 > **NOTE:** If creating a customized flavor, the *Video Analytics Services* role can be included in the Ansible playbook by setting the flag `video_analytics_services_enable: true` in the flavor file.
 

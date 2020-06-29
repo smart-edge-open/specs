@@ -4,7 +4,6 @@ Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using Visual Compute Accelerator Card - Analytics (VCAC-A) in OpenNESS
-
 - [Overview](#overview)
 - [Architecture](#architecture)
   - [VCA Zone](#vca-zone)
@@ -166,7 +165,7 @@ _Figure - Using VCAC-A Telemetry with OpenNESS_
 4. Now that the VPU device usage became 60, when the `OpenVINO` application turns up, it gets scheduled on VCA pool B in fulfillment of the policy.
 
 ## Media-Analytics-VCA Flavor
-The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [OpenNESS Flavors](../flavors) document and encompasses the VCAC-A installation.
+The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [Media Analytics Flavor with VCAC-A](../flavors.md#media-analytics-flavor-with-vcac-a) section and encompasses the VCAC-A installation.
 
 The VCAC-A installation in OEK performs the following tasks:
 - Pulling the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies

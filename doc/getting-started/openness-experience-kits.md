@@ -2,25 +2,23 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Experience Kits
-
-- [OpenNESS Experience Kits](#openness-experience-kits)
-  - [Purpose](#purpose)
-  - [OpenNESS setup playbooks](#openness-setup-playbooks)
-  - [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
-    - [Default values](#default-values)
-    - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
-    - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
-    - [Use tuned 2.9](#use-tuned-29)
-    - [Default kernel and configure tuned](#default-kernel-and-configure-tuned)
-    - [Change amount of hugepages](#change-amount-of-hugepages)
-    - [Change the size of hugepages](#change-the-size-of-hugepages)
-    - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
-    - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
-    - [Add custom GRUB parameter](#add-custom-grub-parameter)
-    - [Configure OVS-DPDK in kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
-  - [Adding new CNI plugins for Kubernetes (Network Edge)](#adding-new-cni-plugins-for-kubernetes-network-edge)
+- [Purpose](#purpose)
+- [OpenNESS setup playbooks](#openness-setup-playbooks)
+- [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+  - [Default values](#default-values)
+  - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
+  - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
+  - [Use tuned 2.9](#use-tuned-29)
+  - [Default kernel and configure tuned](#default-kernel-and-configure-tuned)
+  - [Change amount of hugepages](#change-amount-of-hugepages)
+  - [Change the size of hugepages](#change-the-size-of-hugepages)
+  - [Change amount & size of hugepages](#change-amount--size-of-hugepages)
+  - [Remove Intel IOMMU from grub params](#remove-intel-iommu-from-grub-params)
+  - [Add custom GRUB parameter](#add-custom-grub-parameter)
+  - [Configure OVS-DPDK in kube-ovn](#configure-ovs-dpdk-in-kube-ovn)
+- [Adding new CNI plugins for Kubernetes (Network Edge)](#adding-new-cni-plugins-for-kubernetes-network-edge)
 
 ## Purpose
 

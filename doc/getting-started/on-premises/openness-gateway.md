@@ -1,15 +1,13 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright © 2019 Intel Corporation
+Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS gateway feature
-
-- [OpenNESS gateway feature](#openness-gateway-feature)
-  - [Introduction](#introduction)
-  - [How to setup](#how-to-setup)
-  - [Known limitations](#known-limitations)
-  - [Further reading](#further-reading)
+- [Introduction](#introduction)
+- [How to setup](#how-to-setup)
+- [Known limitations](#known-limitations)
+- [Further reading](#further-reading)
 
 ## Introduction
 

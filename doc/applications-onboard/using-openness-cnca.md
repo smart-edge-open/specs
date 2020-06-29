@@ -2,7 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# Core Network Configuration Agent (CNCA)
 - [4G/LTE Core Configuration using CNCA](#4glte-core-configuration-using-cnca)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode)
     - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
