@@ -476,7 +476,7 @@ Note: These configuration settings are for real time kernel. The expected kernel
 
 Host kernel version should be - 3.10.0-1062.12.1.rt56.1042.el7.x86_64
 
-Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 ### PTP Synchronization
 

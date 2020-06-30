@@ -99,7 +99,7 @@ onprem_dataplane: "ovncni"
 
 ## Manual steps
 
-> *Ansible Controller* is a machine with [openness-experience-kits](https://github.com/otcshare/openness-experience-kits) repo and it's used to configure *Edge Controller* and *Edge Nodes*. Please be careful not to confuse them.
+> *Ansible Controller* is a machine with [openness-experience-kits](https://github.com/open-ness/openness-experience-kits) repo and it's used to configure *Edge Controller* and *Edge Nodes*. Please be careful not to confuse them.
 
 After the deployment scripts are run there are still some manual steps required to setup the environment.
 
@@ -202,7 +202,7 @@ In order to configure interface available on the Edge Node for the NTS the follo
 | WARNING: do not modify a NIC which is used for Internet connection! |
 | ------------------------------------------------------------------- |
 
-> Note: For adding traffic policy to interface refere to following section in on-premises-applications-onboarding.md: [Instruction to create Traffic Policy and assign it to Interface](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md#instruction-to-create-traffic-policy-and-assign-it-to-interface)
+> Note: For adding traffic policy to interface refere to following section in on-premises-applications-onboarding.md: [Instruction to create Traffic Policy and assign it to Interface](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md#instruction-to-create-traffic-policy-and-assign-it-to-interface)
 
 ![Configuring Interface 1](controller-edge-node-setup-images/AddingInterfaceToNTS.png)
 
@@ -389,7 +389,7 @@ After configuring NTS send PING (it is needed by NTS) from UE to EPC (`ping 192.
   ```
 
 ### Configuring DNS
-* [Instructions for configuring DNS](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
+* [Instructions for configuring DNS](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-edgedns.md)
 
 # Q&A
 
@@ -577,4 +577,4 @@ openssl pkey -pubout -in /var/lib/appliance/certs/key.pem -inform pem -outform d
 
 ## Customization of kernel, grub parameters and tuned profile
 
-OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+OpenNESS Experience Kits provides easy way to customize kernel version, grub parameters and tuned profile - for more information refer to [the OpenNESS Experience Kits guide](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).

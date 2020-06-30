@@ -35,21 +35,21 @@ Copyright (c) 2019-2020 Intel Corporation
 The aim of this document is to familiarize the user with the OpenNESS application on-boarding process for the Network Edge. This guide will provide instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster; it will provide sample deployment scenarios and traffic configuration for the application. The applications will be deployed from Edge Controller via the Kubernetes `kubectl` command line utility, sample specification files for application onboarding will also be provided.
 
 # Installing OpenNESS
-The following application onboarding steps assumes that OpenNESS were installed through [OpenNESS playbooks](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
+The following application onboarding steps assumes that OpenNESS were installed through [OpenNESS playbooks](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md).
 
 # Building Applications
 It is the responsibility of the user to provide the application to be deployed on the OpenNESS platform for Network Edge. The application must be provided in a format of Docker image available either from an external Docker repository (ie. Docker Hub) or a locally build/imported Docker image - the image must be available on the Edge Node which the application will be deployed on.
 
 > Note: setting up of the Docker registry is out of scope of this document. If the user already has a docker container image file and would like to copy it to the node manually then `docker load` command can be used to add the image. The success of using such pre-built docker image depends on dependencies of the application that user needs to be aware of. 
 
-The OpenNESS [edgeapps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. Please pull the repository to your Edge Node in order to build the images.  
+The OpenNESS [edgeapps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. Please pull the repository to your Edge Node in order to build the images.  
 
 This document will explain the build and deployment to two applications 
 1. Sample application: Simple hello-world like reference application for OpenNESS 
 2. OpenVINO application: A close to real-world inference application 
 
 ## Building Sample Application images
-The sample application is available in this [location in edgeapps repository](https://github.com/otcshare/edgeapps/tree/master/sample-app), further information about the application is contained within `Readme.md` file.
+The sample application is available in this [location in edgeapps repository](https://github.com/open-ness/edgeapps/tree/master/sample-app), further information about the application is contained within `Readme.md` file.
 
 To build the sample application Docker images for testing OpenNESS EAA with the consumer and producer applications the following steps are required:
 
@@ -64,7 +64,7 @@ To build the sample application Docker images for testing OpenNESS EAA with the 
    docker images | grep consumer
    ```
 ## Building the OpenVINO Application images
-The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
 
 To build sample application Docker images for testing OpenVINO consumer and producer applications the following steps are required:
 
@@ -297,11 +297,11 @@ The purpose of this section is to guide the user on the complete process of onbo
 
 ## Deploying the Application
 
-1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
+1. An application `yaml` specification file for the OpenVINO producer used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
    ```
-2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
+2. An application `yaml` specification file for the OpenVINO consumer used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image which must be [built](#building-openvino-application-images) and available on the platform. Deploy consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
    ```
@@ -401,7 +401,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
    dig openvino.openness
    ```
 3. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images)
-4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
+4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. Graphical user environment is required to observed the results of the returning augmented videos stream.
    ```
    ./run_docker.sh
    ```
@@ -529,15 +529,15 @@ kubectl interfaceservice get <officeX_host_name>
 
 ## Inter Application Communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
-For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
+For more information on Kube-OVN refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
 
 # Enhanced Platform Awareness
-Enhanced platform awareness is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default please refer to the [NFD whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
+Enhanced platform awareness is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default please refer to the [NFD whitepaper](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
 
-Refer to [<b>supported-epa.md</b>](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge.
+Refer to [<b>supported-epa.md</b>](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge.
 
 # VM support for Network Edge
-Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. For information on application deployment in VM please see [openness-network-edge-vm-support.md](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md).
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default, certain configuration and pre-requisites may need to be fulfilled in order to use all capabilities. For information on application deployment in VM please see [openness-network-edge-vm-support.md](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md).
 
 # Troubleshooting
 In this sections steps for debugging Edge applications in Network Edge will be covered.

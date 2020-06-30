@@ -66,7 +66,7 @@ kubernetes_cnis:
 
 ### Multus usage
 
-Multus CNI is deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/master/files/multus-cni). Multus image is pulled by ansible Multus role and pushed to local Docker registry on Edge Controller.
+Multus CNI is deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/open-ness/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/master/files/multus-cni). Multus image is pulled by ansible Multus role and pushed to local Docker registry on Edge Controller.
 
 [Custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-resources) (CRD) is used to define additional network that can be used by Multus.
 
@@ -135,7 +135,7 @@ kubernetes_cnis:
 - sriov
 ```
 
-SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/sriov/master/files/sriov). Additional chart templates for SR-IOV device plugin are downloaded from [container-experience-kits repository](https://github.com/intel/container-experience-kits/tree/master/roles/sriov-dp-install/charts/sriov-net-dp/templates). SR-IOV images are built from source by ansible SR-IOV role and pushed to local Docker registry on Edge Controller.
+SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/open-ness/openness-experience-kits/tree/master/roles/kubernetes/cni/sriov/master/files/sriov). Additional chart templates for SR-IOV device plugin are downloaded from [container-experience-kits repository](https://github.com/intel/container-experience-kits/tree/master/roles/sriov-dp-install/charts/sriov-net-dp/templates). SR-IOV images are built from source by ansible SR-IOV role and pushed to local Docker registry on Edge Controller.
 
 #### Edge Node SRIOV interfaces configuration
 

@@ -18,4 +18,4 @@ with the value of the command you want to run instead of the default. OpenNESS w
 Make sure your base container has no ENTRYPOINT defined, as otherwise it will be prepended to the command you choose with this feature.
 
 For more details on the application onboarding (including other fields to set), please refer to 
-[Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
+[Application Onboarding Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 

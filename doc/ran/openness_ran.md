@@ -60,7 +60,7 @@ This section will explain the steps involved in building the FlexRAN image. Only
    > Note: these environmental variables path has to be updated according to your installation and file/directory names  
 4. Build L1, WLS interface between L1 and L2 and L2-Stub (testmac)    
    `./flexran_build.sh -r 5gnr_sub6 -m testmac -m wls -m l1app -b -c`
-5. Once the build is successfully completed, copy the required binary files to the folder where docker image is built. The list of binary files that were used is documented in the [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
+5. Once the build is successfully completed, copy the required binary files to the folder where docker image is built. The list of binary files that were used is documented in the [dockerfile](https://github.com/open-ness/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
    - ICC, IPP mpi and mkl Runtime 
    - DPDK build target directory 
    - FlexRAN test vectors (optional) 
@@ -68,7 +68,7 @@ This section will explain the steps involved in building the FlexRAN image. Only
    - FlexRAN SDK modules 
    - FlexRAN WLS share library 
    - FlexRAN CPA libraries 
-6. `cd` to the folder where docker image is built and start the docker build ` docker build -t <name of image>:<tag> .`, see the following example which reflects the docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
+6. `cd` to the folder where docker image is built and start the docker build ` docker build -t <name of image>:<tag> .`, see the following example which reflects the docker image [expected by Helm chart](https://github.com/open-ness/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
    
    ```shell
    docker build -t flexran5g:3.10.0-1062.12.1.rt56 .
@@ -95,11 +95,11 @@ usbcore.autosuspend=-1 selinux=0 enforcing=0 nmi_watchdog=0 softlockup_panic=0 a
 
 Host kernel version - 3.10.0-1062.12.1.rt56.1042.el7.x86_64 
 
-Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 # Deploying and Running the FlexRAN pod
 
-1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge) .
+1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge) .
 2. Ensure there are no FlexRAN pods and FPGA configuration pods are not deployed using `kubectl get pods`
 3. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` 
   ```yaml
@@ -133,9 +133,9 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
   openness      syslog-master-894hs                       1/1     Running   0          7d19h
   openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
   ```
-4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
+4. Deploy the Kubernetes job to program the [FPGA](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
-6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
+6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
 7. Deploy the FlexRAN Kubernetes pod using Helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
 
    ```shell

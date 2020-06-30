@@ -35,7 +35,7 @@ Update the physical ethernet interface with an IP from `192.168.1.0/24` subnet a
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
 
-> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port.
+> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port.
 
 > **NOTE:** The subnet `192.168.1.0/24` is allocated by Ansible playbook to the physical interface which is attached to the first edge node. The second edge node joined to the cluster is allocated the next subnet `192.168.2.0/24` and so on.
 
@@ -77,7 +77,7 @@ Currently interface service supports following values of `driver` parameter:
 
 ## Userspace (DPDK) bridge
 
-Default DPDK-enabled bridge `br-userspace` will be only available if OpenNESS was deployed with support for [Userspace CNI](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using Userspace CNI. You can check if `br-userspace` bridge exists executing the following command on your node:
+Default DPDK-enabled bridge `br-userspace` will be only available if OpenNESS was deployed with support for [Userspace CNI](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using Userspace CNI. You can check if `br-userspace` bridge exists executing the following command on your node:
 
 ```shell
 ovs-vsctl list-br

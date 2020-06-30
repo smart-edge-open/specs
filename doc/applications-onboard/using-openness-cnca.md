@@ -290,7 +290,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopt plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes eco-system. The plugin performs remote callouts against NGC OAM and AF micro service on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

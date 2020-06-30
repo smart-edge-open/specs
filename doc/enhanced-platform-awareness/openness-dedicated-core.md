@@ -151,7 +151,7 @@ EOF
 >   ```
 
 ### OnPremises Usage
-Dedicated core pinning is also supported for container and virtual machine deployment in OnPremises mode. This is done using the EPA Features section provided when creating applications for onboarding. For more details on application creation and onboarding in OnPremises mode, please see the [Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
+Dedicated core pinning is also supported for container and virtual machine deployment in OnPremises mode. This is done using the EPA Features section provided when creating applications for onboarding. For more details on application creation and onboarding in OnPremises mode, please see the [Application Onboarding Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
 
 To set dedicated core pinning for an application, *EPA Feature Key* should be set to `cpu_pin` and *EPA Feature Value* should be set to one of the following options:
 

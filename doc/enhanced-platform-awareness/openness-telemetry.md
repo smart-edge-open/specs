@@ -138,7 +138,7 @@ Node Exporter is a Prometheus exporter that exposes hardware and OS metrics of *
 
 #### VCAC-A
 
-Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file, this text file is used as an input to Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md).
+Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file, this text file is used as an input to Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md).
 
 ### cAdvisor
 
@@ -178,7 +178,7 @@ The various OEK flavors are enabled for CollectD deployment as follows:
 
 1. Select the flavor for deployment of CollectD from the OEK during OpenNESS deployment - flavor is to be selected with `telemetry_flavor: <flavor name>`.
 
-   In the event of using the `flexran` profile, `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` and `n3000-1-3-5-beta-rte-setup.zip` need to be available in `./openness-experience-kits/opae_fpga` directory; for more information about the packages see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#edge-controller)
+   In the event of using the `flexran` profile, `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` and `n3000-1-3-5-beta-rte-setup.zip` need to be available in `./openness-experience-kits/opae_fpga` directory; for more information about the packages see [FPGA support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#edge-controller)
 2. To access metrics available from CollectD, connect to the Prometheus [dashboard](#prometheus).
 3. Look up an example CollectD metric by specifying the metric name (ie. `collectd_cpufreq`) and pressing `execute` under `graph` tab.
    ![CollectD Metric](telemetry-images/collectd_metric.png)
@@ -243,7 +243,7 @@ Processor Counter Monitor (PCM) is an application programming interface (API) an
 
 ### TAS
 
-[Telemetry Aware Scheduler](https://github.com/intel/telemetry-aware-scheduling) enables the user to make K8s scheduling decisions based on the metrics available from telemetry. This is crucial for a variety of Edge use-cases and workloads where it is critical that the workloads are balanced and deployed on the best suitable node based on hardware ability and performance. The user is able to create a set of policies defining the rules to which pod placement must adhere, functionality to de-schedule pods from given nodes if a rule is violated is also provided. TAS consists of a TAS Extender which is an extension to K8s scheduler, it correlates the scheduling policies with deployment strategies and returns decisions to the K8s Scheduler. It also consists of a TAS Controller which consumes TAS policies and makes them available to TAS components locally. A metrics pipeline which exposes metrics to a K8s API must be established for TAS to be able to read in the metrics. In OpenNESS, the metrics pipeline consists of Prometheus responsible for collecting and providing the metrics, and Prometheus Adapter exposing the metrics from Prometheus to a K8s API - this adapter is configured to provide metrics from Node Exporter and CollectD collectors. TAS is enabled by default in OEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
+[Telemetry Aware Scheduler](https://github.com/intel/telemetry-aware-scheduling) enables the user to make K8s scheduling decisions based on the metrics available from telemetry. This is crucial for a variety of Edge use-cases and workloads where it is critical that the workloads are balanced and deployed on the best suitable node based on hardware ability and performance. The user is able to create a set of policies defining the rules to which pod placement must adhere, functionality to de-schedule pods from given nodes if a rule is violated is also provided. TAS consists of a TAS Extender which is an extension to K8s scheduler, it correlates the scheduling policies with deployment strategies and returns decisions to the K8s Scheduler. It also consists of a TAS Controller which consumes TAS policies and makes them available to TAS components locally. A metrics pipeline which exposes metrics to a K8s API must be established for TAS to be able to read in the metrics. In OpenNESS, the metrics pipeline consists of Prometheus responsible for collecting and providing the metrics, and Prometheus Adapter exposing the metrics from Prometheus to a K8s API - this adapter is configured to provide metrics from Node Exporter and CollectD collectors. TAS is enabled by default in OEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
 
 #### Usage
 

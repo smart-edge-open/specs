@@ -245,7 +245,7 @@ spec:
 ```
 #### Telemetry monitoring
 
-  Support for monitoring temperature and power telemetry of the FPGA PACN3000 is also provided from OpenNESS with a CollectD collector configured for `flexran` flavor. PACN3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus from which user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS see [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-telemetry.md#collectd).
+  Support for monitoring temperature and power telemetry of the FPGA PACN3000 is also provided from OpenNESS with a CollectD collector configured for `flexran` flavor. PACN3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus from which user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS see [telemetry whitepaper](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-telemetry.md#collectd).
 
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 

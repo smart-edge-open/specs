@@ -31,7 +31,7 @@ The VCAC-A installation involves [two-stage build](https://github.com/OpenVisual
 
 The OEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical worker node to the OpenNESS cluster. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for close proximity to the hardware acceleration.
 
-When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge worker node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
+When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/open-ness/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge worker node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
 
 ![Smart City Setup](vcaca-images/smart-city-app-vcac-a.png)
 
