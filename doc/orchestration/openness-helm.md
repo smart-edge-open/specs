@@ -86,7 +86,7 @@ To see the values that took effect for a specific release (For example: nfd-rele
    weavenet_cidr_enabled: false
    ```
 
-To customize values and upgrade, users can modify the values.yaml file for the helm charts and use `helm upgrade`. (More details refer to [Helm Commands Guidance](https://helm.sh/docs/helm/))
+To customize values and upgrade, users can modify the values.yaml file for the helm charts and use `helm upgrade`. (More details refer to [Helm CLI Commands List](https://helm.sh/docs/helm/))
 
 
 # References
