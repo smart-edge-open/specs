@@ -2,33 +2,31 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Telemetry support in OpenNESS
-
-- [Telemetry support in OpenNESS](#telemetry-support-in-openness)
-  - [Overview](#overview)
-  - [Architecture](#architecture)
-  - [Flavors and configuration](#flavors-and-configuration)
-  - [Telemetry features](#telemetry-features)
-    - [Prometheus](#prometheus)
-      - [Usage](#usage)
-    - [Grafana](#grafana)
-      - [Usage](#usage-1)
-    - [Node Exporter](#node-exporter)
-      - [Usage](#usage-2)
-      - [VCAC-A](#vcac-a)
-    - [cAdvisor](#cadvisor)
-      - [Usage](#usage-3)
-    - [CollectD](#collectd)
-      - [Plugins](#plugins)
-      - [Usage](#usage-4)
-    - [OpenTelemetry](#opentelemetry)
-      - [Usage](#usage-5)
-    - [PCM](#pcm)
-      - [Usage](#usage-6)
-    - [TAS](#tas)
-      - [Usage](#usage-7)
-  - [Summary](#summary)
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Flavors and configuration](#flavors-and-configuration)
+- [Telemetry features](#telemetry-features)
+  - [Prometheus](#prometheus)
+    - [Usage](#usage)
+  - [Grafana](#grafana)
+    - [Usage](#usage-1)
+  - [Node Exporter](#node-exporter)
+    - [Usage](#usage-2)
+    - [VCAC-A](#vcac-a)
+  - [cAdvisor](#cadvisor)
+    - [Usage](#usage-3)
+  - [CollectD](#collectd)
+    - [Plugins](#plugins)
+    - [Usage](#usage-4)
+  - [OpenTelemetry](#opentelemetry)
+    - [Usage](#usage-5)
+  - [PCM](#pcm)
+    - [Usage](#usage-6)
+  - [TAS](#tas)
+    - [Usage](#usage-7)
+- [Summary](#summary)
 
 ## Overview
 
@@ -119,10 +117,14 @@ Grafana is an open-source visualization and analytics software. It takes the dat
 8. Configure the panel as per below configuration and press apply.
    ![Dash save](telemetry-images/grafana-panel-settings.png)
 
-9. To query a specific metric in the panel select a data source (Prometheus) and pick a metric needed to be monitored. From visualization tab pick a desired style to display the metric. Give the panel a name and press apply in upper right corner.
+9. To query a specific metric in the panel select a data source (Prometheus-TLS) and pick a metric needed to be monitored. From visualization tab pick a desired style to display the metric. Give the panel a name and press apply in upper right corner.
+    > Prometheus's metrics can be queried using [PromQL language](https://prometheus.io/docs/prometheus/latest/querying/basics/). Queried metrics can be then processed using [PromQL's functions](https://prometheus.io/docs/prometheus/latest/querying/functions) or [Grafana's transformations](https://grafana.com/docs/grafana/latest/panels/transformations).
+
    ![Grafana dash](telemetry-images/grafana-panel.png)
 10. To save the dashboard click save in upper right corner.
    ![Grafana dash](telemetry-images/grafana-save.png)
+
+> OpenNESS will deploy Grafana with simple `Example dashboard`. You can use this dashboard to learn how to use Grafana and create your own dashboards.
 
 ### Node Exporter
 

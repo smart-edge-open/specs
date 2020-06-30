@@ -283,3 +283,6 @@ In future OpenNESS releases, various CERA flavor may be available.
 - COTS: Commercial Off-The-Shelf 
 - DU: Distributed Unit of RAN
 - CU: Centralized Unit of RAN
+- SBI: Service Based Interfaces
+- OEK: OpenNESS Experience Kit 
+- IDO: Intel Distribution of OpenNESS 

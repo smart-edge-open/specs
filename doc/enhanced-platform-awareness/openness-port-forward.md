@@ -17,3 +17,7 @@ OpenNESS will pass that information down to Docker, and assuming all goes well, 
 
 For more details on the application onboarding (including other fields to set), please refer to 
 [Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
+
+> Note: Port forward feature for Legacy OnPremises is not supported when using OVN-CNI 
+
+ 
