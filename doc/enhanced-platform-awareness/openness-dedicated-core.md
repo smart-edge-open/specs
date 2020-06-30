@@ -2,16 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Dedicated CPU core for workload support in OpenNESS
-
-- [Dedicated CPU core for workload support in OpenNESS](#dedicated-cpu-core-for-workload-support-in-openness)
-  - [Overview](#overview)
-  - [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
-    - [Setup](#setup)
-    - [Usage](#usage)
-    - [OnPremises Usage](#onpremises-usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+- [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
+  - [Setup](#setup)
+  - [Usage](#usage)
+  - [OnPremises Usage](#onpremises-usage)
+- [Reference](#reference)
 
 ## Overview
 
@@ -53,23 +51,28 @@ CMK documentation available on github includes:
 - [operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md)
 - [user manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).
 
+CPU Manager for Kubernetes can be deployed using [Helm chart](https://helm.sh/). CMK Helm chart used in OpenNESS deployment is available on github repository [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/cmk-install).
+
 ### Setup
 
 **Edge Controller / Kubernetes master**
 
-1. Configure Edge Controller in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/master`, `kubernetes/cni` (both enabled by default) and `cmk/master` (disabled by default).
-2. CMK is enabled with following default values of parameters in `roles/cmk/master/defaults/main.yml` (adjust the values if needed):
-
-- `cmk_num_exclusive_cores` set to `4`
-- `cmk_num_shared_cores` set to `1`
-- `cmk_host_list` set to `node01,node02` (it should contain comma separated list of nodes' hostnames).
-
-3. Deploy the controller with `deploy_ne.sh controller`.
+1. In `group_vars/all/10-default.yml` change `ne_cmk_enable` to `true` and adjust the settings if needed.
+   CMK default settings are:
+   ```yaml
+   # CMK - Number of cores in exclusive pool
+   cmk_num_exclusive_cores: "4"
+   # CMK - Number of cores in shared pool
+   cmk_num_shared_cores: "1"
+   # CMK - Comma separated list of nodes' hostnames
+   cmk_host_list: "node01,node02"
+   ```
+2. Deploy the controller with `deploy_ne.sh controller`.
 
 **Edge Node / Kubernetes worker**
 
-1. Configure Edge Node in Network Edge mode using `network_edge.yml`, following roles must be enabled `kubernetes/worker`, `kubernetes/cni` (both enabled by default) and `cmk/worker` (disabled by default).
-2. To change core isolation set isolated cores in `host_vars/node-name-in-inventory.yml` as `additional_grub_params` for your node e.g. in `host_vars/node01.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
+1. In `group_vars/all/10-default.yml` change `ne_cmk_enable` to `true`
+2. To change core isolation set isolated cores in `group_vars/edgenode_group/10-default.yml` as `additional_grub_params` for your node e.g. in `group_vars/edgenode_group/10-default.yml` set `additional_grub_params: "isolcpus=1-10,49-58"`
 3. Deploy the node with `deploy_ne.sh node`.
 
 Environment setup can be validated using steps from [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).

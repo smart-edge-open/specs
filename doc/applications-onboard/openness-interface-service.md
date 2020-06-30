@@ -1,22 +1,23 @@
-SPDX-License-Identifier: Apache-2.0    
-Copyright © 2019-2020 Intel Corporation
-
+```text
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2019-2020 Intel Corporation
+```
+<!-- omit in toc -->
 # OpenNESS Interface Service
+- [Overview](#overview)
+- [Traffic from external host](#traffic-from-external-host)
+- [Usage](#usage)
+- [Default parameters](#default-parameters)
+- [Supported drivers](#supported-drivers)
+- [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
+- [Hugepages (DPDK)](#hugepages-dpdk)
+- [Examples](#examples)
+  - [Getting information about node's interfaces](#getting-information-about-nodes-interfaces)
+  - [Attaching kernel interfaces](#attaching-kernel-interfaces)
+  - [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
+  - [Detaching interfaces](#detaching-interfaces)
 
-  - [Overview](#overview)
-  - [Traffic from external host](#traffic-from-external-host)
-  - [Usage](#usage)
-  - [Default parameters](#default-parameters)
-  - [Supported drivers](#supported-drivers)
-  - [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
-  - [Hugepages (DPDK)](#hugepages-dpdk)
-  - [Examples](#examples)
-    - [Getting information about node's interfaces](#getting-information-about-nodes-interfaces)
-    - [Attaching kernel interfaces](#attaching-kernel-interfaces)
-    - [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
-    - [Detaching interfaces](#detaching-interfaces)
-
-## Overview 
+## Overview
 
 Interface service is an application running in Kubernetes pod on each worker node of OpenNESS Kubernetes cluster. It allows to attach additional network interfaces of the worker host to provided OVS bridge, enabling external traffic scenarios for applications deployed in Kubernetes pods. Services on each worker can be controlled from master node using kubectl plugin.
 
@@ -29,7 +30,7 @@ A machine (client-sim) that is physically connected to OpenNESS edge node over a
 The machine that is connected to the edge node must be configured as below in order to allow the traffic originating from the client-sim (`192.168.1.0/24` subnet) to be routed over to the Kubernetes cluster (`10.16.0.0/16` subnet).
 
 Update the physical ethernet interface with an IP from `192.168.1.0/24` subnet and the Linux IP routing table with the routing rule as:
-```bash 
+```bash
   ip a a 192.168.1.10/24 dev eth1
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
@@ -55,7 +56,7 @@ Update the physical ethernet interface with an IP from `192.168.1.0/24` subnet a
 
 * `kubectl interfaceservice --help` to learn about usage
 * `kubectl interfaceservice get <node_hostname>` to list network interfaces of node
-* `kubectl interfaceservice attach <node_hostname> <pci_addr1,pci_addr2,...> <ovs_bridge> <driver>` to attach interfaces to OVS bridge `<ovs_bridge>` using specified `driver`. 
+* `kubectl interfaceservice attach <node_hostname> <pci_addr1,pci_addr2,...> <ovs_bridge> <driver>` to attach interfaces to OVS bridge `<ovs_bridge>` using specified `driver`.
 * `kubectl interfaceservice detach <node_hostname> <pci_addr1,pci_addr2,...>` to detach interfaces from OVS br_local bridge
 
 > NOTE: `node_hostname` must be valid worker node name - can be found using `kubectl get nodes`
@@ -70,7 +71,7 @@ Parameters `<ovs_bridge>` and `<driver>` are optional for `attach` command. The 
 
 Currently interface service supports following values of `driver` parameter:
 - `kernel` - this will use default kernel driver
-- `dpdk` - userspace driver `igb_uio` will be used 
+- `dpdk` - userspace driver `igb_uio` will be used
 
 > NOTE: Please remember that `dpdk` devices can be only attached to DPDK-enabled bridges, and `kernel` devices can be only attached to OVS `system` bridges.
 
@@ -102,38 +103,32 @@ ovs-vsctl add-br br-userspace -- set bridge br-userspace datapath_type=netdev
 Please be aware that DPDK apps will require specific amount of HugePages enabled. By default the ansible scripts will enable 1024 of 2M HugePages in system, and then start OVS-DPDK with 1GB of those HugePages reserved for NUMA node 0. If you would like to change this settings to reflect your specific requirements please set ansible variables as defined in the example below. This example enables 4 of 1GB HugePages and appends 2GB to OVS-DPDK leaving 2 pages for DPDK applications that will be running in the pods. This example uses Edge Node with 2 NUMA nodes, each one with 1GB of HugePages reserved.
 
 ```yaml
-# network_edge.yml
-- hosts: controller_group
-  vars:
-    hugepage_amount: "4"
-
-- hosts: edgenode_group
-  vars:
-    hugepage_amount: "4"
-```
-
-```yaml
-# roles/machine_setup/grub/defaults/main.yml
+# group_vars/controller_group/10-default.yml
 hugepage_size: "1G"
+hugepage_amount: "4"
 ```
-
->The variable `hugepage_amount` that can be found in `roles/machine_setup/grub/defaults/main.yml` can be left at default value of `5000` as this value will be overridden by values of `hugepage_amount` variables that were set earlier in `network_edge.yml`.
 
 ```yaml
-# roles/kubernetes/cni/kubeovn/common/defaults/main.yml
-ovs_dpdk_socket_mem: "1024,1024" # Will reserve 1024MB of hugepages for NUNA node 0 and NUMA node 1 respectively.
-ovs_dpdk_hugepage_size: "1Gi" # This is the size of single hugepage to be used by DPDK. Can be 1Gi or 2Mi.
-ovs_dpdk_hugepages: "2Gi" # This is overall amount of hugepags available to DPDK.
+# group_vars/edgenode_group/10-default.yml
+hugepage_size: "1G"
+hugepage_amount: "4"
 ```
 
-> NOTE: DPDK PCI device connected to specific NUMA node cannot be attached to OVS if hugepages for this NUMA node will not be reserved with `ovs_dpdk_socket_mem` variable.
+```yaml
+# group_vars/all/10-default.yml
+kubeovn_dpdk_socket_mem: "1024,1024" # Will reserve 1024MB of hugepages for NUNA node 0 and NUMA node 1 respectively.
+kubeovn_dpdk_hugepage_size: "1Gi" # This is the size of single hugepage to be used by DPDK. Can be 1Gi or 2Mi.
+kubeovn_dpdk_hugepages: "2Gi" # This is overall amount of hugepags available to DPDK.
+```
+
+> NOTE: DPDK PCI device connected to specific NUMA node cannot be attached to OVS if hugepages for this NUMA node will not be reserved with `kubeovn_dpdk_socket_mem` variable.
 
 ## Examples
 
 ### Getting information about node's interfaces
 ```shell
 [root@master1 ~] kubectl interfaceservice get worker1
-  
+
 Kernel interfaces:
 	0000:02:00.0  |  00:1e:67:d2:f2:06  |  detached
 	0000:02:00.1  |  00:1e:67:d2:f2:07  |  detached

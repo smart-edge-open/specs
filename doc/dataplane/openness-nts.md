@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment
-
-- [Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment](#dataplane-support-for-edge-cloud-between-enb-and-epc-s1-u-deployment)
-  - [Overview](#overview)
-  - [Network Traffic Services](#network-traffic-services)
+- [Overview](#overview)
+- [Network Traffic Services](#network-traffic-services)
 
 ## Overview 
 

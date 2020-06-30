@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Support for setting Environment Variables in OpenNESS
-
-- [Support for setting Environment Variables in OpenNESS](#support-for-setting-environment-variables-in-openness)
-  - [Overview](#overview)
-  - [Details of Environment Variable support in OpenNESS](#details-of-environment-variable-support-in-openness)
+- [Overview](#overview)
+- [Details of Environment Variable support in OpenNESS](#details-of-environment-variable-support-in-openness)
 
 ## Overview
 

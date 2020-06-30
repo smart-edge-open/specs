@@ -2,20 +2,20 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
+- [Overview](#overview)
+- [HDDL Introduction](#hddl-introduction)
+- [HDDL OpenNESS Integration](#hddl-openness-integration)
+  - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
+- [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
+  - [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
+  - [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpuvpu-usage)
+  - [Deploying application with HDDL support](#deploying-application-with-hddl-support)
+- [Summary](#summary)
+- [Reference](#reference)
 
-- [Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](#using-intel%c2%ae-movidius%e2%84%a2-myriad%e2%84%a2-x-high-density-deep-learning-hddl-solution-in-openness)
-  - [HDDL Introduction](#hddl-introduction)
-  - [HDDL OpenNESS Integration](#hddl-openness-integration)
-    - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
-  - [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
-    - [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
-    - [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpuvpu-usage)
-    - [Deploying application with HDDL support](#deploying-application-with-hddl-support)
-  - [Summary](#summary)
-  - [Reference](#reference)
-
+## Overview
 Deployment of AI based Machine Learning (ML) applications on the edge is becoming more prevalent. Supporting hardware resources that accelerate AI/ML applications on the edge is key to improve the capacity of edge cloud deployment. It is also important to use CPU instruction set to execute AI/ML tasks when load is less. This paper explains these topics in the context of inference as a edge workload.
 
 ## HDDL Introduction
@@ -61,17 +61,14 @@ Further sections provide information on how to use the HDDL setup on OpenNESS On
 ### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
 To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
 
-To enable on the Edge Node set following in `on_premises.yml` (Please note that the hddl precheck and role needs to be executed after openness/onprem/worker role):
-
-```
-- include_tasks: ./roles/hddl/common/tasks/precheck.yml
-
-- role: hddl/onprem/worker
+To enable, modify `onprem_hddl_enable` variable in `group_vars/all/10-default.yml` file:
+```yaml
+onprem_hddl_enable: true
 ```
 Run setup script `deploy_onprem.sh nodes`.
 
-NOTE: For this release, HDDL only supports default OS kernel(3.10.0-957.el7.x86_64) and need to set flag: kernel_skip as true before running OpenNESS installation scripts. (kernel_skip in the roles/machine_setup/custom_kernel/defaults/main.yml)
-NOTE: The HDDL precheck will check the current role and playbooks variables whether they satisfy the HDDL running pre-conditions.
+> NOTE: For this release, HDDL verifed with default CentOS Minimal No-RT-kernel(3.10.0-957.el7.x86_64) and Customized RT-kernel(3.10.0-1062.12.1.rt56.1042.el7.x86_64).
+> NOTE: For the hardware platforms with ASMedia PCIe Gen3 switch need to upgrade firmware. otherwise there will be potential system hang issue for some small network models such as squeenzenet1.1...etc.
 
 To check HDDL service running status on the edgenode after deploy, docker logs should look like:
 ```

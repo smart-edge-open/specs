@@ -1,3 +1,8 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
 {%- assign pagePath = page.path | remove: ".md" | prepend: "/" -%}
 {%- assign title = page.name | replace: "-"," " | replace: "_"," " | split: ".md" | first -%}
 {%- assign pageTitle = title | split: ' ' -%}

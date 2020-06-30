@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
-# OpenNESS Network Edge - Enhanced Platform Awareness Features supported 
-
-- [OpenNESS Network Edge - Enhanced Platform Awareness Features supported](#openness-network-edge---enhanced-platform-awareness-features-supported)
-  - [Overview](#overview)
-  - [Features](#features)
+<!-- omit in toc -->
+# OpenNESS Network Edge - Enhanced Platform Awareness Features supported
+- [Overview](#overview)
+- [Features](#features)
 
 ## Overview 
 Enhanced Platform Awareness features are supported in OnPremises using Kubernetes infrastructure. Some of the EPA features are supported as Kubernetes jobs, some as daemon sets, some as normal pods and some as Kubernetes device plugins. The overall objective of EPA for network edge is to expose the platform capability to the edge cloud orchastrator for better performance, consistency and reliability.  

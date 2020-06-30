@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Support for setting up port forwarding of a container in OpenNESS On-Prem mode
-
-- [Support for setting up port forwarding of a container in OpenNESS On-Prem mode](#support-for-setting-up-port-forwarding-of-a-container-in-openness-on-prem-mode)
-  - [Overview](#overview)
-  - [Usage](#usage)
+- [Overview](#overview)
+- [Usage](#usage)
 
 ## Overview
 
@@ -19,3 +17,7 @@ OpenNESS will pass that information down to Docker, and assuming all goes well, 
 
 For more details on the application onboarding (including other fields to set), please refer to 
 [Application Onboarding Document](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md) 
+
+> Note: Port forward feature for Legacy OnPremises is not supported when using OVN-CNI 
+
+ 

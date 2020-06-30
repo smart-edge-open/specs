@@ -2,17 +2,15 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Node Feature Discovery support in OpenNESS
-
-- [Node Feature Discovery support in OpenNESS](#node-feature-discovery-support-in-openness)
-  - [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
-  - [Details](#details)
-    - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
-      - [Usage](#usage)
-    - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
-      - [Usage](#usage-1)
-  - [Reference](#reference)
+- [Overview of NFD and Edge usecase](#overview-of-nfd-and-edge-usecase)
+- [Details](#details)
+  - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
+    - [Usage](#usage)
+  - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
+    - [Usage](#usage-1)
+- [Reference](#reference)
 
 ## Overview of NFD and Edge usecase
 
@@ -53,9 +51,11 @@ _Figure - CDN app deployment with NFD Features_
 
 ### Node Feature Discovery support in OpenNESS Network Edge
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `network_edge.yml` file and commenting out `nfd/network_edge` role before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `ne_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
 
 Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
+
+Node Feature Discovery is deployed in OpenNESS using Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
 
 #### Usage
 
@@ -118,7 +118,7 @@ spec:
 
 ### Node Feature Discovery support in OpenNESS On Premises
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by editing the `on_premises.yml` file and commenting out `nfd/onprem/master` role and `nfd/onprem/master` role before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `onprem_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
 
 NFD service in OpenNESS On Premises consists of two software components:
 
@@ -130,9 +130,9 @@ Nfd-worker connects to nfd-master server. Connection between nfd-workers and nfd
 #### Usage
 
 NFD is working automatically and does not require any user action to collect the features from nodes.
-Default version of nfd-worker downloaded by ansible scripts during deployment is v.0.5.0. It can be changed by setting variable `nfd_version` in `roles/nfd/onprem/worker/defaults/main.yml`.
+Default version of nfd-worker downloaded by ansible scripts during deployment is v.0.5.0. It can be changed by setting variable `_nfd_version` in `roles/nfd/onprem/worker/defaults/main.yml`.
 
-Features found by NFD are visible in Edge Controller UI in node's NFD tab. While defining edge application (Controller UI->APPLICATIONS->ADD APPLICATION), `EPA Feature` fields can be used as definition of NFD requirement for app deployment. Eg: if application requires Multi-Precision Add-Carry Instruction Extensions (ADX), user can set EPA Feature Key to `nfd:cpu-cpuid.ADX` and EPA Feature Value to `true`. 
+Features found by NFD are visible in Edge Controller UI in node's NFD tab. While defining edge application (Controller UI->APPLICATIONS->ADD APPLICATION), `EPA Feature` fields can be used as definition of NFD requirement for app deployment. Eg: if application requires Multi-Precision Add-Carry Instruction Extensions (ADX), user can set EPA Feature Key to `nfd:cpu-cpuid.ADX` and EPA Feature Value to `true`.
 
 ![Sample application with NFD Feature required](nfd-images/nfd3_onp_app.png)
 

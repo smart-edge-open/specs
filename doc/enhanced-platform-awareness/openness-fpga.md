@@ -2,23 +2,21 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration
-
-- [Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration](#using-fpga-in-openness-programming-resource-allocation-and-configuration)
-  - [Overview](#overview)
-  - [Intel® PAC N3000 FlexRAN host interface overview](#intel%c2%ae-pac-n3000-flexran-host-interface-overview)
-  - [Intel PAC N3000 Orchestration and deployment with Kubernetes for FlexRAN](#intel-pac-n3000-orchestration-and-deployment-with-kubernetes-for-flexran)
-  - [Intel PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intel-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
-  - [Using FPGA on OpenNESS - Details](#using-fpga-on-openness---details)
-    - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
-      - [Edge Controller](#edge-controller)
-      - [Edge Node](#edge-node)
-    - [FPGA Programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
-    - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
-    - [Requesting resources and running pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
-    - [Verifying Application POD access and usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
-  - [Reference](#reference)
+- [Overview](#overview)
+- [Intel PAC N3000 FlexRAN host interface overview](#intel-pac-n3000-flexran-host-interface-overview)
+- [Intel PAC N3000 Orchestration and deployment with Kubernetes for FlexRAN](#intel-pac-n3000-orchestration-and-deployment-with-kubernetes-for-flexran)
+- [Intel PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intel-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
+- [Using FPGA on OpenNESS - Details](#using-fpga-on-openness---details)
+  - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
+    - [OpenNESS Experience Kit](#openness-experience-kit)
+  - [FPGA Programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
+    - [Telemetry monitoring](#telemetry-monitoring)
+  - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
+  - [Requesting resources and running pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
+  - [Verifying Application POD access and usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
+- [Reference](#reference)
 
 ## Overview
 
@@ -36,7 +34,7 @@ The Intel® FPGA Programmable Acceleration Card (Intel FPGA PAC) N3000 is a full
 
 FlexRAN is a reference Layer 1 pipeline of 4G eNb and 5G gNb on Intel architecture. The FlexRAN reference pipeline consists of L1 pipeline, optimized L1 processing modules, BBU pooling framework, Cloud and Cloud native deployment support and accelerator support for hardware offload. Intel® PAC N3000 card is used by FlexRAN to offload FEC (Forward Error Correction) for 4G and 5G and IO for Fronthaul/Midhaul.
 
-## Intel® PAC N3000 FlexRAN host interface overview
+## Intel PAC N3000 FlexRAN host interface overview
 The PAC N3000 card used in the FlexRAN solution exposes the following physical functions to the CPU host.
 - 2x25G Ethernet interface that can be used for Fronthaul or Midhaul
 - One FEC Interface that can be used of 4G or 5G FEC acceleration
@@ -72,8 +70,8 @@ The full pipeline of preparing the device for a workload deployment and deployin
 
 - Programming the FPGA with RTL factory and user images - Feature installation via Ansible automation and  K8s kubectl plugin provided to use the feature.
 - Enabling SRIOV, binding devices to appropriate drivers and creation of VFs - Delivered as part of the Edge Node's Ansible automation.
-- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility - Docker image creation delivered as part of the Edge Nodes's Ansible automation (Dependency on the config utility from FlexRAN package), Sample pod/job deployment specification and instructions delivered as part of Edge Controller’s package.
-- Enabling orchestration/allocation of the devices (VFs) to non-root pods requesting the devices - Patch to existing SRIOV K8s device plugin extending the functionality, and Ansible automation of image build delivered as part of Edge Node’s package. K8s Plugin deployment delivered as part of Edge Controller's Ansible automation.
+- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility - Docker image creation delivered as part of the Edge Nodes's Ansible automation (Dependency on the config utility from FlexRAN package) - the images being pushed to local docker registry, Sample pod/job deployment via Helm charts.
+- Enabling orchestration/allocation of the devices (VFs) to non-root pods requesting the devices - leveraging the support of FPGA SRIOV VFs from K8s SRIOV Device Plugin. K8s Plugin deployment delivered as part of Edge Controller's Ansible automation.
 - Simple sample BBDEV application to validate the pipeline (ie. SRIOV creation - Queue configuration - Device orchestration - Pod deployment) - Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
 It is assumed that the FPGA is always used with OpenNESS Network Edge, paired with Multus plugin (Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables attaching multiple network interfaces to pods.) to enable the workload pod with a default K8s network interface.
@@ -81,28 +79,29 @@ It is assumed that the FPGA is always used with OpenNESS Network Edge, paired wi
 ### FPGA (FEC) Ansible installation for OpenNESS Network Edge
 To run the OpenNESS package with FPGA (FEC) functionality the feature needs to be enabled on both Edge Controller and Edge Node.
 
-#### Edge Controller
+#### OpenNESS Experience Kit
 
-To enable on Edge Controller set/uncomment following in `network_edge.yml` in OpenNESS-Experience-Kits top level directory:
+To enable from OEK, change variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` to `true`:
 ```yaml
-# network_edge.yml
-- role: opae_fpga/master
+# group_vars/all/10-default.yml
+ne_opae_fpga_enable: true
 ```
 
 Additionally SRIOV must be enabled in OpenNESS:
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 kubernetes_cnis:
 - kubeovn
 - sriov
 ```
 
-Also enable/configure following options in `roles/kubernetes/cni/sriov/common/defaults/main.yml`.
+Also enable/configure following options in `group_vars/all/10-default.yml`.
 The following device config is the default config for the PAC N3000 with 5GNR vRAN user image tested (this configuration is common both to EdgeNode and EdgeController setup).
 ```yaml
-# roles/kubernetes/cni/sriov/common/defaults/main.yml
-fpga_sriov_userspace:
-  enabled: true
+# group_var/all/10-default.yml
+
+fpga_sriov_userspace_enable: true
+
 fpga_userspace_vf:
   enabled: true
   vendor_id: "8086"
@@ -110,14 +109,6 @@ fpga_userspace_vf:
   pf_device_id: "0d8f"
   vf_number: "2"
   vf_driver: "vfio-pci"
-```
-
-#### Edge Node
-
-To enable on the Edge Node set following in `network_edge.yml`:
-
-```
-- role: opae_fpga/worker
 ```
 
 The following packages need to be placed into specific directories in order for the feature to work:
@@ -252,39 +243,46 @@ spec:
 
   backoffLimit: 0
 ```
+#### Telemetry monitoring
+
+  Support for monitoring temperature and power telemetry of the FPGA PACN3000 is also provided from OpenNESS with a CollectD collector configured for `flexran` flavor. PACN3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus from which user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS see [telemetry whitepaper](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-telemetry.md#collectd).
+
+  ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 
 ### FEC VF configuration for OpenNESS Network Edge
-To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is to be run as a job within a privileged container.
+To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is to be run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness-helm-charts/fpga_config`
 
-Sample configMap (can be configured if other than typical config is required) with profile for the queue configuration is provided at (from EdgeController package):
-`fpga/fpga-sample-configmap.yaml`
+Sample configMap (can be configured by changing values if other than typical config is required) with profile for the queue configuration is provided as part of Helm chart template `/opt/openness-helm-charts/fpga_config/templates/fpga-config.yaml` populated with values from `/opt/openness-helm-charts/fpga_config/values.yaml`. Helm chart installation requires a provision of host name for target node during job deployment.
 
-Deploy the configMap for queue profile:
+Install the Helm chart providing configmap and BBDEV config utility job with following command from `/opt/openness-helm-charts/` on Edge Controller:
 
-`kubectl create -f fpga-sample-configmap.yaml`
-
-Sample K8s job specification using the BBDEV config app is provided at:
-
-`fpga/fpga-config-job.yaml`
-
-In the above edit the `nodeSelector: kubernetes.io/hostname: <host_name>` with the name of the host that has the FPGA and is meant to run the workloads.
-
-Deploy the BBDEV config utility job:
-
-`kubectl create -f fpga-config-job.yaml`
+```shell
+helm install --set nodeName=<node_name> intel-fpga-cfg fpga_config
+```
 
 Check if the job has successfully completed and the pod created for this job is in “Completed” state. Check the logs of the pod to see complete successful configuration.
 ```
 kubectl get pods
-kubectl logs fpga-config-job-xxxxx
+kubectl logs intel-fpga-cfg-<node_name>-xxxxx
 ```
 Expected: `Mode of operation = VF-mode FPGA_LTE PF [0000:xx:00.0] configuration complete!`
 
+To redeploy job on another node the following command can be used:
+
+```
+helm upgrade --set nodeName=<another_node_name> intel-fpga-cfg fpga_config
+```
+
+To uninstall the job run:
+```
+helm uninstall intel-fpga-cfg
+```
+
 ### Requesting resources and running pods for OpenNESS Network Edge
-As part of OpenNESS Ansible automation a K8s device plugin to orchestrate the FPGA VFs bound to user-space driver is running. This will enable scheduling of pods requesting this device/devices. Number of devices available on the Edge Node can be checked from Edge Controller by running:
+As part of OpenNESS Ansible automation a K8s SRIOV device plugin to orchestrate the FPGA VFs bound to user-space driver is running. This will enable scheduling of pods requesting this device/devices. Number of devices available on the Edge Node can be checked from Edge Controller by running:
 
 ```shell
-kubectl get node silpixa00400489 -o json | jq '.status.allocatable'
+kubectl get node <node_name> -o json | jq '.status.allocatable'
 
 "intel.com/intel_fec_5g": "2"
 ```

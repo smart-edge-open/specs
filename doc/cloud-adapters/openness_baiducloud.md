@@ -2,12 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
-OpenNESS Integration with Baidu OpenEdge
-=======
-- Application Note
-
-- [OpenNESS Integration with Baidu OpenEdge](#openness-integration-with-baidu-openedge)
+<!-- omit in toc -->
+# OpenNESS Integration with Baidu OpenEdge
 - [Overview](#overview)
 - [Integration Architecture](#integration-architecture)
 - [Run OpenEdge on OpenNESS](#run-openedge-on-openness)

@@ -1,3 +1,7 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * Copyright (c) 2020 Intel Corporation
+ */
+
 (function () {
     window.initializeSearch = function (currentDocVersion, searchInputSelector, searchContentSelector,
         searchResultsSelector, searchPaginationSelector) {

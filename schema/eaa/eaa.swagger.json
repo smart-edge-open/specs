@@ -446,6 +446,10 @@
             "$ref": "#/definitions/eaaNotificationDescriptor"
           },
           "title": "Notitication types that will be produced"
+        },
+        "info": {
+          "$ref": "#/definitions/eaaRawJSONObject",
+          "description": "Extra information about the service being registered. This is a producer-defined JSON object."
         }
       },
       "title": "Service"

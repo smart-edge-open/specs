@@ -2,12 +2,10 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS OnPremises - Enhanced Platform Awareness Features supported 
-
-- [OpenNESS OnPremises - Enhanced Platform Awareness Features supported](#openness-onpremises---enhanced-platform-awareness-features-supported)
-  - [Overview](#overview)
-  - [Features](#features)
+- [Overview](#overview)
+- [Features](#features)
 
 ## Overview 
 Enhanced Platform Awareness features are supported in OnPremises using EVA APIs. The flow looks like this:

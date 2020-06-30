@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
 title: "Application Onboarding"
 path: /applications-onboard/
 order: 2
@@ -6,23 +9,33 @@ section:
     path: /doc/applications-onboard/network-edge-applications-onboarding
     meta_title: OpenNESS Network Edge Application On-Boarding Process
     meta_description: OpenNESS application on-boarding process for the Network Edge provides instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster.
-    
+
   - title: OnPremises Applications Onboarding
     path: /doc/applications-onboard/on-premises-applications-onboarding
     meta_title: OpenNESS OnPremises Mode Application On-Boarding Process
     meta_description: OpenNESS application on-boarding process for the OnPremises mode provides instructions on how to deploy an application from the Edge Controller on Edge Nodes.
-    
-  - title: OpenNESS Edge DNS
+
+  - title: Edge DNS
     path: /doc/applications-onboard/openness-edgedns
     meta_title: OpenNESS Provides Edge DNS and Supports DNS Microservice
     meta_description: OpenNESS edge platform is required to provides access to DNS. The edge platform receives the application DNS rules from the controller.
-    
-  - title: OpenNESS Interface Service
+
+  - title: Edge Application Agent (EAA)
+    path: /doc/applications-onboard/openness-eaa
+    meta_title: Edge Application Agent (EAA)
+    meta_description: OpenNESS enables Edge Applications to produce, discover and consume services that are available on the OpenNESS cluster through the Edge Application Agent (EAA) APIs.
+
+  - title: Interface Service
     path: /doc/applications-onboard/openness-interface-service
     meta_title: OpenNESS Applications Onboard - OpenNESS Interface Service
     meta_description: OpenNESS Interface service is an application running in Kubernetes pod on every worker node of OpenNESS Kubernetes cluster and provides OVS bridge, enabling external traffic scenarios.
-    
-  - title: Using OpenNESS CNCA
+
+  - title: VM support in OpenNESS for Network Edge
+    path: /doc/applications-onboard/openness-network-edge-vm-support
+    meta_title: VM support in OpenNESS for Network Edge
+    meta_description: VM support in OpenNESS for Network Edge - Setup, deployment, and management considerations.
+
+  - title: Core Network Configuration Agent (CNCA)
     path: /doc/applications-onboard/using-openness-cnca
     meta_title: OpenNESS 4G/LTE Core Configuration Using CNCA
     meta_description: CNCA provides a kubectl plugin to configure the 4G/LTE Core network. Kubernetes adopts plugins concepts to extend its functionality executes CNCA related functions.

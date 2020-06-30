@@ -2,16 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # BIOS and Firmware Configuration on OpenNESS Platform
-
-- [BIOS and Firmware Configuration on OpenNESS Platform](#bios-and-firmware-configuration-on-openness-platform)
-  - [Overview](#overview)
-  - [Usecase for edge](#usecase-for-edge)
-  - [Details: BIOS and Firmware Configuration on OpenNESS Network Edge](#details-bios-and-firmware-configuration-on-openness-network-edge)
-    - [Setup](#setup)
-    - [Usage](#usage)
-  - [Reference](#reference)
+- [Overview](#overview)
+- [Usecase for edge](#usecase-for-edge)
+- [Details: BIOS and Firmware Configuration on OpenNESS Network Edge](#details-bios-and-firmware-configuration-on-openness-network-edge)
+  - [Setup](#setup)
+  - [Usage](#usage)
+- [Reference](#reference)
 
 ## Overview
 
@@ -44,7 +42,10 @@ Intel SYSCFG must be manually downloaded by user after accepting the license.
 In order to enable BIOSFW following steps need to be performed:
 1. SYSCFG package must be downloaded and stored inside OpenNESS Experience Kits' `biosfw/` directory as a syscfg_package.zip, i.e.
 `openness-experience-kits/biosfw/syscfg_package.zip`
-2. `biosfw/master` and `biosfw/worker` roles must be uncommented in OpenNESS Experience Kits' `network_edge.yml`
+2. Variable `ne_biosfw_enable` in `group_vars/all/10-default.yml` needs to changed to `true`:
+   ```yaml
+   ne_biosfw_enable: true
+   ```
 3. OpenNESS Experience Kits' NetworkEdge deployment for both controller and nodes can be started.
 
 ### Usage

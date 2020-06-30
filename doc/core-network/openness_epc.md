@@ -2,26 +2,24 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC  
-
-- [Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC](#edge-cloud-deployment-with-3gpp-4g-lte-cups-of-epc)
-  - [Abstract](#abstract)
-  - [Introduction](#introduction)
-  - [4G LTE CUPS architectural aspects](#4g-lte-cups-architectural-aspects)
-  - [Integration with Edge Platform](#integration-with-edge-platform)
-    - [Open Network Edge Services Software (OpenNESS)](#open-network-edge-services-software-openness)
-    - [EPC Deployment Models and Integration with Edge Platforms](#epc-deployment-models-and-integration-with-edge-platforms)
-    - [OpenNESS implementation](#openness-implementation)
-    - [API schema for the Core Network Configuration Agent (CNCA) Endpoint](#api-schema-for-the-core-network-configuration-agent-cnca-endpoint)
-    - [Additional Recommended Semantics for Core Network Configuration Agent (CNCA) API](#additional-recommended-semantics-for-core-network-configuration-agent-cnca-api)
-  - [UE to Application](#ue-to-application)
-    - [UE to Application to Internet](#ue-to-application-to-internet)
-    - [UE traffic forward to internet due to lack of Authentication](#ue-traffic-forward-to-internet-due-to-lack-of-authentication)
-    - [Non Edge Application Traffic](#non-edge-application-traffic)
-  - [Summary](#summary)
-  - [References](#references)
-  - [List of Abbreviations](#list-of-abbreviations)
+- [Abstract](#abstract)
+- [Introduction](#introduction)
+- [4G LTE CUPS architectural aspects](#4g-lte-cups-architectural-aspects)
+- [Integration with Edge Platform](#integration-with-edge-platform)
+  - [Open Network Edge Services Software (OpenNESS)](#open-network-edge-services-software-openness)
+  - [EPC Deployment Models and Integration with Edge Platforms](#epc-deployment-models-and-integration-with-edge-platforms)
+  - [OpenNESS implementation](#openness-implementation)
+  - [API schema for the Core Network Configuration Agent (CNCA) Endpoint](#api-schema-for-the-core-network-configuration-agent-cnca-endpoint)
+  - [Additional Recommended Semantics for Core Network Configuration Agent (CNCA) API](#additional-recommended-semantics-for-core-network-configuration-agent-cnca-api)
+- [UE to Application](#ue-to-application)
+  - [UE to Application to Internet](#ue-to-application-to-internet)
+  - [UE traffic forward to internet due to lack of Authentication](#ue-traffic-forward-to-internet-due-to-lack-of-authentication)
+  - [Non Edge Application Traffic](#non-edge-application-traffic)
+- [Summary](#summary)
+- [References](#references)
+- [List of Abbreviations](#list-of-abbreviations)
 
 ## Abstract
 An important requirement for edge computing architectures is to minimize the distance between an edge platform and an end-user, while maintaining deployment flexibility for the edge platform. A recent architectural enhancement to the LTE architecture, the CUPS (Control and User Plane Separation) approach, in which the control and user plane aspects of Serving and PDN Gateways are separated into separate components, provides an effective means of achieving this goal. This was tested via the integration of a commercial CUPS-based EPC with an edge compute platform based on the Open Network Edge Services Software (OpenNESS) platform. The interfaces required to create the integration are described, and future implementation strategies for user plane selection and traffic steering to target edge applications are described.

@@ -2,22 +2,20 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # OpenNESS Support for OVS as dataplane with OVN
-
-- [OpenNESS Support for OVS as dataplane with OVN](#openness-support-for-ovs-as-dataplane-with-ovn)
-  - [OVN Introduction](#ovn-introduction)
-  - [OVN/OVS support in OpenNESS Network Edge](#ovnovs-support-in-openness-network-edge)
-  - [OVS/OVN support in OpenNESS On Premises (OVN CNI)](#ovsovn-support-in-openness-on-premises-ovn-cni)
-    - [Enable OVNCNI](#enable-ovncni)
-    - [OVS-DPDK Parameters](#ovs-dpdk-parameters)
-    - [CNI Implementation](#cni-implementation)
-    - [The Network](#the-network)
-    - [Cluster architecture](#cluster-architecture)
-    - [Additional physical ports](#additional-physical-ports)
-    - [Traffic rules](#traffic-rules)
-      - [Example: Block pod's ingress IP traffic but allow ICMP](#example-block-pods-ingress-ip-traffic-but-allow-icmp)
-  - [Summary](#summary)
+- [OVN Introduction](#ovn-introduction)
+- [OVN/OVS support in OpenNESS Network Edge](#ovnovs-support-in-openness-network-edge)
+- [OVS/OVN support in OpenNESS On Premises (OVN CNI)](#ovsovn-support-in-openness-on-premises-ovn-cni)
+  - [Enable OVNCNI](#enable-ovncni)
+  - [OVS-DPDK Parameters](#ovs-dpdk-parameters)
+  - [CNI Implementation](#cni-implementation)
+  - [The Network](#the-network)
+  - [Cluster architecture](#cluster-architecture)
+  - [Additional physical ports](#additional-physical-ports)
+  - [Traffic rules](#traffic-rules)
+    - [Example: Block pod's ingress IP traffic but allow ICMP](#example-block-pods-ingress-ip-traffic-but-allow-icmp)
+- [Summary](#summary)
 
 ## OVN Introduction
 Open Virtual Network (OVN) is an open source solution based on the Open vSwitch-based (OVS) software-defined networking (SDN) solution for providing network services to instances. OVN adds to the capabilities of OVS to provide native support for virtual network abstractions, such as virtual L2 and L3 overlays and security groups. Further information about the OVN architecture can be found [here](https://www.openvswitch.org/support/dist-docs/ovn-architecture.7.html)
@@ -59,14 +57,15 @@ OVN/OVS can be used as:
 To enable OVNCNI instead of NTS, "onprem_dataplane" variable needs to be set to "ovncni", before executing deploy_onprem.yml file to start OpenNESS installation.
 
 ```yaml
-# group_vars/all.yml
+# group_vars/all/10-default.yml
 onprem_dataplane: "ovncni"
 ```
-OVS role used for _Inter App Communication_ with _nts_ dataplane has to be disabled(Disabled by default):
+OVS-based Inter-App Communication is intended to be used with _nts_ dataplane, therefore it has to be disabled:
 ```yaml
-# on_premises.yml
-# - role: ovs
+# group_vars/all/10-default.yml
+onprem_iac_enable: false
 ```
+
 > NOTE: When deploying virtual machine with OVNCNI dataplane, `/etc/resolv.conf` must be edited to use `192.168.122.1` nameserver.
 
 The ansible scripts configure the OVN infrastructure to be used by OpenNESS. OVN-OVS container is created on each controller and Edge node where OVS is installed and configured to use DPDK. Network connectivity is set for the controller and all the nodes in the OpenNESS cluster. On each Edge node the CNI plugin is built which can be later used to add and delete OVN ports to connect/disconnect Edge applications to/from the cluster.
@@ -74,17 +73,18 @@ The ansible scripts configure the OVN infrastructure to be used by OpenNESS. OVN
 CNI configuration is retrieved from roles/openness/onprem/dataplane/ovncni/master/files/cni.conf file. Additional arguments used by CNI are stored in roles/openness/onprem/dataplane/ovncni/master/files/cni_args.json file. The user is not expected to modify the files.
 
 ### OVS-DPDK Parameters
-The following parameters are used to configure DPDK within OVS. They are set in roles/openness/onprem/dataplane/ovncni/common/defaults/main.yml.
+The following parameters are used to configure DPDK within OVS.
+They can be customized in `group_vars/all/10-default.yml` file.
 
-"ovs_dpdk_lcore_mask" parameter is used to set core bitmask that is used for DPDK initialization. Its default value is "0x2" to select core 1.
+`ovncni_dpdk_lcore_mask` parameter is used to set core bitmask that is used for DPDK initialization. Its default value is "0x2" to select core 1.
 
-"ovs_dpdk_pmd_cpu_mask" parameter is used to set the cores that are used by OVS-DPDK for datapath packet processing. Its default value is "0x4" to select core 2. It can be set at any time using ovs-vsctl:
+`ovncni_dpdk_pmd_cpu_mask` parameter is used to set the cores that are used by OVS-DPDK for datapath packet processing. Its default value is "0x4" to select core 2. It can be set at any time using ovs-vsctl:
 
 ```shell
 ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=0x4
 ```
 
-"ovs_dpdk_socket_mem" parameter is used to set how hugepage memory is allocated across NUMA nodes. By default it is set to "1024,0" to allocate 1G of hugepage memory on numa 0.
+`ovncni_dpdk_socket_mem` parameter is used to set how hugepage memory is allocated across NUMA nodes. By default it is set to "1024,0" to allocate 1G of hugepage memory on numa 0.
 
 ### CNI Implementation
 OpenNESS EdgeNode has two built-in packages that are used for handling OVN:

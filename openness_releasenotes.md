@@ -1,11 +1,10 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # Release Notes 
 This document provides high level system features, issues and limitations information for OpenNESS. 
-- [Release Notes](#release-notes)
 - [Release history](#release-history)
 - [Features for Release](#features-for-release)
 - [Changes to Existing Features](#changes-to-existing-features)
@@ -13,10 +12,11 @@ This document provides high level system features, issues and limitations inform
 - [Known Issues and Limitations](#known-issues-and-limitations)
 - [Release Content](#release-content)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
-  - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
-  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
-  - [Intel® Xeon® Scalable Processors](#intel%c2%ae-xeon%c2%ae-scalable-processors)
+  - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
+  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
+  - [Intel® Xeon® Scalable Processors](#intel-xeon-scalable-processors)
 - [Supported Operating Systems](#supported-operating-systems)
+- [Package Versions](#package-versions)
 
 # Release history 
 1. OpenNESS - 19.06
@@ -24,7 +24,8 @@ This document provides high level system features, issues and limitations inform
 3. OpenNESS - 19.09 
 4. OpenNESS - 19.12
 5. OpenNESS - 20.03
-
+6. OpenNESS - 20.06
+   
 # Features for Release 
 1. <b>OpenNESS - 19.06 </b>
    - Edge Cloud Deployment options  
@@ -133,7 +134,7 @@ This document provides high level system features, issues and limitations inform
          -  Mount point for shared storage
          -  Pass environment variables
          -  Configure the port rules  
-    - 5G Components  
+    - Core Network Feature (5G)  
       - PFD Management API support (3GPP 23.502  Sec. 52.6.3  PFD Management service)
         - AF:   Added support for PFD Northbound API
         - NEF:  Added support for PFD southbound API, and Stubs to loopback the PCF calls.
@@ -152,6 +153,54 @@ This document provides high level system features, issues and limitations inform
       - AF: dockerfile and pod specification 
       - NEF: dockerfile and pod specification 
       - UPF: dockerfile and pod specification 
+5. <b>OpenNESS – 20.06</b>
+   - OpenNESS is now available in two distributions
+      - Open source (Apache 2.0 license)
+      - Intel Distribution of OpenNESS (Intel Proprietary License)
+        - Includes all the code from the open source distribution plus additional features and enhancements to improve the user experience
+        - Access requires a signed license. A request for access can be made at openness.org by navigating to the “Products” section and selecting “Intel Distribution of OpenNESS” 
+      - Both distributions are hosted at github.com/open-ness
+   - On premises configuration now optionally supports Kubernetes 
+   - Dataplane 
+     - Support for Calico eBPF as CNI 
+     - Performance baselining of the CNIs 
+   - Visual Compute and Media Analytics 
+     - Intel Visual Cloud Accelerator Card - Analytics (VCAC-A) Kubernetes deployment support (CPU, GPU and VPU)
+     - Node feature discovery of VCAC-A 
+     - Telemetry support for VCAC-A 
+     - Provide ansible and Helm -playbook support for OVC codecs Intel Xeon CPU mode - video analytics service (REST API) for developers
+   - Edge Applications 
+     - Smart City Application Pipeline supporting CPU or VCAC-A mode with Helm chart
+     - CDN Content Delivery using NGINX with SR-IOV capability for higher performance with Helm chart 
+     - CDN transcode sample application using Intel Xeon CPU optimized media SDK with Helm Chart
+     - Support for Transcoding Service using Intel Xeon CPU optimized media SDK with Helm chart 
+     - Intel Edge Insights application support with Helm chart 
+   - Edge Network Functions 
+     - FlexRAN DU with Helm Chart (FlexRAN not part of the release)
+     - xRAN Fronthaul with Helm CHart (xRAN app not part of the release) 
+   - Helm Chart for Kubernetes enhancements 
+     - NFD, CMK, SRIOV-Device plugin and Multus 
+     - Support for local Docker registry setup  
+   - Support for deployment specific Flavors 
+     - Minimal
+     - RAN - 4G and 5G     
+     - Media Analytics with VCAC-A and with CPU only mode 
+     - CDN - Transcode
+     - CDN - Content Delivery
+     - Azure - Deployment of OpenNESS cluster on Microsoft Azure cloud 
+   - Support for OpenNESS on CSP Cloud 
+     - Azure - Deployment of OpenNESS cluster on Microsoft Azure cloud
+   - Telemetry Support 
+     - Support for Collectd backend with Intel hardware and custom metrics
+     - Cpu, cpufreq, load, hugepages, intel_pmu, intel_rdt, ipmi, ovs_stats, ovs_pmd_stats
+     - FPGA – PACN3000 (collectd) - Temp, Power draw
+     - VPU Device memory, VPU device thermal, VPU Device utilization 
+     - Open Telemetry - Support for collector and exporter for metrics ( e.g. heartbeat from app)
+     - Support for PCM counter for Prometheus and Grafana
+     - Telemetry Aware Scheduler 
+   - Early Access support for Resource Management Daemon (RMD) 
+     - RMD for cache allocation to the application Pods 
+   - Ability to deploy OpenNESS Master and Node on same platform  
 
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
@@ -163,6 +212,8 @@ This document provides high level system features, issues and limitations inform
    - Edge node only supports non-realtime kernel. 
  - **OpenNESS 20.03**  
    - Support for HDDL-R only restricted to non-real-time or non-customized CentOS 7.6 default kernel. 
+ - **OpenNESS 20.06**  
+   - Offline install for Native mode OnPremises has be deprecated 
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
@@ -181,6 +232,8 @@ This document provides high level system features, issues and limitations inform
 - **OpenNESS 20.03** 
   - Realtime Kernel support for network edge with K8s.
   - Modular playbooks  
+- **OpenNESS 20.06** 
+  - Optimized the Kubernetes based deployment by supporting multiple Flavors 
 
 # Known Issues and Limitations
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -202,13 +255,26 @@ This document provides high level system features, issues and limitations inform
   - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from master
   - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
   - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed.  
-    
+- **OpenNESS 20.06** 
+  - On-Premises edge installation takes 1.5hrs because of docker image build for OVS-DPDK 
+  - Network edge installation takes 1.5hrs because of docker image build for OVS-DPDK
+  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from master
+  - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
+  - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed. 
+  - Legacy OnPremises - Traffic rule creation: cannot parse filled and cleared field
+  - There is an issue with using CDI when uploading VM images when CMK is enabled due to missing CMK taint toleration. The CDI upload pod does not get deployed and the `virtctl` plugin command times out waiting for the action to complete. A workaround for the issue is to invoke the CDI upload command, edit the taint toleration for the CDI upload to tolerate CMK, update the pod, create the PV and let the pod run to completion.
+  - There is a known issue with cAdvisor which in certain scenarios occasionally fails to expose the metrics for Prometheus endpoint, see Git Hub: https://github.com/google/cadvisor/issues/2537 
+      
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.09** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.12** OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications and Experience kit. 
 - **OpenNESS 20.03** OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications and Experience kit. 
+- **OpenNESS 20.06** 
+  - Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
+  - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit. 
+  > Note: Application repo common to Open Source and IDO
   
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
@@ -249,7 +315,11 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
 | Other card       | 2x PCIe Riser cards                                           |
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
+| VCAC-A           | [VCAC-A Accelerator for Media Analytics](https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/media-analytics-vcac-a-accelerator-card-by-celestica-datasheet.pdf)                                                 |
 
 # Supported Operating Systems
 > OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is not a requirement from OpenNESS software to run on a Pre-empt RT kernel.
+
+# Package Versions 
+Package: telemetry, cadvisor 0.36.0, grafana  7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, tas 0., golang 1.14.2, docker 19.03., kubernetes 1.18.4, dpdk 18.11.6, ovs 2.11.1, ovn 2.12.0, helm 3.0, kubeovn 1.0.1, flannel 0.12.0, calico 3.14.0 , multus 3.4.1, sriov cni 2.3, nfd 0.5.0, cmk   v1.4.1
 

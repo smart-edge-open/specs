@@ -2,10 +2,12 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# On-Premises Edge Applications Onboarding
 - [Introduction](#introduction)
   - [Instructions to setup HTTPD server for images](#instructions-to-setup-httpd-server-for-images)
-    - [How to setup apache step by step for IP address](#how-to-setup-apache-step-by-step-for-ip-address)
+    - [Automatic deployment](#automatic-deployment)
+    - [Manual step by step how-to](#manual-step-by-step-how-to)
     - [Instruction to generate certificate for a domain](#instruction-to-generate-certificate-for-a-domain)
     - [Instruction to upload and access images](#instruction-to-upload-and-access-images)
     - [Instruction to create Traffic Policy and assign it to Interface](#instruction-to-create-traffic-policy-and-assign-it-to-interface)
@@ -28,8 +30,12 @@ The aim of this guide is to familiarize the user with the OpenNESS application o
 
 ## Instructions to setup HTTPD server for images
 
-### How to setup apache step by step for IP address
-1. Install apache and mod_ssl: 
+### Automatic deployment
+
+Apache server is automatically deployed to the Edge Controller machine during On-Premises deployment.
+
+### Manual step by step how-to
+1. Install apache and mod_ssl:
 ```
  yum -y install httpd mod_ssl
 ```
@@ -171,13 +177,13 @@ To build sample application Docker images for testing OpenVINO consumer and prod
 1. To build the producer application image from the application directory navigate to the `./producer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
     **Note**: Only CPU inference support is currently available for OpenVINO application on OpenNESS Network Edge - environmental variable `OPENVINO_ACCL` must be set to `CPU` within Dockerfile available in the directory
 
 2. To build the consumer application image from application directory navigate to the `./consumer` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
     **Note**: Default consumer inference process is using 'CPU 8' to avoid conflicts with NTS. If the desired CPU is changed, environmental variable `OPENVINO_TASKSET_CPU` must be set within Dockerfile available in the directory
     **NOTE**: fwd.sh is using 'CPU 1'. If the desired CPU is changed, user can change fwd.sh accordingly.
 3. Check that the images built successfully and are available in local Docker image registry:
@@ -195,10 +201,10 @@ Both images should be extracted from local docker repository to archive file and
 
 An application to generate sample traffic is provided. The application should be built on separate host which will generate the traffic.
 
-1. To build the client simulator application image from application directory navigate to the `./clientsim` directory and run: 
+1. To build the client simulator application image from application directory navigate to the `./clientsim` directory and run:
    ```
    ./build-image.sh
-   ``` 
+   ```
 2. Check that the image built successfully and is available in local Docker image registry:
    ```
    docker images | grep client-sim
@@ -233,7 +239,7 @@ To add an application to list of applications managed by Controller following st
   - Description: description
   - Cores: 2
   - Memory: 100
-  - Source: https://controller_hostname/image_file_name 
+  - Source: https://controller_hostname/image_file_name
 - Controllers hostname (or hostname of any other machine serving as HTTPS server) can be found by running ```hostname -f``` from terminal of that machine.
 - Then memory unit used is MB. A sample path to image could be https://controller_hostname/sample_docker_app.tar.gz
 - The hostname of the controller or server serving HTTPS can be checked by running: ```hostname -f``` command from servers terminal.
@@ -342,7 +348,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
 
 5. Commit those changes to start NTS
 6. Create OpenVINO producer and consumer applications and deploy them on the node. When the applications has `Deployed` status start them with 10 seconds distance to let the producer to subscribe to the platform.
-   
+
     ![Adding producer application entry to Edge Controller](on-premises-app-onboarding-images/adding-application.png)
 
     Note: Fields `Port` and `Protocol` have no affect on the application
@@ -360,7 +366,7 @@ This chapter describes how to deploy OpenVINO applications on OpenNESS platform 
     ip link set dev vEth2 arp off
     ip a a 192.168.10.11/24 dev vEth2
     ip link set dev vEth2 up
-    wget 192.168.10.10 -Y off 
+    wget 192.168.10.10 -Y off
     ```
 9.  Modify `analytics.openness` entry in /etc/hosts with IP address set in step 1 (separate interface on OpenVINO client machine/VM)
 10. Send ping from OpenVINO client platform to gateway using 192.168.10.9 IP address

@@ -2,7 +2,8 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-
+<!-- omit in toc -->
+# Core Network Configuration Agent (CNCA)
 - [4G/LTE Core Configuration using CNCA](#4glte-core-configuration-using-cnca)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode)
     - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
@@ -242,10 +243,10 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ### Bring-up of NGC components in Network Edge mode
 
 1. If the Edge controller is not yet deployed through openness-experience-kit then:
-  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/network_edge.yml` before running `deploy_ne.sh controller` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
+   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` before running `deploy_ne.sh controller` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by un-commenting the line `role: ngc_test/master` in the file `openness-experience-kits/network_edge.yml` and then re-run `deploy_ne.sh controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` and then re-run `deploy_ne.sh controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
 
     **NOTE:**
     In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.
@@ -399,7 +400,7 @@ Supported operations through `kube-cnca` plugin:
   * Creation of packet flow description (PFD) transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
   * Deletion of transactions and applications within a transaction
   * Updating (patching) transactions and applications within a transaction
-  * get or get-all transactions. 
+  * get or get-all transactions.
   * get a specific application within a transaction
 
 Creation of the AF PFD transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a PFD transaction creation request onto AF:
@@ -526,13 +527,13 @@ policy:
   **NOTE:** The certificates generated as part of OpenNess Experience Kit are self signed certificates are for testing purpose only.
 
   The certificate can be imported in the different browsers as:
-  
+
    * Google Chrome (ver 80.0.3987): Go to settings --> Under "Privacy and security" Section Click on "More" --> Select "Manage Certificates" --> in the pop up window select "Intermediate Certification Authorities" --> Select "Import" and provide the downloaded certificate file (root-ca-cert.pem).
    * Mozilla Firefox (ver 72.0.2): Go to options --> Under "Privacy and security" Section Click on "View Certificates..." --> Under "Authorities" section click on "import" --> Provide the certificate (root-ca-cert.pem) and import it for accessing websites.
-  
+
   **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates, other steps can be followed to trust the certificates:
-   * User needs to access these specific 5G core components URL to trust the certificates used by the 5G core components. 
-   * First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`. 
+   * User needs to access these specific 5G core components URL to trust the certificates used by the 5G core components.
+   * First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`.
    * On accessing these url, browser will show the warning for trusting the self-signed certificate. Proceed by trusting the certificates.
 
 #### Edge Node services operations with 5G Core (through OAM interface)
@@ -613,6 +614,7 @@ policy:
 This sections describes the paramters that are used in the Traffic Influce subscription POST request. Groups mentioned as Mandatory needs te provided, in the absence of the Mandatory parameters a 400 response would be returned.
 
 ### Identification (Mandatory)
+
 | Attribute name | Description                                                                                                                           |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | afTransId      | Identifies an NEF Northbound interface transaction, generated by the AF                                                               |
@@ -637,6 +639,7 @@ Note: One of afServiceId or dnn shall be included
 Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be included
 
 ### Target UE Identifier (Mandatory)
+
 | Attribute name  | Description                                                                                                                                 |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | externalGroupId | Identifies a group of users                                                                                                                 |
@@ -649,26 +652,31 @@ Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be include
 Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or macAddr), External Group Identifier (i.e. "externalGroupId") or any UE indication "anyUeInd" shall be included
 
 ### Application Relocation (Optional)
+
 | Attribute name | Description                                                                                                                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | appReloInd     | Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise set to "false". Default value is "false" if omitted |
 
 ### Traffic Routing (Optional)
+
 | Attribute name | Description                                   |
 | -------------- | --------------------------------------------- |
 | trafficRoutes  | Identifies the N6 traffic routing requirement |
 
 ### Spatial Validity (Optional)
+
 | Attribute name  | Description                                                                                                         |
 | --------------- | ------------------------------------------------------------------------------------------------------------------- |
 | validGeoZoneIds | Identifies a geographic zone that the AF request applies only to the traffic of UE(s) located in this specific zone |
 
 ### Temporal Validity (Optional)
+
 | Attribute name | Description                                                                 |
 | -------------- | --------------------------------------------------------------------------- |
 | tempValidities | Indicates the time interval(s) during which the AF request is to be applied |
 
 ### UPF Event Notifications (Optional)
+
 | Attribute name          | Description                                                                                                                  |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | subscribedEvents        | Identifies the requirement to be notified of the event(s)                                                                    |
@@ -676,6 +684,7 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 | notificationDestination | Contains the Callback URL to receive the notification from the NEF. It shall be present if the "subscribedEvents" is present |
 
 ### AF to NEF specific (Optional)
+
 | Attribute name          | Description                                                                                                                                                                                                                                             |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | suppFeat                | Indicates the list of Supported features used as described in subclause 5.4.4. This attribute shall be provided in the POST request and in the response of successful resource creation. Values 1 - Notification_websocket 2 -  Notification_test_event |
@@ -696,5 +705,5 @@ This sections describes the parameters that are used in the Packet flow descript
 | Urls             | NOTE      | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                                       |
 | domainName       | NOTE      | Indicates an FQDN or a regular expression as a domain name matching criteria.                                                          |
 
-  **NOTE:**
-  One of the attribute of flowDescriptions, URls and domainName is mandatory.
+**NOTE:**
+One of the attribute of flowDescriptions, URls and domainName is mandatory.

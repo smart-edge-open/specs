@@ -2,14 +2,12 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
-
+<!-- omit in toc -->
 # InterApp Communication support in OpenNESS
-
-- [InterApp Communication support in OpenNESS](#interapp-communication-support-in-openness)
-  - [Overview](#overview)
-  - [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
-    - [Setup](#setup)
-  - [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
+- [Overview](#overview)
+- [InterApp Communication support in OpenNESS On-Premises Edge](#interapp-communication-support-in-openness-on-premises-edge)
+  - [Setup](#setup)
+- [InterApp Communication support in OpenNESS Network Edge](#interapp-communication-support-in-openness-network-edge)
 
 ## Overview
 
@@ -42,7 +40,7 @@ Ports assigned to OVS will be ignored by ELA, so it is not possible for them to 
 
 To enable OVS-DPDK for inter app communication follow the steps below.
 
-1. Enable `ovs` role in `openness-experience-kits/on_premises.yml`
+1. Change `onprem_iac_enable` variable in `group_vars/all/10-default.yml` to `true`
 2. Set the `ovs_ports` variable in `host_vars/node-name-in-inventory.yml`. Example:
 
     ```
