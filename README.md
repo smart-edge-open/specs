@@ -18,6 +18,7 @@ Below is the complete list of OpenNESS solution documentation
 ## Architecture 
 
 * [<b>architecture.md</b>: OpenNESS Architecture overview](https://github.com/otcshare/specs/blob/master/doc/architecture.md)
+* [<b>flavors.md</b>: OpenNESS Deployment Flavors](https://github.com/otcshare/specs/blob/master/doc/flavors.md)
 
 ## Getting Started - Setup 
 
