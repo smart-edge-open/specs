@@ -84,6 +84,7 @@ spec:
   containers:
   - name: pod1
     image: stress-ng-im:latest
+    imagePullPolicy: "Never"
     command: ["/bin/sh"]
     args: ["-c", "echo pod1 started; sleep 9999999"]
     resources:
@@ -106,6 +107,7 @@ spec:
   containers:
   - name: pod2
     image: stress-ng-im:latest
+    imagePullPolicy: "Never"
     command: ["/bin/sh"]
     args: ["-c", "echo pod2 started; sleep 9999999"]
     resources:
@@ -171,10 +173,10 @@ After you start and stop pcm, you should be able to run the pqos tool without a 
 
 ### Starting the stress-ng command on the prepared pods
 Pod1
-> kubectl exec -it pod1 -- stress-ng --matrix 1 -t 1h --metrics-brief
+> kubectl exec -it pod1 -- stress-ng --matrix 1 -t 1h --metrics-brief --aggressive --maximize
 
 Pod2
-> kubectl exec -it pod2 -- stress-ng --matrix 1 -t 1h --metrics-brief
+> kubectl exec -it pod2 -- stress-ng --matrix 1 -t 1h --metrics-brief --aggressive --maximize
 
 
 ## Links
