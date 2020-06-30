@@ -101,6 +101,9 @@ Below is the complete list of OpenNESS solution documentation
 * [<b>Edge Virtualization Infrastructure API: EVA</b>](https://github.com/open-ness/specs/blob/master/schema/pb/eva.proto)
 * [<b>schema</b>: Folder containing APIs protobuf or schema for varios endpoints in OpenNESS solution](https://github.com/otcshare/specs/tree/master/schema)
 
+## Orchestration
+* [<b>openness-helm.md</b>: Helm support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/orchestration/openness-helm.md)
+
 ## Release history 
 
 * [<b>openness_releasenotes.md</b>: This document provides high level system features, issues and limitations information for OpenNESS](https://github.com/otcshare/specs/blob/master/openness_releasenotes.md)
