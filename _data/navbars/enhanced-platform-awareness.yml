@@ -50,6 +50,11 @@ section:
         meta_title: Topology Manager Support in OpenNESS, Resource Locality Awareness
         meta_description: Topology Manager is a solution permitting k8s components like CPU Manager and Device Manager, to coordinate the resources allocated to a workload.
 
+      - title: Resource Management Daemon
+        path: /doc/enhanced-platform-awareness/openness-rmd
+        meta_title: Cache Allocation for Containers with Resource Management Daemon (RMD)
+        meta_description: Intel® Resource Director Technology (Intel® RDT) provides visibility and control over how shared resources such as last-level cache (LLC) and memory bandwidth are used by applications, virtual machines (VMs), and containers.
+
       - title: Environment Variables Support
         path: /doc/enhanced-platform-awareness/openness-environment-variables
         meta_title: Environment Variable Support in OpenNESS
