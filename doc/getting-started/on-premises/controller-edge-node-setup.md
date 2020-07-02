@@ -45,6 +45,8 @@ OpenNESS Experience Kits repository contains set of Ansible playbooks for easy s
 
 In order to use the playbooks several preconditions must be fulfilled:
 
+- CentOS 7.6.1810 operating installed on hosts where product will be deployed. It is highly recommended to install operating system using a minimal ISO image on nodes that will take part in deployment (obtained from inventory file) and do not make own customizations after a fresh manuall install, since they might interfere with Ansible scripts and give unpredictable results during deployment.
+
 - Time must be configured on all hosts (refer to [Configuring time](#configuring-time))
 
 - Hosts for Edge Controller and Edge Nodes must have proper and unique hostname (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#Setup-static-hostname)).
