@@ -49,6 +49,8 @@ The following is a complete set of actions that need to be completed to successf
 
 In order to use the playbooks several preconditions must be fulfilled. These preconditions are described in the section [Q&A](#qa) below. The preconditions are:
 
+- CentOS 7.6.1810 operating installed on hosts where product will be deployed. It is highly recommended to install operating system using a minimal ISO image on nodes that will take part in deployment (obtained from inventory file) and do not make own customizations after a fresh manuall install, since they might interfere with Ansible scripts and give unpredictable results during deployment.
+ 
 - Hosts for  the Edge Controller (Kubernetes master) and Edge Nodes (Kubernetes workers) must have proper and unique hostnames (not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#setup-static-hostname)).
 
 - SSH keys must be exchanged between hosts (refer to [Exchanging SSH keys between hosts](#exchanging-ssh-keys-between-hosts)).

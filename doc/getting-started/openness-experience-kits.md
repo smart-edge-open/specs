@@ -38,6 +38,8 @@ OpenNESS Experience Kits allows user to customize kernel, grub parameters, and t
 
 OpenNESS Experience Kits contains `host_vars/` directory that can be used to place a YAML file (`nodes-inventory-name.yml`, e.g. `node01.yml`). The file would contain variables that would override roles' default values.
 
+> NOTE: Despite the ability to customize parameters (kernel) it is required to have a clean CentOS 7.6.1810 operating system installed on hosts (from a Minimal ISO image) that will be later deployed from Ansible scripts. This OS shall not have any user customizations.
+
 To override the default value, place the variable's name and new value in the host's vars file, e.g. contents of `host_vars/node01.yml` that would result in skipping kernel customization on that node:
 
 ```yaml
