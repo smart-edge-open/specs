@@ -284,6 +284,7 @@ OpenNESS Edge Node has been tested using the following hardware specification:
    - Motherboard type: [X11SDV-16C-TP8F](https://www.supermicro.com/products/motherboard/Xeon/D/X11SDV-16C-TP8F.cfm)
    - Intel® Xeon® Processor D-2183IT
 ## 2nd Generation Intel® Xeon® Scalable Processors
+
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | CLX-SP           | Compute Node based on CLX-SP(6252N)                           |
@@ -300,6 +301,7 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | Other card       | 2x PCIe Riser cards                                           |
 
 ## Intel® Xeon® Scalable Processors
+
 |                  |                                                               |
 |------------------|---------------------------------------------------------------|
 | SKX-SP           | Compute Node based on SKX-SP(6148)                            |
