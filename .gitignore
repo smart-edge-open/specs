@@ -1,2 +1,6 @@
-
+.jekyll-metadata
+Gemfile
+Gemfile.lock
+_config.yml
+_site/
 *.pdf

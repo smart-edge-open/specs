@@ -3,6 +3,13 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 -->
 
+<style>
+        @media print {
+         nav .menubar,.container .leftSection,.container .rightSection .rightHead,.container .rightSection .read-time,
+         .container .rightSection .download-pdf,.rightSection .contentArea .language-text .highlight,footer#footer, body #bannerSection{ display:none!important;}
+        .rightSection .contentArea img { width: auto; max-width: 100%;}
+      }
+    </style>
 <nav id="header" class="navbar navbar-default ">
       <div class="container">
         <div class="row">
@@ -27,21 +34,21 @@ Copyright (c) 2020 Intel Corporation
 				  </div>
                   <ul class="nav menu opennessmenu mod-list">
                     <li class="item-102 deeper parent">
-                      <a href="/about">About</a>
-                      <ul class="nav-child unstyled small" style="display: none;">
-                        <li class="item-118"><a href="/about#openness-overview">OpenNESS Overview</a></li>
-                        <li class="item-119"><a href="/about#technical-steering-committee-charter">Technical Steering Committee Charter</a></li>
-                      </ul>
-                    </li>
-                    <li class="item-137 deeper parent">
-                      <a href="https://github.com/open-ness/specs/tree/master/doc/getting-started" target="_blank" rel="noopener noreferrer">Getting Started</a>
-                      <ul class="nav-child unstyled small" style="display: none;">
-                        <li class="item-138"><a href="https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md" target="_blank" rel="noopener noreferrer">OpenNESS Network Edge Getting Started</a></li>
-                        <li class="item-139"><a href="https://github.com/open-ness/specs/blob/master/doc/getting-started/on-premises/controller-edge-node-setup.md" target="_blank" rel="noopener noreferrer">OpenNESS On-Premise Edge Getting Started</a></li>
-                      </ul>
-                    </li>
-					<li class="item-143"><a href="/docs/">Documentation</a></li>
-                    <li class="item-103 deeper parent">
+						<a href="/about">About</a>
+						<ul class="nav-child unstyled small" style="display: none;">
+							<li class="item-118"><a href="/about#openness-overview" class="lowerCase">OpenNESS OVERVIEW</a></li>
+							<li class="item-119"><a href="/about#technical-steering-committee-charter">Technical Steering Committee Charter</a></li>
+						</ul>
+					</li>
+					<li class="item-163 deeper parent">
+						<a href="/products">Products</a>
+						<ul class="nav-child unstyled small" style="display: none;">
+							<li class="item-166"><a href="/products">Getting Started</a></li>
+							<li class="item-149"><a href="/docs/openness_releasenotes/" class="lowerCase">OpenNESS</a></li>
+							<li class="item-168"><a href="/products/intel-distribution" class="lowerCase">INTEL® DISTRIBUTION OF OpenNESS</a></li>
+						</ul>
+					</li>
+					<li class="item-103 deeper parent">
                       <a href="/resources">Resources</a>
                       <ul class="nav-child unstyled small" style="display: none;">
                         <li class="item-120"><a href="/resources#whitepaper">Whitepaper</a></li>
@@ -49,21 +56,21 @@ Copyright (c) 2020 Intel Corporation
                         <li class="item-130"><a href="/resources#training">Training</a></li>
                         <li class="item-135"><a href="/resources/social-videos">Social Videos</a></li>
                         <li class="item-136"><a href="/resources/podcasts">Podcasts</a></li>
-                      </ul>
+					  </ul>
                     </li>
-                    <li class="item-122 deeper parent">
-                      <a href="/developers">Developers</a>
-                      <ul class="nav-child unstyled small" style="display: none;">
-                        <li class="item-123"><a href="/developers#apidoc">API Documentation</a></li>
-                        <li class="item-124"><a href="/developers#mailinglist">Mailing List</a></li>
-                        <li class="item-125"><a href="/developers#softwarerelease">OpenNESS Software</a></li>
-                      </ul>
-                    </li>
+					<li class="item-122 deeper parent">
+						<a href="/developers">Developers</a>
+						<ul class="nav-child unstyled small" style="display: none;">
+						<li class="item-123"><a href="/developers#apidoc">API Documentation</a></li>
+						<li class="item-124"><a href="/developers#mailinglist">Mailing List</a></li>
+						</ul>
+					</li>
                     <li class="item-104 deeper parent">
                       <a href="/news-and-events">News &amp; Events</a>
                       <ul class="nav-child unstyled small" style="display: none;">
                         <li class="item-132"><a href="/news-and-events#news">News</a></li>
                         <li class="item-126"><a href="/news-and-events#blog">Blog</a></li>
+						<li class="item-170"><a href="/faqs" class="lowerCase">FAQs</a></li>
                       </ul>
                     </li>
                   </ul>

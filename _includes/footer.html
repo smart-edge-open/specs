@@ -53,3 +53,27 @@ Copyright (c) 2020 Intel Corporation
     
     </script>
     
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="{{ '/js/searchConfig.js' | prepend: site.baseurl | prepend: site.siteurl  }}?{{ site.time | date: '%s%N' }}"></script>
+    <script>
+        jQuery('.rightSection .contentArea a').each(function(e){
+            var url = jQuery(this).attr('href');
+            if(typeof url != 'undefined'){
+                var urlFound = url.indexOf('{{site.siteurl}}');
+                var httpUrl = url.indexOf('http://');
+                var httpsUrl = url.indexOf('https://');
+                
+                if(urlFound != '-1'){
+                    jQuery(this).attr('rel','nofollow');
+                }else if(httpUrl != '-1' || httpsUrl != '-1'){
+                    jQuery(this).attr('rel','nofollow');
+                }
+            }
+        });
+        
+        jQuery(document).ready(function() {
+            window.initializeSearch('master', '.input-section', '.output-section', '#search-result', '#search-result-pagination');
+        });
+        
+        
+  </script>
