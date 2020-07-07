@@ -11,7 +11,6 @@ Copyright (c) 2020 Intel Corporation
 {%- assign pageName = pageName[0] | prepend: "/" | append: "/" | replace: ".md","" -%}
 {%- endif -%}
 
-
 {%- assign navigations = "" | split:"|" -%}
 {%- for navbars_data in site.data.navbars -%}
   {%- assign nav = navbars_data[1] -%}
@@ -35,9 +34,12 @@ Copyright (c) 2020 Intel Corporation
     {%- for navbar in navbars -%}
         {%- include metainfo.html meta=navbar.section -%}
     {%- endfor -%}  
+    {% if page.name != 'index.html' %}
+<!--    <base href="{{ site.siteurl | append: "/" }}">-->
     <link href="{{ '/templates/openness/favicon.ico' | prepend: site.siteurl }}" rel="shortcut icon" type="image/vnd.microsoft.icon" />
     {% if site.siteurl != 'https://openness.org' %}
         <meta name="robots" content="noindex, nofollow" />
+    {% endif %}
     {% endif %}
     <link href="{{ page.url | prepend: site.baseurl | prepend: site.siteurl }}" rel="canonical" />
     
@@ -47,7 +49,7 @@ Copyright (c) 2020 Intel Corporation
     <link rel="stylesheet" href="{{ '/css/instantsearch.min.css' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}" type="text/css" />
     <script src="{{ '/js/instantsearch.min.js' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}"></script>
     
-    
+    {% if page.name != 'index.html' %}
     <script>
         //configure tms
         var wapLocalCode = 'us-en'; //dynamically set per localized site, see mapping table for values
@@ -78,10 +80,19 @@ Copyright (c) 2020 Intel Corporation
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-56HQ28L');</script>
     <!-- End Google Tag Manager -->
-    
+    {% endif %}
   </head>
   <body>
     {%- include header.html -%}
+    
+    <section id="bannerSection" class="innerPageBanner">
+        <div class="container">
+            <div class="caption text-center">
+                <h1 class="heroHeading">OpenNESS</h1>
+            </div>
+        </div>
+    </section>
+    
     <div class="container">
       <div class="leftSection">  
           <div class="searchBar-section">   
@@ -137,97 +148,21 @@ Copyright (c) 2020 Intel Corporation
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                 {% include reading-time.html %}
             </div>
-            <!--<div class="download-pdf pull-right">
-                <a href="javascript:void(0)" class="download_page">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                    Download this page
-                </a>
-            </div>-->
-        </div>
+                {% if page.name != 'index.html' %}
+                    <div class="download-pdf pull-right">
+                        <a id="{{pageName}}.pdf" href="{{pageName | prepend: site.baseurl}}.pdf" download class="download_page">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                            Download this page
+                        </a>
+                    </div>
+                {% endif %}
+        </div> 
         
         <div class="contentArea" id="contentArea" style="margin-top: 80px;">
             {{ content }}
         </div>
       </div>
     </div>
-    {%- include footer.html -%}
-    
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="{{ '/js/searchConfig.js' | prepend: site.baseurl | prepend: site.siteurl  }}?{{ site.time | date: '%s%N' }}"></script>
-<!--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
-
-<script>
-      jQuery('.download_page').click('on', function(){
-            
-            var HTML_Width = jQuery(".contentArea").width();
-            var HTML_Height = $(".contentArea").height();
-            var top_left_margin = 15;
-            var PDF_Width = HTML_Width+(top_left_margin*2);
-            var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
-            var canvas_image_width = HTML_Width;
-            var canvas_image_height = HTML_Height;
-
-            var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;             
-            
-            
-            html2canvas($(".contentArea")[0],{allowTaint:true, imageTimeout: 50000}).then(function(canvas) {
-                canvas.getContext('2d');
-                var imgData = canvas.toDataURL("image/png");
-            //alert(JSON.stringify(canvas));
-		var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
-                //alert(imgData);
-                
-		pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
-			
-		for (var i = 1; i <= totalPDFPages; i++) { 
-                    pdf.addPage(PDF_Width, PDF_Height);                    
-                    pdf.addImage(imgData, 'PNG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-		}
-			
-		pdf.save("HTML-Document.pdf"); 
-                
-        }); 
-      });
-  
-      </script> -->
-<script>
-/* jQuery('.download_page').click('on', function(){
-        var doc = new jsPDF('p', 'pt', 'a4', true);
-        doc.fromHTML(jQuery('.contentArea').html(), 15, 15,           
-        {
-            'width': 500
-        },
-        function(){
-            doc.save('thisMotion.pdf');
-        });
-    
-    }); */
-
-</script>
-    <script>
-        jQuery('.rightSection .contentArea a').each(function(e){
-            var url = jQuery(this).attr('href');
-            if(typeof url != 'undefined'){
-                var urlFound = url.indexOf('{{site.siteurl}}');
-                var httpUrl = url.indexOf('http://');
-                var httpsUrl = url.indexOf('https://');
-                
-                if(urlFound != '-1'){
-                    jQuery(this).attr('rel','nofollow');
-                }else if(httpUrl != '-1' || httpsUrl != '-1'){
-                    jQuery(this).attr('rel','nofollow');
-                }
-            }
-        });
-        
-        jQuery(document).ready(function() {
-            window.initializeSearch('master', '.input-section', '.output-section', '#search-result', '#search-result-pagination');
-        });
-        
-        
-  </script>
-    
+    {%- include footer.html -%}    
   </body>  
 </html>
