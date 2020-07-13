@@ -83,8 +83,10 @@ Below are the list of minimal configuration parameters that one can think of for
 
 # How to start
 
-1. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` . Make sure that **multus**, **sriov-cni** and **sriov-device-plugin** pods are alive on controller and the node. Additionally on the node the **interface service** pod should be alive.
-  ```bash
+1.Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces`.
+Make sure that **multus**, **sriov-cni** and **sriov-device-plugin** pods are alive on controller and the node. Additionally on the node the **interface service** pod should be alive.
+
+```bash
   ne-controller# kubectl get po --all-namespaces
 
   NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
@@ -118,7 +120,7 @@ Below are the list of minimal configuration parameters that one can think of for
   openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
   ```
 
-2.  Make sure that the VF to the mentioned interface on node host is created. You should see a new interface type “Ethernet Virtual Function“. In the below example for the configuration where 2 VF's(Virtual Functions Interfaces) have been requested for 1 PF (Physical functional interface), the output shows for the PF "af:00.0" the corresponding two VF's are "af:0a.0" and "af:0a.1"
+2.Make sure that the VF to the mentioned interface on node host is created. You should see a new interface type “Ethernet Virtual Function“. In the below example for the configuration where 2 VF's(Virtual Functions Interfaces) have been requested for 1 PF (Physical functional interface), the output shows for the PF "af:00.0" the corresponding two VF's are "af:0a.0" and "af:0a.1"
 
 ```bash
 ne-node# lspci | grep Eth
@@ -127,7 +129,8 @@ af:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10Gb
 af:0a.0 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
 af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
 ```
-3. Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
+
+3.Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
 
 ```bash
 ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
@@ -143,7 +146,7 @@ Network devices using kernel driver
 0000:af:0a.1 'Ethernet Virtual Function 700 Series 154c' if=enp175s10f1 drv=i40evf unused=igb_uio,vfio-pci
 ```
 
-4. Check the configmaps has the resource name as intel_sriov_dpdk along with the devices and drivers. In example below the devices **154c** and the driver **igb_uio** are part of the configmaps. If the device and driver are not present in the configmap they need to be added.
+4.Check the configmaps has the resource name as intel_sriov_dpdk along with the devices and drivers. In example below the devices **154c** and the driver **igb_uio** are part of the configmaps. If the device and driver are not present in the configmap they need to be added.
 
 ```bash
 ne-controller# kubectl get configmaps -n kube-system | grep sriov
@@ -182,7 +185,7 @@ config.json:
 Events:  <none>
 ```
 
-5. Check and change the network attachment from sriov_netdevice to sriov_dpdk
+5.Check and change the network attachment from sriov_netdevice to sriov_dpdk
 
 ```bash
 ne-controller# kubectl get network-attachment-definitions
@@ -252,13 +255,13 @@ ne-controller# kubectl describe network-attachment-definitions sriov-openness
   Events:    <none>
 ```
 
-6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of **ne-node** and it will restart automatically in about 20 seconds
+6.Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of **ne-node** and it will restart automatically in about 20 seconds
 
 ```bash
 ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
 ```
 
-7. Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
+7.Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
 
 ```bash
 ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
