@@ -53,18 +53,18 @@ These scripts are validated through a reference UPF solution (implementation bas
 
 1. To keep the build and deploy process simple for reference, docker build and image are stored on the Edge node itself.
 
-```bash
-ne-node# cd <5g-upf-binary-package>
-```
+    ```bash
+    ne-node# cd <5g-upf-binary-package>
+    ```
 
 2. Copy the docker files to the node and build the docker image. Reference docker files and helm-chart for deploying the upf is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
 
-```bash
-ne-node# ./build_image.sh
+    ```bash
+    ne-node# ./build_image.sh
 
-ne-node# docker image ls | grep upf
-upf-cnf     1.0                 e0ce467c13d0        15 hours ago        490MB
-```
+    ne-node# docker image ls | grep upf
+    upf-cnf     1.0                 e0ce467c13d0        15 hours ago        490MB
+    ```
 
 # UPF configure
 
@@ -79,192 +79,196 @@ Below are the list of minimal configuration parameters that one can think of for
 - Amount of Huge pages
 
 ## UPF application specific information
-- N3, N4, N6 and N9 Interface IP addresses
+ 
+ - N3, N4, N6 and N9 Interface IP addresses
 
 # How to start
 
-1. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` . Make sure that **multus**, **sriov-cni** and **sriov-device-plugin** pods are alive on controller and the node. Additionally on the node the **interface service** pod should be alive.
-  ```bash
-  ne-controller# kubectl get po --all-namespaces
+1. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces`.
+Make sure that **multus**, **sriov-cni** and **sriov-device-plugin** pods are alive on controller and the node. Additionally on the node the **interface service** pod should be alive.
 
-  NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
-  kube-ovn      kube-ovn-cni-8x5hc                        1/1     Running   17         7d19h
-  kube-ovn      kube-ovn-cni-p6v6s                        1/1     Running   1          7d19h
-  kube-ovn      kube-ovn-controller-578786b499-28lvh      1/1     Running   1          7d19h
-  kube-ovn      kube-ovn-controller-578786b499-d8d2t      1/1     Running   3          5d19h
-  kube-ovn      ovn-central-5f456db89f-l2gps              1/1     Running   0          7d19h
-  kube-ovn      ovs-ovn-56c4c                             1/1     Running   17         7d19h
-  kube-ovn      ovs-ovn-fm279                             1/1     Running   5          7d19h
-  kube-system   coredns-6955765f44-2lqm7                  1/1     Running   0          7d19h
-  kube-system   coredns-6955765f44-bpk8q                  1/1     Running   0          7d19h
-  kube-system   etcd-silpixa00394960                      1/1     Running   0          7d19h
-  kube-system   kube-apiserver-silpixa00394960            1/1     Running   0          7d19h
-  kube-system   kube-controller-manager-silpixa00394960   1/1     Running   0          7d19h
-  kube-system   kube-multus-ds-amd64-bpq6s                1/1     Running   17         7d18h
-  kube-system   kube-multus-ds-amd64-jf8ft                1/1     Running   0          7d19h
-  kube-system   kube-proxy-2rh9c                          1/1     Running   0          7d19h
-  kube-system   kube-proxy-7jvqg                          1/1     Running   17         7d19h
-  kube-system   kube-scheduler-silpixa00394960            1/1     Running   0          7d19h
-  kube-system   kube-sriov-cni-ds-amd64-crn2h             1/1     Running   17         7d19h
-  kube-system   kube-sriov-cni-ds-amd64-j4jnt             1/1     Running   0          7d19h
-  kube-system   kube-sriov-device-plugin-amd64-vtghv      1/1     Running   0          7d19h
-  kube-system   kube-sriov-device-plugin-amd64-w4px7      1/1     Running   0          4d21h
-  openness      eaa-78b89b4757-7phb8                      1/1     Running   3          5d19h
-  openness      edgedns-mdvds                             1/1     Running   16         7d18h
-  openness      interfaceservice-tkn6s                    1/1     Running   16         7d18h
-  openness      nfd-master-82dhc                          1/1     Running   0          7d19h
-  openness      nfd-worker-h4jlt                          1/1     Running   37         7d19h
-  openness      syslog-master-894hs                       1/1     Running   0          7d19h
-  openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
-  ```
+    ```bash
+    ne-controller# kubectl get po --all-namespaces
 
-2.  Make sure that the VF to the mentioned interface on node host is created. You should see a new interface type “Ethernet Virtual Function“. In the below example for the configuration where 2 VF's(Virtual Functions Interfaces) have been requested for 1 PF (Physical functional interface), the output shows for the PF "af:00.0" the corresponding two VF's are "af:0a.0" and "af:0a.1"
+    NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+    kube-ovn      kube-ovn-cni-8x5hc                        1/1     Running   17         7d19h
+    kube-ovn      kube-ovn-cni-p6v6s                        1/1     Running   1          7d19h
+    kube-ovn      kube-ovn-controller-578786b499-28lvh      1/1     Running   1          7d19h
+    kube-ovn      kube-ovn-controller-578786b499-d8d2t      1/1     Running   3          5d19h
+    kube-ovn      ovn-central-5f456db89f-l2gps              1/1     Running   0          7d19h
+    kube-ovn      ovs-ovn-56c4c                             1/1     Running   17         7d19h
+    kube-ovn      ovs-ovn-fm279                             1/1     Running   5          7d19h
+    kube-system   coredns-6955765f44-2lqm7                  1/1     Running   0          7d19h
+    kube-system   coredns-6955765f44-bpk8q                  1/1     Running   0          7d19h
+    kube-system   etcd-silpixa00394960                      1/1     Running   0          7d19h
+    kube-system   kube-apiserver-silpixa00394960            1/1     Running   0          7d19h
+    kube-system   kube-controller-manager-silpixa00394960   1/1     Running   0          7d19h
+    kube-system   kube-multus-ds-amd64-bpq6s                1/1     Running   17         7d18h
+    kube-system   kube-multus-ds-amd64-jf8ft                1/1     Running   0          7d19h
+    kube-system   kube-proxy-2rh9c                          1/1     Running   0          7d19h
+    kube-system   kube-proxy-7jvqg                          1/1     Running   17         7d19h
+    kube-system   kube-scheduler-silpixa00394960            1/1     Running   0          7d19h
+    kube-system   kube-sriov-cni-ds-amd64-crn2h             1/1     Running   17         7d19h
+    kube-system   kube-sriov-cni-ds-amd64-j4jnt             1/1     Running   0          7d19h
+    kube-system   kube-sriov-device-plugin-amd64-vtghv      1/1     Running   0          7d19h
+    kube-system   kube-sriov-device-plugin-amd64-w4px7      1/1     Running   0          4d21h
+    openness      eaa-78b89b4757-7phb8                      1/1     Running   3          5d19h
+    openness      edgedns-mdvds                             1/1     Running   16         7d18h
+    openness      interfaceservice-tkn6s                    1/1     Running   16         7d18h
+    openness      nfd-master-82dhc                          1/1     Running   0          7d19h
+    openness      nfd-worker-h4jlt                          1/1     Running   37         7d19h
+    openness      syslog-master-894hs                       1/1     Running   0          7d19h
+    openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
+    ```
 
-```bash
-ne-node# lspci | grep Eth
-af:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
-af:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
-af:0a.0 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
-af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
-```
+2. Make sure that the VF to the mentioned interface on node host is created. You should see a new interface type “Ethernet Virtual Function“. In the below example for the configuration where 2 VF's(Virtual Functions Interfaces) have been requested for 1 PF (Physical functional interface), the output shows for the PF "af:00.0" the corresponding two VF's are "af:0a.0" and "af:0a.1"
+
+    ```bash
+    ne-node# lspci | grep Eth
+    af:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+    af:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+    af:0a.0 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
+    af:0a.1 Ethernet controller: Intel Corporation Ethernet Virtual Function 700 Series (rev 02)
+    ```
+
 3. Enable the vfio-pci/igb-uio driver on the node. The below example shows enabling of the igb_uio driver
 
-```bash
-ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
+    ```bash
+    ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
-ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --status
-Network devices using DPDK-compatible driver
-============================================
-0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
+    ne-node# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --status
+    Network devices using DPDK-compatible driver
+    ============================================
+    0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
 
-Network devices using kernel driver
-===================================
-0000:af:00.0 'Ethernet Controller X710 for 10GbE SFP+ 1572' if=enp175s0f0 drv=i40e unused=igb_uio,vfio-pci
-0000:af:0a.1 'Ethernet Virtual Function 700 Series 154c' if=enp175s10f1 drv=i40evf unused=igb_uio,vfio-pci
-```
+    Network devices using kernel driver
+    ===================================
+    0000:af:00.0 'Ethernet Controller X710 for 10GbE SFP+ 1572' if=enp175s0f0 drv=i40e unused=igb_uio,vfio-pci
+    0000:af:0a.1 'Ethernet Virtual Function 700 Series 154c' if=enp175s10f1 drv=i40evf unused=igb_uio,vfio-pci
+    ```
 
 4. Check the configmaps has the resource name as intel_sriov_dpdk along with the devices and drivers. In example below the devices **154c** and the driver **igb_uio** are part of the configmaps. If the device and driver are not present in the configmap they need to be added.
 
-```bash
-ne-controller# kubectl get configmaps -n kube-system | grep sriov
-sriov-release-sriovdp-config         1      55m
+    ```bash
+    ne-controller# kubectl get configmaps -n kube-system | grep sriov
+    sriov-release-sriovdp-config         1      55m
 
-ne-controller# kubectl describe configmap sriov-release-sriovdp-config -n kube-system
-Name:         sriov-release-sriovdp-config
-Namespace:    kube-system
-Labels:       <none>
-Annotations:  <none>
+    ne-controller# kubectl describe configmap sriov-release-sriovdp-config -n kube-system
+    Name:         sriov-release-sriovdp-config
+    Namespace:    kube-system
+    Labels:       <none>
+    Annotations:  <none>
 
-Data
-====
-config.json:
-----
-{
-    "resourceList": [{
-            "resourceName": "intel_sriov_netdevice",
-            "selectors": {
-                "vendors": ["8086"],
-                "devices": ["154c", "10ed"],
-                "drivers": ["iavf", "i40evf", "ixgbevf"]
+    Data
+    ====
+    config.json:
+    ----
+    {
+        "resourceList": [{
+                "resourceName": "intel_sriov_netdevice",
+                "selectors": {
+                    "vendors": ["8086"],
+                    "devices": ["154c", "10ed"],
+                    "drivers": ["iavf", "i40evf", "ixgbevf"]
+                }
+            },
+            {
+                "resourceName": "intel_sriov_dpdk",
+                "selectors": {
+                    "vendors": ["8086"],
+                    "devices": ["154c", "10ed"],
+                    "drivers": ["igb_uio"]
+                }
             }
-        },
-        {
-            "resourceName": "intel_sriov_dpdk",
-            "selectors": {
-                "vendors": ["8086"],
-                "devices": ["154c", "10ed"],
-                "drivers": ["igb_uio"]
-            }
-        }
-    ]
-}
+        ]
+    }
 
-Events:  <none>
-```
+    Events:  <none>
+    ```
 
 5. Check and change the network attachment from sriov_netdevice to sriov_dpdk
 
-```bash
-ne-controller# kubectl get network-attachment-definitions
-  NAME             AGE
-  sriov-openness   59m
+    ```bash
+    ne-controller# kubectl get network-attachment-definitions
+      NAME             AGE
+      sriov-openness   59m
 
-ne-controller# kubectl describe network-attachment-definitions sriov-openness
-  Name:         sriov-openness
-  Namespace:    default
-  Labels:       <none>
-  Annotations:  k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_netdevice
-  API Version:  k8s.cni.cncf.io/v1
-  Kind:         NetworkAttachmentDefinition
-  Metadata:
-    Creation Timestamp:  2020-06-10T02:45:03Z
-    Generation:          1
-    Resource Version:    2182
-    Self Link:           /apis/k8s.cni.cncf.io/v1/namespaces/default/network-attachment-definitions/sriov-openness
-    UID:                 6c019ef1-b8d3-43ea-b5f9-3355a6198e53
-  Spec:
-    Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
-  Events:    <none>
+    ne-controller# kubectl describe network-attachment-definitions sriov-openness
+      Name:         sriov-openness
+      Namespace:    default
+      Labels:       <none>
+      Annotations:  k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_netdevice
+      API Version:  k8s.cni.cncf.io/v1
+      Kind:         NetworkAttachmentDefinition
+      Metadata:
+        Creation Timestamp:  2020-06-10T02:45:03Z
+        Generation:          1
+        Resource Version:    2182
+        Self Link:           /apis/k8s.cni.cncf.io/v1/namespaces/default/network-attachment-definitions/sriov-openness
+        UID:                 6c019ef1-b8d3-43ea-b5f9-3355a6198e53
+      Spec:
+        Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
+      Events:    <none>
 
-ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
-  "intel.com/intel_sriov_netdevice": "2",
+    ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
+      "intel.com/intel_sriov_netdevice": "2",
 
-ne-controller# kubectl delete network-attachment-definitions sriov-openness
+    ne-controller# kubectl delete network-attachment-definitions sriov-openness
 
-ne-controller# cat <<EOF | kubectl create -f -
-  apiVersion: "k8s.cni.cncf.io/v1"
-  kind: NetworkAttachmentDefinition
-  metadata:
-    name: sriov-openness
-    annotations:
-      k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_dpdk
-  spec:
-    config: '{
-    "type": "sriov",
-    "cniVersion": "0.3.1",
-    "name": "sriov-openness-network",
-    "ipam": {
-      "type": "host-local",
-      "subnet": "192.168.2.0/24",
-      "routes": [{
-        "dst": "0.0.0.0/0"
-      }],
-      "gateway": "192.168.2.1"
-    }
-  }'
-  EOF
+    ne-controller# cat <<EOF | kubectl create -f -
+      apiVersion: "k8s.cni.cncf.io/v1"
+      kind: NetworkAttachmentDefinition
+      metadata:
+        name: sriov-openness
+        annotations:
+          k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_dpdk
+      spec:
+        config: '{
+        "type": "sriov",
+        "cniVersion": "0.3.1",
+        "name": "sriov-openness-network",
+        "ipam": {
+          "type": "host-local",
+          "subnet": "192.168.2.0/24",
+          "routes": [{
+            "dst": "0.0.0.0/0"
+          }],
+          "gateway": "192.168.2.1"
+        }
+      }'
+      EOF
 
-ne-controller# kubectl describe network-attachment-definitions sriov-openness
-  Name:         sriov-openness
-  Namespace:    default
-  Labels:       <none>
-  Annotations:  k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_dpdk
-  API Version:  k8s.cni.cncf.io/v1
-  Kind:         NetworkAttachmentDefinition
-  Metadata:
-    Creation Timestamp:  2020-06-10T03:52:58Z
-    Generation:          1
-    Resource Version:    21790
-    Self Link:           /apis/k8s.cni.cncf.io/v1/namespaces/default/network-attachment-definitions/sriov-openness
-    UID:                 959c3630-74c5-45b0-ab39-cd8dd7c87c5f
-  Spec:
-    Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
-  Events:    <none>
-```
+    ne-controller# kubectl describe network-attachment-definitions sriov-openness
+      Name:         sriov-openness
+      Namespace:    default
+      Labels:       <none>
+      Annotations:  k8s.v1.cni.cncf.io/resourceName: intel.com/intel_sriov_dpdk
+      API Version:  k8s.cni.cncf.io/v1
+      Kind:         NetworkAttachmentDefinition
+      Metadata:
+        Creation Timestamp:  2020-06-10T03:52:58Z
+        Generation:          1
+        Resource Version:    21790
+        Self Link:           /apis/k8s.cni.cncf.io/v1/namespaces/default/network-attachment-definitions/sriov-openness
+        UID:                 959c3630-74c5-45b0-ab39-cd8dd7c87c5f
+      Spec:
+        Config:  { "type": "sriov", "cniVersion": "0.3.1", "name": "sriov-openness-network", "ipam": { "type": "host-local", "subnet": "192.168.2.0/24", "routes": [{ "dst": "0.0.0.0/0" }], "gateway": "192.168.2.1" } }
+      Events:    <none>
+    ```
 
 6. Restart the pod sriov-device-plugin for modifications in configMap and network attachments to take effect. Delete the existing device-plugin pod of **ne-node** and it will restart automatically in about 20 seconds
 
-```bash
-ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
-```
+    ```bash
+    ne-controller# kubectl delete pod -n kube-system <sriov-release-kube-sriov-device-plugin-xxx>
+    ```
 
 7. Check for the network attachment, you should see intel_sriov_dpdk with 1 allocated VF
 
-```bash
-ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
-  "intel.com/intel_sriov_dpdk": "1",
-  "intel.com/intel_sriov_netdevice": "1",
-```
+    ```bash
+    ne-controller# kubectl get node ne-node -o json | jq '.status.allocatable' | grep sriov
+      "intel.com/intel_sriov_dpdk": "1",
+      "intel.com/intel_sriov_netdevice": "1",
+    ```
 
 ## Deploy UPF POD from OpenNESS controller
 
@@ -272,66 +276,78 @@ In this reference validation, UPF will be deployed using helm charts. Reference 
 
 helm install \<pod-name\> \<path to the upf helm chart\> \<list of configuration values\>
 
-Here's an example which configures the following information
-- image.repository=upf-cnf  # image repository to upf-cnf i.e. local image on the node
-- node.name=ne-node         # node on which the upf to be deployed
-- node.path=/root/upf       # location on the node where the upf binary is available
-- upf.vf_if_name=VirtualFunctionEthernetaf/a/0 # VF interface name
-- hugePageSize=hugepages-1Gi # hugepage size
-- hugePageAmount=4Gi        # Amount of hugepages to be reserved for the pod
-- upf.pci_bus_addr=0000:af:0a.1  # full format of the PCI bus addr of the VF interface the UPF needs to be attached
-- upf.uio_driver=igb_uio   # UIO driver used vfio-pci or igb_uio
-- upf.main_core=2           # main core
-- upf.worker_cores="3\,4"   # worker cores
-- upf.pfcp_thread.cores=5   # core for the pfcp thread
-- upf.pfcp_thread.count=2   # number of pfcp threads
-- upf.n3_addr=192.179.120.170/24  # the N3 I/f ip address along with subnet info
-- upf.n4_addr=192.179.120.180     # the N4 I/f ip address
-- upf.n6_addr=192.168.1.180/24    # the N6 I/f ip address along with subnet info
-- upf.n6_gw_addr=192.168.1.180    # the N6 gateway IP address
+Here's an example
 
-```bash
-ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
-```
+  ```bash
+  ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+  ```
+
+which configures the following information
+
+| Parameter                                    | Description                                                                      |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| image.repository=upf-cnf                     | Image repository to upf-cnf i.e. local image on the node                         |
+| node.name=ne-node                            | Node on which the upf to be deployed                                             |
+| node.path=/root/upf                          | Location on the node where the upf binary is available                           |
+| upf.vf_if_name=VirtualFunctionEthernetaf/a/0 | VF interface name                                                                |
+| hugePageSize=hugepages-1Gi                   | Hugepage size                                                                    |
+| hugePageAmount=4Gi                           | Amount of hugepages to be reserved for the pod                                   |
+| upf.pci_bus_addr=0000:af:0a.1                | Full format of the PCI bus addr of the VF interface the UPF needs to be attached |
+| upf.uio_driver=igb_uio                       | UIO driver used vfio-pci or igb_uio                                              |
+| upf.main_core=2                              | Main core                                                                        |
+| upf.worker_cores="3\,4"                      | Worker cores                                                                     |
+| upf.pfcp_thread.cores=5                      | Core for the pfcp thread                                                         |
+| upf.pfcp_thread.count=2                      | Number of pfcp threads                                                           |
+| upf.n3_addr=192.179.120.180/24               | The N3 I/f ip address along with subnet info                                     |
+| upf.n4_addr=192.179.120.180                  | The N4 I/f ip address along with subnet info                                     |
+| upf.n6_addr=192.168.1.180/24                 | The N6 I/f ip address along with subnet info                                     |
+| upf.n6_gw_addr=192.168.1.180                 | The N6 gateway IP address                                                        |
+
+ 
 
 ## To start UPF
+
 In this reference validation, UPF application will be started manually after UPF POD deployed successfully.
 
-- Verify UPF pod is up and running `kubectl get po`
-```bash
-ne-controller# kubectl get po
-NAME             READY   STATUS    RESTARTS   AGE
-upf-cnf          1/1     Running   0          6d19h
-```
+1. Verify UPF pod is up and running `kubectl get po`
 
-- Exec into  UPF pod and start the UPF. 
+    ```bash
+    ne-controller# kubectl get po
+    NAME             READY   STATUS    RESTARTS   AGE
+    upf-cnf          1/1     Running   0          6d19h
+    ```
 
-Note: The command **groupadd vpp** needs to be given only for the first execution.
-  
-```bash
-ne-controller# kubectl exec -it upf-cnf -- /bin/bash
-upf-cnf# groupadd vpp
-upf-cnf# ./run_upf.sh
-```
+2. Exec into  UPF pod and start the UPF
+
+    Note: The command **groupadd vpp** needs to be given only for the first execution.
+
+    ```bash
+    ne-controller# kubectl exec -it upf-cnf -- /bin/bash
+    upf-cnf# groupadd vpp
+    upf-cnf# ./run_upf.sh
+    ```
+
 ## Uninstall UPF POD from OpenNESS controller
 
 In this reference validation, UPF can be deleted/uninstalled using the upf helm chart
 
-- Get the helm chart release name for the upf
-  
-```bash
-ne-controller# helm list | grep upf
-upf-cnf         default         1               2020-06-16 12:37:53.40562176 +0530 IST  deployed        upf-0.1.0               0.1.0
-```
+1. Get the helm chart release name for the upf
 
-- Uninstall the upf-cnf helm chart
-```bash
-ne-controller# helm uninstall upf-cnf
-release "upf-cnf" uninstalled
-```
+    ```bash
+    ne-controller# helm list | grep upf
+    upf-cnf         default         1               2020-06-16 12:37:53.40562176 +0530 IST  deployed        upf-0.1.0               0.1.0
+    ```
 
-- List of pods should not show the upf pod now.
-```bash
-ne-controller# kubectl get po | grep upf
-No resources found in default namespace.
-```
+2. Uninstall the upf-cnf helm chart
+
+    ```bash
+    ne-controller# helm uninstall upf-cnf
+    release "upf-cnf" uninstalled
+    ```
+
+3. List of pods should not show the upf pod now
+
+    ```bash
+    ne-controller# kubectl get po | grep upf
+    No resources found in default namespace.
+    ```
