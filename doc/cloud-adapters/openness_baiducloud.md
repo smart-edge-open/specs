@@ -20,8 +20,7 @@ Copyright (c) 2019 Intel Corporation
     - [RTT Test with OpenEdge:](#rtt-test-with-openedge)
     - [RTT Test with IoTHub:](#rtt-test-with-iothub)
 
-Overview
-========
+# Overview
 
 OpenNESS is an open source software toolkit to enable easy orchestration and management of edge services across diverse network platform and access technologies in multi-cloud environments.
 OpenNESS can integrate with Baidu Cloud Connector --OpenEdge which is Edge IoT Gateway. 
@@ -33,8 +32,7 @@ This application note will provide guidelines and examples on:
 - Run Baidu® OpenEdge on OpenNESS platform.
 - End to End Example
 
-Integration Architecture
-========================
+# Integration Architecture
 
 Figure 1. Integration Architecture for OpenEdge on OpenNESS.
 
@@ -48,18 +46,15 @@ Figure 1. Integration Architecture for OpenEdge on OpenNESS.
   - Consumer: consumes end user traffic and optionally can get services from producer apps on the same edge platform. (If need to get services from other edge apps, it need to use control path to authenticate and register with OpenNESS).
   - NOTE: in the application note, OpenEdge is treated as pure consumer application and need not get service from other edge apps. So in the integration architecture diagram, there is not control path.
 
-Run OpenEdge on OpenNESS 
-=========================
+# Run OpenEdge on OpenNESS 
 
 This section describe how to setup and run OpenEdge as a consumer application on OpenNESS based on cloud native infrastructure.
 
-OpenNESS Setup
---------------
+## OpenNESS Setup
 
 Follow ```OpenNESS user guide``` to prepare setup envionment, deploy OpenNESS and configure traffic routing rules.
 
-OpenEdge Setup
---------------
+## OpenEdge Setup
 
 ### Scripts overview
 
@@ -283,11 +278,9 @@ Up 3 seconds 0.0.0.0:443->443/tcp, 0.0.0.0:1883-1884->1883-1884/tcp
 composefile_baidu_edge_1
 ```
 
-End to End Example Demo
-=======================
+# End to End Example Demo
 
-Overview
---------
+## Overview
 
 Figure 2. End to End Example Diagram.
 
@@ -310,8 +303,7 @@ It consists of the following elements and related IOT data processing:
   (3) According to topic configuration, Baidu OpenEdge sends data to Baidu Cloud.
   (4) Also Baidu OpenEdge forwards the message to device #2 sbuscriber.
 
-Run MQTT simulator
-------------------
+## Run MQTT simulator
 
 In the OpenNESS release package, it provides example scripts to help user for MQTT simulator and RTT testing. 
 The scripts can be found in the release package with the subfolder name ```setup_baidu_openedge/mqtt ``` as below structure:
