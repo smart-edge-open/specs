@@ -26,105 +26,10 @@ Copyright (c) 2020 Intel Corporation
 {%- assign title = page.name | replace: "-"," " | replace: "_"," " | split: ".md" | first -%}
 {%- assign pageTitle = title | split: ' ' -%}
 {%- capture pageTitleUpper -%}{%- for word in pageTitle -%}{{ word | capitalize }} {%- endfor -%}{%- endcapture -%}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {%- for navbar in navbars -%}
-        {%- include metainfo.html meta=navbar.section -%}
-    {%- endfor -%}  
-    {% if page.name != 'index.html' %}
-<!--    <base href="{{ site.siteurl | append: "/" }}">-->
-    <link href="{{ '/templates/openness/favicon.ico' | prepend: site.siteurl }}" rel="shortcut icon" type="image/vnd.microsoft.icon" />
-    {% if site.siteurl != 'https://openness.org' %}
-        <meta name="robots" content="noindex, nofollow" />
-    {% endif %}
-    {% endif %}
-    <link href="{{ page.url | prepend: site.baseurl | prepend: site.siteurl }}" rel="canonical" />
-    
-    <link rel="stylesheet" href="{{ 'css/bootstrap.min.css' | prepend: site.CDNurl }}?{{ site.time | date: '%s%N' }}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" type="text/css" />
-    <link rel="stylesheet" href="{{ '/css/custom.css' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}" type="text/css" />
-    <link rel="stylesheet" href="{{ '/css/instantsearch.min.css' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}" type="text/css" />
-    <script src="{{ '/js/instantsearch.min.js' | prepend: site.baseurl | prepend: site.siteurl }}?{{ site.time | date: '%s%N' }}"></script>
-    
-    {% if page.name != 'index.html' %}
-    <script>
-        //configure tms
-        var wapLocalCode = 'us-en'; //dynamically set per localized site, see mapping table for values
-        var wapSection = "open-ness"; //section, specific for each site
-        //load tms
-        (function() {
-             var host = (window.document.location.protocol == 'http:') ? "http://www.intel.com" : "https://www.intel.com";
-             var url = host+"/content/dam/www/global/wap/tms-loader.js"; //wap file url
-             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;  po.src = url;
-             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-         })(); 
-    </script>
-
-    <script src="https://www.googletagmanager.com/gtag/js?id=UA-134913728-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-134913728-1');
-    </script>
-
-
-
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-56HQ28L');</script>
-    <!-- End Google Tag Manager -->
-    {% endif %}
-  </head>
-  <body>
-    {%- include header.html -%}
-    
-    <section id="bannerSection" class="innerPageBanner">
-        <div class="container">
-            <div class="caption text-center">
-                <h1 class="heroHeading">OpenNESS</h1>
-            </div>
-        </div>
-    </section>
-    
-    <div class="container">
-      <div class="leftSection">  
-          <div class="searchBar-section">   
-            <div class="input-section" data-toggle="popover" data-placement="bottom"></div>
-            <div class="output-section">
-                <div id="search-result"></div>
-                <div id="search-result-pagination"></div>
-            </div>
-          </div>
-          
-       <div class="quickLinkBtn" style="display:none;">Quick Links</div>
-        <ul class="collapseArea">
-         {%- for navbar in navbars -%}
-         {%- assign navbar_id = navbar.path | replace: "/", "-" | remove_first: "-" -%}
-         <li class="{{navbar_id}}">
-            <div class="collaspeHead">{{ navbar.title }}</div>
-            {%- assign availableMenus = navbar.section | where_exp: "item", "item.title != navbar.title" -%}
-            {%- assign childMenu = navbar_id | append: "menu" -%}
-            {%- if availableMenus -%}
-            <div class="collaspeContent {{childMenu}}"  {% if this_pages_navbar == navbar %} {% else %}  style="display:none;" {% endif %} >
-              <ul>                
-                {%- include sideNavigation.html sidebar=availableMenus prefix=childMenu -%}                
-              </ul>
-            </div>
-            {%- endif -%}
-          </li>
-           {%- endfor -%}
-        </ul>      
-      </div>
-        
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <style>.rightSection #contentArea img { max-width: none; width: 100% }</style>
       <div class="rightSection">
-        <div class="rightHead">
+        <div class="rightHead" style="display: none;">
           <div class="breadcrumbList pull-left">
             <a href="{{ site.baseurl | append: "/" }}" class="noCrossRef productSubtitle"> Home </a>
             {%- if pageTitleUpper != 'index.html' -%}
@@ -133,24 +38,24 @@ Copyright (c) 2020 Intel Corporation
                 {%- endfor -%}
             {%- endif -%}
           </div>
-          
           <div class="editLink pull-right">
-              <a data-proofer-ignore href="https://github.com/open-ness/specs/blob/master/{{page.path}}" rel="nofollow" class="edit-page-link" target="_blank">
+            <a data-proofer-ignore href="https://github.com/open-ness/specs/blob/master/{{page.path}}" rel="nofollow" class="edit-page-link" target="_blank">
                 <i class="fa fa-github" aria-hidden="true"></i>
                 Edit this page
             </a>
-          </div>         
+          </div>  
+            
         </div>
         <div class="clearfix"></div>
         
-        <div>
+        <div class="download-strip" style="display: none;">
             <div class="read-time pull-left">
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                 {% include reading-time.html %}
             </div>
                 {% if page.name != 'index.html' %}
                     <div class="download-pdf pull-right">
-                        <a id="{{pageName}}.pdf" href="{{pageName | prepend: site.baseurl}}.pdf" download class="download_page">
+                        <a href="javascript:void(0)" class="download_page">
                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                             Download this page
                         </a>
@@ -158,11 +63,7 @@ Copyright (c) 2020 Intel Corporation
                 {% endif %}
         </div> 
         
-        <div class="contentArea" id="contentArea" style="margin-top: 80px;">
+        <div class="contentArea" id="contentArea">
             {{ content }}
         </div>
       </div>
-    </div>
-    {%- include footer.html -%}    
-  </body>  
-</html>
