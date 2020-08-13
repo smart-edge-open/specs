@@ -125,7 +125,7 @@ More details about running Amazon AWS IoT Greengrass as OpenNESS application can
 
 ## Application On-boarding
 
-OpenNESS toolkit allows application developers and content providers to onboard their own applications on-premise or on the network edge, closer to the source of action. The edge computing development model imposes the business logic to be split and distributed across 3 sides: (a) _client side_, (b) _edge side_, and (c) _cloud side_. OpenNESS enables landing applications on the _edge side_.
+OpenNESS toolkit allows application developers and content providers to onboard their own applications on the network edge, closer to the source of action. The edge computing development model imposes the business logic to be split and distributed across 3 sides: (a) _client side_, (b) _edge side_, and (c) _cloud side_. OpenNESS enables landing applications on the _edge side_.
 
 Applications to be onboarded on OpenNESS framework must be self-contained in a container or a virtual machine (VM). The applications have the option to be landed with or without awareness of the hosting edge environment. Below sections will explore the two options and how they can be useful.
 

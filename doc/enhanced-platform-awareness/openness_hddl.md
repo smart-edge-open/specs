@@ -9,7 +9,6 @@ Copyright (c) 2019 Intel Corporation
 - [HDDL OpenNESS Integration](#hddl-openness-integration)
   - [Dynamic CPU and VPU usage](#dynamic-cpu-and-vpu-usage)
 - [Using HDDL-R PCI card with OpenNESS - Details](#using-hddl-r-pci-card-with-openness---details)
-  - [HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge](#hddl-r-pci-card-ansible-installation-for-openness-onpremise-edge)
   - [Building Docker image with HDDL only or dynamic CPU/VPU usage](#building-docker-image-with-hddl-only-or-dynamic-cpuvpu-usage)
   - [Deploying application with HDDL support](#deploying-application-with-hddl-support)
 - [Summary](#summary)
@@ -52,58 +51,6 @@ From perspective of application built to use HDDL acceleration for inference the
 OpenNESS demonstrates one more great applicability Edge compute and efficient resource utilization in the Edge cloud. OpenVINO sample application supports support dynamic use of VPU or CPU for Object detection depending on the input from Producer application. The producer application can behave as a load balancer. It also demonstrates the Application portability with OpenVINO so that it can run on CPU or VPU.
 
 ![HDDL-R Add-in Card](hddl-images/openness_dynamic.png)
-
-HDDL-R support is available for OnPrem OpenNESS deployment flavor with Docker.
-
-## Using HDDL-R PCI card with OpenNESS - Details
-Further sections provide information on how to use the HDDL setup on OpenNESS OnPremise Edge.
-
-### HDDL-R PCI card Ansible installation for OpenNESS OnPremise Edge
-To run the OpenNESS package with HDDL-R functionality the feature needs to be enabled on Edge Node.
-
-To enable, modify `onprem_hddl_enable` variable in `group_vars/all/10-default.yml` file:
-```yaml
-onprem_hddl_enable: true
-```
-Run setup script `deploy_onprem.sh nodes`.
-
-> NOTE: For this release, HDDL verifed with default CentOS Minimal No-RT-kernel(3.10.0-957.el7.x86_64) and Customized RT-kernel(3.10.0-1062.12.1.rt56.1042.el7.x86_64).
-> NOTE: For the hardware platforms with ASMedia PCIe Gen3 switch need to upgrade firmware. otherwise there will be potential system hang issue for some small network models such as squeenzenet1.1...etc.
-
-To check HDDL service running status on the edgenode after deploy, docker logs should look like:
-```
-docker ps
-CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                                                                  NAMES
-ca7e9bf9e570        hddlservice:1.0                        "./start.sh"             20 hours ago        Up 20 hours                                                                                openvino-hddl-service
-ea82cbc0d84a        004fddc9c299                           "/usr/sbin/syslog-ng…"   21 hours ago        Up 21 hours         601/tcp, 514/udp, 6514/tcp                                             edgenode_syslog-ng_1
-3b4daaac1bc6        appliance:1.0                          "sudo -E ./entrypoin…"   21 hours ago        Up 21 hours         0.0.0.0:42101-42102->42101-42102/tcp, 192.168.122.1:42103->42103/tcp   edgenode_appliance_1
-2262b4fa875b        eaa:1.0                                "sudo ./entrypoint_e…"   21 hours ago        Up 21 hours         192.168.122.1:80->80/tcp, 192.168.122.1:443->443/tcp                   edgenode_eaa_1
-eedf4355ec98        edgednssvr:1.0                         "sudo ./edgednssvr -…"   21 hours ago        Up 19 hours         192.168.122.128:53->53/udp                                             mec-app-edgednssvr
-5c94f7203023        nts:1.0                                "sudo -E ./entrypoin…"   21 hours ago        Up 19 hours                                                                                nts
-docker logs --tail 20 ca7e9bf9e570
-+-------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------+
-| status      | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | WAIT_TASK         | RUNNING           | WAIT_TASK         | WAIT_TASK         |
-| fps         | 1.61              | 1.62              | 1.63              | 1.65              | 1.59              | 1.58              | 1.67              | 1.60              |
-| curGraph    | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 | icv-ped...sd-v2.0 |
-| rPriority   | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 |
-| loadTime    | 20200330 05:34:34 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 | 20200330 05:34:35 |
-| runTime     | 00:00:41          | 00:00:41          | 00:00:41          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          | 00:00:40          |
-| inference   | 64                | 64                | 64                | 64                | 63                | 63                | 64                | 63                |
-| prevGraph   |                   |                   |                   |                   |                   |                   |                   |                   |
-| loadTime    |                   |                   |                   |                   |                   |                   |                   |                   |
-| unloadTime  |                   |                   |                   |                   |                   |                   |                   |                   |
-| runTime     |                   |                   |                   |                   |                   |                   |                   |                   |
-| inference   |                   |                   |                   |                   |                   |                   |                   |                   |
-```
-
-
-### Building Docker image with HDDL only or dynamic CPU/VPU usage
-
-In order to enable HDDL or mixed CPU/VPU operation by the containerized OpenVINO application set the `OPENVINO_ACCL` environmental variable to `HDDL` or `CPU_HDDL` inside producer application Dockerfile, located in Edge Apps repo - [edgeapps/applications/openvino/producer](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/Dockerfile). Build the image using the ./build-image.sh located in same directory. Making the image accessible by Edge Controller via HTTPs server is out of scope of this documentation - please refer to [Application Onboard Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
-
-### Deploying application with HDDL support
-
-Application onboarding is out of scope of this document - please refer to [Application Onboard Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md). General steps for onboarding OpenVino application should be executed with one exception. During the addition of the OpenVino consumer application to OpenNESS controller's library, the user needs to input an 'EPA Feature Key' and 'EPA Feature Value', the key to be entered is `hddl`, the value is `true`.
 
 ## Summary
 Intel® Movidius™ Myriad™ X High Density Deep Learning solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution. OpenNESS provides a toolkit for customers to put together Deep learning solution at the edge. To take it further for efficient resource usage OpenNESS provides mechanism to use CPU or VPU depending on the load or any other criteria.

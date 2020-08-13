@@ -8,7 +8,6 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
   - [Setup](#setup)
   - [Usage](#usage)
-  - [OnPremises Usage](#onpremises-usage)
 - [Reference](#reference)
 
 ## Overview
@@ -150,14 +149,6 @@ EOF
 >     operator: Exists
 >   ```
 
-### OnPremises Usage
-Dedicated core pinning is also supported for container and virtual machine deployment in OnPremises mode. This is done using the EPA Features section provided when creating applications for onboarding. For more details on application creation and onboarding in OnPremises mode, please see the [Application Onboarding Document](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/on-premises-applications-onboarding.md).
-
-To set dedicated core pinning for an application, *EPA Feature Key* should be set to `cpu_pin` and *EPA Feature Value* should be set to one of the following options:
-
-1. A single core e.g. `EPA Feature Value = 3` if pinning to core 3 only.
-2. A sequential series of cores, e.g. `EPA Feature Value = 2-7` if pinning to cores 2 to 7 inclusive.
-3. A comma separated list of cores, e.g. `EPA Feature Value = 1,3,6,7,9` if pinning to cores 1,3,6,7 and 9 only.
 ## Reference
 - [CPU Manager Repo](https://github.com/intel/CPU-Manager-for-Kubernetes)
 - More examples of Kubernetes manifests available in [CMK repository](https://github.com/intel/CPU-Manager-for-Kubernetes/tree/master/resources/pods) and [documentation](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md).

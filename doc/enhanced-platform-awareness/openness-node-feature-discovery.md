@@ -8,8 +8,6 @@ Copyright (c) 2019 Intel Corporation
 - [Details](#details)
   - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
     - [Usage](#usage)
-  - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
-    - [Usage](#usage-1)
 - [Reference](#reference)
 
 ## Overview of NFD and Edge usecase
@@ -115,28 +113,6 @@ spec:
   nodeSelector:
     feature.node.kubernetes.io/cpu-pstate.turbo: 'true'
 ```
-
-### Node Feature Discovery support in OpenNESS On Premises
-
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `onprem_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
-
-NFD service in OpenNESS On Premises consists of two software components:
-
-- *nfd-worker*, which is taken from https://github.com/kubernetes-sigs/node-feature-discovery (downloaded as image)
-- *nfd-master*: stand alone service run on Edge Controller.
-
-Nfd-worker connects to nfd-master server. Connection between nfd-workers and nfd-master is secured by TLS based certificates used in Edge Node enrollment: nfd-worker uses certificates of Edge Node, nfd-master generates certificate based on Edge Controller root certificate. Nfd-worker provides hardware features to nfd-master which stores that data to the controller mysql database. It can be used then as EPA Feature requirement while defining and deploying app on node.
-
-#### Usage
-
-NFD is working automatically and does not require any user action to collect the features from nodes.
-Default version of nfd-worker downloaded by ansible scripts during deployment is v.0.5.0. It can be changed by setting variable `_nfd_version` in `roles/nfd/onprem/worker/defaults/main.yml`.
-
-Features found by NFD are visible in Edge Controller UI in node's NFD tab. While defining edge application (Controller UI->APPLICATIONS->ADD APPLICATION), `EPA Feature` fields can be used as definition of NFD requirement for app deployment. Eg: if application requires Multi-Precision Add-Carry Instruction Extensions (ADX), user can set EPA Feature Key to `nfd:cpu-cpuid.ADX` and EPA Feature Value to `true`.
-
-![Sample application with NFD Feature required](nfd-images/nfd3_onp_app.png)
-
-Deployment of such application will fail for nodes that don't provide this feature with this particular value. List of features supported by nfd-worker service can be found: https://github.com/kubernetes-sigs/node-feature-discovery#feature-discovery. Please note that `nfd:` prefix always has to be added when used as EPA Feature Key.
 
 ## Reference
 More details about NFD can be found here: https://github.com/Intel-Corp/node-feature-discovery

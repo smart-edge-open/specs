@@ -62,7 +62,7 @@ _Figure - OpenNESS Network Edge Intel PAC N3000 RSU and resource allocation_
 
 ## Using FPGA on OpenNESS - Details
 
-Further sections provide instructions on how to use all three FPGA features - Programming, Configuration and accessing from application on OpenNESS Network and OnPremises Edge.
+Further sections provide instructions on how to use all three FPGA features - Programming, Configuration and accessing from application on OpenNESS Network Edge.
 
 When the PAC N3000 FPGA is programmed with a vRAN 5G FPGA image it exposes the Single Root I/O Virtualization (SRIOV) Virtual Function (VF) devices which can be used to accelerate the FEC in the vRAN workload. In order to take advantage of this functionality for a Cloud Native deployment the PF (Physical Function) of the device must be bound to DPDK IGB_UIO user-space driver in order to create a number of VFs (Virtual Functions). Once the VFs are created they must also be bound to a DPDK user-space driver in order to allocate them to specific K8s pods running the vRAN workload.
 

@@ -29,23 +29,22 @@ By default, these variables have values:
 | ------------ | ------------ | :---------------: | :-------------: | -------------------------------------------- |
 | Network Edge | Controller   |      `1024`       |      `2M`       |                                              |
 |              | Node         |      `1024`       |      `2M`       |                                              |
-| On-Premises  | Controller   |      `1024`       |      `2M`       | For OVNCNI dataplane, otherwise no hugepages |
-|              | Node         |      `1024`       |      `2M`       |                                              |
+
 
 Guide on changing these values is below. Customizations must be made before OpenNESS deployment.
 
 Variables for hugepage customization can be placed in several files:
 * `group_vars/controller_group/10-default.yml` and `group_vars/edgenode_group/10-default.yml` will affect Edge Controller and Edge Nodes respectively in every mode
 * `host_vars/<inventory_host_name>.yml` will only affect `<inventory_host_name>` host present in `inventory.ini` (in all modes)
-* Hugepages can be also specified for mode and machine type, e.g. hugepages for On-Premises Edge Node can be set in `on_premises.yml` in a play for Edge Nodes:
+* Hugepages can be also specified for mode and machine type, e.g. hugepages for Network Edge Edge Node can be set in `network_edge.yml` in a play for Edge Nodes:
   ```yaml
-  # on_premises.yml
+  # network_edge.yml
 
   - hosts: edgenode_group
     vars:
       hugepage_amount: "5000"
   ```
-  > NOTE: Due to Ansible's variable precedence, configuring hugepages in `on_premises.yml` and `network_edge.yml` is not recommended because it overrides customization in `group_vars` and `host_vars`
+  > NOTE: Due to Ansible's variable precedence, configuring hugepages in `network_edge.yml` is not recommended because it overrides customization in `group_vars` and `host_vars`
 
 This is summarized in a following table:
 
@@ -55,10 +54,9 @@ This is summarized in a following table:
 | `group_vars/edgenode_group/10-default.yml`   |     yes      |     yes     |                                        |                 yes - every node                  |                                                                                 |
 | `host_vars/<inventory_host_name>.yml`        |     yes      |     yes     |                  yes                   |                        yes                        | affects machine specified in `inventory.ini` with name  `<inventory_host_name>` |
 | `network_edge.yml`                           |     yes      |             | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
-| `on_premises.yml`                            |              |     yes     | `vars` under `hosts: controller_group` | `vars` under `hosts: edgenode_group` - every node |                                 not recommended                                 |
 
 Note that variables have a precedence:
-1. **not recommended:** `network_edge.yml` and `on_premises.yml` will always take precedence for files from this list (overrides every other var)
+1. **not recommended:** `network_edge.yml` will always take precedence for files from this list (overrides every other var)
 2. `host_vars/`
 3. `group_vars/edgenode_group/10-default.yml` and `group_vars/controller_group/10-default.yml`
 4. `group_vars/all/10-default.yml`

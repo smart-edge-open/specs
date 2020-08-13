@@ -57,8 +57,6 @@ OpenNESS supports deployment of edge nodes that host Applications and Network fu
 
 ![](arch-images/locations.png)
 
-<b>On-Premises </b> : The Edge Computing resources are located in the customer premises (e.g. Industrial, Retail, Healthcare) and managed by the Communication Service Provider (CoSP) or by the Enterprise customer as a Private network (Private 4G/5G, uCPE/SDWAN). These deployments retain the sensitive data generated on-premises. 
-
 <b>Network Edge </b>: The Edge compute resources are typically spread across the CoSP network (e.g. Access Edge - Cell site, Near Edge - Aggregation Sites and Central Office - Regional Data Center) and managed by the CoSP. Adoption of 5G has paved the way for cloud native COTS deployments that host Network Functions and Applications.  
 
 Most of these deployments are fully virtualized and moving towards cloud native platforms for agility and elasticity. 
@@ -219,7 +217,7 @@ This flavor supports the installation of an OpenNESS Kubernetes cluster on a Mic
 
 ### Converged Edge Reference Architecture (CERA) Flavor 
 
-The Converged Edge Reference Architecture (CERA) from Intel provides foundational recipes that converge IT, OT & NT workloads on various on-premise & network edge platforms. 
+The Converged Edge Reference Architecture (CERA) from Intel provides foundational recipes that converge IT, OT & NT workloads  network edge platform. 
 
 In future OpenNESS releases, various CERA flavor will be available. Each of these recipes would include combinations of other OpenNESS flavor (e.g. RAN + UPF + Apps)
 
