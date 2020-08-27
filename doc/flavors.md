@@ -7,6 +7,7 @@ Copyright (c) 2020 Intel Corporation
 This document introduces the supported deployment flavors that are deployable through the OpenNESS Experience Kits (OEK).
 - [Minimal Flavor](#minimal-flavor)
 - [FlexRAN Flavor](#flexran-flavor)
+- [Service Mesh](#service-mesh)
 - [Media Analytics Flavor](#media-analytics-flavor)
 - [Media Analytics Flavor with VCAC-A](#media-analytics-flavor-with-vcac-a)
 - [CDN Transcode Flavor](#cdn-transcode-flavor)
@@ -46,7 +47,26 @@ This deployment flavor enables the following ingredients:
 * RT Kernel
 * Tapology Manager
 * RMD operator
-  
+
+## Service Mesh
+The pre-defined *service-mesh* deployment flavor installs the OpenNESS service mesh that is based on [Istio](https://istio.io/).
+
+Steps to install this flavor are as follows:
+1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+2. Run OEK deployment script:
+    ```shell
+    $ deploy_ne.sh -f service-mesh
+    ```
+
+This deployment flavor enables the following ingredients:
+* Node Feature Discovery
+* The default Kubernetes CNI: `kube-ovn`
+* Istio service mesh
+* Kiali management console
+* Telemetry
+
+> **NOTE:** Kiali management console username & passowrd can be changed by editing the variables `istio_kiali_username` & `istio_kiali_password`.
+
 ## Media Analytics Flavor
 The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel Xeon servers. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
 
@@ -57,6 +77,9 @@ Steps to install this flavor are as follows:
     $ deploy_ne.sh -f media-analytics
     ```
 
+> **NOTE:** The video analytics services integrates with the OpenNESS service mesh when the flag `ne_istio_enable: true` is set.
+> **NOTE:** Kiali management console username & passowrd can be changed by editing the variables `istio_kiali_username` & `istio_kiali_password`.
+
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
 * VPU & GPU device plugins
@@ -64,6 +87,8 @@ This deployment flavor enables the following ingredients:
 * The default Kubernetes CNI: `kube-ovn`
 * Video analytics services
 * Telemetry
+* Istio service mesh - conditional
+* Kiali management console - conditional
 
 ## Media Analytics Flavor with VCAC-A
 The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
