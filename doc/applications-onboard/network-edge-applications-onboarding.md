@@ -49,7 +49,7 @@ This document will explain the build and deployment to two applications
 2. OpenVINO application: A close to real-world inference application 
 
 ## Building Sample Application images
-The sample application is available in this [location in edgeapps repository](https://github.com/open-ness/edgeapps/tree/master/sample-app), further information about the application is contained within `Readme.md` file.
+The sample application is available in this [location in edgeapps repository](https://github.com/open-ness/edgeapps/tree/master/applications/sample-app), further information about the application is contained within `Readme.md` file.
 
 To build the sample application Docker images for testing OpenNESS EAA with the consumer and producer applications the following steps are required:
 
@@ -64,7 +64,7 @@ To build the sample application Docker images for testing OpenNESS EAA with the 
    docker images | grep consumer
    ```
 ## Building the OpenVINO Application images
-The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/applications/openvino), further information about the application is contained within `Readme.md` file.
 
 To build sample application Docker images for testing OpenVINO consumer and producer applications the following steps are required:
 

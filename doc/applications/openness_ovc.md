@@ -36,7 +36,7 @@ OpenNESS provides the underpinning network edge infrastructure which comprises o
 
 ![Smart City Architecure Deployed with OpenNESS](ovc-images/smart-city-architecture.png)
 
-The Open Visual Cloud website is located at [Open Visual Cloud project](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available on [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample) and its integration with OpenNESS is available at [OpenNESS branch](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness).
+The Open Visual Cloud website is located at [Open Visual Cloud project](https://01.org/openvisualcloud). The Smart City sample source code & documentation are available on [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample) and its integration with OpenNESS is available at [OpenNESS branch](https://github.com/open-ness/edgeapps/tree/master/applications/smart-city-app).
 
 ## The Smart City Building Blocks
 The Smart City sample consists of the following major building blocks:
