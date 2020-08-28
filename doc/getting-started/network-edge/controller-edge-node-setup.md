@@ -99,7 +99,7 @@ For example, when installing Docker, the RPM repository is added and Docker inst
 Note that there might be some leftovers created by installed software; for example, DPDK and Golang installations, found in `/opt`, are not rolled back.
 
 ### Supported EPA features
-A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [Enhanced Platform Awareness Features](supported-epa). The documents referenced in this list provide detailed description of the features, and step by step instructions for to enabling them. The user is advised to become familiar with the features available before executing the deployment playbooks.
+A number of enhanced platform capabilities/features are available in OpenNESS for Network Edge. For the full list of features supported see [Enhanced Platform Awareness Features](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md). The documents referenced in this list provide detailed description of the features, and step by step instructions for to enabling them. The user is advised to become familiar with the features available before executing the deployment playbooks.
 
 ### VM support for Network Edge
 Support for VM deployment on OpenNESS for Network Edge is available and enabled by default. Certain configurations and pre-requisites may need to be satisfied in order to use all VM capabilities. The user is advised to become familiar with the VM support documentation before executing the deployment playbooks. Please see [openness-network-edge-vm-support](../../applications-onboard/openness-network-edge-vm-support) for more information.

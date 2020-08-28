@@ -17,7 +17,7 @@ Copyright © 2020 Intel Corporation
   - [xRAN Library](#xran-library)
   - [Packet Classification](#packet-classification)
   - [xRAN Library Sample Application](#xran-library-sample-application)
-  - [Precision Time Protocol Synchronization](precision-time-protocol-synchronization)
+  - [Precision Time Protocol Synchronization](#precision-time-protocol-synchronization)
   - [eCPRI DDP Profile](#ecpri-ddp-profile)
 - [xRAN Sample App Deployment in OpenNESS](#xran-sample-app-deployment-in-openness)
   - [Hardware Configuration and Checks](#hardware-configuration-and-checks)

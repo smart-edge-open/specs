@@ -170,7 +170,7 @@ Currently the applications are limited to 4096 MB RAM and 8 cores. Memory limit 
 The OpenNESS [EdgeApps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. They should be downloaded on machine where docker is installed.
 
 ## Building the OpenVINO Application images
-The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/openvino), further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in this [location in EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/applications/openvino), further information about the application is contained within `Readme.md` file.
 
 To build sample application Docker images for testing OpenVINO consumer and producer applications the following steps are required:
 
