@@ -52,9 +52,9 @@ Below are several common customization scenarios.
 ### IP address range allocation for various CNIs and interfaces
 
 The OpenNESS Experience kits deployment uses/allocates/reserves a set of IP address ranges for different CNIs and interfaces. The server or host IP address should not conflict with the default address allocation.
-In case if there is a critical need for the server IP address used by the OpenNESS default deployment, it would require to modify the default addresses used by the OpenNESS.
+If there is a critical requirement for the server IP address which is used by the OpenNESS default deployment IP addresses, a modification is required to update the default addresses used by the OpenNESS.
 
-Following files sepcify the CIDR for CNIs and interfaces. These are the IP address ranges allocated and used by default just for reference.
+The following files specify the CIDR for CNIs and interfaces. These are the IP address ranges allocated and used by default just for reference.
 
 ```yaml
 flavors/media-analytics-vca/all.yml:19:vca_cidr: "172.32.1.0/12"
@@ -65,8 +65,8 @@ group_vars/all/10-default.yml:99:kubeovn_cidr: "10.16.0.0/16,100.64.0.0/16,10.96
 roles/kubernetes/cni/kubeovn/master/templates/crd_local.yml.j2:13:  cidrBlock: "192.168.{{ loop.index0 + 1 }}.0/24"
 ```
 
-The 192.168.x.y is used for SRIOV and interface service IP address allocation in Kube-ovn CNI. So it is not allowed for the server IP address, which conflicting with this range.
-Completely avoid the range of address defined as per the netmask as it may conflict in routing rules.
+The 192.168.x.y is used for SRIOV and interface service IP address allocation in the Kube-ovn CNI, therefore the server IP address should not conflict with this range.
+Completely avoid the range of address defined as per the netmask as it may conflict with routing rules.
 
 Eg. If the server/host IP address is required to use 192.168.x.y while this range by default used for SRIOV interfaces in OpenNESS. The IP address range for cidrBlock in roles/kubernetes/cni/kubeovn/master/templates/crd_local.yml.j2 file  can be changed to 192.167.{{ loop.index0 + 1 }}.0/24 to use some other IP segment for SRIOV interfaces.
 
