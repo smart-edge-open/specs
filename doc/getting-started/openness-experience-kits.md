@@ -52,7 +52,7 @@ Below are several common customization scenarios.
 ### IP address range allocation for various CNIs and interfaces
 
 The OpenNESS Experience kits deployment uses/allocates/reserves a set of IP address ranges for different CNIs and interfaces. The server or host IP address should not conflict with the default address allocation.
-If there is a critical requirement for the server IP address which is used by the OpenNESS default deployment IP addresses, a modification is required to update the default addresses used by the OpenNESS.
+If there is a critical requirement for the server IP address to use the OpenNESS default deployment IP addresses, a modification is required to update the default addresses used by the OpenNESS.
 
 The following files specify the CIDR for CNIs and interfaces. These are the IP address ranges allocated and used by default just for reference.
 
