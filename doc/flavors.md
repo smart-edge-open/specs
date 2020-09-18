@@ -7,7 +7,7 @@ Copyright (c) 2020 Intel Corporation
 This document introduces the supported deployment flavors that are deployable through the OpenNESS Experience Kits (OEK).
 - [Minimal Flavor](#minimal-flavor)
 - [FlexRAN Flavor](#flexran-flavor)
-- [Service Mesh](#service-mesh)
+- [Service Mesh Flavor](#service-mesh-flavor)
 - [Media Analytics Flavor](#media-analytics-flavor)
 - [Media Analytics Flavor with VCAC-A](#media-analytics-flavor-with-vcac-a)
 - [CDN Transcode Flavor](#cdn-transcode-flavor)
@@ -48,7 +48,7 @@ This deployment flavor enables the following ingredients:
 * Tapology Manager
 * RMD operator
 
-## Service Mesh
+## Service Mesh Flavor
 The pre-defined *service-mesh* deployment flavor installs the OpenNESS service mesh that is based on [Istio](https://istio.io/).
 
 Steps to install this flavor are as follows:
@@ -66,6 +66,20 @@ This deployment flavor enables the following ingredients:
 * Telemetry
 
 > **NOTE:** Kiali management console username & passowrd can be changed by editing the variables `istio_kiali_username` & `istio_kiali_password`.
+
+Following parameters in the flavor/all.yaml can be customize for Istio deployment:
+
+```
+# Istio deployment profile possible values: default, demo, minimal, remote
+istio_deployment_profile: "default"
+
+# Kiali 
+istio_kiali_username: "admin"
+istio_kiali_password: "admin"
+istio_kiali_nodeport: 30001
+```
+
+> **NOTE:** If creating a customized flavor, the Istio service mesh installation can be included in the Ansible playbook by setting the flag `ne_istio_enable: true` in the flavor file.
 
 ## Media Analytics Flavor
 The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel Xeon servers. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
