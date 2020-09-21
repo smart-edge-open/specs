@@ -7,6 +7,7 @@ Copyright (c) 2019 Intel Corporation
 - [Purpose](#purpose)
 - [OpenNESS setup playbooks](#openness-setup-playbooks)
 - [Customizing kernel, grub parameters, and tuned profile & variables per host.](#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+  - [IP address range allocation for various CNIs and interfaces](#ip-address-range-allocation-for-various-cnis-and-interfaces)
   - [Default values](#default-values)
   - [Use newer realtime kernel (3.10.0-1062)](#use-newer-realtime-kernel-3100-1062)
   - [Use newer non-rt kernel (3.10.0-1062)](#use-newer-non-rt-kernel-3100-1062)
@@ -47,6 +48,27 @@ kernel_skip: true
 ```
 
 Below are several common customization scenarios.
+
+### IP address range allocation for various CNIs and interfaces
+
+The OpenNESS Experience kits deployment uses/allocates/reserves a set of IP address ranges for different CNIs and interfaces. The server or host IP address should not conflict with the default address allocation.
+If there is a critical requirement for the server IP address to use the OpenNESS default deployment IP addresses, a modification is required to update the default addresses used by the OpenNESS.
+
+The following files specify the CIDR for CNIs and interfaces. These are the IP address ranges allocated and used by default just for reference.
+
+```yaml
+flavors/media-analytics-vca/all.yml:19:vca_cidr: "172.32.1.0/12"
+group_vars/all/10-default.yml:90:calico_cidr: "10.243.0.0/16"
+group_vars/all/10-default.yml:93:flannel_cidr: "10.244.0.0/16"
+group_vars/all/10-default.yml:96:weavenet_cidr: "10.32.0.0/12"
+group_vars/all/10-default.yml:99:kubeovn_cidr: "10.16.0.0/16,100.64.0.0/16,10.96.0.0/12"
+roles/kubernetes/cni/kubeovn/master/templates/crd_local.yml.j2:13:  cidrBlock: "192.168.{{ loop.index0 + 1 }}.0/24"
+```
+
+The 192.168.x.y is used for SRIOV and interface service IP address allocation in the Kube-ovn CNI, therefore the server IP address should not conflict with this range.
+Completely avoid the range of address defined as per the netmask as it may conflict with routing rules.
+
+Eg. If the server/host IP address is required to use 192.168.x.y while this range by default used for SRIOV interfaces in OpenNESS. The IP address range for cidrBlock in roles/kubernetes/cni/kubeovn/master/templates/crd_local.yml.j2 file  can be changed to 192.167.{{ loop.index0 + 1 }}.0/24 to use some other IP segment for SRIOV interfaces.
 
 
 ### Default values
