@@ -214,7 +214,7 @@ OAM agent functionality is another component which should be part of 5G Core sol
 
 ### Core Network Configuration Agent
 
-Core Network Configuration Agent (CNCA) is a micro service that provides an interface for end users of OpenNESS controller to interact with 5G Core network solution.  CNCA provides a web based UI and CLI (kube-ctl plugin) interface to interact with the AF and OAM services.
+Core Network Configuration Agent (CNCA) is a micro service that provides an interface for end users of OpenNESS controller to interact with 5G Core network solution.  CNCA provides a CLI (kube-ctl plugin) interface to interact with the AF and OAM services.
 
 ### Security between OpenNess 5GC micro-services
 
