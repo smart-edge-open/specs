@@ -32,7 +32,7 @@ Open Visual Cloud provides access to open-source interoperable building blocks t
 ## Smart City Edge Application Introduction
 The Smart City reference pipeline shows how the integration of various media building blocks, including SVT, with analytics powered by the OpenVINO<sup>TM</sup> Toolkit. Smart City use cases include traffic control/city planning as the starting point. This Smart City sample (not a finished product) can be referenced by developers to ease application development challenges. It enables real-time analytics of live video feeds from IP cameras.
 
-The Smart City sample when deployed on Edge nodes based on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS, Open Visual Cloud, and OpenVINO™.
+The Smart City sample when deployed on Edge nodes based on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS, Open Visual Cloud, and OpenVINOâ„¢.
 
 OpenNESS provides the underpinning network edge infrastructure which comprises three edge nodes (hosting three Smart City regional offices). The media processing and analytics utilizing the Open Visual Cloud software stack are executed on the network edge nodes to reduce latency. The analytics data are aggregated to the cloud for additional post-processing (such as calculating statistics) and display/visualization.
 
@@ -106,8 +106,8 @@ The deployment script is also rewritten to separate the launch of the services i
 
 ## Open Visual Cloud and OpenNESS Integration as cloud-native
 
-Integrating the [cloud-native Smart City application](https://github.com/OpenVisualCloud/Smart-City-Sample/blob/master/deployment/kubernetes/README.md) with OpenNESS was a seamless process due to the OpenNESS adoption of Kubernetes standard features (Namespaces, Services, DaemonSets, and Network Policies). In one step, the Smart City application is deployed on the OpenNESS setup based on the reference deployment on vanilla Kubernetes. Details about onboarding the cloud-native Smart City application with OpenNESS is covered in the [application onboarding guide](https://github.com/otcshare/x-specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#onboarding-smart-city-sample-application).
+Integrating the [cloud-native Smart City application](https://github.com/OpenVisualCloud/Smart-City-Sample/blob/master/deployment/kubernetes/README.md) with OpenNESS was a seamless process due to the OpenNESS adoption of Kubernetes standard features (Namespaces, Services, DaemonSets, and Network Policies). In one step, the Smart City application is deployed on the OpenNESS setup based on the reference deployment on vanilla Kubernetes. Details about onboarding the cloud-native Smart City application with OpenNESS is covered in the [application onboarding guide](../applications-onboard/network-edge-applications-onboarding.md#onboarding-smart-city-sample-application).
 
 ## Conclusion
 
-The Smart City sample when deployed on the Edge nodes based on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS, Open Visual Cloud, and OpenVINO™. The integration shows that the three can run together to show scalable Edge deployment and low-latency analytics processing on Edge nodes.
+The Smart City sample when deployed on the Edge nodes based on OpenNESS creates an impactful edge computing use case that utilizes the capability of OpenNESS, Open Visual Cloud, and OpenVINOâ„¢. The integration shows that the three can run together to show scalable Edge deployment and low-latency analytics processing on Edge nodes.
