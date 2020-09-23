@@ -211,6 +211,143 @@ Now, the `BookInfo` web dashboard is accessible by any web browser at the addres
 _Figure - BookInfo Application Main Page_
 
 
+### Access blocking
+
+Istio controls traffic to specific services. This can be done using `AuthorizationPolicy` resource. Following example will give user access to main page, but without `details` or `reviews` part:
+
+```yaml
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: productpage-viewer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: productpage
+      version: v1
+  rules:
+  - from:
+    - source:
+        principals: ["*"]
+    to:
+    - operation:
+        methods: ["GET"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: default
+spec:
+  {}
+```
+
+![Book Info Application Main Page with no reviews and no details](./service-mesh-images/bookinfo-landing-page-no-reviews-no-details.png)
+
+_Figure - BookInfo Application Main Page with no reviews and details_
+
+To gain access to `details` and `reviews`, but only v1, the following rules are needed:
+
+```yaml
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: reviews-viewer-v1
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: reviews
+      version: v1
+  rules:
+  - from:
+    - source:
+        principals: ["*"]
+    to:
+    - operation:
+        methods: ["GET"]
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: details-viewer-v1
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: details
+      version: v1
+  rules:
+  - from:
+    - source:
+        principals: ["*"]
+    to:
+    - operation:
+        methods: ["GET"]
+```
+
+As mentioned this provides access only to `reviews-v1`. When `productpage` service will try to access other version, this will result with an error.
+
+![Book Info Application Main Page with no reviews](./service-mesh-images/bookinfo-landing-page-no-reviews.png)
+
+_Figure - BookInfo Application Main Page with no reviews_
+
+
+### Load Balancing
+
+Istio provides load balancing functionality. This can be used to spread the access to services (different versions or replicas of the same version). There are two types of load balancers. One called `simple`, which consists of such variants as `RANDOM`, `ROUND_ROBIN`, `LEAST_CONN`. The second is `consistentHash`.
+
+While the `simple` constantly changes the accessed service within the algorithm, the `consistentHash` allows to keep accessing the same service basing on user ip address, or some magic keyword in the request header.
+
+Running a few examples showed that (at least in version 1.6.8) the algorithms were providing rather "-ish" results. Ie:
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: bookinfo-load-balancer
+spec:
+  host: reviews
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+```
+
+Displayed `reviews` part mostly in a expected sequence (v1->v2->v3->v1->...). But every few times some version got repeated. This is not however the same result as when using `RANDOM`:
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: bookinfo-load-balancer
+spec:
+  host: reviews
+  trafficPolicy:
+    loadBalancer:
+      simple: RANDOM
+```
+
+The `RANDOM` version displayed `reviews` part in any order, including repetitions.
+
+As mentioned user can be connected to one specific version (ie: depending on ip address) with:
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: bookinfo-load-balancer
+spec:
+  host: reviews
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        useSourceIp: true
+```
+
+This kept showing the same version of `reviews`, but it was the same on version on all of the few machines that were used during testing. Note that after removing the sample app and deploying it again, the version changed (but was still the same on each computer).
+
+
 ### Canary Deployment
 
 By default if there are more than one services connected, such as "reviews" Istio provides random, but rather equal availability of each service.
