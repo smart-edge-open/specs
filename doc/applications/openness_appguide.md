@@ -119,9 +119,9 @@ OpenNESS supports this by ability to deploy public cloud IOT gateways from cloud
 
 _Figure - Example of Cloud Adapter Edge Application in OpenNESS Platform_
 
-More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_baiducloud.md). 
+More details about running Baidu OpenEdge as OpenNESS application can be found here [Baidu OpenEdge  Edge Application](https://github.com/otcshare/specs/blob/master/doc/cloud-adapters/openness_baiducloud.md).
 
-More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/open-ness/specs/blob/master/doc/openness_awsgreengrass.md). 
+More details about running Amazon AWS IoT Greengrass as OpenNESS application can be found here  [Amazon AWS IoT Greengrass Edge Application](https://github.com/otcshare/specs/blob/master/doc/cloud-adapters/openness_awsgreengrass.md).
 
 ## Application On-boarding
 

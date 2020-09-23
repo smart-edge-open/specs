@@ -94,4 +94,4 @@ _Figure - VAS Activation and Discovery through EAA_
 ## References
 * [Video Analytics Serving](https://github.com/intel/video-analytics-serving)
 * [Edge Application API](https://www.openness.org/api-documentation/?api=eaa)
-* [OpenNESS Application development and porting guide](./openness_appguide)
+* [OpenNESS Application development and porting guide](https://github.com/open-ness/specs/blob/master/doc/applications/openness_appguide.md)
