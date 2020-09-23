@@ -73,10 +73,10 @@ The OpenNESS release includes reference producer and consumer applications.
 
 _Figure - Example of Producer and Consumer Applications_
 
-The consumer application is based on OpenVINO� [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
+The consumer application is based on OpenVINO™ [OpenVINO] (https://software.intel.com/en-us/openvino-toolkit)
 
-- The  OpenVINO� consumer app executes inference on the input video stream.
-- The OpenVINO� producer app generates notifications to the consumer app for changing the inference model.
+- The  OpenVINO™ consumer app executes inference on the input video stream.
+- The OpenVINO™ producer app generates notifications to the consumer app for changing the inference model.
 - The video input stream is captured from a webcam installed on an Embedded Linux\* client device.
 - The annotated video is streamed out of the OpenNESS edge node back to the client device for further data analysis
 
