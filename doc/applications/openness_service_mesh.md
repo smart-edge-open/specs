@@ -11,6 +11,8 @@ Copyright (c) 2020 Intel Corporation
 - [Authentication, Authorization & Mutual TLS enforcement](#authentication-authorization--mutual-tls-enforcement)
 - [Traffic Management](#traffic-management)
   - [External Access](#external-access)
+  - [Access blocking](#access-blocking)
+  - [Load Balancing](#load-balancing)
   - [Canary Deployment](#canary-deployment)
 - [Fault Injection](#fault-injection)
   - [Delays](#delays)
@@ -138,7 +140,6 @@ In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST" a
 
 > **NOTE:** The above `AuthorizationPolicy` can be tailored so that the OpenNESS service mesh *selectively* authorizes particular applications to consume premium video analytics services such as being accelerated using HDDL or VCAC-A cards.
 
-
 ## Traffic Management
 
 Istio provides means to manage the traffic to particular services. This can be either done directly over Istio API, or through the [Service Mesh Interface (SMI)](https://smi-spec.io/) that is standardized across various service mesh implementations. The SMI adapter must be compatible with the service mesh implementation in order to work properly.
@@ -149,6 +150,7 @@ The following demonstrated examples are based on the [BookInfo sample applicatio
 
 _Figure - Book Info Sample Application_
 
+> **NOTE:** By default Istio deployment namespace in OpenNESS is set to `default` Kubernetes namespace. During deployment default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Kubernetes NetworkPolicy is not supporting port range used in Book info sample application. Therefore as workaround user must remove NetworkPolicy for the `default` namespace.
 
 ### External Access
 
@@ -213,7 +215,7 @@ _Figure - BookInfo Application Main Page_
 
 ### Access blocking
 
-Istio controls traffic to specific services. This can be done using `AuthorizationPolicy` resource. Following example will give user access to main page, but without `details` or `reviews` part:
+Istio provides `AuthorizationPolicy` resource for controling traffic to specific services. Following example gives user access to the main page of Book Info saple application, but without `details` or `reviews` parts:
 
 ```yaml
 apiVersion: security.istio.io/v1beta1
@@ -247,7 +249,7 @@ spec:
 
 _Figure - BookInfo Application Main Page with no reviews and details_
 
-To gain access to `details` and `reviews`, but only v1, the following rules are needed:
+To gain access to `details` and `reviews`, but only specific version: v1, the following rules are needed:
 
 ```yaml
 apiVersion: security.istio.io/v1beta1
@@ -287,7 +289,7 @@ spec:
         methods: ["GET"]
 ```
 
-As mentioned this provides access only to `reviews-v1`. When `productpage` service will try to access other version, this will result with an error.
+As mentioned this provides access only to `reviews-v1`. When `productpage` service will try to access other version, it will result with an error.
 
 ![Book Info Application Main Page with no reviews](./service-mesh-images/bookinfo-landing-page-no-reviews.png)
 
@@ -296,11 +298,13 @@ _Figure - BookInfo Application Main Page with no reviews_
 
 ### Load Balancing
 
-Istio provides load balancing functionality. This can be used to spread the access to services (different versions or replicas of the same version). There are two types of load balancers. One called `simple`, which consists of such variants as `RANDOM`, `ROUND_ROBIN`, `LEAST_CONN`. The second is `consistentHash`.
+Istio provides load balancing functionality. This can be used to spread the access to services (different versions or replicas of the same version). There are two types of load balancers:
+* `simple`, which consists of such variants as `RANDOM`, `ROUND_ROBIN`, `LEAST_CONN`
+* `consistentHash`.
 
-While the `simple` constantly changes the accessed service within the algorithm, the `consistentHash` allows to keep accessing the same service basing on user ip address, or some magic keyword in the request header.
+While the `simple` constantly changes the accessed service according to chosen algorithm, the `consistentHash` allows to keep accessing the same service basing on user IP address, or some magic keyword in the request header.
 
-Running a few examples showed that (at least in version 1.6.8) the algorithms were providing rather "-ish" results. Ie:
+Running a few examples showed that (at least in version 1.6.8) the algorithms were providing rather "-ish" results.
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -330,7 +334,7 @@ spec:
 
 The `RANDOM` version displayed `reviews` part in any order, including repetitions.
 
-As mentioned user can be connected to one specific version (ie: depending on ip address) with:
+As mentioned user can be connected to one specific version (i.e. depending on IP address) with:
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -346,7 +350,6 @@ spec:
 ```
 
 This kept showing the same version of `reviews`, but it was the same on version on all of the few machines that were used during testing. Note that after removing the sample app and deploying it again, the version changed (but was still the same on each computer).
-
 
 ### Canary Deployment
 
@@ -464,7 +467,7 @@ Istio-proxy container is attached to each CNF pod as a sidecar. All the traffic 
 
 **Traffic flow: Client → Istio Gateway**
 
-To access NGC CNF API’s (AF & OAM), the client request to the server using the hostname (`afservice`, `oamservice`) along with the port number exposed by the ingress gateway. Based on the Host header, traffic is forwarded to either AF or OAM container. Mutual TLS between gateway and client is enabled by default. The certificates for enabling mutual TLS is managed using `kubectl secret`. Below command add the `server-cert.pem`, `server-key.pem`, `root-ca-cert.pem` to the kubectl secret which are used while creating istio ingress gateway. 
+To access NGC CNF API’s (AF & OAM), the client request to the server using the hostname (`afservice`, `oamservice`) along with the port number exposed by the ingress gateway. Based on the Host header, traffic is forwarded to either AF or OAM container. Mutual TLS between gateway and client is enabled by default. The certificates for enabling mutual TLS is managed using `kubectl secret`. Below command add the `server-cert.pem`, `server-key.pem`, `root-ca-cert.pem` to the kubectl secret which are used while creating istio ingress gateway.
 
 ```shell
 $ kubectl create secret generic ngc-credential -n istio-system \
@@ -508,7 +511,7 @@ The above gateway can be configured to either use HTTP2 without TLS, HTTP2 with 
 
 **Traffic flow: Istio Ingress gateway → Istio-proxy (AF/OAM pods)**
 
-Istio ingress gateway after performing TLS handshake forwards the client request to `afservice/oamservice` which is intercepted by the istio-proxy attached to the corresponding service. 
+Istio ingress gateway after performing TLS handshake forwards the client request to `afservice/oamservice` which is intercepted by the istio-proxy attached to the corresponding service.
 
 **Traffic flow: Between Istio-proxy and Micro services (AF/OAM/NEF/CNTF)**
 
@@ -595,12 +598,17 @@ Annotations:  ovn.kubernetes.io/cidr: 10.16.0.0/16
 Status:       Active
 ```
 
-Kiali console is accessible from browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits: 
+User may change the namespace labeled with istio label using parameter `istio_deployment_namespace`
+* in `flavors/service-mesh/all.yml` for dployment with service-mesh flavor
+* in `flavors/media-analytics/all.yml` for deployment with media-analytics flavor
+
+> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. User must remove default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port.
+
+Kiali console is accessible from browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits:
 
 ![Kiali Dashboard Login](./service-mesh-images/kiali-login.png)
 
 _Figure - Kiali Dashboard Login_
-
 
 ### Enabling Service Mesh with the Media Analytics Flavor
 
