@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
-# Service Mesh support in OpenNESS
+# Utilizing a Service Mesh for Edge Services in OpenNESS
 - [Overview](#overview)
 - [OpenNESS Service Mesh Enablement through Istio](#openness-service-mesh-enablement-through-istio)
 - [Video Analytics Service Mesh](#video-analytics-service-mesh)
@@ -11,26 +11,23 @@ Copyright (c) 2020 Intel Corporation
 - [Authentication, Authorization & Mutual TLS enforcement](#authentication-authorization--mutual-tls-enforcement)
 - [Traffic Management](#traffic-management)
   - [External Access](#external-access)
-  - [Access blocking](#access-blocking)
   - [Load Balancing](#load-balancing)
   - [Canary Deployment](#canary-deployment)
 - [Fault Injection](#fault-injection)
   - [Delays](#delays)
   - [Aborts](#aborts)
   - [Circuit Breaker](#circuit-breaker)
-- [NGC Service Mesh Enablement](#ngc-service-mesh-enablement)
 - [Prometheus, Grafana & Kiali integration](#prometheus-grafana--kiali-integration)
 - [Getting Started](#getting-started)
   - [Enabling Service Mesh through the Service Mesh Flavor](#enabling-service-mesh-through-the-service-mesh-flavor)
   - [Enabling Service Mesh with the Media Analytics Flavor](#enabling-service-mesh-with-the-media-analytics-flavor)
-  - [Enabling 5GC Service Mesh with the Core Control Plane Flavor](#enabling-5gc-service-mesh-with-the-core-control-plane-flavor)
 - [References](#references)
 
 ## Overview
 
-Service mesh acts as a middleware between the edge applications/services and the OpenNESS platform providing abstractions for traffic management, observability and security for the edge micro-services.
+Service mesh acts as a middleware between the edge applications/services and the OpenNESS platform that provides abstractions for traffic management, observability and security of the edge micro-services in the mesh.
 
-In the native Kubernetes deployment, the services are orchestrated by the Kubernetes controller and the consumer applications must decide on which service endpoint they need to reach out according to the services information broadcasted on the EAA bus.
+In the native Kubernetes deployment, the services are orchestrated by the Kubernetes controller and the consumer applications must decide which service endpoint they need to reach out according to the services information broadcasted on the Edge Application Agent (EAA) bus.
 
 With the Service Mesh approach, the applications do not have to worry on deciding which service endpoint it should reach, but instead it requests a service name that is translated and load-balanced by the service mesh. The service mesh manages the traffic routing and the service scale-up & down behind the scenes and adds more capabilities to the mix such as tracing, monitoring & logging.
 
@@ -93,6 +90,17 @@ spec:
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: destination-rule-analytics-gstreamer
+  namespace: default
+spec:
+  host: analytics-gstreamer
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
 ```
 
 
@@ -142,19 +150,22 @@ In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST" a
 
 ## Traffic Management
 
-Istio provides means to manage the traffic to particular services. This can be either done directly over Istio API, or through the [Service Mesh Interface (SMI)](https://smi-spec.io/) that is standardized across various service mesh implementations. The SMI adapter must be compatible with the service mesh implementation in order to work properly.
+Istio facilitates the traffic management between the services running in the mesh, which can be done either directly over Istio's API, or through the [Service Mesh Interface (SMI)](https://smi-spec.io/) that is standardized across various service mesh implementations. The SMI adapter must be compatible with the service mesh implementation in order to work properly.
 
-The following demonstrated examples are based on the [BookInfo sample application](https://istio.io/latest/docs/examples/bookinfo/) that is shipped by default with the Istio software package. Deploying the BookInfo sample application creates a couple of interconnected services as shown in the following figure:
+The following examples are based on the [BookInfo sample application](https://istio.io/latest/docs/examples/bookinfo/) that is shipped by default with the Istio software package. Deploying the BookInfo sample application turns up a couple of interconnected services as shown in this figure:
 
 ![Book Info Sample Application](./service-mesh-images/kiali-book-info.png)
 
 _Figure - Book Info Sample Application_
 
-> **NOTE:** By default Istio deployment namespace in OpenNESS is set to `default` Kubernetes namespace. During deployment default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. Kubernetes NetworkPolicy is not supporting port range used in Book info sample application. Therefore as workaround user must remove NetworkPolicy for the `default` namespace.
+> **NOTE:** By default Istio deployment namespace in OpenNESS is set to the `default` Kubernetes namespace where all the ingress traffic to the cluster is blocked by the default network poolicy `block-all-ingress`. At the time of writing this document, the Kubernetes NetworkPolicy does not support specifying port ranges which are needed by the the BookInfo sample application. Therefore, as workaround the user should remove the network policy of the `default` namespace.
+> ```shell
+> kubectl delete netpol block-all-ingress
+> ```
 
 ### External Access
 
-In order to access a service mesh application from outside the cluster, the [Ingress Gateway](https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/) needs to be deployed. The following `Gateway` specs are extracted from the sample [BookInfo Gateway](https://github.com/istio/istio/blob/master/samples/bookinfo/networking/bookinfo-gateway.yaml):
+Accessing a service endpoint in the mesh from outside the cluster is achieved by deploying the [Ingress Gateway](https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/). The following `Gateway` specs are extracted from the sample [BookInfo Gateway](https://github.com/istio/istio/blob/master/samples/bookinfo/networking/bookinfo-gateway.yaml) to demonstrate the concept of Ingress Gateway:
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -200,111 +211,26 @@ spec:
           number: 9080
 ```
 
-The port is assigned dynamically and can be retrieved using the command:
+Acce port to access  is assigned dynamically and can be retrieved using the command:
+
+
+Now, the `BookInfo` web dashboard is accessible by any web browser at the address `http://<CONTROLLER_IP>:<GATEWAY_PORT>/productpage`. The `<GATEWAY_PORT>` is assigned dynamically and can be retrieved using this command:
 
 ```shell
 $ kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}'
 ```
 
-Now, the `BookInfo` web dashboard is accessible by any web browser at the address `http://<CONTROLLER_IP>:<GATEWAY_PORT>/productpage`
-
 ![Book Info Application Main Page](./service-mesh-images/bookinfo-landing-page.png)
 
 _Figure - BookInfo Application Main Page_
 
-
-### Access blocking
-
-Istio provides `AuthorizationPolicy` resource for controling traffic to specific services. Following example gives user access to the main page of Book Info saple application, but without `details` or `reviews` parts:
-
-```yaml
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: productpage-viewer
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: productpage
-      version: v1
-  rules:
-  - from:
-    - source:
-        principals: ["*"]
-    to:
-    - operation:
-        methods: ["GET"]
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: deny-all
-  namespace: default
-spec:
-  {}
-```
-
-![Book Info Application Main Page with no reviews and no details](./service-mesh-images/bookinfo-landing-page-no-reviews-no-details.png)
-
-_Figure - BookInfo Application Main Page with no reviews and details_
-
-To gain access to `details` and `reviews`, but only specific version: v1, the following rules are needed:
-
-```yaml
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: reviews-viewer-v1
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: reviews
-      version: v1
-  rules:
-  - from:
-    - source:
-        principals: ["*"]
-    to:
-    - operation:
-        methods: ["GET"]
----
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: details-viewer-v1
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: details
-      version: v1
-  rules:
-  - from:
-    - source:
-        principals: ["*"]
-    to:
-    - operation:
-        methods: ["GET"]
-```
-
-As mentioned this provides access only to `reviews-v1`. When `productpage` service will try to access other version, it will result with an error.
-
-![Book Info Application Main Page with no reviews](./service-mesh-images/bookinfo-landing-page-no-reviews.png)
-
-_Figure - BookInfo Application Main Page with no reviews_
-
-
 ### Load Balancing
 
-Istio provides load balancing functionality. This can be used to spread the access to services (different versions or replicas of the same version). There are two types of load balancers:
-* `simple`, which consists of such variants as `RANDOM`, `ROUND_ROBIN`, `LEAST_CONN`
-* `consistentHash`.
+Istio provides load balancing functionality to spread the access multiple service instances (different versions or replicas of the same version). There are two types of load balancers:
+* `simple` that consists of the variants: `RANDOM`, `ROUND_ROBIN` and `LEAST_CONN`, or
+* `consistentHash`, while the `simple` constantly changes the reachable service instance according to a chosen algorithm, the `consistentHash` allows to keep accessing the same service based on the consumer IP address, or a magic keyword in the request header.
 
-While the `simple` constantly changes the accessed service according to chosen algorithm, the `consistentHash` allows to keep accessing the same service basing on user IP address, or some magic keyword in the request header.
-
-Running a few examples showed that (at least in version 1.6.8) the algorithms were providing rather "-ish" results.
+Round-robin load-balancer:
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -318,7 +244,7 @@ spec:
       simple: ROUND_ROBIN
 ```
 
-Displayed `reviews` part mostly in a expected sequence (v1->v2->v3->v1->...). But every few times some version got repeated. This is not however the same result as when using `RANDOM`:
+Random load-balancer:
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -332,9 +258,7 @@ spec:
       simple: RANDOM
 ```
 
-The `RANDOM` version displayed `reviews` part in any order, including repetitions.
-
-As mentioned user can be connected to one specific version (i.e. depending on IP address) with:
+Load-balancer based on service consumer IP address:
 
 ```yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -349,15 +273,10 @@ spec:
         useSourceIp: true
 ```
 
-This kept showing the same version of `reviews`, but it was the same on version on all of the few machines that were used during testing. Note that after removing the sample app and deploying it again, the version changed (but was still the same on each computer).
-
 ### Canary Deployment
 
-By default if there are more than one services connected, such as "reviews" Istio provides random, but rather equal availability of each service.
-
-One can configure Istio to display certain apps more often than the other. This can be used to balance the load in a specific way, or simply for the canary release approach.
-
-This can be done with `TrafficSplit` structure. Such example will provide access ratio 5:1 between reviews-v1, and reviews-v2:
+Canary deployment is a technique to reduce the risk of introducing a new service version in production by gradually routing a percentage of the traffic to the new service instance before rolling it out to the entire service mesh and making it available to full consumption.
+This can be done with `TrafficSplit` structure as in the following example, the traffic is routed with ratio of 5:1 between `reviews-v1` and `reviews-v2` back-end services:
 
 ```yaml
 apiVersion: split.smi-spec.io/v1alpha2
@@ -376,8 +295,6 @@ spec:
 ![Canary Deployment with TrafficSplit](./service-mesh-images/kiali-canary-deployment.png)
 
 _Figure - Canary Deployment with TrafficSplit_
-
-The `TrafficSplit` works only if the app versions have unique service assigned.
 
 
 ## Fault Injection
@@ -454,86 +371,6 @@ circuitBreaker:
   simpleCb:
     maxConnections: 100
 ```
-
-## NGC Service Mesh Enablement
-
-The proposed architecture for service mesh with 5G CNF is depicted in the graphic below.
-
-![Service Mesh for NGC](./service-mesh-images/ngc-service-mesh.png)
-
-_Figure - Service Mesh for NGC_
-
-Istio-proxy container is attached to each CNF pod as a sidecar. All the traffic for the CNF container go through the istio-proxy container only. The traffic flow between different entities is described in the following sections.
-
-**Traffic flow: Client → Istio Gateway**
-
-To access NGC CNF API’s (AF & OAM), the client request to the server using the hostname (`afservice`, `oamservice`) along with the port number exposed by the ingress gateway. Based on the Host header, traffic is forwarded to either AF or OAM container. Mutual TLS between gateway and client is enabled by default. The certificates for enabling mutual TLS is managed using `kubectl secret`. Below command add the `server-cert.pem`, `server-key.pem`, `root-ca-cert.pem` to the kubectl secret which are used while creating istio ingress gateway.
-
-```shell
-$ kubectl create secret generic ngc-credential -n istio-system \
-      --from-file=tls.key=/etc/openness/certs/ngc/server-key.pem \
-      --from-file=tls.crt=/etc/openness/certs/ngc/server-cert.pem \
-      --from-file=ca.crt=/etc/openness/certs/ngc/root-ca-cert.pem
-```
-
-The `root-ca-cert.pem` is used to validate client certificates while the `server-cert.pem` and `server-key.pem` are used for providing server authentication and encryption. This below policy creates istio gateway with mutual tls while using the ngc-credential secret created above.
-
-```yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: ngc-ingress-gateway
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    tls:
-      mode: MUTUAL
-      credentialName: ngc-credential
-    hosts:
-    - afservice
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    tls:
-      mode: MUTUAL
-      credentialName: ngc-credential
-    hosts:
-    - oamservice
-```
-
-The above gateway can be configured to either use HTTP2 without TLS, HTTP2 with simple TLS or HTTP2 with mutual TLS by changing value of port.protocol (HTTPS/HTTP/HTTP2) and tls.mode (SIMPLE, MUTUAL). Istio upgrades the traffic to HTTP2 by default if supported by the client. An istio virtual service `ngc-vs` is also created which defines the routes from istio-ingress-gateway.
-
-**Traffic flow: Istio Ingress gateway → Istio-proxy (AF/OAM pods)**
-
-Istio ingress gateway after performing TLS handshake forwards the client request to `afservice/oamservice` which is intercepted by the istio-proxy attached to the corresponding service.
-
-**Traffic flow: Between Istio-proxy and Micro services (AF/OAM/NEF/CNTF)**
-
-Micro service handles incoming and outgoing request. A request made by the service is intercepted by istio-proxy which performs encryption (mutual TLS) and forward the request to server. An incoming request to the micro service is intercepted by the istio-proxy which decrypts the traffic and forward to the actual service container. Any decryption/encryption and client/server validation is performed by the istio-proxy only.
-
-**Traffic Flow: Between different istio-proxy containers**
-
-The traffic between the istio-proxy containers is fully encrypted by using mutual TLS. The below policy enforce mutual TLS for the traffic between different istio-proxy.
-
-```yaml
-apiVersion: security.istio.io/v1beta1
-kind: PeerAuthentication
-metadata:
-  name: ngc-mtls
-  namespace: ngc
-spec:
-  mtls:
-    mode: STRICT
-```
-
-For every workload in `ngc` namespace which has the istio-proxy side car attached is enforced to use mutual TLS. Any entity can't access 5G APIs without authenticating via istio-proxy.
-
 
 ## Prometheus, Grafana & Kiali integration
 
@@ -613,11 +450,6 @@ _Figure - Kiali Dashboard Login_
 ### Enabling Service Mesh with the Media Analytics Flavor
 
 The Istio service mesh is not enabled by default in OpenNESS. It can be installed alongside the video analytics services - by setting the flag `ne_istio_enable` to `true` in the *media-nalaytics* flavor. The media analytics services are installed with the OpenNESS service mesh through the OEK playbook as described in the [Media Analytics](../flavors.md#media-analytics-flavor) section.
-
-### Enabling 5GC Service Mesh with the Core Control Plane Flavor
-
-The Istio service mesh is integrated with the NGC core control plane and can be deployed through the pre-defined *core-cplane* deployment flavor in OEK playbook as described in the [Core Control Plane Flavor](../flavors.md#core-control-plane-flavor) section. Istio service mesh flag `ne_istio_enable` is enabled by default. The below command deploys the NGC Cloud-Native Functions (CNFs) with Istio service mesh
-
 
 ## References
 
