@@ -373,7 +373,10 @@ circuitBreaker:
 
 Prometheus\* and Grafana\* are deployed in OpenNESS platform as part of the [Telemetry support in OpenNESS](../enhanced-platform-awareness/openness-telemetry.md) and are integrated with the Istio service mesh. When enabled in OpenNESS, Istio's scraping endpoints are added to the Prometheus configuration file according to the [Prometheus configuration guide](https://istio.io/latest/docs/ops/integrations/prometheus/).
 
-Collected metrics can be observed on the Grafana dashboard. More details can be found in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
+Collected metrics can be observed on the Grafana dashboard. To see all requests made with Istio a new dashboard should use a metric `istio_requests_total`. This shows up how many times each service was accessed. It could be narrowed down to a specific version of single service, or with some other critheria, i.e. by using `istio_requests_total{destination_service_name="reviews",destination_version="v1"}`. The same can be used for Prometheus. More details can be found in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
+
+![Grafana example metric](./service-mesh-images/telem-grafana-rule.png)
+_Figure - Grafana example metric rule fo Istio_
 
 Kiali is deployed alongside Istio. More details on accessing the Kiali dashboard are covered in the [Getting Started](#getting-started) section.
 
