@@ -25,23 +25,23 @@ Copyright (c) 2020 Intel Corporation
 
 ## Overview
 
-Service mesh acts as a middleware between the edge applications/services and the OpenNESS platform that provides abstractions for traffic management, observability and security of the edge micro-services in the mesh.
+Service mesh acts as a middleware between the edge applications/services and the OpenNESS platform that provides abstractions for traffic management, observability, and security of the edge micro-services in the mesh.
 
 In the native Kubernetes deployment, the services are orchestrated by the Kubernetes controller and the consumer applications must decide which service endpoint they need to reach out according to the services information broadcasted on the Edge Application Agent (EAA) bus.
 
-With the Service Mesh approach, the applications do not have to worry on deciding which service endpoint it should reach, but instead it requests a service name that is translated and load-balanced by the service mesh. The service mesh manages the traffic routing and the service scale-up & down behind the scenes and adds more capabilities to the mix such as tracing, monitoring & logging.
+With the Service Mesh approach, the applications do not decide which service endpoint it should reach. Instead, it requests a service name that is translated and load-balanced by the service mesh. The service mesh manages the traffic routing and the service scale-up and down behind the scenes, and it adds more capabilities to the mix such as tracing, monitoring, and logging.
 
 
 ## OpenNESS Service Mesh Enablement through Istio
 
-[Istio](https://istio.io/) is a feature-rich cloud-native service mesh platform that provides a collection of key capabilities such as: [Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/), [Security](https://istio.io/latest/docs/concepts/security/) and [Observability](https://istio.io/latest/docs/concepts/observability/) uniformly across a network of services. OpenNESS integrates natively with the Istio service mesh to help reduce the complexity of large scale edge applications, services and network functions. The Istio service mesh is deployed automatically through the OpenNESS Experience Kits (OEK) with an option to onboard the media analytics services on the service mesh.
+[Istio](https://istio.io/) is a feature-rich, cloud-native service mesh platform that provides a collection of key capabilities such as: [Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/), [Security](https://istio.io/latest/docs/concepts/security/) and [Observability](https://istio.io/latest/docs/concepts/observability/) uniformly across a network of services. OpenNESS integrates natively with the Istio service mesh to help reduce the complexity of large scale edge applications, services, and network functions. The Istio service mesh is deployed automatically through OpenNESS Experience Kits (OEK) with an option to onboard the media analytics services on the service mesh.
 
-Istio mandates injecting [Envoy sidecars](https://istio.io/latest/docs/ops/deployment/architecture/#envoy) into the applications and services pods to become part of the service mesh. The Envoy sidecars intercepts all inter-pod traffic, therefore, it becomes easy to manage, secure and observe. Sidecar injection is automatically enabled to the `default` namespace in the OpenNESS cluster. This is done by applying the label `istio-injection=enabled` to the `default` namespace.
+Istio mandates injecting [Envoy sidecars](https://istio.io/latest/docs/ops/deployment/architecture/#envoy) into the applications and services pods to become part of the service mesh. The Envoy sidecars intercept all inter-pod traffic, making it easy to manage, secure, and observe. Sidecar injection is automatically enabled to the `default` namespace in the OpenNESS cluster. This is done by applying the label `istio-injection=enabled` to the `default` namespace.
 
 
 ## Video Analytics Service Mesh
 
-The OpenNESS Video Analytics services enables third party consumer applications running on OpenNESS to perform video analytics/inferencing workloads by consuming the Video Analytics Serving APIs as described in the [OpenNESS Video Analytics Services](./openness_va_services.md).
+OpenNESS Video Analytics services enable third-party consumer applications running on OpenNESS to perform video analytics and inferencing workloads by consuming the Video Analytics Serving APIs as described in the [OpenNESS Video Analytics Services](./openness_va_services.md).
 
 The proposed architecture with the video analytics use case is depicted in the graphic below:
 
@@ -49,15 +49,15 @@ The proposed architecture with the video analytics use case is depicted in the g
 
 _Figure - Video Analytics Service Mesh Architecture_
 
-Multiple instances of the video analytics services could be provisioned in the cluster. These services are deployed in multiple flavors based on the supported multimedia frameworks (FFmpeg & Gstreamer) and the available acceleration (CPU, HDDL & VCAC-A).
+Multiple instances of video analytics services can be provisioned in the cluster. These services are deployed in multiple flavors based on the supported multimedia frameworks (FFmpeg\* and GStreamer\*) and the available acceleration (CPU, HDDL, and VCAC-A).
 
-In each deployment, three containers are actually created:
+In each deployment, three containers are created:
 
-- Video analytics serving gateway (VAS gateway): This is the actual video analytics serving container that is exposing the consumable APIs for video analytics/inference.
-- Video analytics serving sidecar (VAS sidecar): This is the sidecar that creates and registers the service with EAA internal service registry.
-- Envoy sidecar (istio-proxy): This is the Istio sidecar proxy that is used for the service mesh plumbing. See Istio Sidecars.
+- Video analytics serving gateway (VAS gateway): This is the actual video analytics serving container that exposes the consumable APIs for video analytics and inference.
+- Video analytics serving sidecar (VAS sidecar): This is the sidecar that creates and registers the service with the EAA internal service registry.
+- Envoy sidecar (istio-proxy): This is the sidecar proxy that is used for the service mesh plumbing. See [Envoy Sidecars](https://istio.io/latest/docs/ops/deployment/architecture/#envoy).
 
-The service mesh framework takes care of provisioning, monitoring and routing the traffic to various services endpoints.
+The service mesh framework takes care of provisioning, monitoring, and routing the traffic to various services endpoints.
 
 
 ## Video Analytics Service Mesh Deployment
@@ -77,7 +77,7 @@ istio-system   smi-adapter-istio-54b7c99755-sxfgd                           1/1 
 ...
 ```
 
-With Istio enabled in the media analytics services flavor, Istio creates two new [Destination Rules](https://istio.io/latest/docs/concepts/traffic-management/#destination-rules) in the service mesh. These Destination Rules enable Mutual TLS for each individual service, which enforces the need for any client attempting to connect to the services via the service mesh to also use the Mutual TLS mode. This prevents any client not using Mutual TLS from connecting with any of the media analytics services pods on the service mesh.
+With Istio enabled in the media analytics services flavor, Istio creates two new [Destination Rules](https://istio.io/latest/docs/concepts/traffic-management/#destination-rules) in the service mesh. These Destination Rules enable Mutual TLS for each service, which enforces the need for any client attempting to connect to the services via the service mesh to also use the Mutual TLS mode. This prevents any client not using Mutual TLS from connecting with any of the media analytics services pods on the service mesh.
 
 ```yaml
 apiVersion: networking.istio.io/v1beta1
@@ -106,9 +106,9 @@ spec:
 
 ## Authentication, Authorization & Mutual TLS enforcement
 
-Mutual TLS is enforced by default in OpenNESS in order to enable authentication of all applications and services onboarded on the mesh.
+Mutual TLS is enforced by default in OpenNESS to enable authentication of all applications and services onboarded on the mesh.
 
-To prevent non-mutual TLS for the whole mesh, the below `PeerAuthentication` policy is automatically applied to the `default` namespace in the OpenNESS cluster. This policy instructs Istio to *strictly* set the mutual TLS between all mesh applications & services running in the `default` namespace.
+To prevent non-mutual TLS for the whole mesh, the following `PeerAuthentication` policy is automatically applied to the `default` namespace in the OpenNESS cluster. This policy instructs Istio to *strictly* set the mutual TLS between all mesh applications and services running in the `default` namespace.
 
 ```yaml
 apiVersion: security.istio.io/v1beta1
@@ -121,7 +121,7 @@ spec:
     mode: STRICT
 ```
 
-With mutual TLS enabled, Istio is capable of applying authorization policies as designed by the cluster administrator. The below authentication policy is applied automatically by the video analytics service mesh. This policy instructs Istio to authorize *all the authenticated* applications to consume the `analytics-ffmpeg` service and use its "GET", "POST" and "DELETE" methods.
+With mutual TLS enabled, Istio is capable of applying authorization policies as designed by the cluster administrator. The below authentication policy is applied automatically by the video analytics service mesh. This policy instructs Istio to authorize *all the authenticated* applications to consume the `analytics-ffmpeg` service and to use its "GET", "POST", and "DELETE" methods.
 
 ```yaml
 apiVersion: security.istio.io/v1beta1
@@ -144,13 +144,13 @@ spec:
         methods: ["GET", "POST", "DELETE"]
 ```
 
-In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST" and "DELETE" requests from any authenticated applications from the `default` namespace only to be passed to the service. For example, if using the [Video Analytics sample application](https://github.com/otcshare/edgeapps/tree/master/applications/vas-sample-app), the policy will allow requests from the sample application to be received by the service as it is deployed in the `default` namespace. However, if the application is deployed in a different namespace, for example the `openness` namespace mentioned above in the output from the Kubernetes cluster, then the policy will deny access to the service as the request is coming from an application on a different namespace.
+In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST", and "DELETE" requests from any authenticated applications from the `default` namespace only to be passed to the service. For example, if using the [Video Analytics sample application](https://github.com/otcshare/edgeapps/tree/master/applications/vas-sample-app), the policy will allow requests from the sample application to be received by the service as it is deployed in the `default` namespace. However, if the application is deployed in a different namespace (for example, the `openness` namespace mentioned above in the output from the Kubernetes cluster), then the policy will deny access to the service as the request is coming from an application on a different namespace.
 
-> **NOTE:** The above `AuthorizationPolicy` can be tailored so that the OpenNESS service mesh *selectively* authorizes particular applications to consume premium video analytics services such as being accelerated using HDDL or VCAC-A cards.
+> **NOTE**: The above `AuthorizationPolicy` can be tailored so that the OpenNESS service mesh *selectively* authorizes particular applications to consume premium video analytics services such as those accelerated using HDDL or VCAC-A cards.
 
 ## Traffic Management
 
-Istio facilitates the traffic management between the services running in the mesh, which can be done either directly over Istio's API, or through the [Service Mesh Interface (SMI)](https://smi-spec.io/) that is standardized across various service mesh implementations. The SMI adapter must be compatible with the service mesh implementation in order to work properly.
+Istio facilitates the traffic management between the services running in the mesh, which can be done either directly over Istio's API or through the [Service Mesh Interface (SMI)](https://smi-spec.io/) that is standardized across various service mesh implementations. The SMI adapter must be compatible with the service mesh implementation to work properly.
 
 The following examples are based on the [BookInfo sample application](https://istio.io/latest/docs/examples/bookinfo/) that is shipped by default with the Istio software package. Deploying the BookInfo sample application turns up a couple of interconnected services as shown in this figure:
 
@@ -158,7 +158,7 @@ The following examples are based on the [BookInfo sample application](https://is
 
 _Figure - Book Info Sample Application_
 
-> **NOTE:** By default Istio deployment namespace in OpenNESS is set to the `default` Kubernetes namespace where all the ingress traffic to the cluster is blocked by the default network poolicy `block-all-ingress`. At the time of writing this document, the Kubernetes NetworkPolicy does not support specifying port ranges which are needed by the the BookInfo sample application. Therefore, as workaround the user should remove the network policy of the `default` namespace.
+> **NOTE**: By default, the Istio deployment namespace in OpenNESS is set to the `default` Kubernetes namespace where all the ingress traffic to the cluster is blocked by the default network policy `block-all-ingress`. At the time of writing this document, the Kubernetes NetworkPolicy does not support specifying port ranges that are needed by the BookInfo sample application. Therefore, as a workaround, the user should remove the network policy of the `default` namespace.
 > ```shell
 > kubectl delete netpol block-all-ingress
 > ```
@@ -211,10 +211,7 @@ spec:
           number: 9080
 ```
 
-Acce port to access  is assigned dynamically and can be retrieved using the command:
-
-
-Now, the `BookInfo` web dashboard is accessible by any web browser at the address `http://<CONTROLLER_IP>:<GATEWAY_PORT>/productpage`. The `<GATEWAY_PORT>` is assigned dynamically and can be retrieved using this command:
+Now, the `BookInfo` web dashboard is accessible by any web browser at the address `http://<CONTROLLER_IP>:<GATEWAY_PORT>/productpage`. The `<GATEWAY_PORT>` is assigned dynamically and can be retrieved using the following command:
 
 ```shell
 $ kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}'
@@ -226,9 +223,9 @@ _Figure - BookInfo Application Main Page_
 
 ### Load Balancing
 
-Istio provides load balancing functionality to spread the access multiple service instances (different versions or replicas of the same version). There are two types of load balancers:
-* `simple` that consists of the variants: `RANDOM`, `ROUND_ROBIN` and `LEAST_CONN`, or
-* `consistentHash`, while the `simple` constantly changes the reachable service instance according to a chosen algorithm, the `consistentHash` allows to keep accessing the same service based on the consumer IP address, or a magic keyword in the request header.
+Istio provides load balancing functionality to spread access to multiple service instances (different versions or replicas of the same version). There are two types of load balancers:
+* `simple`, which consists of the following variants: `RANDOM`, `ROUND_ROBIN`, and `LEAST_CONN`, or
+* `consistentHash`, while the `simple` constantly changes the reachable service instance according to a chosen algorithm, the `consistentHash` allows users to keep accessing the same service based on the consumer IP address or a magic keyword in the request header.
 
 Round-robin load-balancer:
 
@@ -276,7 +273,7 @@ spec:
 ### Canary Deployment
 
 Canary deployment is a technique to reduce the risk of introducing a new service version in production by gradually routing a percentage of the traffic to the new service instance before rolling it out to the entire service mesh and making it available to full consumption.
-This can be done with `TrafficSplit` structure as in the following example, the traffic is routed with ratio of 5:1 between `reviews-v1` and `reviews-v2` back-end services:
+This can be done with `TrafficSplit` structure according to the following example. The traffic is routed with a ratio of 5:1 between `reviews-v1` and `reviews-v2` back-end services:
 
 ```yaml
 apiVersion: split.smi-spec.io/v1alpha2
@@ -299,11 +296,11 @@ _Figure - Canary Deployment with TrafficSplit_
 
 ## Fault Injection
 
-Fault injection, in the context of Istio, is a mechanism by which failures can be purposefully injected into the service mesh in order to mimic how an application would behave in case failures or degradations are encountered. Application developers and cluster administrators can programatically inject faults at the application layer instead of killing pods, delaying packets, or corrupting packets at the TCP layer. Istio provisions various APIs to perform fault injections such as: delays, aborts & circuit breakers to the application micro-services deployed in OpenNESS cluster and verify their resiliency.
+Fault injection, in the context of Istio, is a mechanism by which failures can be purposefully injected into the service mesh to mimic how an application would behave in case failures or degradations are encountered. Application developers and cluster administrators can programmatically inject faults at the application layer instead of killing pods, delaying packets, or corrupting packets at the TCP layer. Istio provisions various APIs to perform fault injections such as delays, aborts, and circuit breakers to the application micro-services deployed in the OpenNESS cluster and to verify their resiliency.
 
 ### Delays
 
-Delays are timing failures such as a network latency or overloaded upstreams. A sample rule for traffic delaying coming from the test user `<username>` can be injected by applying the following specification:
+Delays are timing failures such as network latency or overloaded upstreams. A sample rule for traffic delaying coming from the test user `<username>` can be injected by applying the following specification:
 
 ```yaml
 apiVersion: networking.istio.io/v1beta1
@@ -361,7 +358,7 @@ spec:
 
 ### Circuit Breaker
 
-A simple circuit breaker can be set based on a criteria on a number of failed connections or request limits. Creating a circuit breaker rule to limit the number of connections to a service is done by applying the following specification:
+A simple circuit breaker can be set based on criteria for several failed connections or request limits. Creating a circuit breaker rule to limit the number of connections to a service is done by applying the following specification:
 
 ```yaml
 destination: reviews.default.svc.cluster.local
@@ -374,13 +371,13 @@ circuitBreaker:
 
 ## Prometheus, Grafana & Kiali integration
 
-Prometheus and Grafana are deployed in OpenNESS platform as part of the [Telemetry support in OpenNESS](../enhanced-platform-awareness/openness-telemetry.md) and are integrated with the Istio service mesh. When enabled in OpenNESS, Istio's scraping endpoints are added to Prometheus configuration file according to [Prometheus configuration guide](https://istio.io/latest/docs/ops/integrations/prometheus/).
+Prometheus\* and Grafana\* are deployed in OpenNESS platform as part of the [Telemetry support in OpenNESS](../enhanced-platform-awareness/openness-telemetry.md) and are integrated with the Istio service mesh. When enabled in OpenNESS, Istio's scraping endpoints are added to the Prometheus configuration file according to the [Prometheus configuration guide](https://istio.io/latest/docs/ops/integrations/prometheus/).
 
-Collected metrics can be observed on Grafana dashboard - more details in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
+Collected metrics can be observed on the Grafana dashboard. More details can be found in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
 
-Kiali is deployed alongside Istio - more details on accessing Kiali dashboard are covered in the [Getting Started](#getting-started) section.
+Kiali is deployed alongside Istio. More details on accessing the Kiali dashboard are covered in the [Getting Started](#getting-started) section.
 
-When properly configured Istio can provide Prometheus and Grafana with telemetry data. Examples showing how many times `BookInfo` micro-services were accessed.
+When a properly configured Istio can provide Prometheus and Grafana with telemetry data. Examples showing how many times `BookInfo` micro-services were accessed.
 
 Prometheus - all elements:
 
@@ -388,7 +385,7 @@ Prometheus - all elements:
 
 _Figure - Istio Telemetry with Prometheus_
 
-Grafana - only stats only for specific services: `details`, `reviews-v1` and `reviews-v3`
+Grafana - only stats only for specific services: `details`, `reviews-v1`, and `reviews-v3`
 
 ![Istio Telemetry with Grafana](./service-mesh-images/grafana-istio.png)
 
@@ -398,9 +395,16 @@ _Figure - Istio Telemetry with Grafana_
 
 ### Enabling Service Mesh through the Service Mesh Flavor
 
-Istio service mesh can be deployed with OpenNESS using the OEK through the pre-defined *service-mesh* flavor as described in [Service Mesh Flavor](../flavors.md#service-mesh-flavor) section. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/). The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials: (a) Username: `admin`, (b) Password: `admin` and (c) Nodeport set to `30001`. Prometheus and Grafana are deployed in OpenNESS platform as part of the telemetry role and are integrated with Istio service mesh.
+Istio service mesh can be deployed with OpenNESS using the OEK through the pre-defined *service-mesh* flavor as described in [Service Mesh Flavor](../flavors.md#service-mesh-flavor) section. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/). 
+The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials: 
 
-To verify if Istio resources are deployed and running use the following command:
+* Username: `admin`
+* Password: `admin`
+* Nodeport set to `30001`
+
+Prometheus and Grafana are deployed in the OpenNESS platform as part of the telemetry role and are integrated with the Istio service mesh.
+
+To verify if Istio resources are deployed and running, use the following command:
 
 ```shell
 $kubectl get deployments,pods,serviceaccounts -n istio-system
@@ -423,7 +427,7 @@ serviceaccount/kiali-service-account                  1         2d21h
 serviceaccount/smi-adapter-istio                      1         2d21h
 ```
 
-During Istio deployment the `default` namespace is labeled with `istio-injection=enabled`
+During Istio deployment, the `default` namespace is labeled with `istio-injection=enabled`
 
 ```shell
 $kubectl describe ns default
@@ -435,13 +439,13 @@ Annotations:  ovn.kubernetes.io/cidr: 10.16.0.0/16
 Status:       Active
 ```
 
-User may change the namespace labeled with istio label using parameter `istio_deployment_namespace`
-* in `flavors/service-mesh/all.yml` for dployment with service-mesh flavor
+Users can change the namespace labeled with istio label using the parameter `istio_deployment_namespace`
+* in `flavors/service-mesh/all.yml` for deployment with service-mesh flavor
 * in `flavors/media-analytics/all.yml` for deployment with media-analytics flavor
 
-> **NOTE:** Default OpenNESS network policy applies to pods in `default` namespace and blocks all ingress traffic. User must remove default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for example policy allowing ingress traffic from `192.168.1.0/24` subnet on specific port.
+> **NOTE**: The default OpenNESS network policy applies to pods in the `default` namespace and blocks all ingress traffic. Users must remove the default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to the [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from `192.168.1.0/24` subnet on a specific port.
 
-Kiali console is accessible from browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits:
+Kiali console is accessible from a browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits:
 
 ![Kiali Dashboard Login](./service-mesh-images/kiali-login.png)
 
@@ -449,7 +453,7 @@ _Figure - Kiali Dashboard Login_
 
 ### Enabling Service Mesh with the Media Analytics Flavor
 
-The Istio service mesh is not enabled by default in OpenNESS. It can be installed alongside the video analytics services - by setting the flag `ne_istio_enable` to `true` in the *media-nalaytics* flavor. The media analytics services are installed with the OpenNESS service mesh through the OEK playbook as described in the [Media Analytics](../flavors.md#media-analytics-flavor) section.
+The Istio service mesh is not enabled by default in OpenNESS. It can be installed alongside the video analytics services by setting the flag `ne_istio_enable` to `true` in the *media-analytics* flavor. The media analytics services are installed with the OpenNESS service mesh through the OEK playbook as described in the [Media Analytics](../flavors.md#media-analytics-flavor) section.
 
 ## References
 
