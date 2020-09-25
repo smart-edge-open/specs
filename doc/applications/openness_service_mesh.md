@@ -373,9 +373,9 @@ circuitBreaker:
 
 Prometheus\* and Grafana\* are deployed in OpenNESS platform as part of the [Telemetry support in OpenNESS](../enhanced-platform-awareness/openness-telemetry.md) and are integrated with the Istio service mesh. When enabled in OpenNESS, Istio's scraping endpoints are added to the Prometheus configuration file according to the [Prometheus configuration guide](https://istio.io/latest/docs/ops/integrations/prometheus/).
 
-Collected metrics can be observed on the Grafana dashboard. To see all requests made with Istio a new dashboard should use a metric `istio_requests_total`. This shows up how many times each service was accessed. It could be narrowed down to a specific version of a single service, or with some other criteria, i.e. by using `istio_requests_total{destination_service_name="reviews",destination_version="v1"}`. The same can be used for Prometheus. More details can be found in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
+Istio related metrics can be viewed on Grafana\* dashboard by defining a filtration criteria such as `istio_requests_total` that displays all requests made through the service mesh. It can be narrowed down to a specific service version e.g: `istio_requests_total{destination_service_name="reviews",destination_version="v1"}` as shown in the following figure. The same approach can be done on Prometheus\* dashboard. More details can be found in the [Grafana](../enhanced-platform-awareness/openness-telemetry.md#grafana) section.
 
-![Grafana example metric](./service-mesh-images/telem-grafana-rule.png)
+![Grafana example metric](./service-mesh-images/grafana-telemetry-rule.png)
 
 _Figure - Grafana example metric rule for Istio_
 
