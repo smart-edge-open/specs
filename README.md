@@ -74,6 +74,8 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness_appguide.md</b>: How to develop or Port existing cloud application to the Edge cloud based on OpenNESS](https://github.com/otcshare/specs/blob/master/doc/applications/openness_appguide.md)
    * [<b>openness_ovc.md</b>: Open Visual Cloud Smart City reference Application for OpenNESS](https://github.com/otcshare/specs/blob/master/doc/applications/openness_ovc.md)
    * [<b>openness_openvino.md</b>: AI inference reference Edge application for OpenNESS](https://github.com/otcshare/specs/blob/master/doc/applications/openness_openvino.md)
+   * [<b>openness_va_services.md</b>: Video Analytics Services for OpenNESS](https://github.com/otcshare/specs/blob/master/doc/applications/openness_va_services.md)
+   * [<b>openness_service_mesh.md</b>: Service Mesh support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/applications/openness_service_mesh.md)
 
 ## Cloud Adapters 
 

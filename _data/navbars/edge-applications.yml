@@ -24,3 +24,8 @@ section:
     path: /doc/applications/openness_va_services
     meta_title: OpenNESS Video Analytics Services
     meta_description: The Video Analytics Services provided by OpenNESS to enable third party edge application to deploy and use hardware optimized video analytics pipelines.
+
+  - title: OpenNESS Service Mesh
+    path: /doc/applications/openness_service_mesh
+    meta_title: OpenNESS Service Mesh
+    meta_description: Service mesh acts as a middleware between the edge applications/services and the OpenNESS platform providing abstractions for traffic management, observability and security for the edge micro-services.
