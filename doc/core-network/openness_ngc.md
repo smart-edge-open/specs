@@ -60,7 +60,7 @@ The 5G system architecture specified by the 3GPP standard [3GPP_23501] has been 
 
 The picture below depicts the 3GPP 5G Core networking components connected to each other in Service Based Interface (SBI) architecture.
 
-![5G System Architecture](ngc-images/5g_system_architecture.png "3GPP TS 23.501 Rel15.3 Sec 4.2.3 : 5G System Architecure")
+![5G System Architecture](ngc-images/5g_system_architecture.png)
 
 3GPP TS 23.501 Rel15.3 Sec 4.2.3 : 5G System Architecture
 
@@ -214,7 +214,7 @@ OAM agent functionality is another component which should be part of 5G Core sol
 
 ### Core Network Configuration Agent
 
-Core Network Configuration Agent (CNCA) is a micro service that provides an interface for end users of OpenNESS controller to interact with 5G Core network solution.  CNCA provides a web based UI and CLI (kube-ctl plugin) interface to interact with the AF and OAM services.
+Core Network Configuration Agent (CNCA) is a micro service that provides an interface for end users of OpenNESS controller to interact with 5G Core network solution.  CNCA provides a CLI (kube-ctl plugin) interface to interact with the AF and OAM services.
 
 ### Security between OpenNess 5GC micro-services
 
@@ -354,7 +354,7 @@ Along with discussing the supported features in OpenNESS for 5G integration also
 -	[3GPP_29244]TS 29.244 Interface between the Control Plane and the User Plane of EPC Nodes.
 -	[3GPP_23501]3GPP TS 23.501 V15.3.0, “3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 15)”
 - [3GPP_23502]3GPP TS 23.502 v15.3.0, "Procedures for 5G Systems; Stage2 (Release 15)"
-- [3GPP_29122]: 3GPP TS 29.122 V15.3.0, "T8 reference point of Northbound APIs (Release 15)"
+- [3GPP_29122]3GPP TS 29.122 V15.3.0, "T8 reference point of Northbound APIs (Release 15)"
 - [3GPP_29512]3GPP TS 29.512 V15.3.0, "5G System; Session Management Policy Control Service; Stage3; (Release 15)"
 - [3GPP_29522]3GPP TS 29.522 V15.3.0, "5G System; Network Exposure Function Northbound APIs; Stage 3; (Release 15)"
 -	[3GPP_CUPS]"Control and User Plane Separation of EPC Nodes (CUPS)", https://www.3gpp.org/cups 

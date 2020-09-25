@@ -299,11 +299,22 @@ which configures the following information
 | upf.pfcp_thread.cores=5                      | Core for the pfcp thread                                                         |
 | upf.pfcp_thread.count=2                      | Number of pfcp threads                                                           |
 | upf.n3_addr=192.179.120.180/24               | The N3 I/f ip address along with subnet info                                     |
-| upf.n4_addr=192.179.120.180                  | The N4 I/f ip address along with subnet info                                     |
+| upf.n4_addr=192.179.120.180                  | The N4 I/f ip address without subnet info                                        |
 | upf.n6_addr=192.168.1.180/24                 | The N6 I/f ip address along with subnet info                                     |
 | upf.n6_gw_addr=192.168.1.180                 | The N6 gateway IP address                                                        |
+| upf_autostart=false                          | Auto-start upf
 
- 
+# extended upf configuration
+
+| Parameter                                    | Description                                                                      |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| n3_if_name=""                                | Name of interface connected to N3                                                |
+| n3_if_mac=""                                 | MAC address of interface connected to N3                                         |
+| n3_pci_bus_addr=""                           | Full format of the PCI bus addr of interface connected to N3                     |
+| n3_uio_driver=""                             | UIO driver used for interface connected to N3.                                   |
+| n3_if_name=""                                | Name of interface connected to N4                                                |
+| n3_pci_bus_addr=""                           | Full format of the PCI bus addr of interface connected to N4                     |
+| n3_uio_driver=""                             | UIO driver used interface connected to N4.                                       |
 
 ## To start UPF
 

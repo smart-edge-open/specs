@@ -239,9 +239,9 @@ Further validation of this architecture will be carried out with commercial EPC 
 -	[3GPP_23214]	TS 23.214 3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; Architecture enhancements for control and user plane separation of EPC nodes; Stage 2.
 -	[3GPP_29244]	TS 29.244 Interface between the Control Plane and the User Plane of EPC Nodes.
 -	[3GPP_29303]	TS 29.303 DNS procedures for UP function selection  
--	Control and User Plane Separation of EPC nodes (CUPS) (https://www.3gpp.org/cups)
+-	Control and User Plane Separation of EPC nodes (CUPS) (https://www.3gpp.org/news-events/1882-cups)
 -	[3GPP_23501]	3GPP TS 23.501 V15.1.0, “3rd Generation Partnership Project; Technical Specification Group Services and System Aspects; System Architecture for the 5G System; Stage 2 (Release 15)” (2018-03)
--	[3GPP_CUPS]	"Control and User Plane Separation of EPC Nodes (CUPS)", https://www.3gpp.org/cups 
+-	[3GPP_CUPS]	"Control and User Plane Separation of EPC Nodes (CUPS)", https://www.3gpp.org/news-events/1882-cups
 -	[OpenNESS_2019]	"OpenNESS Architecture and Solution", white paper, 2019.
 
 ## List of Abbreviations
