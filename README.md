@@ -65,7 +65,6 @@ Below is the complete list of OpenNESS solution documentation
 * [<b>dataplane</b>: Folder containing Dataplane and inter-app infrastructure support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/dataplane)
    * [<b>openness-interapp.md</b>: InterApp Communication support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md)
    * [<b>openness-ovn.md</b>: OpenNESS Support for OVS as dataplane with OVN](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-ovn.md)
-   * [<b>openness-nts.md</b>: Dataplane support for Edge Cloud between ENB and EPC (S1-U) Deployment](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-nts.md)
    * [<b>openness-userspace-cni.md</b>: Userspace CNI - Container Network Interface Kubernetes plugin](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md)
 
 ## Edge Applications 
