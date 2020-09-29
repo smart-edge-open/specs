@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
-# OpenNESS Radio Access Network
+# OpenNESS Radio Access Network (RAN)
 - [Introduction](#introduction)
 - [Building the FlexRAN image](#building-the-flexran-image)
 - [FlexRAN hardware platform configuration](#flexran-hardware-platform-configuration)
@@ -12,32 +12,31 @@ Copyright (c) 2020 Intel Corporation
 - [Deploying and Running the FlexRAN pod](#deploying-and-running-the-flexran-pod)
 - [Setting up 1588 - PTP based Time synchronization](#setting-up-1588---ptp-based-time-synchronization)
   - [Setting up PTP](#setting-up-ptp)
-  - [Grandmaster clock](#grandmaster-clock)
-  - [Slave clock](#slave-clock)
+  - [Primary clock](#primary-clock)
+  - [Secondary clock](#secondary-clock)
 - [BIOS configuration](#bios-configuration)
 - [References](#references)
 
 # Introduction
+Radio Access Network (RAN) is the edge of wireless network. 4G and 5G base stations form the key network function for the edge deployment. In OpenNESS, FlexRAN is used as a reference for 4G and 5G base stations as well as 4G and 5G end-to-end testing. 
 
-Radio Access Network is the edge of wireless network. 4G and 5G base stations form the key network function for the edge deployment. In OpenNESS Intel FlexRAN is used as a reference 4G and 5G base station for 4G and 5G end-to-end testing. 
+FlexRAN offers high-density baseband pooling that could run on a distributed Telco\* cloud to provide a smart indoor coverage solution and next-generation fronthaul architecture. This 4G and 5G platform provides the open platform ‘smarts’ for both connectivity and new applications at the edge of the network, along with the developer tools to create these new services. FlexRAN running on the Telco Cloud provides low latency compute, storage, and network offload from the edge. Thus, saving network bandwidth. 
 
-FlexRAN offers high-density baseband pooling that could run on a distributed Telco Cloud to provide a smart indoor coverage solution and next-generation front haul architecture. This flexible, 4G and 5G platform provides the open platform ‘smarts’ for both connectivity and new applications at the edge of the network, along with the developer tools to create these new services. FlexRAN running on Telco Cloud provides low latency compute, storage, and network offload from the edge, thus saving network bandwidth. 
+FlexRAN 5GNR Reference PHY is a baseband PHY Reference Design for a 4G and 5G base station, using Intel® Xeon® processor family with Intel® architecture. This 5GNR Reference PHY consists of a library of c-callable functions that are validated on several technologies from Intel (Intel® microarchitecture code name Broadwell, Intel® microarchitecture code name Skylake, Cascade Lake, and Ice Lake) and demonstrates the capabilities of the software running different 5GNR L1 features. The functionality of these library functions is defined by the relevant sections in [3GPP TS 38.211, 212, 213, 214, and 215]. Performance of the Intel 5GNR Reference PHY meets the requirements defined by the base station conformance tests in [3GPP TS 38.141]. This library of functions will be used by Intel partners and end customers as a foundation for their product development. Reference PHY is integrated with third-party L2 and L3 to complete the base station pipeline. 
 
-Intel FlexRAN 5GNR Reference PHY is a baseband PHY Reference Design for a 4G and 5G base station, using Xeon® series Processor with Intel Architecture. This 5GNR Reference PHY consists of a library of c-callable functions which are validated on Intel® Xeon® Broadwell / Skylake / Cascade Lake / Ice Lake platforms and demonstrates the capabilities of the software running different 5GNR L1 features. Functionality of these library functions is defined by the relevant sections in [3GPP TS 38.211, 212, 213, 214 and 215]. Performance of the Intel 5GNR Reference PHY meets the requirements defined by the base station conformance tests in [3GPP TS 38.141]. This library of Intel functions will be used by Intel partners and end-customers as a foundation for their own product development. Reference PHY is integrated with third party L2 and L3 to complete the base station pipeline. 
-
-The diagram below shows FlexRAN DU (Real-time L1 and L2) deployed on the OpenNESS platform with the necessary microservice and Kubernetes enhancements required for real-time workload deployment. 
+The diagram below shows FlexRAN DU (Real-time L1 and L2) deployed on the OpenNESS platform with the necessary microservices and Kubernetes\* enhancements required for real-time workload deployment. 
 
 ![FlexRAN DU deployed on OpenNESS](openness-ran.png)
 
 This document aims to provide the steps involved in deploying FlexRAN 5G (gNb) on the OpenNESS platform. 
 
-> Note: This document covers both FlexRAN 4G and 5G. All the steps mentioned in this document uses 5G for reference. Please refer to the FlexRAN 4G document for minor updated needed in order to build, deploy and test FlexRAN 4G. 
+>**NOTE**: This document covers both FlexRAN 4G and 5G. All the steps mentioned in this document use 5G for reference. Refer to the [FlexRAN 4G Reference Solution L1 User Guide #570228](https://cdrdv2.intel.com/v1/dl/getContent/570228) for minor updates needed to build, deploy, and test FlexRAN 4G. 
 
 # Building the FlexRAN image 
 
-This section will explain the steps involved in building the FlexRAN image. Only L1 and L2-stub will be part of these steps. Real-time L2 (MAC and RLC) and non Real-time L2 and L3 is out of scope as it is a part of the third party component.  
+This section explains the steps involved in building the FlexRAN image. Only L1 and L2-stub will be part of these steps. Real-time L2 (MAC and RLC) and non-real-time L2 and L3 are out of scope as it is a part of the third-party component.  
 
-1. Please contact your Intel representative to obtain the package
+1. Contact your Intel representative to obtain the package
 2. Untar the FlexRAN package.
 3. Set the required environmental variables:
    ```
@@ -57,10 +56,10 @@ This section will explain the steps involved in building the FlexRAN image. Only
    export FLEXRAN_SDK=${DIR_WIRELESS_SDK}/install 
    export DIR_WIRELESS_TABLE_5G=${flexranPath}/bin/nr5g/gnb/l1/table    
    ```
-   > Note: these environmental variables path has to be updated according to your installation and file/directory names  
-4. Build L1, WLS interface between L1 and L2 and L2-Stub (testmac)    
+   >**NOTE**: The environmental variables path must be updated according to your installation and file/directory names.  
+4. Build L1, WLS interface between L1, L2, and L2-Stub (testmac):    
    `./flexran_build.sh -r 5gnr_sub6 -m testmac -m wls -m l1app -b -c`
-5. Once the build is successfully completed, copy the required binary files to the folder where docker image is built. The list of binary files that were used is documented in the [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
+5. Once the build has completed, copy the required binary files to the folder where the Docker\* image is built. The list of binary files that are used is documented in [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
    - ICC, IPP mpi and mkl Runtime 
    - DPDK build target directory 
    - FlexRAN test vectors (optional) 
@@ -68,12 +67,13 @@ This section will explain the steps involved in building the FlexRAN image. Only
    - FlexRAN SDK modules 
    - FlexRAN WLS share library 
    - FlexRAN CPA libraries 
-6. `cd` to the folder where docker image is built and start the docker build ` docker build -t <name of image>:<tag> .`, see the following example which reflects the docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
+6. `cd` to the folder where the Docker image is built and start the docker build `docker build -t <name of image>:<tag> .` 
+The following example reflects the Docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
    
    ```shell
    docker build -t flexran5g:3.10.0-1062.12.1.rt56 .
    ```
-7. Tag the image and push to local Docker registry (Docker registry deployed as part of OpenNESS Experience Kit)
+7. Tag the image and push to a local Docker registry (Docker registry deployed as part of OpenNESS Experience Kit)
    
    ```shell
    docker tag flexran5g <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
@@ -81,11 +81,11 @@ This section will explain the steps involved in building the FlexRAN image. Only
    docker push <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
    ```
 
-By the end of step 7 the FlexRAN docker image will be created and available in Docker registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel PACN3000 FPGA. Please refer to [Using FPGA in OpenNESS: Programming, Resource Allocation and Configuration](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) document for further details for setting up Intel PACN3000 vRAN FPGA. 
+By the end of step 7, the FlexRAN Docker image is created and available in the Docker registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
 
 # FlexRAN hardware platform configuration 
 ## BIOS 
-FlexRAN on Skylake and Cascade lake require special BIOS configuration which involves disabling C-state and enabling Config TDP level-2. Please refer to the [BIOS configuration](#bios-configuration) section in this document. 
+FlexRAN on Intel® microarchitecture code name Skylake and Cascade Lake technology from Intel requires a BIOS configuration that disables C-state and enables Config TDP level-2. Refer to the [BIOS configuration](#bios-configuration) section in this document. 
 
 ## Host kernel command line
 
@@ -95,13 +95,13 @@ usbcore.autosuspend=-1 selinux=0 enforcing=0 nmi_watchdog=0 softlockup_panic=0 a
 
 Host kernel version - 3.10.0-1062.12.1.rt56.1042.el7.x86_64 
 
-Instructions on how to configure kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure the kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 # Deploying and Running the FlexRAN pod
 
-1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge) .
-2. Ensure there are no FlexRAN pods and FPGA configuration pods are not deployed using `kubectl get pods`
-3. Ensure all the EPA microservice and Enhancements (part of OpenNESS play book) are deployed `kubectl get po --all-namespaces` 
+1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge).
+2. Confirm that there are no FlexRAN pods and the FPGA configuration pods are not deployed using `kubectl get pods`.
+3. Confirm that all the EPA microservice and enhancements (part of OpenNESS playbook) are deployed `kubectl get po --all-namespaces`.
   ```yaml
   NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
   kube-ovn      kube-ovn-cni-8x5hc                        1/1     Running   17         7d19h
@@ -136,7 +136,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
 4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
 6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
-7. Deploy the FlexRAN Kubernetes pod using Helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
+7. Deploy the FlexRAN Kubernetes pod using a helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
 
    ```shell
    helm install flexran-pod flexran
@@ -149,7 +149,7 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
    printenv | grep FEC
    ```
 
-11. Edit `phycfg_timer.xml` used for configuration of L1 application with the PCI Bus function device ID from previous step in order to offload FEC to this device:
+11. Edit `phycfg_timer.xml` used for configuration of L1 application with the PCI Bus function device ID from the previous step to offload FEC to this device:
 
     ```xml
     <!--  DPDK FEC BBDEV to use             [0 - SW, 1 - FPGA, 2 - Both] -->
@@ -160,13 +160,12 @@ Instructions on how to configure kernel command line in OpenNESS can be found in
 12. Once in the FlexRAN pod L1 and test-L2 (testmac) can be started.
 
 # Setting up 1588 - PTP based Time synchronization 
-This section provides an overview of setting up PTP based Time synchronization in a cloud Native Kubernetes/docker environment. For FlexRAN specific xRAN Front haul tests and configuration please refer to the xRAN specific document in the reference section.
+This section provides an overview of setting up PTP-based time synchronization in a cloud-native Kubernetes/docker environment. For FlexRAN specific xRAN fronthaul tests and configurations please refer to the xRAN specific document in the reference section.
 
-> Note: PTP based Time synchronization method described here is applicable only for containers. For VMs methods based on Virtual PTP needs to be applied and is not covered in this document.  
+>**NOTE**: The PTP-based time synchronization method described here is applicable only for containers. For VMs, methods based on Virtual PTP need to be applied and this is not covered in this document.  
 
-## Setting up PTP 
-In the environment that needs to be synchronized install linuxptp package. It provides ptp4l and phc2sys applications. PTP setup needs Grandmaster clock and Slave clock setup. Slave clock will be synchronized to the Grandmaster clock. At first, Grandmaster clock will be configured. To use Hardware Time Stamps supported NIC is required. To check if NIC is supporting Hardware Time Stamps run ethtool. Similar output should appear:
-
+## Setting up PTP
+In the environment that needs to be synchronized, install the linuxptp package, which provides ptp4l and phc2sys applications. The PTP setup needs the primary clock and secondary clock setup. The secondary clock will be synchronized to the primary clock. At first, the primary clock will be configured. A supported NIC is required to use Hardware Time Stamps. To check if NIC is supporting Hardware Time Stamps, run the ethtool and a similar output should appear:
 ```shell 
 # ethtool -T eno4
 Time stamping parameters for eno4:
@@ -188,23 +187,23 @@ Hardware Receive Filter Modes:
         ptpv2-event           (HWTSTAMP_FILTER_PTP_V2_EVENT)
 ```
 
-Time in containers is the same as on the host machine so it is enough to synchronize the host to Grandmaster clock.   
+The time in containers is the same as on the host machine, and so it is enough to synchronize the host to the primary clock.
 
-PTP requires a few Kernel configuration options to be enabled:
+PTP requires a few kernel configuration options to be enabled:
 - CONFIG_PPS
 - CONFIG_NETWORK_PHY_TIMESTAMPING
 - CONFIG_PTP_1588_CLOCK
 
-## Grandmaster clock
-This is an optional step if you already have a grandmaster. The below steps explain how to setup a linux system to behave like ptp GM. 
+## Primary clock
+This is an optional step if you already have a primary clock. The below steps explain how to set up a Linux system to behave like ptp GM. 
 
-On Grandmaster clock side take a look at `/etc/sysconfig/ptp4l` file. It is `ptp4l` daemon configuration file where starting options will be provided. Its content should look like this:
+On the primary clock side, take a look at the `/etc/sysconfig/ptp4l` file. It is the `ptp4l` daemon configuration file where starting options will be provided. Its content should look like this:
 ```shell 
 OPTIONS=”-f /etc/ptp4l.conf -i <if_name>”
 ```
-Where `<if_name>` is interface name that will be used for time stamping and `/etc/ptp4l.conf` is a configuration file for `ptp4l` instance.
+`<if_name>` is the interface name used for time stamping and `/etc/ptp4l.conf` is a configuration file for the `ptp4l` instance.
 
-To determine a Grandmaster clock PTP protocol is using BMC algorithm and it is not obvious which clock will be chosen as master. However, user can set the timer that is preferable to be master clock. It can be changed in `/etc/ptp4l.conf`. Set `priority1 property` to `127`.
+To determine if a primary clock PTP protocol is using BMC algorithm, and it is not obvious which clock will be chosen as primary clock. However, users can set the timer that is preferable to be the primary clock. It can be changed in `/etc/ptp4l.conf`. Set `priority1 property` to `127`.
 
 After that start ptp4l service.
 
@@ -212,7 +211,7 @@ After that start ptp4l service.
 service ptp4l start
 ```
 
-Output from the service can be checked at `/var/log/messages` and for master clock should be like:
+Output from the service can be checked at `/var/log/messages`, and for primary clock, it should be like this:
 
 ```shell 
 Mar 16 17:08:57 localhost ptp4l: ptp4l[23627.304]: selected /dev/ptp2 as PTP clock
@@ -237,11 +236,11 @@ The next step is to synchronize PHC timer to the system time. To do that `phc2sy
 OPTIONS="-c <if_name> -s CLOCK_REALTIME -w"
 ```
 
-Replace `<if_name>` with interface name. Start phc2sys service.
+Replace `<if_name>` with the interface name. Start the phc2sys service.
 ```shell
 service phc2sys start
 ```
-Logs can be viewed at `/var/log/messages` and look like:
+Logs can be viewed at `/var/log/messages` and it looks like this:
 
 ```shell 
 phc2sys[3656456.969]: Waiting for ptp4l...                                      
@@ -252,13 +251,13 @@ phc2sys[3656460.970]: sys offset       -29 s2 freq  -22909 delay   1548
 phc2sys[3656461.971]: sys offset       -25 s2 freq  -22913 delay   1549         
 ``` 
 
-## Slave clock
-Slave clock configuration will be the same as for Grandmaster clock except `phc2sys` options and priority1 property for `ptp4l`. For slave clock priority1 property in `/etc/ptp4l.conf` should stay with default value (128). Run `ptp4l` service. To keep system time synchronized to PHC time change `phc2sys` options in `/etc/sysconfig/phc2sys` to:
+## Secondary clock
+The secondary clock configuration will be the same as the primary clock except for `phc2sys` options and priority1 property for `ptp4l`. For secondary clock priority1 property in `/etc/ptp4l.conf` should stay with default value (128). Run `ptp4l` service. To keep the system time synchronized to PHC time, change `phc2sys` options in `/etc/sysconfig/phc2sys` using the following command:
 
 ```shell 
 OPTIONS=”phc2sys -s <if_name> -w"
 ``` 
-Replace `<if_name>` with interface name. Logs will be available at `/var/log/messages`.
+Replace `<if_name>` with the interface name. Logs will be available at `/var/log/messages`.
 
 ```shell
 phc2sys[28917.406]: Waiting for ptp4l...
@@ -268,7 +267,7 @@ phc2sys[28920.407]: phc offset       308 s2 freq   +5470 delay    947
 phc2sys[28921.407]: phc offset       408 s2 freq   +5662 delay    947
 phc2sys[28922.407]: phc offset       394 s2 freq   +5771 delay    947
 ```
-Since this moment both clocks should be synchronized. Any docker container running in a pod is using the same clock as host so its clock will be synchronized as well.
+Since this moment, both clocks should be synchronized. Any Docker container running in a pod is using the same clock as host so its clock will be synchronized as well.
 
 
 # BIOS configuration 
