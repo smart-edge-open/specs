@@ -3,10 +3,10 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
-# Cache allocation for containers with RMD (resource management daemon)
+# Cache Allocation for Containers with Resource Management Daemon (RMD)
 
-- [Resource Allocation](#resource-allocation)
-- [Intel® RDT Framework](#intel-rdt-framework)
+- [Resource allocation](#resource-allocation)
+- [Intel® RDT framework](#intel-rdt-framework)
   - [Cache Monitoring Technology (CMT)](#cache-monitoring-technology-cmt)
   - [Cache Allocation Technology (CAT)](#cache-allocation-technology-cat)
   - [Code and Data Prioritization (CDP)](#code-and-data-prioritization-cdp)
@@ -14,24 +14,29 @@ Copyright (c) 2020 Intel Corporation
   - [Memory Bandwidth Allocation (MBA)](#memory-bandwidth-allocation-mba)
 - [OpenNESS RDT support](#openness-rdt-support)
 - [Usage](#usage)
+- [Example setup for running the benchmarks](#example-setup-for-running-the-benchmarks)
+  - [Pod1 on coreA](#pod1-on-corea)
+  - [Pod2 on coreB](#pod2-on-coreb)
+  - [RMD workload](#rmd-workload)
+  - [Start monitoring the cache usage with the PQOS tool](#start-monitoring-the-cache-usage-with-the-pqos-tool)
+  - [Starting the stress-ng command on the prepared pods](#starting-the-stress-ng-command-on-the-prepared-pods)
 - [Links](#links)
 
 
-## Resource Allocation 
-Intel® Resource Director Technology (Intel® RDT) brings new levels of visibility and control over how shared resources such as last-level cache (LLC) and memory bandwidth are used by applications, virtual machines (VMs), and containers. It’s the next evolutionary leap in workload consolidation density, performance consistency, and dynamic service delivery, helping to drive efficiency and flexibility across the data center while reducing overall total cost of ownership (TCO). As software-defined infrastructure and advanced resource-aware orchestration technologies increasingly transform the industry, Intel® RDT is a key feature set to optimize application performance and enhance the capabilities of orchestration and virtualization management server systems using Intel® Xeon® processors.
+## Resource allocation 
+Intel® Resource Director Technology (Intel® RDT) brings new levels of visibility and control over how shared resources such as last-level cache (LLC) and memory bandwidth are used by applications, virtual machines (VMs), and containers. It’s the next evolutionary leap in workload consolidation density, performance consistency, and dynamic service delivery, helping to drive efficiency and flexibility across the data center while reducing overall total cost of ownership (TCO). As software-defined infrastructure and advanced, resource-aware orchestration technologies increasingly transform the industry, Intel® RDT is a key feature set to optimize application performance and enhance the capabilities of orchestration and virtualization management server systems using Intel® Xeon® processors.
 
-## Intel® RDT Framework
-Intel® Resource Director Technology (Intel® RDT) Framework
- provides a framework with several component features for cache and memory monitoring and allocation capabilities, including CMT, CAT, CDP, MBM, and MBA. These technologies enable tracking and control of shared resources, such as the Last Level Cache (LLC) and main memory (DRAM) bandwidth, in use by many applications, containers or VMs running on the platform concurrently. RDT may aid “noisy neighbor” detection and help to reduce performance interference, ensuring the performance of key workloads in complex environments.
+## Intel® RDT framework
+Intel® RDT framework provides a framework with several component features for cache and memory monitoring and allocation capabilities, including CMT, CAT, CDP, MBM, and MBA. These technologies enable tracking and control of shared resources, such as the LLC and main memory (DRAM) bandwidth, in use by many applications, containers, or VMs running concurrently on the platform. RDT can help with “noisy neighbor” detection and reduce performance interference, ensuring the performance of key workloads in complex environments.
 
 ### Cache Monitoring Technology (CMT)
-Providing new insight by monitoring the last-level cache (LLC) utilization by individual threads, applications, or VMs, CMT improves workload characterization, enables advanced resource-aware scheduling decisions, aids “noisy neighbor” detection and improves performance debugging.
+Providing new insight by monitoring the last-level cache (LLC) utilization by individual threads, applications, or VMs, CMT improves workload characterization, enables advanced, resource-aware scheduling decisions, helps with “noisy neighbor” detection and improves performance debugging.
 
 ### Cache Allocation Technology (CAT)
-Software-guided redistribution of cache capacity is enabled by CAT, enabling important data center VMs, containers or applications to benefit from improved cache capacity and reduced cache contention. CAT may be used to enhance runtime determinism and prioritize important applications such as virtual switches or Data Plane Development Kit (DPDK) packet processing apps from resource contention across various priority classes of workloads.
+Software-guided redistribution of cache capacity is enabled by CAT, enabling important data center VMs, containers, or applications to benefit from improved cache capacity and reduced cache contention. CAT may be used to enhance runtime determinism and prioritize important applications such as virtual switches or Data Plane Development Kit (DPDK) packet processing apps from resource contention across various priority classes of workloads.
 
 ### Code and Data Prioritization (CDP)
-As a specialized extension of CAT, Code and Data Prioritization (CDP) enables separate control over code and data placement in the last-level (L3) cache. Certain specialized types of workloads may benefit with increased runtime determinism, enabling greater predictability in application performance.
+As a specialized extension of CAT, Code and Data Prioritization (CDP) enables separate control over code and data placement in the last-level (L3) cache. Certain specialized types of workloads may benefit from increased runtime determinism, enabling greater predictability in application performance.
 
 ### Memory Bandwidth Monitoring (MBM)
 Multiple VMs or applications can be tracked independently via Memory Bandwidth Monitoring (MBM), which provides memory bandwidth monitoring for each running thread simultaneously. Benefits include detection of noisy neighbors, characterization and debugging of performance for bandwidth-sensitive applications, and more effective non-uniform memory access (NUMA)-aware scheduling.
@@ -44,15 +49,15 @@ MBA enables approximate and indirect control over memory bandwidth available to 
 >  
 This feature allows you to allocate a guaranteed number of cache ways for a container. This is useful when you need consistent performance or need to meet real-time requirements.
 This feature depends on the [RMD Daemon](https://github.com/intel/rmd/) and the Kubernetes [RMD Operator](https://github.com/intel/rmd-operator) to control it.
-For more information about cache allocation and available cache pools, please refer to [RMD cache pools](https://github.com/intel/rmd/#cache-poolsgroups)
+For more information about cache allocation and available cache pools, refer to the [RMD cache pools](https://github.com/intel/rmd/#cache-poolsgroups)
 This feature is for the OpenNESS Network Edge deployment mode.
 
 ## Usage
-To start, you have to enable the RMD feature in *group_vars/all/10-default.yml* when installing OpenNESS (Under the Network Edge section):
+Enable the RMD feature in *group_vars/all/10-default.yml* when installing OpenNESS (Under the Network Edge section):
 > rmd_operator_enable: True
 > 
 This will install the underlying infrastructure.
-Next you will need to find out which cores are used by your container. You can use the following shell function for that:
+Next, use the following shell function to determine which cores are used by your container:
 ```bash
 #!/bin/sh
 
@@ -68,7 +73,7 @@ get_cores() {
 }
 ```
 
-For information about how to actually assign an RMD workload to a core (how to allocate the cache-ways to that core), please refer to:
+For information about how to assign an RMD workload to a core (how to allocate the cache-ways to that core), refer to:
 https://github.com/intel/rmd-operator#examples
 
 ## Example setup for running the benchmarks
@@ -140,7 +145,7 @@ kubectl create -f rmdworkload.yaml	# create the workload as above
 kubectl get rmdworkloads		# your workload should be listed now
 kubectl describe rmdnodestate
 ```
-At the end of the output you should see this:
+At the end of the output you should see the following:
 ```
 Status:
   Workloads:
@@ -154,7 +159,6 @@ Status:
       Status:     Successful
 Events:           <none>
 ```
-
 ### Start monitoring the cache usage with the PQOS tool
 ```bash
 # Install - once off
@@ -163,13 +167,13 @@ make install
 # Run it
 pqos
 ```
-If the PQOS tool is failing to start, download this tool
+If the PQOS tool fails to start, download the following tool:
 ```bash
 git clone https://github.com/opcm/pcm.git
 make install
 pcm	# run it for a second, then ctrl-c
 ```
-After you start and stop pcm, you should be able to run the pqos tool without a further problem. Look especially at the cores your pods got assigned. The LLC column (last level cache / L3 cache) should change after you run the stress-ng commands below.
+After you start and stop pcm, you should be able to run the pqos tool without a further problem. Look especially at the cores your pods got assigned. The LLC column (last level cache / L3 cache) should change after you run the `stress-ng` commands below.
 
 ### Starting the stress-ng command on the prepared pods
 Pod1
