@@ -110,25 +110,7 @@ spec:
         cmk.intel.com/exclusive-cores: 1
       requests:
         cmk.intel.com/exclusive-cores: 1
-    volumeMounts:
-    - mountPath: "/host/proc"
-      name: host-proc
-      readOnly: true
-    - mountPath: "/opt/bin"
-      name: cmk-install-dir
-    - mountPath: "/etc/cmk"
-      name: cmk-conf-dir
   restartPolicy: Never
-  volumes:
-  - hostPath:
-      path: "/opt/bin"
-    name: cmk-install-dir
-  - hostPath:
-      path: "/proc"
-    name: host-proc
-  - hostPath:
-      path: "/etc/cmk"
-    name: cmk-conf-dir
 EOF
 ```
 
