@@ -114,7 +114,7 @@ Steps to install this flavor are as follows:
     [edgenode_vca_group]
     silpixa00400194
     ```
-    > **NOTE:** The VCA host name should *only* placed once in the `inventory.ini` file and under the `[edgenode_vca_group]` group. 
+    > **NOTE:** The VCA host name should *only* be placed once in the `inventory.ini` file and under the `[edgenode_vca_group]` group. 
 
 3. Run OEK deployment script:
     ```shell
