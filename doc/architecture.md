@@ -139,7 +139,6 @@ OpenNESS supports the following EPA microservices, which typically span across t
   - FPGA device plugin for inferencing
   - SR-IOV device plugin for FPGA/eASIC
   - Dynamic Device Profile for Network Interface Cards (NIC)
-  <!-- Fix this sentence. “…and offloading for network functions such as eNB/gNB offloading Forward Error Correction (FEC)” -->
 - <b>Resource Management Daemon (RMD)</b>: RMD uses Intel® Resource Director Technology (Intel® RDT) to implement cache allocation and memory bandwidth allocation to the application pods. This is a key technology for achieving resource isolation and determinism on a cloud-native platform. 
 - <b>Node Feature Discovery (NFD)</b>: Software that enables node feature discovery for Kubernetes. It detects hardware features available on each node in a Kubernetes cluster and advertises those features using node labels. 
 - <b>Topology Manager</b>: This component allows users to align their CPU and peripheral device allocations by NUMA node.
@@ -186,7 +185,6 @@ OpenNESS also supports a reference application of using telemetry to take action
 
 ### Software Development Kits 
 OpenNESS supports leading SDKs for edge services (applications) and network function development. As part of the development of OpenNESS, applications developed using these SDKs are optimized to provide optimal performance. This ensures that when customers develop applications using these SDKs, they can achieve optimal performance. 
-<!-- The paragraph above is confusing. Improve. -->
 
 - <b> OpenVINO™ SDK </b>: The OpenVINO™ toolkit is composed of a variety of tools from Intel that work together to provide a complete computer vision pipeline solution that is optimized on Intel® architecture. This article will focus on the Intel® Media SDK component of the toolkit. The Intel Media SDK is a high-level API for specific video processing operations: decode, process, and encode. It supports H.265, H.264, MPEG-2, and more codecs. Video processing can be used to resize, scale, de-interlace, color conversion, de-noise, sharpen, and more. The Intel Media SDK works in the background to leverage hardware acceleration on Intel® architecture with optimized software fallback for each hardware platform. Thus, developers do not need to change the code from platform to platform and can focus more on the application itself rather than on hardware optimization.
 - <b> Intel Media SDK </b>: SDK used for developing video applications with state-of-the-art libraries, tools, and samples. They are all accessible via a single API that enables hardware acceleration for fast video transcoding, image processing, and media workflows. The two main paths for application developers to access GPU media processing capabilities are Intel® Media SDK and Intel® SDK for OpenCL™ applications.
@@ -250,7 +248,6 @@ In future OpenNESS releases, various CERA flavors will be available. Each of the
 - [Enabling 5G Wireless Acceleration in FlexRAN: for the Intel® FPGA Programmable Acceleration Card N3000](https://www.intel.com/content/www/us/en/programmable/documentation/ocl1575542673666.html)
 
 ## List of Abbreviations
-<!-- I placed these acronyms in a markdown table and put them in alphabetical order. Removed duplicate terms. -->
 
 | Acronym  | Definition                                      |
 |----------|-------------------------------------------------|
