@@ -406,7 +406,7 @@ Verify the i40e driver version of the NIC to be used and the firmware version on
 
 ## Deploy xRAN sample app O-DU and O-RU in OpenNESS Network Edge
 
-Before starting the deployment script, OpenNESS should be configured according to the instructions available [here](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+Before starting the deployment script, OpenNESS should be configured according to the instructions available [here](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 Additional configuration steps are provided below.
 
 ### Setting up SRIOV 
@@ -437,7 +437,7 @@ Additional configuration steps are provided below.
       vm_vf_ports: 0
 ```
 
-Detailed instructions on configuring SRIOV for OpenNESS can be found [here](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
+Detailed instructions on configuring SRIOV for OpenNESS can be found [here](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
 
 3. Modify SRIOV ConfigMap
 
@@ -481,7 +481,7 @@ In file `./group_vars/edgenode_group.yml`, change the following settings:
 
 Host kernel version should be - 3.10.0-1062.12.1.rt56.1042.el7.x86_64
 
-Instructions on how to configure the kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure the kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 ### PTP Synchronization
 

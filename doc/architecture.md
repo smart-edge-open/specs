@@ -43,8 +43,8 @@ OpenNESS simplifies edge platform development and deployment:
 
 OpenNESS provides three easy steps to achieve deployment:
 1. Acquire hardware that meets the requirements
-2. Meet the prerequisites and use the [Getting Started Guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md) for deployment
-3. Use [Application Onboarding](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) for applications and Cloud-native Network Functions (CNFs)
+2. Meet the prerequisites and use the [Getting Started Guide](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md) for deployment
+3. Use [Application Onboarding](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md) for applications and Cloud-native Network Functions (CNFs)
 
 ![](arch-images/start.png)
 

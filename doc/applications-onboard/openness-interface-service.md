@@ -36,7 +36,7 @@ Update the physical Ethernet interface with an IP from the `192.168.1.0/24` subn
   route add -net 10.16.0.0/16 gw 192.168.1.1 dev eth1
 ```
 
-> **NOTE**: The default OpenNESS network policy applies to pods in a `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from the `192.168.1.0/24` subnet on a specific port.
+> **NOTE**: The default OpenNESS network policy applies to pods in a `default` namespace and blocks all ingress traffic. Refer to [Kubernetes NetworkPolicies](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from the `192.168.1.0/24` subnet on a specific port.
 
 > **NOTE**: The subnet `192.168.1.0/24` is allocated by the Ansible\* playbook to the physical interface, which is attached to the first edge node. The second edge node joined to the cluster is allocated to the next subnet `192.168.2.0/24` and so on.
 
@@ -79,7 +79,7 @@ Currently, interface service supports the following values of the `driver` param
 
 ## Userspace (DPDK) bridge
 
-The default DPDK-enabled bridge `br-userspace` is only available if OpenNESS is deployed with support for [Userspace CNI](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using the Userspace CNI. You can check if the `br-userspace` bridge exists by running the following command on your node:
+The default DPDK-enabled bridge `br-userspace` is only available if OpenNESS is deployed with support for [Userspace CNI](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using the Userspace CNI. You can check if the `br-userspace` bridge exists by running the following command on your node:
 
 ```shell
 ovs-vsctl list-br

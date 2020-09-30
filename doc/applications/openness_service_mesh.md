@@ -144,7 +144,7 @@ spec:
         methods: ["GET", "POST", "DELETE"]
 ```
 
-In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST", and "DELETE" requests from any authenticated applications from the `default` namespace only to be passed to the service. For example, if using the [Video Analytics sample application](https://github.com/otcshare/edgeapps/tree/master/applications/vas-sample-app), the policy will allow requests from the sample application to be received by the service as it is deployed in the `default` namespace. However, if the application is deployed in a different namespace (for example, the `openness` namespace mentioned above in the output from the Kubernetes cluster), then the policy will deny access to the service as the request is coming from an application on a different namespace.
+In this `AuthorizationPolicy`, the Istio service mesh will allow "GET", "POST", and "DELETE" requests from any authenticated applications from the `default` namespace only to be passed to the service. For example, if using the [Video Analytics sample application](https://github.com/open-ness/edgeapps/tree/master/applications/vas-sample-app), the policy will allow requests from the sample application to be received by the service as it is deployed in the `default` namespace. However, if the application is deployed in a different namespace (for example, the `openness` namespace mentioned above in the output from the Kubernetes cluster), then the policy will deny access to the service as the request is coming from an application on a different namespace.
 
 > **NOTE**: The above `AuthorizationPolicy` can be tailored so that the OpenNESS service mesh *selectively* authorizes particular applications to consume premium video analytics services such as those accelerated using HDDL or VCAC-A cards.
 
@@ -469,7 +469,7 @@ Users can change the namespace labeled with istio label using the parameter `ist
 * in `flavors/service-mesh/all.yml` for deployment with service-mesh flavor
 * in `flavors/media-analytics/all.yml` for deployment with media-analytics flavor
 
-> **NOTE**: The default OpenNESS network policy applies to pods in the `default` namespace and blocks all ingress traffic. Users must remove the default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to the [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from `192.168.1.0/24` subnet on a specific port.
+> **NOTE**: The default OpenNESS network policy applies to pods in the `default` namespace and blocks all ingress traffic. Users must remove the default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to the [Kubernetes NetworkPolicies](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from `192.168.1.0/24` subnet on a specific port.
 
 Kiali console is accessible from a browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits:
 

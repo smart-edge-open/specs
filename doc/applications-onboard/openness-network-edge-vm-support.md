@@ -132,7 +132,7 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
 
 ## VM deployment
 Provided below are sample deployment instructions for different types of VMs.
-Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/otcshare/edgenode/edgecontroller/tree/master/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
+Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/open-ness/edgenode/edgecontroller/tree/master/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
 
 ### Stateless VM deployment
 To deploy a sample stateless VM with containerDisk storage:
