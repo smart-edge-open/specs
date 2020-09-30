@@ -109,11 +109,13 @@ The pre-defined *media-analytics-vca* deployment flavor provisions an optimized 
 
 Steps to install this flavor are as follows:
 1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Add the VCA host name in the [edgenode_vca_group] group in `inventory.ini` file of the OEK, e.g:
+2. Add the VCA host name in the `[edgenode_vca_group]` group in `inventory.ini` file of the OEK, e.g:
     ```
     [edgenode_vca_group]
     silpixa00400194
     ```
+    > **NOTE:** The VCA host name should *only* placed once in the `inventory.ini` file and under the `[edgenode_vca_group]` group. 
+
 3. Run OEK deployment script:
     ```shell
     $ deploy_ne.sh -f media-analytics-vca
