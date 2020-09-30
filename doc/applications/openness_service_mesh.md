@@ -159,8 +159,30 @@ The following examples are based on the [BookInfo sample application](https://is
 _Figure - Book Info Sample Application_
 
 > **NOTE**: By default, the Istio deployment namespace in OpenNESS is set to the `default` Kubernetes namespace where all the ingress traffic to the cluster is blocked by the default network policy `block-all-ingress`. At the time of writing this document, the Kubernetes NetworkPolicy does not support specifying port ranges that are needed by the BookInfo sample application. Therefore, as a workaround, the user should remove the network policy of the `default` namespace.
+> 
 > ```shell
 > kubectl delete netpol block-all-ingress
+> ```
+
+> **NOTE**: It was observed at limited occasions that the BookInfo sample application deployment pods may end up not being successfully running, i.e. `reviews` pods (all the three versions) get stuck in `CrashLoopBack` state. A quick work-around is to create a patch file `bookinfo-patch.yaml` with the following contents:
+>
+> ```yaml
+> spec:
+>   template:
+>     spec:
+>       containers:
+>       - name: reviews
+>         env:
+>         - name: WLP_OUTPUT_DIR
+>           value: /opt/output
+> ```
+>
+> Then, apply the patch to the three deployments: `reviews-v1`, `reviews-v2` and `reviews-v3`, through the commands:
+>
+> ```shell
+> $ patch deployment reviews-v1 --patch "$(cat bookinfo-patch.yaml)"
+> $ patch deployment reviews-v2 --patch "$(cat bookinfo-patch.yaml)"
+> $ patch deployment reviews-v3 --patch "$(cat bookinfo-patch.yaml)"
 > ```
 
 ### External Access
