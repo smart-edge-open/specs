@@ -35,7 +35,7 @@ This guide is targeted at the <b><i>Cloud Application developers who want to</b>
 - Develop applications for Edge computing that take advantage of all the capabilities exposed through Edge Compute APIs in OpenNESS. 
 - Port the existing applications and services in the public/private cloud to the edge unmodified. 
 
-The document will describe how to develop applications from scratch using the template/example applications/services provided in the OpenNESS software release. All the OpenNESS Applications and services can be found in the [edgeapps repo](https://github.com/open-ness/edgeapps). 
+The document will describe how to develop applications from scratch using the template/example applications/services provided in the OpenNESS software release. All the OpenNESS Applications and services can be found in the [edgeapps repo](https://github.com/otcshare/edgeapps).
 
 ## OpenNESS Edge Node Applications
 OpenNESS Applications can onboard and provision on the edge nodes only through the OpenNESS Controller. The first step in Onboarding involves uploading the application image to the controller through the web interface. Both VM and Container images are supported. 

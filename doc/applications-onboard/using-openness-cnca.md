@@ -40,7 +40,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
 
