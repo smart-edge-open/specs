@@ -13,6 +13,10 @@ Before looking at the APIs that are exposed to the Edge Applications, let's have
 - **Producer Application**: OpenNESS Producer application is an edge compute application that provides services to other applications running on the edge compute platform. E.g. Location Services, Mapping Services, Transcoding Services, etc. 
 - **Consumer Application**: OpenNESS Consumer application is an edge compute application that serves end users traffic directly. E.g. CDN App, Augmented Reality App, VR Application, Infotainment Application, etc. Pre-existing cloud applications that do not intend to call the EAA APIs but would like to serve the users (without any changes to the implementation) on the edge also fall into this category. 
 
+#### EAA component design 
+![Edge Application Agent component design](eaa-images/eaa-comp.png)
+
+
 API endpoint for edge applications is implemented in the EAA (Edge Application Agent) microservice and is implemented in Go lang. APIs are classified into:
 
 | Edge Application API                     | Description                                                                                                                                                                                                                                                 | Example                                                                                                         |
@@ -26,16 +30,20 @@ API endpoint for edge applications is implemented in the EAA (Edge Application A
 
 ### Edge Application APIs
 Edge Application APIs are implemented by the EAA. Edge Application APIs are important APIs for Edge application developers. EAA APIs are implemented as HTTPS REST. There are two types of use cases here. 
-1. **Porting of existing Public/Private Cloud application to the edge compute based on OpenNESS**: This is the scenario where a customer wants to run existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case, the only requirement is for an Application image (VM/Container) should be uploaded to the controller and provisioned on the Edge Node using OpenNESS Controller. In this case, the Application cannot call any EAA APIs and consume services on the edge compute. It just services the end-user traffic. 
+1. **Porting of existing Public/Private Cloud application to the edge compute based on OpenNESS**: This is the scenario where a customer wants to run existing apps in public cloud on OpenNESS edge without calling any APIs or changing code. In this case, the only requirement is for an Application image (VM/Container) should be available to be deployed using OpenNESS Kubernetes Control plane. 
 3. **Native Edge compute Application calling EAA APIs**: This is the scenario where a customer wants to develop Edge compute applications that take advantage of the Edge compute services resulting in more tactile application that responds to the changing user, network or resource scenarios. 
 
 OpenNESS supports deployment of both types of applications mentioned above. The Edge Application Agent is a service that runs on the Edge Node and operates as a discovery service and basic message bus between applications via pubsub. The connectivity and discoverability of applications by one another is governed by an entitlement system and is controlled by policies set with the OpenNESS Controller. The entitlement system is still in its infancy, however, and currently allows all applications on the executing Edge Node to discover one another as well as publish and subscribe to all notifications. The Figure below provides the sequence diagram of the supported APIs for the application 
 
 More details about the APIs can be found here [Edge Application APIs](https://www.openness.org/api-documentation/?api=eaa) 
 
-![Edge Application APIs](eaa-images/openness-eaa.png)
+![Edge Application services APIs](eaa-images/eaa_services.svg)
 
-_Figure - Edge Application API Sequence Diagram_
+![Edge Application subscription APIs](eaa-images/eaa_subscriptions.svg)
+
+![Edge Application notification APIs](eaa-images/eaa_notifications.svg)
+
+_Figure - Edge Application API Sequence Diagram: Service, Subscription and Notification_
 
 ### Edge Application Authentication APIs
 OpenNESS supports authentication of Edge compute apps that intend to call EAA APIs. Applications are authenticated by the Edge Node microservice issuing the requesting application a valid TLS certificate after validating the identity of the application. It should be noted that in the OpenNESS solution, the Application can only be provisioned by the OpenNESS controller. There are two categories of Applications as discussed above and here is the implication for the authentication. 
