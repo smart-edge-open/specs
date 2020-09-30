@@ -20,51 +20,47 @@ Copyright (c) 2019 Intel Corporation
     - [RTT Test with OpenEdge:](#rtt-test-with-openedge)
     - [RTT Test with IoTHub:](#rtt-test-with-iothub)
 
-Overview
-========
+## Overview
 
-OpenNESS is an open source software toolkit to enable easy orchestration and management of edge services across diverse network platform and access technologies in multi-cloud environments.
-OpenNESS can integrate with Baidu Cloud Connector --OpenEdge which is Edge IoT Gateway. 
-(Together with Baidu edge management dashboard, the whole Baidu Edge solution is called as Baidu® IntelliEdge. More details refer to Baidu's website: www.baidu.com)
+OpenNESS is an open-source software toolkit to enable easy orchestration and management of edge services across diverse network platforms and access technologies in multi-cloud environments.
+OpenNESS can integrate with Baidu\* Cloud Connector, OpenEdge, which is Edge IoT Gateway. 
+Together with Baidu edge management dashboard, the whole Baidu Edge solution is called Baidu IntelliEdge\*. For more details, refer to Baidu's website: www.baidu.com
 
-This application note will provide guidelines and examples on:
+This application note provides guidelines and examples on:
 
-- Integration Architecture Description
-- Run Baidu® OpenEdge on OpenNESS platform.
-- End to End Example
+- Integration architecture description
+- Run Baidu OpenEdge on the OpenNESS platform
+- End-to-end example
 
-Integration Architecture
-========================
+## Integration Architecture
 
-Figure 1. Integration Architecture for OpenEdge on OpenNESS.
+Figure 1. Integration Architecture for OpenEdge on OpenNESS
 
 ![](baidu-cloudadapter-images//openness_baiduedge_integration_arch.png)
 
-- OpenNESS Edge Platform support Cloud Native Infrastructure. Baidu OpenEdge and other edge apps can run as separated container.
+- OpenNESS Edge platform supports cloud-native infrastructure. Baidu OpenEdge and other edge apps can run as a separate container.
   OpenNESS NTS will send/receive data traffic to/from the apps according to traffic routing configuration.
 
 - OpenEdge can play as two types of Apps
-  - Producer: provides a service to other apps on the Edge Platform (need control path between OpenEdge and OpenNESS for EAA interaction).
-  - Consumer: consumes end user traffic and optionally can get services from producer apps on the same edge platform. (If need to get services from other edge apps, it need to use control path to authenticate and register with OpenNESS).
-  - NOTE: in the application note, OpenEdge is treated as pure consumer application and need not get service from other edge apps. So in the integration architecture diagram, there is not control path.
+  - **Producer**: provides a service to other apps on the Edge Platform (need a control path between OpenEdge and OpenNESS for EAA interaction).
+  - **Consumer**: consumes end-user traffic and optionally can get services from producer apps on the same edge platform. If the Consumer needs to get services from other edge apps, they need to use a control path to authenticate and register with OpenNESS.
+  
+ >**NOTE**: In the application note, OpenEdge is treated as a pure consumer application and does not need to get service from other edge apps. Thus, in the integration architecture diagram, there is no control path.
 
-Run OpenEdge on OpenNESS 
-=========================
+## Run OpenEdge on OpenNESS 
 
-This section describe how to setup and run OpenEdge as a consumer application on OpenNESS based on cloud native infrastructure.
+This section describes how to set up and run OpenEdge as a consumer application on OpenNESS based on cloud-native infrastructure.
 
-OpenNESS Setup
---------------
+### OpenNESS Setup
 
-Follow ```OpenNESS user guide``` to prepare setup envionment, deploy OpenNESS and configure traffic routing rules.
+Follow the `OpenNESS user guide` to prepare a setup environment, deploy OpenNESS, and configure traffic routing rules.
+<!-- provide a link to the user guide referenced above. -->
+### OpenEdge Setup
 
-OpenEdge Setup
---------------
+#### Scripts overview
 
-### Scripts overview
-
-In the OpenNESS release package, it provides example scripts to help user for the setup. 
-The scripts are located in the release package with folder name ```setup_baidu_openedge``` as below structure:
+In the OpenNESS release package, it provides example scripts to help users with the setup. 
+The scripts are located in the release package with the folder name `setup_baidu_openedge` as shown in the structure below:
 
 ```docker
 setup_baidu_openedge
@@ -96,21 +92,25 @@ setup_baidu_openedge
 └── defaults.yml
 ```
 
-There are three main scripts: ```01_setup.sh```, ```02_build.sh``` and ```03_deploy.sh```. The scrips need to be executed as root user in the order
-from local console on the OpenNESS server or remotely via SSH. The other scripts will be called by the three main scripts for the setup.
+There are three main scripts: `01_setup.sh`, `02_build.sh`, and `03_deploy.sh`. The scripts need to be executed as the root user in the order
+from the local console on the OpenNESS server or remotely via SSH. The other scripts will be called by the three main scripts for the setup.
+- The folder - `mqtt` contains MQTT IOT device simulators for end-to-end testing so that they should be executed from device machines.
+- The folder - `democfg` is where you should put files downloaded from the Baidu\* cloud to bring up OpenEdge. For details, refer to the below chapter. 
+<!-- Provide a link to specific chapter referenced above. -->
+- To run the scripts correctly, make sure that the folder `setup_baidu_openedge` is located at :
+ ```
+appliance-ce/scripts/ansible/examples/ 
+```
 
-- The folder - ```mqtt``` contains MQTT IOT device simulators for end to end testing, so they should be executed from device machines.
-- The folder - ```democfg``` where should put files downloaded from baidu cloud to bringup Openedge. Details refer to below chapter.
-- To run the scripts correctly, need make sure that the whole folder ```setup_baidu_openedge``` locates at : ```appliance-ce/scripts/ansible/examples/ ```
+#### Prepare OpenEdge certs and configuration files
 
-### Prepare OpenEdge certs and configuration files
+Before you build and run OpenEdge, sign up for a Baidu\* account to get certification and configuration files necessary for OpenEdge.
+<!-- make the sentence below complete -->
+gateway to register with Baidu IntelliEdge\* management suite, which provides a management dashboard for managing OpenEdge gateway. For details on how to get those Baidu's files, go to:
+<https://cloud.baidu.com/> and search the following keyword: Baidu IntelliEdge.
 
-Before build and run OpenEdge, need to register Baidu account to get certification and configuration files which nesseceray for OpenEdge
-gateway to register with Baidu ® IntelliEdge management suite (It provides management dashboard for managing OpenEdge gateway.) More details about how to get those Baidu's files, please goto
-<https://cloud.baidu.com/> and serch key word: Baidu IntelliEdge.
-
-In the folder: ```setup_baidu_openedge/composefile/democfg```, put certification and configuration files got from Baidu® IntelliEdge to the folder.
-So when building container image for OpenEdge, those files will be copied into the image. The sub-directory structure in the democfg should look like as below:
+In the folder: `setup_baidu_openedge/composefile/democfg`, put the certification and configuration files from Baidu IntelliEdge into the folder.
+When building a container image for OpenEdge, those files will be copied into the image. The sub-directory structure in the `democfg` should look like the following:
 
 ```docker
 ├── democfg
@@ -126,8 +126,8 @@ So when building container image for OpenEdge, those files will be copied into t
 │ └── service.yml
 ```
 
-Below will describe example configuration for your reference, and the example configurations can be used for the end to end example demo in chapter 4.0 End to End Example Demo.
-
+The following code describes an example configuration for your reference, and the example configurations can be used for the end-to-end example demo in chapter 4.0 End to End Example Demo.
+<!-- Provide a link to the chapter 4.0 reference above -->
 **Democfg/application.yml example:**
 
 ```docker
@@ -221,10 +221,10 @@ volumes:
 ```
 
 **Democfg/** **agent-cert/ example:**
-The cert files should be downloaded from Baidu IntelliEdge management dashboard for the OpenEdge gateway and put into the subfolder: ```/democfg/agent-cert/```.
+The cert files should be downloaded from the Baidu IntelliEdge management dashboard for the OpenEdge gateway and put into the following subfolder: `/democfg/agent-cert/`.
 
 **Democfg/** **agent-conf/service.yml example:**
-The service.yml file should be downloaded from Baidu IntelliEdge management dashboard for the OpenEdge gateway and put into the subfolder: ```/democfg/agent-conf/```.
+The service.yml file should be downloaded from the Baidu IntelliEdge management dashboard for the OpenEdge gateway and put into the following subfolder: `/democfg/agent-conf/`.
 
 **Democfg/remote-iothub-conf/service.yml example:**
 
@@ -254,24 +254,24 @@ The service.yml file should be downloaded from Baidu IntelliEdge management dash
 ```
 
 The configuration file is used for testing the IoT data route from Baidu OpenEdge to IoTHub Cloud (also named as IoTHub). 
-To get more information about Baidu IotHub Cloud, goto website: cloud.baidu.com, and search keyword: iothub.
+To get more information about Baidu IotHub Cloud, go to cloud.baidu.com, and search for the following keyword: iothub.
 
-### Running scripts -- build and run OpenEdge
+#### Running scripts -- build and run OpenEdge
 
-On the server that is running OpenNESS, executed the scripts as blew:
+On the server that is running OpenNESS, execute the scripts as shown below:
 ```docker
 01_setup.sh
 02_build.sh
 03_deploy.sh
 ```
 
-After competition for each script, expected successful print should be as:
+After competition for each script, the expected successful print should be:
 
 ```docker
 "msg": "Script completed successfully"
 ```
 
-Check docker information to make sure that the container STATUS is Up.
+Check the Docker information to make sure that the container STATUS is Up.
 
 ```docker
 #docker ps
@@ -283,38 +283,35 @@ Up 3 seconds 0.0.0.0:443->443/tcp, 0.0.0.0:1883-1884->1883-1884/tcp
 composefile_baidu_edge_1
 ```
 
-End to End Example Demo
-=======================
+## End to End Example Demo
 
-Overview
---------
+### Overview
 
 Figure 2. End to End Example Diagram.
 
 ![](baidu-cloudadapter-images//openness_baiduedge_end2end_demosetup.png)
 
-This is an end to end example demo for MQTT traffic. This could be an IOT industrial application. 
-It consists of the following elements and related IOT data processing:
+This is an end-to-end example demo for MQTT traffic. This could be an IoT industrial application. 
+It consists of the following elements and related IoT data processing:
 
-- Two MQTT devices as publisher and subscriber. Can use MQTT client software to simulate two MQTT IOT devices.
+- Two MQTT devices as publisher and subscriber. The MQTT client software is used to simuate two MQTT IoT devices.
 
-- OpenNESS Controller: OpenNESS controller performs management and policy configuration. 
-  For this example, controller will configure traffic rule for routing MQTT IOT traffic to Baidu OpenEdge via OpenNESS.
+- OpenNESS Controller: performs management and policy configuration. 
+  For this example, the controller will configure traffic rules for routing MQTT IOT traffic to Baidu OpenEdge via OpenNESS.
+- Baidu OpenEdge: In the example provided, the OpenNESS Baidu OpenEdge app is deployed as a pure Consumer app which does not consume any services from producer applications on the edge node. Hence, the Baidu OpenEdge app does not need to call EAA APIs. The app will handle data traffic from/to MQTT devices via the OpenNESS dataplane.
 
-- Baidu OpenEdge: In the example provided as part of OpenNESS Baidu OpenEdge app is deployed as a pure consumer app without consuming any services from other producer application on the edge node. Hence the Baidu OpenEdge app need not call EAA APIs. The app will handle data traffic from/to MQTT devices via OpenNESS dataplane.
-> Note: Implementing EAA APIs in the Baidu OpenEdge application will further enhance the capability of the Baidu OpenEdge based application as they can consume services like location, Radio network information etc. from the Edge Node. 
+>**NOTE**: Implementing EAA APIs in the Baidu OpenEdge application will further enhance the capability of the Baidu OpenEdge based application as they can consume services, such as location and radio network information, from the Edge Node. 
 
 - IOT MQTT Data plane processing:
-  (1) Device #1 publishes its status data by using MQTT protocol.
-  (2) OpenNESS Platform forwards the traffic to Baidu OpenEdge according to traffic rule. Then Baidu OpenEdge will perform local computing and data filter.
-  (3) According to topic configuration, Baidu OpenEdge sends data to Baidu Cloud.
-  (4) Also Baidu OpenEdge forwards the message to device #2 sbuscriber.
+  (1) Device #1 publishes its status data by using the MQTT protocol.
+  (2) The OpenNESS Platform forwards the traffic to Baidu OpenEdge according to traffic rules. Baidu OpenEdge will then perform local computing and data filtering.
+  (3) According to the topic configuration, Baidu OpenEdge sends data to Baidu Cloud.
+  (4) Also, Baidu OpenEdge forwards the message to device #2 subscriber.
 
-Run MQTT simulator
-------------------
+### Run MQTT simulator
 
-In the OpenNESS release package, it provides example scripts to help user for MQTT simulator and RTT testing. 
-The scripts can be found in the release package with the subfolder name ```setup_baidu_openedge/mqtt ``` as below structure:
+The OpenNESS release package provides example scripts to help users run the MQTT simulator and RTT testing. 
+The scripts can be found in the release package with the subfolder name `setup_baidu_openedge/mqtt `as the below structure:
 
 ```docker
 ├── devices
@@ -325,8 +322,8 @@ The scripts can be found in the release package with the subfolder name ```setup
 └── measure_rtt_openedge.py
 ```
 
-Before running the scripts, need install python3.6 and paho mqtt on CentOS Linux Machine (suggested version is: CentOS Linux release 7.6.1810 (Core)). 
-Suggested install commands as below:
+Before running the scripts, install python3.6 and paho mqtt on a CentOS\* Linux\* machine, where the recommended version is CentOS Linux release 7.6.1810 (Core). 
+The following are recommended install commands:
 
 ```docker
 sudo yum -y install epel-release
@@ -336,22 +333,21 @@ sudo yum install python36-pip
 sudo pip3 install paho-mqtt
 ```
 
-### Test OpenEdge Sub and Pub:
+#### Test OpenEdge Sub and Pub:
 
 Data path is:
 
 ```docker
 Device#1 publisher -> OpenNESS -> OpenEdge -> OpenNESS -> Deivce#2 Subscriber.
 ```
-
-Run commands separately on the two devices's machines:
+Run commands separately on each device machine:
 
 ```docker
 python3.6 openedge_pub.py -e [openedge_address] -c clientA -u test -s hahaha -t t
 python3.6 openedge_sub.py -e [openedge_address] -c clientB -u test -s hahaha -t t/topic
 ```
 
-*NOTE: [openedge_address] is ip address of OpenEdge gateway.*
+>**NOTE**: [openedge_address] is ip address of OpenEdge gateway.
 
 Expected result on the subscriber:
 
@@ -360,22 +356,22 @@ Received Message of Topic t/topic
 Message Content: b\'{\"wmId\": 0,\"aa\": b,\"cc\": {\"p\": 99,\"kk\":x}}\'
 ```
 
-### Test OpenEdge Route to IotHub:
+#### Test OpenEdge Route to IotHub:
 
-Data path is:
+The data path is:
 
 ```docker
 Device#1 publisher -> OpenNESS -> OpenEdge -> IoTHub -> Deivce#2 Subscriber.
 ```
-
-Run commands separately on the two devices's machines:
+Run commands separately on each device machine:
 
 ```docker
 python3.6 openedge_sub.py -e [iothub_address] -c clientA -u [iothub_username] -s [iothub_password] -t t/topic
 python3.6 openedge_pub.py -e [openedge_address] -c clientB -u test -s hahaha -t t
 ```
 
-*NOTE: iothub_address, iothub_username and iothub_password will be got when registering user for Baidu IoTHub .*
+>**NOTE**: The iothub_address, iothub_username, and iothub_password will be assigned when registering user for Baidu IoTHub.
+
 
 Expected result on the subscriber:
 
@@ -384,21 +380,20 @@ Received Message of Topic t/topic
 Message Content: b\'{\"wmId\": 0,\"aa\": b,\"cc\": {\"p\": 99,\"kk\":x}}\'
 ```
 
-### RTT Test with OpenEdge:
+#### RTT Test with OpenEdge:
 
-Data path is:
+The data path is:
 
 ```docker
 Device#1 publisher -> OpenNESS -> OpenEdge -> OpenNESS -> Deivce#1 Subscriber.
 ```
-
-Run command on the one machine (Here only need device \#1 to play as publisher and subscriber):
+Run the following command on first device machine (here, the device will play as publisher and subscriber):
 
 ```docker
 python3.6 measure_rtt_openedge.py -e [openedge_address] -c clientRTT -u test -s hahaha -t t -b t/topic
 ```
 
-*NOTE: \[openedge\_address\] is ip address of OpenEdge gateway.*
+>**NOTE**: \[openedge\_address\] is an IP address of OpenEdge gateway.
 
 Expected result on the subscriber:
 
@@ -407,25 +402,24 @@ Expected result on the subscriber:
 avg delay (ms) = 1.7480066461309578
 ```
 
-And the output statistics file is: rtt\_openedge.csv
+And the output statistics file is: `rtt\_openedge.csv`
 
-### RTT Test with IoTHub:
+#### RTT Test with IoTHub:
 
-Data path is:
+The data path is:
 
 ```docker
 Device#1 publisher -> OpenNESS -> OpenEdge -> IoTHub -> Deivce#1 Subscriber.
 ```
-
-Run command on the one machine (Here only need device \#1 to play as publisher and subscriber):
+Run the following command on first device machine (here, the device will play as publisher and subscriber):
 
 ```docker
 python3.6 measure_rtt_iothub.py -e [iothub_address] -c clientA -u [iothub_username] -s [iothub_password] -t rtt -b rtt
 ```
 
-*NOTE: \[iothub\_address\] is ip address of Baidu IotHub. rtt is topic that is pre-configured on iotHub.*
+>**NOTE**: \[iothub\_address\] is the IP address of Baidu IotHub. rtt is a topic that is pre-configured on iotHub.
 
-Expected result on the subscriber:
+The expected result on the subscriber:
 
 ```docker
 ===receve message from topic: t/topic
@@ -433,4 +427,4 @@ Expected result on the subscriber:
 avg delay (ms) = 1.7480066461309578
 ```
 
-And the output statistics file is: rtt\_iothub.csv
+And the output statistics file is: `rtt\_iothub.csv`

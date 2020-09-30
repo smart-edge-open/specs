@@ -8,19 +8,17 @@ Copyright (c) 2019 Intel Corporation
 - [Details](#details)
   - [Node Feature Discovery support in OpenNESS Network Edge](#node-feature-discovery-support-in-openness-network-edge)
     - [Usage](#usage)
-  - [Node Feature Discovery support in OpenNESS On Premises](#node-feature-discovery-support-in-openness-on-premises)
-    - [Usage](#usage-1)
 - [Reference](#reference)
 
 ## Overview of NFD and Edge usecase
 
-COTS Platforms used for edge deployment come with many features that enable workloads take advantage of, to provide better performance and meet the SLA. When such COTS platforms are deployed in a cluster as part of a Cloudnative deployment it becomes important to detect the hardware and software features on all nodes that are part of that cluster. It should also be noted that some of the nodes might have special accelerator hardware like FPGA, GPU, NVMe, etc.
+Commercial, off-the-shelf (COTS) platforms used for edge deployment come with many features that enable workloads to take advantage of, to provide better performance, and to meet the SLA. When such COTS platforms are deployed in a cluster as part of a cloud-native deployment, it becomes important to detect the hardware and software features on all nodes that are part of that cluster. It should also be noted that some of the nodes might have special accelerator hardware (FPGA, GPU, Non-Volatile Memory Express (NVMe)\*, etc.).
 
-Let us consider an edge application like CDN that needs to be deployed in the cloud native edge cloud. It would be favorable for a Container orchestrator like Kubernetes to detect the nodes that have CDN friendly hardware and software features like NVMe, media extensions and so on.
+Consider an edge application such as CDN that needs to be deployed in the cloud-native edge cloud. It is favorable for a container orchestrator like Kubernetes\* to detect the nodes that have CDN-friendly hardware and software features (NVMe, media extensions, etc.).
 
-Now let us consider a Container Network Function (CNF) like 5G gNb that implements L1 5G NR base station. It would be favorable for the Container orchestrator like Kubernetes to detect nodes that have hardware and software features like FPGA acceleration for Forward error correction, Advanced vector instructions to implement math functions, real-time kernel and so on.
+Next, consider a Container Network Function (CNF) such as 5G gNb that implements L1 5G NR base station. It is favorable for the container orchestrator like Kubernetes to detect nodes that have hardware and software features—FPGA acceleration for Forward Error Correction (FEC), advanced vector instructions to implement math functions, real-time kernel, etc.
 
-OpenNESS supports the discovery of such features using Node Feature Discovery (NFD). NFD is a Kubernetes add-on that detects and advertises hardware and software capabilities of a platform that can, in turn, be used to facilitate intelligent scheduling of a workload. Node Feature Discovery is one of the Intel technologies that supports targeting of intelligent configuration and capacity consumption of platform capabilities. NFD runs as a separate container on each individual node of the cluster, discovers capabilities of the node, and finally, publishes these as node labels using the Kubernetes API. NFD only handles non-allocatable features.
+OpenNESS supports the discovery of such features using Node Feature Discovery (NFD). NFD is a Kubernetes add-on that detects and advertises hardware and software capabilities of a platform that can, in turn, be used to facilitate intelligent scheduling of a workload. NFD is one of the technologies from Intel that supports targeting of intelligent configuration and capacity consumption of platform capabilities. NFD runs as a separate container on each node of the cluster, discovers the capabilities of the node, and finally, publishes these as node labels using the Kubernetes API. NFD only handles non-allocatable features.
 
 Some of the Node features that NFD can detect include:
 
@@ -28,38 +26,40 @@ Some of the Node features that NFD can detect include:
 ![Sample NFD Features](nfd-images/nfd2.png)
 _Figure - Sample NFD Features_
 
-At its core, NFD detects hardware features available on each node in a Kubernetes cluster, and advertises those features using node labels.
+At its core, NFD detects hardware features available on each node in a Kubernetes cluster and advertises those features using node labels.
 
 NFD consists of two software components:
-
 1) nfd-master is responsible for labeling Kubernetes node objects
 2) nfd-worker detects features and communicates them to the nfd-master. One instance of nfd-worker should be run on each node of the cluster
 
-The figure below illustrates how the CDN application will be deployed on the right platform when NFD is utilized, where the required key hardware like NVMe and AVX instruction set support is available.
+The figure below illustrates how the CDN application will be deployed on the correct platform when NFD is utilized, where the required key hardware like NVMe and the AVX instruction set support is available.
 
 ![CDN app deployment with NFD Features](nfd-images/nfd0.png)
 
 _Figure - CDN app deployment with NFD Features_
 
-> Non-Volatile Memory Express* is a scalable non-volatile memory host interface that can help increase efficiency and reduce latency, while providing high speed access to storage media connected over PCIe.  NVMe overcomes SAS/SATA SSD performance limitations by optimizing hardware and software to take full advantage of NVM SSD technology
+> Non-Volatile Memory Express (NVMe)* is a scalable, non-volatile memory host interface that can help increase efficiency and reduce latency, while providing high-speed access to storage media connected over PCIe. NVMe overcomes SAS/SATA SSD performance limitations by optimizing hardware and software to take full advantage of NVM SSD technology.
 
-> AVX CPUID Features: Intel® Advances Vector Extensions 512 (Intel® AVX 512)
+> AVX CPUID Features: Intel® Advanced Vector Extensions 512 (Intel® AVX-512)
 
-> UEFI Secure Boot: Boot Firmware verification and authorization of OS Loader/Kernel  components
+> UEFI Secure Boot: Boot Firmware verification and authorization of OS Loader/Kernel components
 
 ## Details
 
 ### Node Feature Discovery support in OpenNESS Network Edge
 
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `ne_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
+Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `ne_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before the OpenNESS installation.
 
-Connection between nfd-workers and nfd-master is secured by certificates generated before running nfd pods.
+The connection between `nfd-nodes` and `nfd-control-plane` is secured by certificates generated before running NFD pods.
 
-Node Feature Discovery is deployed in OpenNESS using Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
+Node Feature Discovery is deployed in OpenNESS using a Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
 
 #### Usage
 
-NFD is working automatically and does not require any user action to collect the features from nodes. Features found by NFD and labeled in Kubernetes can be shown by command: `kubectl get no -o json | jq '.items[].metadata.labels'`.
+NFD is working automatically and does not require any user action to collect the features from nodes. Features found by NFD and labeled in Kubernetes can be shown by the following command: 
+```
+kubectl get no -o json | jq '.items[].metadata.labels'
+```
 
 Example output :
 ```json
@@ -99,7 +99,7 @@ Example output :
 }
 ```
 
-To specify which features should be available by node at deploying pod time, `nodeSelector` field should be defined in pod `.yaml` file. Example pod `yaml` file:
+To specify which features should be available by the node at deploying pod time, the `nodeSelector` field should be defined in the pod `.yaml` file. Example pod `yaml` file:
 
 ```yaml
 apiVersion: v1
@@ -115,28 +115,6 @@ spec:
   nodeSelector:
     feature.node.kubernetes.io/cpu-pstate.turbo: 'true'
 ```
-
-### Node Feature Discovery support in OpenNESS On Premises
-
-Node Feature Discovery is enabled by default. It does not require any configuration or user input. It can be disabled by changing the `onprem_nfd_enable` variable to `false` in the `group_vars/all/10-default.yml` before OpenNESS installation.
-
-NFD service in OpenNESS On Premises consists of two software components:
-
-- *nfd-worker*, which is taken from https://github.com/kubernetes-sigs/node-feature-discovery (downloaded as image)
-- *nfd-master*: stand alone service run on Edge Controller.
-
-Nfd-worker connects to nfd-master server. Connection between nfd-workers and nfd-master is secured by TLS based certificates used in Edge Node enrollment: nfd-worker uses certificates of Edge Node, nfd-master generates certificate based on Edge Controller root certificate. Nfd-worker provides hardware features to nfd-master which stores that data to the controller mysql database. It can be used then as EPA Feature requirement while defining and deploying app on node.
-
-#### Usage
-
-NFD is working automatically and does not require any user action to collect the features from nodes.
-Default version of nfd-worker downloaded by ansible scripts during deployment is v.0.5.0. It can be changed by setting variable `_nfd_version` in `roles/nfd/onprem/worker/defaults/main.yml`.
-
-Features found by NFD are visible in Edge Controller UI in node's NFD tab. While defining edge application (Controller UI->APPLICATIONS->ADD APPLICATION), `EPA Feature` fields can be used as definition of NFD requirement for app deployment. Eg: if application requires Multi-Precision Add-Carry Instruction Extensions (ADX), user can set EPA Feature Key to `nfd:cpu-cpuid.ADX` and EPA Feature Value to `true`.
-
-![Sample application with NFD Feature required](nfd-images/nfd3_onp_app.png)
-
-Deployment of such application will fail for nodes that don't provide this feature with this particular value. List of features supported by nfd-worker service can be found: https://github.com/kubernetes-sigs/node-feature-discovery#feature-discovery. Please note that `nfd:` prefix always has to be added when used as EPA Feature Key.
 
 ## Reference
 More details about NFD can be found here: https://github.com/Intel-Corp/node-feature-discovery

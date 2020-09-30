@@ -10,11 +10,6 @@ section:
     meta_title: OpenNESS Network Edge Application On-Boarding Process
     meta_description: OpenNESS application on-boarding process for the Network Edge provides instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster.
 
-  - title: OnPremises Applications Onboarding
-    path: /doc/applications-onboard/on-premises-applications-onboarding
-    meta_title: OpenNESS OnPremises Mode Application On-Boarding Process
-    meta_description: OpenNESS application on-boarding process for the OnPremises mode provides instructions on how to deploy an application from the Edge Controller on Edge Nodes.
-
   - title: Edge DNS
     path: /doc/applications-onboard/openness-edgedns
     meta_title: OpenNESS Provides Edge DNS and Supports DNS Microservice

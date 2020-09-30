@@ -25,6 +25,7 @@ This document provides high level system features, issues and limitations inform
 4. OpenNESS - 19.12
 5. OpenNESS - 20.03
 6. OpenNESS - 20.06
+7. OpenNESS - 20.09
    
 # Features for Release 
 1. <b>OpenNESS - 19.06 </b>
@@ -201,7 +202,19 @@ This document provides high level system features, issues and limitations inform
    - Early Access support for Resource Management Daemon (RMD) 
      - RMD for cache allocation to the application Pods 
    - Ability to deploy OpenNESS Master and Node on same platform  
-
+5. <b>OpenNESS – 20.09</b>
+    - Native On-premises mode
+      - Following from the previous release decision of pausing Native on-premises Development the code has been move to a dedicated repository “native-on-prem”
+      - Kubernetes based solution will now support both Network and on-premises Edge
+    - Service Mesh support
+      - Basic support for Service Mesh using istio within an OpenNESS cluster
+      - Application of Service Mesh openness 5G and Media analytics - A dedicated network for service to service communications
+    - EAA Update 
+      - EAA microservices has been updated to be more cloud-native friendly 
+    - Edge Insights Application (update)
+      - Industrial Edge Insights Software update to version 2.3. 
+      - Experience Kit now supports multiple detection video’s – Safety equipment detection, PCB default detection and also supports external video streams. 
+  
 # Changes to Existing Features
  - **OpenNESS 19.06** There are no unsupported or discontinued features relevant to this release.
  - **OpenNESS 19.06.01** There are no unsupported or discontinued features relevant to this release.
@@ -214,6 +227,8 @@ This document provides high level system features, issues and limitations inform
    - Support for HDDL-R only restricted to non-real-time or non-customized CentOS 7.6 default kernel. 
  - **OpenNESS 20.06**  
    - Offline install for Native mode OnPremises has be deprecated 
+ - **OpenNESS 20.09**  
+   - Native on-premises is now located in a dedicated repository with no further feature updates from previous release.
 
 # Fixed Issues
 - **OpenNESS 19.06** There are no non-Intel issues relevant to this release.
@@ -234,6 +249,10 @@ This document provides high level system features, issues and limitations inform
   - Modular playbooks  
 - **OpenNESS 20.06** 
   - Optimized the Kubernetes based deployment by supporting multiple Flavors 
+- **OpenNESS 20.09** 
+  - Further optimized the Kubernetes based deployment by supporting multiple Flavors 
+  - Network edge installation time is optimized using pre-built docker images 
+  - cAdvisor occasional failure issue is resolved 
 
 # Known Issues and Limitations
 - **OpenNESS 19.06** There are no issues relevant to this release.
@@ -264,7 +283,11 @@ This document provides high level system features, issues and limitations inform
   - Legacy OnPremises - Traffic rule creation: cannot parse filled and cleared field
   - There is an issue with using CDI when uploading VM images when CMK is enabled due to missing CMK taint toleration. The CDI upload pod does not get deployed and the `virtctl` plugin command times out waiting for the action to complete. A workaround for the issue is to invoke the CDI upload command, edit the taint toleration for the CDI upload to tolerate CMK, update the pod, create the PV and let the pod run to completion.
   - There is a known issue with cAdvisor which in certain scenarios occasionally fails to expose the metrics for Prometheus endpoint, see Git Hub: https://github.com/google/cadvisor/issues/2537 
-      
+- **OpenNESS 20.09** 
+  - Pod which uses hugepage get stuck in terminating state on deletion. This is a known issue on Kubernetes 1.18.x and is planned to be fixed in 1.19.x
+  - Calico cannot be used as secondary CNI with Multus in OpenNESS. It will work only as primary CNI. Calico must be the only network provider in each cluster. We do not currently support migrating a cluster with another network provider to use Calico networking. https://docs.projectcalico.org/getting-started/kubernetes/requirements
+  - collectd Cache telemetry using RDT does not work when RMD is enabled because of resource conflict. Workaround is to disable collectd RDT plugin when using RMD - this by default is implemented globally. With this workaround customers will be able to allocate the Cache but not use Cache related telemetry. In case where RMD is not being enabled customers who desire RDT telemetry can re-enable collectd RDT.
+       
 # Release Content
 - **OpenNESS 19.06** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
 - **OpenNESS 19.06.01** OpenNESS Edge node, OpenNESS Controller, Common, Spec and OpenNESS Applications. 
@@ -274,7 +297,9 @@ This document provides high level system features, issues and limitations inform
 - **OpenNESS 20.06** 
   - Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
   - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit. 
-  > Note: Application repo common to Open Source and IDO
+- **OpenNESS 20.09** 
+  - Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
+  - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.> Note: Application repo common to Open Source and IDO
   
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
@@ -318,10 +343,10 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | Other card       | 2x PCIe Riser cards                                           |
 | HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
 | VCAC-A           | [VCAC-A Accelerator for Media Analytics](https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/media-analytics-vcac-a-accelerator-card-by-celestica-datasheet.pdf)                                                 |
+| PAC-N3000        | [Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 ](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html)                  |
 
 # Supported Operating Systems
 > OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is not a requirement from OpenNESS software to run on a Pre-empt RT kernel.
 
 # Package Versions 
-Package: telemetry, cadvisor 0.36.0, grafana  7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, tas 0., golang 1.14.2, docker 19.03., kubernetes 1.18.4, dpdk 18.11.6, ovs 2.11.1, ovn 2.12.0, helm 3.0, kubeovn 1.0.1, flannel 0.12.0, calico 3.14.0 , multus 3.4.1, sriov cni 2.3, nfd 0.5.0, cmk   v1.4.1
-
+Package: telemetry, cadvisor 0.36.0, grafana  7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, tas 0., golang 1.14.9 docker 19.03.12, kubernetes 1.18.4, dpdk 18.11.6, ovs 2.12.0, ovn 2.12.0, helm 3.0, kubeovn 1.0.1, flannel 0.12.0, calico 3.14.0 , multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk   v1.4.1 TAS we build from specific commit “a13708825e854da919c6fdf05d50753113d04831” 

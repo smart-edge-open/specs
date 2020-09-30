@@ -7,17 +7,9 @@ Copyright (c) 2019-2020 Intel Corporation
 - [4G/LTE Core Configuration using CNCA](#4glte-core-configuration-using-cnca)
   - [Configuring in Network Edge mode](#configuring-in-network-edge-mode)
     - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
-  - [Configuring in On-Premises mode](#configuring-in-on-premises-mode)
-    - [CUPS UI Prerequisites](#cups-ui-prerequisites)
-    - [First time access to CUPS UI](#first-time-access-to-cups-ui)
-      - [Prerequisites](#prerequisites)
-      - [Steps to access UI](#steps-to-access-ui)
-    - [Get User Plane specific information and Update](#get-user-plane-specific-information-and-update)
-    - [Add a new user plane information to Core](#add-a-new-user-plane-information-to-core)
-    - [Delete a user plane information from Core](#delete-a-user-plane-information-from-core)
-- [5G NGC components bringup and Configuration using CNCA](#5g-ngc-components-bringup-and-configuration-using-cnca)
+- [5G NGC components bring up and Configuration using CNCA](#5g-ngc-components-bring-up-and-configuration-using-cnca)
   - [Network Edge mode](#network-edge-mode)
-    - [Bring-up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
+    - [Bring up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
     - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
       - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
@@ -25,14 +17,6 @@ Copyright (c) 2019-2020 Intel Corporation
         - [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration)
       - [Packet Flow Description operations with 5G Core (through AF interface)](#packet-flow-description-operations-with-5g-core-through-af-interface)
         - [Sample YAML NGC AF PFD transaction configuration](#sample-yaml-ngc-af-pfd-transaction-configuration)
-  - [On-Premises mode](#on-premises-mode)
-    - [Bringing up NGC components in On-Premises mode](#bringing-up-ngc-components-in-on-premises-mode)
-    - [Configuring in On-Premises mode](#configuring-in-on-premises-mode-1)
-      - [Certificates Management for communicating with 5G core micro-services](#certificates-management-for-communicating-with-5g-core-micro-services)
-      - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface-1)
-        - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core-1)
-      - [Traffic influence operations with 5G Core (through AF interface)](#traffic-influence-operations-with-5g-core-through-af-interface-1)
-      - [Packet Flow Description operation with 5G Core (through AF interface)](#packet-flow-description-operation-with-5g-core-through-af-interface)
   - [Traffic Influence Subscription description](#traffic-influence-subscription-description)
     - [Identification (Mandatory)](#identification-mandatory)
     - [Traffic Description Group (Mandatory)](#traffic-description-group-mandatory)
@@ -49,49 +33,48 @@ Copyright (c) 2019-2020 Intel Corporation
 
 ## Configuring in Network Edge mode
 
-In case of Network Edge mode, CNCA provides a kubectl plugin to configure the 4G/LTE Core network. Kubernetes adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within Kubernetes eco-system. The plugin performs remote callouts against LTE CUPS OAM agent.
+For Network Edge mode, CNCA provides a kubectl plugin to configure the 4G/LTE Core network. Kubernetes\* adopts plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes eco-system. The plugin performs remote callouts against LTE Control and User Plane Separation (LTE CUPS) Operation Administration and Maintenance (OAM) agent.
 
 Available management with `kube-cnca` against LTE CUPS OAM agent are:
 1. Creation of LTE CUPS userplanes
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the control plane node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
-
-Creation the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command as below to post a userplane creation request onto AF:
+Creation of the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command to post a userplane creation request onto Application Function (AF):
 ```shell
 kubectl cnca apply -f <config.yml>
 ```
 
-When the userplane is created successfully, the `apply` command will return the userplane identifier `<userplane-id>`, which should be used in further correspondence with LTE CUPS OAM agent concerning this particular userplane. It is the responsibility of the user to retain the `<userplane-id>` as `kube-cnca` is a stateless function.
+When the userplane is created successfully, the `apply` command returns the userplane identifier `<userplane-id>`, which should be used in further correspondence with LTE CUPS OAM agent concerning this particular userplane. It is the responsibility of the user to retain the `<userplane-id>` as `kube-cnca` is a stateless function.
 
-> NOTE: All active userplanes can be retrieved from AF through command `kubectl cnca get userplanes`.
+>**NOTE**: All active userplanes can be retrieved from AF through the command `kubectl cnca get userplanes`.
 
-To retrieve an existing userplane with a known userplane ID, use the below command:
+To retrieve an existing userplane with a known userplane ID, use the following command:
 ```shell
 kubectl cnca get userplane <userplane-id>
 ```
 
-To retrieve all active userplanes at LTE CUPS OAM agent, execute this command:
+To retrieve all active userplanes at LTE CUPS OAM agent, use the following command:
 ```shell
 kubectl cnca get userplanes
 ```
 
-To modify an active userplane, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an active userplane, use the `patch` command and provide a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca patch <userplane-id> -f <config.yml>
 ```
 
-To delete an active userplane, use the `delete` command as below:
+To delete an active userplane, use the `delete` command:
 ```shell
 kubectl cnca delete userplane <userplane-id>
 ```
 
 ### Sample YAML LTE CUPS userplane configuration
 
-Similarly, the `kube-cnca` expects the YAML configuration as in the format below for the LTE CUPS-specific information. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`.
+Similarly, the `kube-cnca` expects the YAML configuration for the LTE CUPS-specific information as shown in the following format. The file must contain the topmost configurations: `apiVersion`, `kind`, and `policy`.
 
 ```yaml
 apiVersion: v1
@@ -120,123 +103,15 @@ policy:
       - APN001
 ```
 
-
-## Configuring in On-Premises mode
-
-In case of On-Premises deployment mode, Core network can be configured through the CNCA CUPS UI interface.
-
-### CUPS UI Prerequisites
-
-- Controller installation, configuration and run as root. Before building, setup the controller env file for CUPS as below:
-
-```
-  REACT_APP_CONTROLLER_API=http://<controller_ip_address>>:8080
-  REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080
-```
-
-- Build the full controller stack including CUPS:
-
-    `make build`
-
-  - Start the full controller stack and CUPS UI:
-
-    `make all-up`
-
-    > NOTE: To bring up just the CUPS UI run `make cups-ui-up`
-  - Check whether controller CUPS UI already bring up by:
-
-```
-    Docker ps
-    CONTAINER ID   IMAGE        COMMAND                  CREATED     STATUS      PORTS
-    0eaaafc01013   cups:latest  "docker-entrypoint.s…"   8 days ago  Up 8 days   0.0.0.0:3010->80/tcp
-    d732e5b93326   ui:latest    "docker-entrypoint.s…"   9 days ago  Up 9 days   0.0.0.0:3000->80/tcp
-    8f055896c767   cce:latest   "/cce -adminPass cha…"   9 days ago  Up 9 days   0.0.0.0:6514->6514/tcp, 0.0.0.0:8080-8081->8080-8081/tcp, 0.0.0.0:8125->8125/tcp
-    d02b5179990c   mysql:8.0    "docker-entrypoint.s…"   13 days ago Up 9 days   33060/tcp, 0.0.0.0:8083->3306/tcp
-```
-
-- OAMAgent(called EPC-OAM) and EPC Control plane installation, configuration and run as `root`.
-  - OAMAgent acts as epc agent between the OpenNESS controller and EPC. It will process CUPS API messages (HTTP based) from the controller, parse JSON payload in the HTTP request, and then convert it to message format that can be used by EPC. And the same in reverse. Refer to the architecture specification and to README in epc-oam repo for further details.
-  - For OAMAgent Installation and configuration details, refer to README in epc-oam repo.
-  - EPC installation and configuration.
-
-### First time access to CUPS UI
-
-#### Prerequisites
-
-- REACT_APP_CUPS_API=http://<<oamagent_ip_address>>:8080 added to Controller's "~/controller/.env" file.
-- Controller full stack including CUPS UI are running.
-- Oamagent and EPC are running.
-- Confirm connection between controller and oamagent (EPC).
-
-#### Steps to access UI
-
-- Open any internet browser
-- Type in "http://<Controller_ip_address>:3010/userplanes" in address bar.
-- This will display all the existing EPC user planes list as shown below:
-  &nbsp;
-  ![FirstAccess screen](cups-howto-images/first_access.png)
-
-### Get User Plane specific information and Update
-
-- Identify the specific userplane using the UUID to get additional information
-- Click on **EDIT** as shown below
-  &nbsp;
-  ![Edit screen](cups-howto-images/edit.png)
-  &nbsp;
-
-- User plane information is displayed as shown below
-  &nbsp;
-  ![Userplane5 screen](cups-howto-images/userplane5.png)
-  &nbsp;
-
-- Update parameters: any of the parameters _{S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC, APN}_ as needed and then click on **Save**.
-  **NOTE** A pop up window will appear with “successfully updated userplane”
-  &nbsp;
-  ![Userplane5Update screen](cups-howto-images/userplane5_update.png)
-  &nbsp;
-
-- After that, web page will automatically return back to the updated user plane list as shown below
-  &nbsp;
-  ![Userplane5UpdateList screen](cups-howto-images/userplane5_update_thenlist.png)
-  &nbsp;
-
-### Add a new user plane information to Core
-
-- Click on **CREATE** button.
-
-- Filling uuid with 36 char string, select Function as “SAEGWU” and set values for parameters: S1-U , S5-U(SGW), S5-U(PGW), MNC,MCC, TAC and APN. And click on “Save” and pop up with “successfully created userplane” as below:
-  &nbsp;
-  ![UserplaneCreate screen](cups-howto-images/userplane_create.png)
-  &nbsp;
-
-- After that, web page will automatically return back to the updated user plane list as shown below
-  &nbsp;
-  ![UserplaneCreateList screen](cups-howto-images/userplane_create_thenlist.png)
-  &nbsp;
-
-### Delete a user plane information from Core
-
-- Find the user plane to delete using UUID and click **EDIT**
-
-- Then web page will list the user plane information, and then click on **DELETE USERPLANE** with popup message with **successfully deleted userplane** as shown below
-  &nbsp;
-  ![UserplaneDelete screen](cups-howto-images/userplane_delete.png)
-  &nbsp;
-
-- After that, web page will automatically return back to the updated user plane list as shown below
-  &nbsp;
-  ![UserplaneDeleteList screen](cups-howto-images/userplane_delete_thenlist.png)
-  &nbsp;
-
-# 5G NGC components bringup and Configuration using CNCA
+# 5G NGC components bring up and Configuration using CNCA
 
 OpenNESS provides ansible scripts for setting up NGC components for two scenarios. Each of the scenarios is supported by a separate role in the OpenNESS Experience Kit:
 
 1. Role "ngc_test"
-  This role brings up the 5g OpenNESS setup in the loopback mode for testing and demonstrating its usability. This scenario is currently the default 5G OpenNESS scenario. The ansible scripts that are part of "ngc_test" role build, configure and start AF, NEF and OAM in the Network Edge or On-Premises mode. Within this role, AF, NEF and OAM are set up on the controller node.  Description of the configuration and setup of the NGC components provided in the next sections of this document refers to ngc_test role. The NGC componetns set up within ngc_test role can be fully integrated and tested with provided Kubectl plugin or CNCA UI.
+  This role brings up the 5g OpenNESS setup in the loopback mode for testing and demonstrating its usability. This scenario is currently the default 5G OpenNESS scenario. The ansible scripts that are part of "ngc_test" role build, configure and start AF, NEF and OAM in the Network Edge. Within this role, AF, NEF and OAM are set up on the controller node.  Description of the configuration and setup of the NGC components provided in the next sections of this document refers to ngc_test role. The NGC componetns set up within ngc_test role can be fully integrated and tested with provided Kubectl plugin or CNCA UI.
 
 2. Role "ngc"
-  This role brings up 5g OpenNESS components - AF and NEF - to present the real deployment scenario, where the components can be further integrated with the real 5G core network. The ansible scripts that are part of this role build, configure and start AF and NEF components on separate nodes either in Network Edge or On-Premises mode. The ansible scripts place AF again on the controller node, whereas NEF is placed on a worker node. Similar functionality will be added for OAM component in the future release. Currently, integration with CNCA UI and Kubectl is not complete due to missing OAM component - the services can not be created and accessed. In CNCA UI the "services" web page does not show any content. The user should proceed to "subscriptions" web page to view and modify subscriptions.
+  This role brings up 5g OpenNESS components - AF and NEF - to present the real deployment scenario, where the components can be further integrated with the real 5G core network. The ansible scripts that are part of this role build, configure and start AF and NEF components on separate nodes in Network Edg. The ansible scripts place AF again on the controller node, whereas NEF is placed on a worker node. Similar functionality will be added for OAM component in the future release. Currently, integration with CNCA UI and Kubectl is not complete due to missing OAM component - the services can not be created and accessed. In CNCA UI the "services" web page does not show any content. The user should proceed to "subscriptions" web page to view and modify subscriptions.
 
 ## Network Edge mode
 
@@ -284,32 +159,31 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
   Successful restart of OAM with the updated config can be observed through OAM container logs. Run the below command to get logs:
   `kubectl logs oam --namespace=ngc oam-container`
 
-*NOTE: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Master node for testing purpose. In a real implementation, if NEF and OAM are being used, these two services will run on the 5G Core network servers either in a POD or a standalone application on the host depending on 5G Core server environment*
+>**NOTE**: In case of ngc-test rule/configuration, NEF and OAM PODs will run in OpenNESS-Controller/Kubernetes-Control-Plane node for testing purpose. In a real implementation, if NEF and OAM are being used, these two services will run on the 5G Core network servers either in a POD or a standalone application on the host depending on 5G Core server environment*
 
 ### Configuring in Network Edge mode
 
-In case of Network Edge mode, CNCA provides kubectl plugin to configure 5G Core network. Kubernetes adopt plugins concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes eco-system. The plugin performs remote callouts against NGC OAM and AF micro service on the controller itself.
+For Network Edge mode, the CNCA provides a kubectl plugin to configure the 5G Core network. Kubernetes adopted plugin concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes ecosystem. The plugin performs remote callouts against NGC OAM and AF microservice on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the master node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the control plane node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 
-  ***NOTE:**
-  Registration of OpenNESS Controller's AF instance with the 5G core need to be performed manually or through any other interface exposed by the 5G Core.  OAM capabilities will be enhanced in future releases to support this. Current version of OAM supports only one instance of OpenNESS Controller to communicate.*
+>**NOTE**: Registration of the OpenNESS Controller's AF instance with the 5G core must be performed manually (or through any other interface) exposed by the 5G Core.  OAM capabilities will be enhanced in future releases to support this. The current version of OAM supports only one instance of the OpenNESS Controller to communicate.
 
 ##### Registration of UPF services associated with Edge-node with 5G Core
 
 Supported operations through `kube-cnca` plugin:
 
-  * Registration of edge service info for an UPF with 5G Core through OAM interface (co-located with Edge-Node)
+  * Registration of edge service info for UPF with a 5G Core through OAM interface (co-located with Edge-Node)
   * Un-registration of edge service info
 
-To register the AF service through the NGC OAM function, execute:
+To register the AF service through the NGC OAM function, run:
 ```shell
 kubectl cnca register --dnai=<DNAI> --dnn=<DNN> --tac=<TAC> --priDns=<pri-DNS> --secDns=<sec-DNS> --upfIp=<UPF-IP> --snssai=<SNSSAI>
 ```
 
-The following parameters MUST be provided to the command in order to succeed:
+The following parameters MUST be provided to the command:
 1. Data Network Access Identifier (DNAI)
 2. Data Network Name (DNN)
 3. Primary DNS (priDns)
@@ -317,9 +191,9 @@ The following parameters MUST be provided to the command in order to succeed:
 5. UPF IP Address (upfIp)
 6. Network Slice Identifier (SNSSAI)
 
-Upon successful registration, subscriptions can be instantiated over the NGC AF. The `af-service-id` is returned by the `register` command to be used in further correspondence with NGC OAM & AF functions.
+Upon successful registration, subscriptions can be instantiated over the NGC AF. The `af-service-id` is returned by the `register` command to be used in further correspondence with NGC OAM and AF functions.
 
-Un-registration of the AF service can be performed as in the command below:
+Un-registration of the AF service can be performed with the following command:
 ```shell
 kubectl cnca unregister <af-service-id>
 ```
@@ -328,19 +202,19 @@ kubectl cnca unregister <af-service-id>
 
 Supported operations through `kube-cnca` plugin:
 
-  * Creation of traffic influence subscriptions through the AF micro service to steer application traffic towards edge-node
+  * Creation of traffic influence subscriptions through the AF microservice to steer application traffic towards edge-node
   * Deletion of subscriptions
   * Updating (patching) subscriptions
   * get or get-all subscriptions
 
-Creation of the AF subscription is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration) section. Use the `apply` command as below to post a subscription creation request onto AF:
+Creation of the AF subscription is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF subscription configuration](#sample-yaml-ngc-af-subscription-configuration) section. Use the `apply` command to post a subscription creation request onto AF:
 ```shell
 kubectl cnca apply -f <config.yml>
 ```
 
-When the subscription is successfully created, the `apply` command will return the subscription URL that includes subscription identifier at the end of the string. Only this subscription identifier `<subscription-id>` should be used in further correspondence with AF concerning this particular subscription. For example, https://localhost:8060/3gpp-traffic-influence/v1/1/subscriptions/11111  and subscription-id is 11111. **It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.**
+When the subscription is successfully created, the `apply` command will return the subscription URL that includes a subscription identifier at the end of the string. Only this subscription identifier `<subscription-id>` should be used in further correspondence with AF concerning this particular subscription. For example, https://localhost:8060/3gpp-traffic-influence/v1/1/subscriptions/11111  and subscription-id is 11111. It is the responsibility of the user to retain the `<subscription-id>` as `kube-cnca` is a stateless function.
 
-To retrieve an existing subscription with a known subscription ID, use the below command:
+To retrieve an existing subscription with a known subscription ID, use the following command:
 ```shell
 kubectl cnca get subscription <subscription-id>
 ```
@@ -350,19 +224,19 @@ To retrieve all active subscriptions at AF, execute this command:
 kubectl cnca get subscriptions
 ```
 
-To modify an active subscription, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an active subscription, use the `patch` command and provide a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca patch <subscription-id> -f <config.yml>
 ```
 
-To delete an active subscription, use the `delete` command as below:
+To delete an active subscription, use the `delete` command:
 ```shell
 kubectl cnca delete subscription <subscription-id>
 ```
 
 ##### Sample YAML NGC AF subscription configuration
 
-The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific subscription information.
+The `kube-cnca` expects the YAML configuration as in the format below. The file must contain the topmost configurations: `apiVersion`, `kind`, and `policy`. The configuration `policy` retains the NGC AF-specific subscription information.
 
 ```yaml
 apiVersion: v1
@@ -395,52 +269,52 @@ policy:
 
 #### Packet Flow Description operations with 5G Core (through AF interface)
 
-Supported operations through `kube-cnca` plugin:
+Supported operations through the `kube-cnca` plugin:
 
-  * Creation of packet flow description (PFD) transactions through the AF micro service to perform accurate detection of application traffic for UPF in 5G Core
+  * Creation of packet flow description (PFD) transactions through the AF microservice to perform accurate detection of application traffic for UPF in 5G Core
   * Deletion of transactions and applications within a transaction
   * Updating (patching) transactions and applications within a transaction
-  * get or get-all transactions.
-  * get a specific application within a transaction
+  * Get or get all transactions.
+  * Get a specific application within a transaction
 
 Creation of the AF PFD transaction is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in the [Sample YAML NGC AF transaction configuration](#sample-yaml-ngc-af-transaction-configuration) section. Use the `apply` command as below to post a PFD transaction creation request onto AF:
 ```shell
 kubectl cnca pfd apply -f <config.yml>
 ```
 
-When the PFD transaction is successfully created, the `apply` command will return the transaction URL, that includes transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. **It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.**
+When the PFD transaction is successfully created, the `apply` command will return the transaction URL, which includes a transaction identifier at the end of the string. Only this transaction identifier `<transaction-id>` should be used in further correspondence with AF concerning this particular transaction. For example, https://localhost:8050/af/v1/pfd/transactions/10000  and transaction-id is 10000. It is the responsibility of the user to retain the `<transaction-id>` as `kube-cnca` is a stateless function.
 
-To retrieve an existing PFD transaction with a known transaction ID, use the below command:
+To retrieve an existing PFD transaction with a known transaction ID, use the following command:
 ```shell
 kubectl cnca pfd get transaction <transaction-id>
 ```
 
-To retrieve all active PFD transactions at AF, execute this command:
+To retrieve all active PFD transactions at AF, run:
 ```shell
 kubectl cnca pfd get transactions
 ```
 
-To modify an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an active PFD transaction, use the `patch` command and provide a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca pfd patch transaction <transaction-id> -f <config.yml>
 ```
 
-To delete an active PFD transaction, use the `delete` command as below:
+To delete an active PFD transaction, use the `delete` command:
 ```shell
 kubectl cnca pfd delete transaction <transaction-id>
 ```
 
-To retrieve an existing application within a PFD  transaction with a known application ID and transaction ID, use the below command:
+To retrieve an existing application within a PFD  transaction with a known application ID and transaction ID, use:
 ```shell
 kubectl cnca pfd get transaction <transaction-id> application <application-id>
 ```
 
-To modify an application within an active PFD transaction, use the `patch` command providing a YAML file with the subset of the configuration to be modified:
+To modify an application within an active PFD transaction, use the `patch` command and provide a YAML file with the subset of the configuration to be modified:
 ```shell
 kubectl cnca pfd patch transaction <transaction-id> application <application-id> -f <config.yml>
 ```
 
-To delete an application within an active PFD transaction, use the `delete` command as below:
+To delete an application within an active PFD transaction, use the `delete` command:
 ```shell
 kubectl cnca pfd delete transaction <transaction-id> application <application-id>
 ```
@@ -448,7 +322,7 @@ kubectl cnca pfd delete transaction <transaction-id> application <application-id
 
 ##### Sample YAML NGC AF PFD transaction configuration
 
-The `kube-cnca pfd apply` expects the YAML configuration as in the format below. The file must contain the topmost configurations; `apiVersion`, `kind` and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
+The `kube-cnca pfd apply` expects the YAML configuration as in the format below. The file must contain the topmost configurations: `apiVersion`, `kind`, and `policy`. The configuration `policy` retains the NGC AF-specific transaction information.
 
 ```yaml
 apiVersion: v1
@@ -485,7 +359,7 @@ policy:
             - "www.example.com"
 ```
 
-Sample yaml file for updating a single application
+Sample yaml file for updating a single application:
 
 ```yaml
 apiVersion: v1
@@ -506,112 +380,9 @@ policy:
         - "www.latest_example.com"
 ```
 
-
-## On-Premises mode
-
-
-### Bringing up NGC components in On-Premises mode
-
-  To bring-up the NGC components in on-premises mode, enable the rule `ngc_test/onprem/master` in the file: `openness-experience-kits/on_premises.yml`. and then run the script `deploy_onprem.sh controller`  as described in [OpenNESS On-Premise: Controller and Edge node setup document](../getting-started/on-premises/controller-edge-node-setup.md).
-
-### Configuring in On-Premises mode
-
-  OpenNESS On-Premises management homepage:
-      sample url: http://<LANDING_UI_URL>/landing
-      ![OpenNESS NGC homepage](using-openness-cnca-images/ngc_homepage.png)
-  **NOTE**: `LANDING_UI_URL` can be retrieved from `.env` file.
-
-#### Certificates Management for communicating with 5G core micro-services
-  5G Core micro-services uses HTTPS protocol over HTTP2 for communication. To communicate with 5G micro-services, the certificates used by 5G core micro-services (AF/NEF/OAM) should be imported into web browser. The root certificate `root-ca-cert.pem` which need to be imported is available at location `/etc/openness/certs/ngc/` where OpenNess Experience Kit is installed.
-
-  **NOTE:** The certificates generated as part of OpenNess Experience Kit are self signed certificates are for testing purpose only.
-
-  The certificate can be imported in the different browsers as:
-
-   * Google Chrome (ver 80.0.3987): Go to settings --> Under "Privacy and security" Section Click on "More" --> Select "Manage Certificates" --> in the pop up window select "Intermediate Certification Authorities" --> Select "Import" and provide the downloaded certificate file (root-ca-cert.pem).
-   * Mozilla Firefox (ver 72.0.2): Go to options --> Under "Privacy and security" Section Click on "View Certificates..." --> Under "Authorities" section click on "import" --> Provide the certificate (root-ca-cert.pem) and import it for accessing websites.
-
-  **NOTE:** If a user don't want to import certificate in the browser or failed to import the certificates, other steps can be followed to trust the certificates:
-   * User needs to access these specific 5G core components URL to trust the certificates used by the 5G core components.
-   * First access the urls `https://controller_ip:8070/ngcoam/v1/af/services, https://controller_ip:8050/af/v1/pfd/transactions`.
-   * On accessing these url, browser will show the warning for trusting the self-signed certificate. Proceed by trusting the certificates.
-
-#### Edge Node services operations with 5G Core (through OAM interface)
-
-  ***NOTE:**
-  Registration of the OpenNESS Controller's AF instance with the 5G core needs to be performed manually or through any other interface exposed by the 5G Core.  OAM capabilities will be enhanced in future releases to support this. The current version of OAM supports only one instance of OpenNESS Controller to communicate.*
-
-##### Registration of UPF services associated with Edge-node with 5G Core
-
-   * Edge services registration home page:
-      sample url: http://<cnca_ui_ip>:3020/services
-      ![Edge services operations homepage](using-openness-cnca-images/oam_services_home.png)
-
-   * Registration of a new edge service offered by UPF (associated with edge-node)
-      ![Edge services create](using-openness-cnca-images/oam_services_create.png)
-
-   * Display of registered edge servers with 5G Core
-      ![Edge services display](using-openness-cnca-images/oam_services_display.png)
-
-   * To edit a registered services
-      ![Edge services edit](using-openness-cnca-images/oam_services_edit.png)
-
-   * To delete a registered service
-      ![Edge services delete](using-openness-cnca-images/oam_services_delete.png)
-
-#### Traffic influence operations with 5G Core (through AF interface)
-
-   * Edge traffic subscription submission homepage
-      sample url: http://<cnca_ui_ip>:3020/subscriptions
-      ![Subscription services homepage](using-openness-cnca-images/af_subscription_display_home.png)
-
-   * Edge traffic subscription submissions with 5G-Core (NEF)
-      click on the "Create" button on the above homepage
-      NOTE: "AF Service Id" field should be the same as the value returned through the AF services create request. In the below sample screen capture shows a different value.
-      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part1.png)
-      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part2.png)
-      ![Subscription service create](using-openness-cnca-images/af_subscription_create_part3.png)
-
-   * Display of submitted Edge traffic subscriptions
-      ![Subscription service display](using-openness-cnca-images/af_subscription_display.png)
-
-   * To edit a submitted edge traffic subscription
-      ![Subscription service edit](using-openness-cnca-images/af_subscription_edit.png)
-
-   * To patch a submitted edge traffic subscription
-      ![Subscription service patch](using-openness-cnca-images/af_subscription_patch.png)
-
-   * To delete a submitted edge traffic subscription
-      ![Subscription service delete](using-openness-cnca-images/af_subscription_delete.png)
-
-#### Packet Flow Description operation with 5G Core (through AF interface)
-
-   * Edge traffic PFD transaction submission homepage
-      sample url: http://<cnca_ui_ip>:3020/pfds
-      ![PFD transaction services homepage](using-openness-cnca-images/af_pfd_transaction_home.png)
-
-   * Edge PFD transaction submissions with 5G-Core (NEF)
-      click on the "Create" button on the above homepage
-      ![Subscription service create](using-openness-cnca-images/pfd_transaction_create.png)
-
-   * Display of submitted Edge PFD transaction
-      ![PFD transaction service display](using-openness-cnca-images/pfd_transaction_display.png)
-
-   * To edit a submitted edge PFD transaction
-      ![PFD transaction service edit](using-openness-cnca-images/pfd_transaction_edit.png)
-
-   * To edit a submitted edge PFD transaction application
-      ![PFD transaction service patch](using-openness-cnca-images/pfd_transaction_edit_appID.png)
-
-   * To delete a submitted edge PFD transaction
-      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete.png)
-
-   * To delete a submitted edge PFD transaction application
-      ![PFD transaction service delete](using-openness-cnca-images/pfd_transaction_delete_appID.png)
-
 ## Traffic Influence Subscription description
 
-This sections describes the paramters that are used in the Traffic Influce subscription POST request. Groups mentioned as Mandatory needs te provided, in the absence of the Mandatory parameters a 400 response would be returned.
+This section describes the parameters that are used in the Traffic Influence subscription POST request. Groups mentioned as mandatory must be provided; in the absence of the mandatory parameters, a 400 response is returned.
 
 ### Identification (Mandatory)
 
@@ -628,7 +399,7 @@ This sections describes the paramters that are used in the Traffic Influce subsc
 | dnn            | Identifies a DNN                                                      |
 | snssai         | Identifies an S-NSSAI                                                 |
 
-Note: One of afServiceId or dnn shall be included
+>**NOTE**: One of afServiceId or dnn shall be included
 
 | Attribute name    | Description                        |
 | ----------------- | ---------------------------------- |
@@ -636,26 +407,26 @@ Note: One of afServiceId or dnn shall be included
 | trafficFilters    | Identifies IP packet filters       |
 | ethTrafficFilters | Identifies Ethernet packet filters |
 
-Note: One of "afAppId", "trafficFilters" or "ethTrafficFilters" shall be included
+>**NOTE**: One of "afAppId", "trafficFilters", or "ethTrafficFilters" shall be included
 
 ### Target UE Identifier (Mandatory)
 
 | Attribute name  | Description                                                                                                                                 |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | externalGroupId | Identifies a group of users                                                                                                                 |
-| anyUeInd        | Identifies whether the AF request applies to any UE. This attribute shall set to "true" if applicable for any UE, otherwise, set to "false" |
+| anyUeInd        | Identifies whether the AF request applies to any UE. This attribute is set to "true" if applicable for any UE. Otherwise, set to "false" |
 | gpsi            | Identifies a user                                                                                                                           |
 | ipv4Addr        | Identifies the IPv4 address                                                                                                                 |
 | ipv6Addr        | Identifies the IPv6 address                                                                                                                 |
 | macAddr         | Identifies the MAC address                                                                                                                  |
 
-Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or macAddr), External Group Identifier (i.e. "externalGroupId") or any UE indication "anyUeInd" shall be included
+>**NOTE**: One of individual UE identifiers ("gpsi", "ipv4Addr", "ipv6Addr" or macAddr), External Group Identifier ("externalGroupId") or any UE indication "anyUeInd" shall be included
 
 ### Application Relocation (Optional)
 
 | Attribute name | Description                                                                                                                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| appReloInd     | Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise set to "false". Default value is "false" if omitted |
+| appReloInd     | Identifies whether an application can be relocated once a location of the application has been selected. Set to "true" if it can be relocated; otherwise, set to "false". The default value is "false" if omitted |
 
 ### Traffic Routing (Optional)
 
@@ -693,17 +464,16 @@ Note: One of individual UE identifier (i.e. "gpsi", "ipv4Addr", "ipv6Addr" or ma
 
 ## Packet Flow Description transaction description
 
-This sections describes the parameters that are used in the Packet flow description POST request. Groups mentioned as Mandatory needs to be provided, in the absence of the Mandatory parameters a 400 response would be returned.
+This sections describes the parameters that are used in the Packet flow description POST request. Groups mentioned as mandatory must be provided; in the absence of the Mandatory parameters, a 400 response is returned.
 
 | Attribute name   | Mandatory | Description                                                                                                                            |
 | ---------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | externalAppID    | Yes       | Unique Application identifier of a PFD                                                                                                 |
 | Allowed Delay    | No        | Indicates that the list of PFDs in this request should be deployed within the time interval indicated by the Allowed Delay             |
-| Caching Time     | No        | It shall be included when the allowed delayed cannot be satisfied, i.e. it is smaller than the caching time configured in fetching PFD |
+| Caching Time     | No        | It shall be included when the allowed delayed cannot be satisfied (i.e., it is smaller than the caching time configured in fetching PFD) |
 | pfdId            | Yes       | Identifies a PFD of an application identifier.                                                                                         |
-| flowDescriptions | NOTE      | Represents a 3-tuple with protocol, server ip and server port for UL/DL application traffic.                                           |
-| Urls             | NOTE      | Indicates a URL or a regular expression which is used to match the significant parts of the URL.                                       |
-| domainName       | NOTE      | Indicates an FQDN or a regular expression as a domain name matching criteria.                                                          |
+| flowDescriptions | NOTE      | Represents a 3-tuple with protocol, server ip, and server port for UL/DL application traffic.                                           |
+| Urls             | NOTE      | Indicates a URL or a regular expression that is used to match the significant parts of the URL.                                       |
+| domainName       | NOTE      | Indicates an FQDN or regular expression as a domain name matching criteria.                                                          |
 
-**NOTE:**
-One of the attribute of flowDescriptions, URls and domainName is mandatory.
+>**NOTE**: One of the attributes of flowDescriptions, URls, and domainName is mandatory.

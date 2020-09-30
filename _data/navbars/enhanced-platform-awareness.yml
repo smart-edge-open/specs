@@ -55,27 +55,12 @@ section:
         meta_title: Cache Allocation for Containers with Resource Management Daemon (RMD)
         meta_description: Intel® Resource Director Technology (Intel® RDT) provides visibility and control over how shared resources such as last-level cache (LLC) and memory bandwidth are used by applications, virtual machines (VMs), and containers.
 
-      - title: Environment Variables Support
-        path: /doc/enhanced-platform-awareness/openness-environment-variables
-        meta_title: Environment Variable Support in OpenNESS
-        meta_description: Environment variables can be configured when creating a new Docker container. Once the container is running, any application located in that container can detect and use the variable.
-
-      - title: Tunable Execution
-        path: /doc/enhanced-platform-awareness/openness-tunable-exec
-        meta_title: Tunable Execution - Overriding the Startup Command for Container
-        meta_description: This feature enables you to override the start-up command for a container, thus removing the need to rebuild it just to make this change. 
-
-      - title: Port Forwarding
-        path: /doc/enhanced-platform-awareness/openness-port-forward
-        meta_title: Setting Up Port Forwarding for Containers
-        meta_description: This feature enables the user to set up external network ports for their application (container) so that applications running on other hosts can connect.
-
-      - title: Shared Storage for containers
-        path: /doc/enhanced-platform-awareness/openness-shared-storage
-        meta_title: Shared Storage for Containers in Openness On-Premises Mode
-        meta_description: OpenNESS On-Prem mode provides possibility to use volume and bind mount storage models known from docker.
-
       - title: Telemetry support in OpenNESS
         path: /doc/enhanced-platform-awareness/openness-telemetry
         meta_title: Telemetry support in OpenNESS
         meta_description: OpenNESS supports platform and application telemetry allowing users to retrieve information about the platform, the underlying hardware, cluster and applications deployed.
+
+      - title: Kubernetes Dashboard in OpenNESS
+        path: /doc/enhanced-platform-awareness/openness-kubernetes-dashboard
+        meta_title: Kubernetes Dashboard in OpenNESS
+        meta_description: OpenNESS supports Kubernetes Dashboard that can be used to inspect and manage Kubernetes cluster.
