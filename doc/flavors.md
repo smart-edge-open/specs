@@ -96,8 +96,6 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
-* VPU & GPU device plugins
-* HDDL daemonset
 * The default Kubernetes CNI: `kube-ovn`
 * Video analytics services
 * Telemetry
