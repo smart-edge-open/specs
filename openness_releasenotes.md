@@ -271,13 +271,13 @@ This document provides high level system features, issues and limitations inform
 - **OpenNESS 20.03** 
   - On-Premises edge installation takes more than 1.5hrs because of docker image build for OVS-DPDK 
   - Network edge installation takes more than 1.5hrs because of docker image build for OVS-DPDK
-  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from master
+  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from control plane
   - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
   - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed.  
 - **OpenNESS 20.06** 
   - On-Premises edge installation takes 1.5hrs because of docker image build for OVS-DPDK 
   - Network edge installation takes 1.5hrs because of docker image build for OVS-DPDK
-  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from master
+  - OpenNESS controller allows management NICs to be in the pool of configuration which might allow configuration by mistake there by disconnecting the node from control plane
   - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
   - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed. 
   - Legacy OnPremises - Traffic rule creation: cannot parse filled and cleared field

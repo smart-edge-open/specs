@@ -166,7 +166,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
   1. Create a persistent volume for the VM:
 
-      - Edit the sample yaml with the hostname of the worker node:
+      - Edit the sample yaml with the hostname of the node:
          ```yaml
          # /opt/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
          # For both kv-pv0 and kv-pv1, enter the correct hostname:
@@ -264,7 +264,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 To deploy a VM requesting SRIOV VF of NIC:
   1. Bind the SRIOV interface to the VFIO driver on Edge Node:
      ```shell
-     [root@worker ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
+     [root@node ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
      ```
   2. Delete/Restart SRIOV device plugin on the node:
      ```shell
@@ -272,7 +272,7 @@ To deploy a VM requesting SRIOV VF of NIC:
      ```
   3. Check that the SRIOV VF for VM is available as an allocatable resource for DP (wait a few seconds after restart):
      ```
-     [root@controller ~]# kubectl get node <worker-node-name> -o json | jq '.status.allocatable'
+     [root@controller ~]# kubectl get node <node-name> -o json | jq '.status.allocatable'
      {
      "cpu": "79",
      "devices.kubevirt.io/kvm": "110",
@@ -348,7 +348,7 @@ Complete the following steps to create a snapshot:
   1. Log into the Edge Node
   2. Go to the virtual disk directory for the previously created VM:
      ```shell
-     [root@worker ~]# cd /var/vd/vol0/ && ls
+     [root@node ~]# cd /var/vd/vol0/ && ls
      ```
   3. Create a qcow2 snapshot image out of the virtual disk present in the directory (`disk.img`):
      ```shell

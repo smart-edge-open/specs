@@ -89,7 +89,7 @@ In OpenNESS, Prometheus is deployed as a K8s Deployment with a single pod/replic
 
 ### Grafana
 
-Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on the control plane node as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in OEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag. The password to gain access to the dashboard can be altered with the `telemetry_grafana_pass` flag.
+Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on a control plane as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in OEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag. The password to gain access to the dashboard can be altered with the `telemetry_grafana_pass` flag.
 
 #### Usage
 

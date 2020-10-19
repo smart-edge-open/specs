@@ -23,7 +23,7 @@ section:
   - title: Interface Service
     path: /doc/applications-onboard/openness-interface-service
     meta_title: OpenNESS Applications Onboard - OpenNESS Interface Service
-    meta_description: OpenNESS Interface service is an application running in Kubernetes pod on every worker node of OpenNESS Kubernetes cluster and provides OVS bridge, enabling external traffic scenarios.
+    meta_description: OpenNESS Interface service is an application running in Kubernetes pod on every node of OpenNESS Kubernetes cluster and provides OVS bridge, enabling external traffic scenarios.
 
   - title: VM support in OpenNESS for Network Edge
     path: /doc/applications-onboard/openness-network-edge-vm-support

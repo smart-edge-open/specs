@@ -322,7 +322,7 @@ kubectl exec -it test -- printenv | grep FEC
 To check the number of devices currently allocated to pods, run (and search for 'Allocated Resources'):
 
 ```
-kubectl describe node <worker_node_host_name>
+kubectl describe node <node_host_name>
 ```
 
 ### Verifying Application POD access and usage of FPGA on OpenNESS Network Edge

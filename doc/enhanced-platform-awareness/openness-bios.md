@@ -26,7 +26,7 @@ OpenNESS provides a reference implementation demonstrating how to configure low-
 
 >**NOTE**: The Intel® System Configuration Utility is not intended for and should not be used on any non-Intel server products.
 
-The OpenNESS Network Edge implementation goes a step further and provides an automated process using Kubernetes\* to save and restore BIOS and firmware settings. To do this, the Intel® System Configuration Utility is packaged as a pod and deployed as a Kubernetes job that uses ConfigMap. This ConfigMap provides a mount point that has the BIOS and firmware profile that needs to be used for the worker node. A platform reboot is required for the BIOS and firmware configuration to be applied. To enable this, the BIOS and firmware job is deployed as a privileged pod.
+The OpenNESS Network Edge implementation goes a step further and provides an automated process using Kubernetes\* to save and restore BIOS and firmware settings. To do this, the Intel® System Configuration Utility is packaged as a pod and deployed as a Kubernetes job that uses ConfigMap. This ConfigMap provides a mount point that has the BIOS and firmware profile that needs to be used for the node. A platform reboot is required for the BIOS and firmware configuration to be applied. To enable this, the BIOS and firmware job is deployed as a privileged pod.
 
  ![BIOS and Firmware configuration on OpenNESS](biosfw-images/openness_biosfw.png)
 

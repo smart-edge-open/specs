@@ -8,8 +8,6 @@ Copyright (c) 2019 Intel Corporation
 - [Usage](#usage)
   - [Network edge usage](#network-edge-usage)
 
-<!-- author to determine appropriate use of worker node and to change to a more appropriate name if needed. Does it align with inclusive language? Also, fix images to align with inclusive language. master/slave to control plane/node -->
-
 ## Overview 
 The edge platform must provide access to DNS. The edge platform receives the application DNS rules from the controller. This is specified in the ETSI Multi-access Edge Computing (MEC). From a 5G edge deployment perspective, the Primary DNS (priDns) and Secondary DNS (secDns) needs to be configured which is going to be consumed by the SMF. 
 <!-- fix the last sentence above. Confusing. -->
@@ -22,7 +20,7 @@ _Figure - DNS support on OpenNESS overview_
 
 >**NOTE**: Secondary DNS service is out of the scope of OpenNESS and is only used for DNS forwarding.
 
-EdgeDNS is a functionality to provide the Domain Name System (DNS) Server with a possibility to be controlled by its CLI. EdgeDNS Server listens for requests from a client's CLI. After receiving a CLI request, a function handling the request adds or removes the RULE inside of the EdgeDNS database. EdgeDNS supports only type A records for Set/Delete Fully Qualified Domain Names (FQDN) and the current forwarder is set to 8.8.8.8 (set in docker-compose.yml and openness.yaml). Network Edge mode provides EdgeDNS as a service, which is an application running in a K8s pod on each worker node of the OpenNESS K8s cluster. It allows users to add and remove DNS entries of the worker host directly from K8s control plane node using kubectl plugin.
+EdgeDNS is a functionality to provide the Domain Name System (DNS) Server with a possibility to be controlled by its CLI. EdgeDNS Server listens for requests from a client's CLI. After receiving a CLI request, a function handling the request adds or removes the RULE inside of the EdgeDNS database. EdgeDNS supports only type A records for Set/Delete Fully Qualified Domain Names (FQDN) and the current forwarder is set to 8.8.8.8 (set in docker-compose.yml and openness.yaml). Network Edge mode provides EdgeDNS as a service, which is an application running in a K8s pod on each node of the OpenNESS K8s cluster. It allows users to add and remove DNS entries of the node directly from K8s control plane using kubectl plugin.
 
 ## Usage
 
@@ -55,17 +53,15 @@ In Network Edge, the EdgeDNS CLI is used as a Kubernetes\* plugin. The following
  `kubectl edgedns del <node_hostname> <JSON filename>` to delete DNS entry of node
 ```
 
->**NOTE**: `node_hostname` must be a valid worker node name; it can be found using `kubectl get nodes`
+>**NOTE**: `node_hostname` must be a valid node name; it can be found using `kubectl get nodes`
 
 >**NOTE**: `JSON filename` is a path to the file containing record_type, fqdn, and addresses in case of setting operation. JSON file without record_type also is valid, and as default value "A" is set.
 
-<!-- Fix the sentence above. Confusing. -->
+To set the DNS entry on the node from the `set.json` file, users must provide the following command:
 
-To set the DNS entry on the worker1 host from the `set.json` file, users must provide the following command:
-
-`kubectl edgedns set worker set.json`
+`kubectl edgedns set node1 set.json`
 
 The following command removes this entry:
 
-`kubectl edgedns del worker del.json`
+`kubectl edgedns del node1 del.json`
 

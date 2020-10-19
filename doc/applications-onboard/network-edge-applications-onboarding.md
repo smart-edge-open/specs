@@ -469,7 +469,7 @@ kubectl interfaceservice get <officeX_host_name>
 
 ## Building Smart City ingredients
 
-   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to the following: 1) Camera simulator machines, 2) OpenNESS Controller machine, and 3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to the following: 1) Camera simulator machines, 2) OpenNESS Controller machine, and 3) Smart City cloud control plane machine.
 
    2. Build the Smart City application on all of the machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices (edge nodes) must be installed on OpenNESS.
 
@@ -502,7 +502,7 @@ kubectl interfaceservice get <officeX_host_name>
       make start_openness_camera
       ```
 
-   3. On the Smart City cloud master machine, run the Smart City cloud containers:
+   3. On the Smart City cloud control-plane machine, run the Smart City cloud containers:
        ```shell
        make start_openness_cloud
        ```
@@ -517,16 +517,16 @@ kubectl interfaceservice get <officeX_host_name>
    4. On the OpenNESS Controller machine, build and run the Smart City cloud containers:
        ```shell
        export CAMERA_HOSTS=192.168.1.10,192.168.2.10
-       export CLOUD_HOST=<cloud-master-node-ip>
+       export CLOUD_HOST=<cloud-control-plane-ip>
 
        make
        make update
        make start_openness_office
       ```
 
-       > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+       > **NOTE**: `<cloud-control-plane-ip>` is where the Smart City cloud control plane machine can be reached on the management/cloud network.
 
-   5. From the web browser, launch the Smart City web UI at the URL `https://<cloud-master-node-ip>/`
+   5. From the web browser, launch the Smart City web UI at the URL `https://<cloud-control-plane-ip>/`
 
 ## Inter application communication 
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.

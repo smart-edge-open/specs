@@ -139,11 +139,11 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 
 ## Docker registry
 
-Docker registry is a storage and distribution system for Docker Images. On the OpenNESS environment, Docker registry service is deployed as a pod on Control plane Node. Docker registry authentication enabled with self-signed certificates as well as all node and control plane nodes will have access to the Docker registry.
+Docker registry is a storage and distribution system for Docker Images. On the OpenNESS environment, Docker registry service is deployed as a pod on Control plane Node. Docker registry authentication enabled with self-signed certificates as well as all nodes and control plane will have access to the Docker registry.
 
 ### Deploy Docker registry
 
-Ansible "docker_registry" roles created on openness-experience-kits. For deploying a Docker registry on Kubernetes, control plane node roles are enabled on the openness-experience-kits "network_edge.yml" file.
+Ansible "docker_registry" roles created on openness-experience-kits. For deploying a Docker registry on Kubernetes, control plane roles are enabled on the openness-experience-kits "network_edge.yml" file.
 
  ```ini
   role: docker_registry/controlplane

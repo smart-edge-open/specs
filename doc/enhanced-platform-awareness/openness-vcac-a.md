@@ -30,9 +30,9 @@ The VCAC-A installation involves a [two-stage build](https://github.com/OpenVisu
 1. VCA host kernel build and configuration: this stage patches the CentOS\* 7.6 kernel and builds the necessary modules and dependencies.
 2. VCAC-A system image (VCAD) generation: this stage builds an Ubuntu\*-based (VCAD) image that is loaded on the VCAC-A card.
 
-The OEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical worker node to the OpenNESS cluster. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
+The OEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical node to the OpenNESS cluster. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
 
-When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge worker node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
+When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
 
 ![Smart City Setup](vcaca-images/smart-city-app-vcac-a.png)
 
@@ -55,11 +55,11 @@ affinity:
 ```
 
 ### VCA Pools
-Another construct used when deploying OpenNESS is the `VCA pool`, which is a similar concept to the *Node pools* that are supported by [Azure\* Kubernetes\* Service](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) and [Google\* Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools). The VCA pool is a unique label assigned to the group of VCA nodes that are plugged into one edge worker node. This enables the scheduler to execute related workloads within the same VCA pool (i.e., within the same edge node physical space). The VCA pool is assigned the label `vcac-pool=<vca-host-name>`, which reflects the hostname of the VCA host that all the VCAC-A cards are connected to.
+Another construct used when deploying OpenNESS is the `VCA pool`, which is a similar concept to the *Node pools* that are supported by [Azure\* Kubernetes\* Service](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools) and [Google\* Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools). The VCA pool is a unique label assigned to the group of VCA nodes that are plugged into one node. This enables the scheduler to execute related workloads within the same VCA pool (i.e., within the same edge node physical space). The VCA pool is assigned the label `vcac-pool=<vca-host-name>`, which reflects the hostname of the VCA host that all the VCAC-A cards are connected to.
 
 Also, the VCA nodes follow a special naming convention. They are assigned the name of their host nodes appended with *vca* keyword and a number (`<vca-host-name>-vcaX`). The number is an incremental index to differentiate between multiple VCAC-A cards that are installed.
 
-In the example below, this is a cluster composed of 1 master `silpixa00399671`, 1 VCA host `silpixa00400194`, and 3 VCAC-A cards: `silpixa00400194-vca1`, `silpixa00400194-vca2`, and `silpixa00400194-vca3`. The 3 VCAC-A cards are connected to the node `silpixa00400194`.
+In the example below, this is a cluster composed of 1 control plane `silpixa00399671`, 1 VCA host `silpixa00400194`, and 3 VCAC-A cards: `silpixa00400194-vca1`, `silpixa00400194-vca2`, and `silpixa00400194-vca3`. The 3 VCAC-A cards are connected to the node `silpixa00400194`.
 ```shell
 $ kubectl get nodes
 NAME                   STATUS   ROLES    AGE   VERSION
