@@ -188,7 +188,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
          ```
   2. Download the Generic Cloud qcow image for CentOS 7:
       ```shell
-      [root@controller ~]# wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
+      [root@controller ~]# wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2003.qcow2
       ```
   3. Get the address of the CDI upload proxy:
       ```shell
@@ -197,7 +197,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
   4. Create and upload the image to PVC via CDI:
        >**NOTE**: There is currently a limitation when using the CDI together with CMK (Intel's CPU Manager for Kubernetes). The CDI upload pod will fail to deploy on the node due to K8s node taint provided by CMK. For a workaround, see the [limitations section](#cdi-image-upload-fails-when-cmk-is-enabled).
       ```shell
-      [root@controller ~]# kubectl virt image-upload dv centos-dv --image-path=/root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443
+      [root@controller ~]# kubectl virt image-upload dv centos-dv --image-path=/root/kubevirt/CentOS-7-x86_64-GenericCloud-2003.qcow2 --insecure --size=15Gi --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443
 
       DataVolume default/centos-dv created
       Waiting for PVC centos-dv upload pod to be ready...
@@ -208,7 +208,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
       Uploading data completed successfully, waiting for processing to complete, you can hit ctrl-c without interrupting the progress
       Processing completed successfully
-      Uploading /root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 completed successfully
+      Uploading /root/kubevirt/CentOS-7-x86_64-GenericCloud-2003.qcow2 completed successfully
       ```
   5. Check that PV, DV, and PVC are correctly created:
       ```shell
@@ -382,7 +382,7 @@ The following script is an example of how to perform the above steps:
 ```shell
 #!/bin/bash
 
-kubectl virt image-upload dv centos-dv --image-path=/root/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi  --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443 &
+kubectl virt image-upload dv centos-dv --image-path=/root/CentOS-7-x86_64-GenericCloud-2003.qcow2 --insecure --size=15Gi  --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443 &
 
 sleep 5
 

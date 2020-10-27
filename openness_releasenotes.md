@@ -346,7 +346,7 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | PAC-N3000        | [Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 ](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html)                  |
 
 # Supported Operating Systems
-> OpenNESS was tested on CentOS Linux release 7.6.1810 (Core) : Note: OpenNESS is tested with CentOS 7.6 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is not a requirement from OpenNESS software to run on a Pre-empt RT kernel.
+> OpenNESS was tested on CentOS Linux release 7.8.2003 (Core) : Note: OpenNESS is tested with CentOS 7.8 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is not a requirement from OpenNESS software to run on a Pre-empt RT kernel.
 
 # Package Versions 
 Package: telemetry, cadvisor 0.36.0, grafana  7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, tas 0., golang 1.14.9 docker 19.03.12, kubernetes 1.18.4, dpdk 18.11.6, ovs 2.12.0, ovn 2.12.0, helm 3.0, kubeovn 1.0.1, flannel 0.12.0, calico 3.14.0 , multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk   v1.4.1 TAS we build from specific commit “a13708825e854da919c6fdf05d50753113d04831” 
