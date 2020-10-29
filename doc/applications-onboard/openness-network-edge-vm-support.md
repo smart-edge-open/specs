@@ -132,7 +132,7 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
 
 ## VM deployment
 Provided below are sample deployment instructions for different types of VMs.
-Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/otcshare/edgenode/edgecontroller/tree/master/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
+Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/otcshare/edgenode/tree/master/edgecontroller/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
 
 ### Stateless VM deployment
 To deploy a sample stateless VM with containerDisk storage:
@@ -150,7 +150,7 @@ To deploy a sample stateless VM with containerDisk storage:
       [root@controller ~]# kubectl get pods | grep launcher
       [root@controller ~]# kubectl get vms
       ```
-  4. Execute into the VM (pass/login cirros/gocubsgo):
+  4. Execute into the VM (login/pass cirros/gocubsgo):
       ```shell
       [root@controller ~]# kubectl virt console cirros-stateless-vm
       ```
