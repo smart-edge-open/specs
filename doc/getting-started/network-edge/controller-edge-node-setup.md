@@ -3,7 +3,9 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
 <!-- omit in toc -->
+
 # OpenNESS Network Edge: Controller and Edge node setup
+- [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Quickstart](#quickstart)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -14,10 +16,10 @@ Copyright (c) 2019-2020 Intel Corporation
     - [VM support for Network Edge](#vm-support-for-network-edge)
     - [Application on-boarding](#application-on-boarding)
     - [Single-node Network Edge cluster](#single-node-network-edge-cluster)
-  - [Docker registry](#docker-registry)
-    - [Deploy Docker registry](#deploy-docker-registry)
-    - [Docker registry image push](#docker-registry-image-push)
-    - [Docker registry image pull](#docker-registry-image-pull)
+  - [Harbor registry](#harbor-registry)
+    - [Deploy Harbor registry](#deploy-harbor-registry)
+    - [Harbor registry image push](#harbor-registry-image-push)
+    - [Harbor registry image pull](#harbor-registry-image-pull)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -133,49 +135,50 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
    ```
 2. Features can be enabled in the `group_vars/all/10-default.yml` file by tweaking the configuration variables.
 3. Settings regarding the kernel, grub, HugePages\*, and tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
+   
    > Default settings in the single-node cluster mode are those of the Edge Node (i.e., kernel and tuned customization enabled).
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
 
-## Docker registry
+## Harbor registry
 
-Docker registry is a storage and distribution system for Docker Images. On the OpenNESS environment, Docker registry service is deployed as a pod on Control plane Node. Docker registry authentication enabled with self-signed certificates as well as all nodes and control plane will have access to the Docker registry.
+Harbor registry is a storage and distribution system for Docker Images. On the OpenNESS environment, Harbor registry service is deployed as a pod on Control plane Node. Harbor registry authentication enabled with self-signed certificates as well as all nodes and control plane will have access to the Harbor registry.
 
-### Deploy Docker registry
+### Deploy Harbor registry
 
-Ansible "docker_registry" roles created on openness-experience-kits. For deploying a Docker registry on Kubernetes, control plane roles are enabled on the openness-experience-kits "network_edge.yml" file.
+Ansible "harbor_registry" roles created on openness-experience-kits. For deploying a Harbor registry on Kubernetes, control plane roles are enabled on the openness-experience-kits "network_edge.yml" file.
 
  ```ini
-  role: docker_registry/controlplane
-  role: docker_registry/node
-   ```
-The following steps are processed during the Docker registry deployment on the OpenNESS setup.
+  role: harbor_registry/controlplane
+  role: harbor_registry/node
+ ```
+The following steps are processed during the Harbor registry deployment on the OpenNESS setup.
 
 * Generate a self-signed certificate on the Kubernetes Control plane Node.
 * Build and deploy a docker-registry pod on the Control plane Node.
-* Generate client.key and client.csr on the node
-* Authenticate client.csr for server access.
-* Share public key and client.cert on trusted Node and Ansible build host location
+* Generate a token on the node
+* Authenticate token for server access.
+* Share public harbor.crt on trusted Node and Ansible build host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
-* After the Docker registry deploys, the Node and Ansible host can access the private Docker registry.
-* The IP address of the Docker registry will be: "Kubernetes_Control_Plane_IP"
-* The port number of the Docker registry will be: 5000
+* After the Harbor registry deploys, the Node and Ansible host can access the private Docker registry.
+* The IP address of the Harbor registry will be: "Kubernetes_Control_Plane_IP"
+* The port number of the Docker registry will be: 30003
 
-### Docker registry image push
-Use the Docker tag to create an alias of the image with the fully qualified path to your Docker registry after the tag successfully pushes the image to the Docker registry.
+### Harbor registry image push
+Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Docker registry.
 
  ```ini
-  docker tag nginx:latest Kubernetes_Control_Plane_IP:5000/nginx:latest
-  docker push Kubernetes_Control_Plane_IP:5000/nginx:latest
-   ```
+  docker tag nginx:latest Kubernetes_Control_Plane_IP:30003/library/nginx:latest
+  docker push Kubernetes_Control_Plane_IP:30003/library/nginx:latest
+ ```
 Now image the tag with the fully qualified path to your private registry. You can push the image to the registry using the Docker push command.
 
-### Docker registry image pull
+### Harbor registry image pull
 Use the `docker pull` command to pull the image from Docker registry:
 
  ```ini
-  docker pull Kubernetes_Control_Plane_IP:5000/nginx:latest
-   ```
->**NOTE**: <Kubernetes_Control_Plane_IP> should be replaced as per our docker registry IP address.
+  docker pull Kubernetes_Control_Plane_IP:30003/library/nginx:latest
+ ```
+>**NOTE**: <Kubernetes_Control_Plane_IP> should be replaced as per our harbor registry IP address.
 
 
 ## Kubernetes cluster networking plugins (Network Edge)
