@@ -155,8 +155,6 @@ The following steps are processed during the Harbor registry deployment on the O
 
 * Generate a self-signed certificate on the Kubernetes Control plane Node.
 * Build and deploy a docker-registry pod on the Control plane Node.
-* Generate a token on the node
-* Authenticate token for server access.
 * Share public harbor.crt on trusted Node and Ansible build host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
 * After the Harbor registry deploys, the Node and Ansible host can access the private Docker registry.
