@@ -73,15 +73,15 @@ The following example reflects the Docker image [expected by Helm chart](https:/
    ```shell
    docker build -t flexran5g:3.10.0-1062.12.1.rt56 .
    ```
-7. Tag the image and push to a local Docker registry (Docker registry deployed as part of OpenNESS Experience Kit)
+7. Tag the image and push to a local Harbor registry (Harbor registry deployed as part of OpenNESS Experience Kit)
    
    ```shell
-   docker tag flexran5g <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
+   docker tag flexran5g <docker_registry_ip_address>:<port>/library/flexran5g:3.10.0-1062.12.1.rt56
 
-   docker push <docker_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
+   docker push <docker_registry_ip_address>:<port>/library/flexran5g:3.10.0-1062.12.1.rt56
    ```
 
-By the end of step 7, the FlexRAN Docker image is created and available in the Docker registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
+By the end of step 7, the FlexRAN Docker image is created and available in the Harbor registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
 
 # FlexRAN hardware platform configuration 
 ## BIOS 
