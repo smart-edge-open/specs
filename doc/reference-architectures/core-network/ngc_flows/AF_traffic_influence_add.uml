@@ -1,0 +1,50 @@
+@startuml
+/' SPDX-License-Identifier: Apache-2.0
+   Copyright (c) 2020 Intel Corporation
+'/
+skinparam monochrome false
+skinparam roundcorner 20
+skinparam defaultFontName "Intel Clear"
+skinparam defaultFontSize 20
+skinparam maxmessagesize 300
+skinparam sequenceArrowThickness 3
+
+header Intel Corporation
+footer Proprietary and Confidential
+title Traffic influencing flows between OpenNESS controller and 5G Core
+
+actor "User/Admin" as user
+box "OpenNESS Controller components" #LightBlue
+    participant "UI/CLI" as cnca 
+    participant "AF Microservice" as af
+end box
+box "5G Core components" #LightGreen
+    participant "NEF" as nef
+    note over nef 
+        OpenNESS provided 
+        Core component with 
+        limited functionality
+    end note
+    participant "NGC\nCP Functions" as ngccp
+end box
+
+group Traffic influence submission flow
+    user -> cnca : Traffic influencing request
+    activate cnca
+    cnca -> af : /af/v1/subscriptions: POST \n {3GPP TS 29.522v15.3 \n Sec. 5.4}*
+    activate af
+    af -> nef : /3gpp-traffic-Influence/v1/{afId}/subscriptions : POST \n {3GPP TS 29.522v15.3 \n Sec. 5.4} 
+    activate nef
+    nef -> nef : NGC_STUB(PCF,UDR,BSF)
+    nef -> ngccp : {Open: 3rd party NGC integration with OpenNESS(NEF)}
+    ngccp --> nef :
+    nef --> af : OK: {subscriptionId} \n ERROR: {400/500}
+    deactivate nef
+    af --> cnca :  OK: {subscriptionId} \n ERROR: {400/500}
+    deactivate af
+    cnca --> user : Success: {subscriptionId} 
+    deactivate cnca 
+end group 
+
+@enduml
+
