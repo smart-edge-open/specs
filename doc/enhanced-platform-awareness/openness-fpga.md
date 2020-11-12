@@ -68,7 +68,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 
 - Programming the FPGA with RTL factory and user images: feature installation via Ansible\* automation and a K8s kubectl plugin are provided to use the feature.
 - Enabling SRIOV, binding devices to appropriate drivers, and the creation of VFs: delivered as part of the Edge Nodes Ansible automation.
-- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility: Docker\* image creation delivered as part of the Edge Nodes Ansible automation (dependency on the config utility from the FlexRAN package). The images being pushed to a local Docker registry, sample pod (job) deployment via Helm charts.
+- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility: Docker\* image creation delivered as part of the Edge Nodes Ansible automation (dependency on the config utility from the FlexRAN package). The images being pushed to a local Harbor registry, sample pod (job) deployment via Helm charts.
 - Enabling orchestration and allocation of the devices (VFs) to non-root pods requesting the devices: leveraging the support of FPGA SRIOV VFs from K8s SRIOV Device Plugin. K8s plugin deployment is delivered as part of the Edge Controller's Ansible automation.
 - Simple sample BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
