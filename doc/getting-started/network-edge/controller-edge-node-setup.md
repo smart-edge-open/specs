@@ -4,7 +4,6 @@ Copyright (c) 2019-2020 Intel Corporation
 ```
 <!-- omit in toc -->
 
-# OpenNESS Network Edge: Controller and Edge node setup
 - [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Quickstart](#quickstart)
 - [Preconditions](#preconditions)
@@ -176,7 +175,7 @@ Use the `docker pull` command to pull the image from Docker registry:
  ```ini
   docker pull Kubernetes_Control_Plane_IP:30003/library/nginx:latest
  ```
->**NOTE**: <Kubernetes_Control_Plane_IP> should be replaced as per our harbor registry IP address.
+>**NOTE**: <Kubernetes_Control_Plane_IP> should be replaced as per our Harbor registry IP address.
 
 
 ## Kubernetes cluster networking plugins (Network Edge)
