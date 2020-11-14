@@ -4,7 +4,7 @@ Copyright (c) 2019-2020 Intel Corporation
 ```
 <!-- omit in toc -->
 
-- [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
+# OpenNESS Network Edge: Controller and Edge node setup
 - [Quickstart](#quickstart)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
