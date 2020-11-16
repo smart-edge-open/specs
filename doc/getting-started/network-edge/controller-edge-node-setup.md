@@ -140,7 +140,7 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 
 ## Harbor registry
 
-Harbor registry is a storage and distribution system for Docker Images. On the OpenNESS environment, Harbor registry service is deployed as a pod on Control plane Node. Harbor registry authentication enabled with self-signed certificates as well as all nodes and control plane will have access to the Harbor registry.
+Harbor registry is an open source cloud native registry which can support images and relevant artifacts with extended functionalities as described in [Harbor](https://goharbor.io/). On the OpenNESS environment, Harbor registry service is installed on Control plane Node by Harbor Helm Chart [github](https://github.com/goharbor/harbor-helm/releases/tag/v1.5.1). Harbor registry authentication enabled with self-signed certificates as well as all nodes and control plane will have access to the Harbor registry.
 
 ### Deploy Harbor registry
 
@@ -150,15 +150,43 @@ Ansible "harbor_registry" roles created on openness-experience-kits. For deployi
   role: harbor_registry/controlplane
   role: harbor_registry/node
  ```
-The following steps are processed during the Harbor registry deployment on the OpenNESS setup.
 
-* Generate a self-signed certificate on the Kubernetes Control plane Node.
-* Build and deploy a docker-registry pod on the Control plane Node.
-* Share public harbor.crt on trusted Node and Ansible build host location
+The following steps are processed by openness-experience-kits during the Harbor registry installation on the OpenNESS control plane node.
+
+* Download Harbor Helm Charts on the Kubernetes Control plane Node.
+* Check whether huge pages is enabled and templates values.yaml file accordingly.
+* Create namespace and disk PV for Harbor Services (The defaut disk PV size is 20G. The values can be chanageable in the roles/harbor_registry/controlplane/defaults/main.yaml).
+* Install Harbor on the control plane node using the Helm Charts.
+* Create project - intel for OpenNESS microservices, Kurbernetes enhanced add-on images storage.
+* Docker login the Harbor Registry, thus enable pulling, pushing and tag images with the Harbor Registry
+
+
+On the OpenNESS edge nodes, openness-experience-kits will conduct the following steps:
+* Get harbor.crt from the OpenNESS control plane node and save into the host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
-* After the Harbor registry deploys, the Node and Ansible host can access the private Docker registry.
+* Docker login the Harbor Registry, thus enable pulling, pushing and tag images with the Harbor Registry
+* After above steps, the Node can access the private Harbor registry.
 * The IP address of the Harbor registry will be: "Kubernetes_Control_Plane_IP"
 * The port number of the Docker registry will be: 30003
+
+For the host outside of the OpenNESS cluster, can use following commands to access the Harbor Registry:
+
+```shell
+# create directory for harbor's CA cert
+mkdir /etc/docker/certs.d/${Kubernetes_Control_Plane_IP}:${port}/
+
+# get EMCO harbor CA.crt
+set -o pipefail && echo -n | openssl s_client -showcerts -connect ${Kubernetes_Control_Plane_IP}:${port} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /etc/docker/certs.d/${Kubernetes_Control_Plane_IP}:${port}/harbor.crt
+
+# docker login harobr registry
+docker login ${Kubernetes_Control_Plane_IP}:${port} -uadmin -p${harborAdminPassword}
+```
+The default access configuration for the Harbor Registry is:
+ ```ini
+Kubernetes_Control_Plane_IP: 30003(default)
+harborAdminPassword: Harbor12345(default)
+ ```
+
 
 ### Harbor registry image push
 Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Docker registry.
