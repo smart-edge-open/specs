@@ -156,24 +156,24 @@ The following steps are processed during the Harbor registry deployment on the O
 * Build and deploy a docker-registry pod on the Control plane Node.
 * Share public harbor.crt on trusted Node and Ansible build host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
-* After the Harbor registry deploys, the Node and Ansible host can access the private Docker registry.
+* After the Harbor registry deploys, the Node and Ansible host can access the private Harbor registry.
 * The IP address of the Harbor registry will be: "Kubernetes_Control_Plane_IP"
-* The port number of the Docker registry will be: 30003
+* The port number of the Harbor registry will be: 30003
 
 ### Harbor registry image push
-Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Docker registry.
+Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Harbor registry.
 
  ```ini
-  docker tag nginx:latest Kubernetes_Control_Plane_IP:30003/library/nginx:latest
-  docker push Kubernetes_Control_Plane_IP:30003/library/nginx:latest
+  docker tag nginx:latest Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
+  docker push Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
  ```
 Now image the tag with the fully qualified path to your private registry. You can push the image to the registry using the Docker push command.
 
 ### Harbor registry image pull
-Use the `docker pull` command to pull the image from Docker registry:
+Use the `docker pull` command to pull the image from Harbor registry:
 
  ```ini
-  docker pull Kubernetes_Control_Plane_IP:30003/library/nginx:latest
+  docker pull Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
  ```
 >**NOTE**: <Kubernetes_Control_Plane_IP> should be replaced as per our Harbor registry IP address.
 
