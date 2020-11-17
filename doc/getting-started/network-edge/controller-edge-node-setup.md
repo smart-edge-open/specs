@@ -21,6 +21,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Harbor registry image push](#harbor-registry-image-push)
     - [Harbor registry image pull](#harbor-registry-image-pull)
     - [Harbor UI](#harbor-ui)
+    - [Harbor Proxy Cache](#harbor-proxy-cache)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -217,7 +218,11 @@ Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admi
 You should see the project - ```intel``` on the Web UI and manage the images. 
 
 ### Harbor Proxy Cache
+To address the concerns about throughput, performance and even rate limitation of Docker Hub or other public repository, can enable Harbor proxy cache feature. 
+Thus the Harbor deployed in the OpenNESS clusters will play as proxy cache registry as shown as below:
+![](controller-edge-node-setup-images/harbor_proxy_setup.png)
 
+The detailed setup steps are shown as below:
 1. Create a new registry endpoint
 
    ![](controller-edge-node-setup-images/harbor-proxy-step1.png)
