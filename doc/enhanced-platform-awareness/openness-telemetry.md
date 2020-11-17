@@ -232,7 +232,7 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
    ./create-secret.sh
    ```
 
-4. Configure and deploy the sample telemetry application with the side-car OpenTelemetry agent from the Edge Apps repo using Helm. Edit `edgeapps/applications/telemetry-sample-app/opentelemetry-agent/values.yaml`, and change `app:image:repository: 10.0.0.1:30003/library/metricapp` to the IP address of the Harbor registry.
+4. Configure and deploy the sample telemetry application with the side-car OpenTelemetry agent from the Edge Apps repo using Helm. Edit `edgeapps/applications/telemetry-sample-app/opentelemetry-agent/values.yaml`, and change `app:image:repository: 10.0.0.1:30003/intel/metricapp` to the IP address of the Harbor registry.
   
     ```shell
     cd edgeapps/applications/telemetry-sample-app/

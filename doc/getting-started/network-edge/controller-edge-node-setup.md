@@ -167,9 +167,9 @@ On the OpenNESS edge nodes, openness-experience-kits will conduct the following 
 * Get harbor.crt from the OpenNESS control plane node and save into the host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
 * Docker login the Harbor Registry, thus enable pulling, pushing and tag images with the Harbor Registry
-* After above steps, the Node can access the private Harbor registry.
+* After above steps, the Node and Ansible host can access the private Harbor registry.
 * The IP address of the Harbor registry will be: "Kubernetes_Control_Plane_IP"
-* The port number of the Docker registry will be: 30003
+* The port number of the Harbor registry will be: 30003
 
 
 ### Harbor login
@@ -198,8 +198,13 @@ harborAdminPassword: Harbor12345(default)
 Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Harbor registry.
 
  ```ini
+<<<<<<< HEAD
+  docker tag nginx:latest Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
+  docker push Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
+=======
   docker tag nginx:latest {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
   docker push {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
+>>>>>>> 7668103c9299ad208ff601ff8d459a692bae10f0
  ```
 Now image the tag with the fully qualified path to your private registry. You can push the image to the registry using the Docker push command.
 
@@ -207,7 +212,11 @@ Now image the tag with the fully qualified path to your private registry. You ca
 Use the `docker pull` command to pull the image from Harbor registry:
 
  ```ini
+<<<<<<< HEAD
+  docker pull Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
+=======
   docker pull {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
+>>>>>>> 7668103c9299ad208ff601ff8d459a692bae10f0
  ```
 
 ### Harbor UI
