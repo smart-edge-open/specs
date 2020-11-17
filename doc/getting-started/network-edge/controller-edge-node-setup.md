@@ -232,7 +232,7 @@ You should see the project - ```intel``` on the Web UI and manage the images.
 
    
 
-To start using the proxy cache, configure your docker pull commands or pod manifests to reference the proxy cache project by adding `//` as a prefix to the image tag. For example:
+To start using the proxy cache, configure your docker pull commands or pod manifests to reference the proxy cache project by adding `<harbor_servername>/<proxy_project_name>/` as a prefix to the image tag. For example:
 
 ```bash
 > docker pull <harbor_server_name>/<proxy_project_name>/goharbor/harbor-core:dev
