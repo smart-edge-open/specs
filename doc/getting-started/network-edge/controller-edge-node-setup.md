@@ -198,13 +198,8 @@ harborAdminPassword: Harbor12345(default)
 Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Harbor registry.
 
  ```ini
-<<<<<<< HEAD
-  docker tag nginx:latest Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
-  docker push Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
-=======
   docker tag nginx:latest {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
   docker push {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
->>>>>>> 7668103c9299ad208ff601ff8d459a692bae10f0
  ```
 Now image the tag with the fully qualified path to your private registry. You can push the image to the registry using the Docker push command.
 
@@ -212,11 +207,7 @@ Now image the tag with the fully qualified path to your private registry. You ca
 Use the `docker pull` command to pull the image from Harbor registry:
 
  ```ini
-<<<<<<< HEAD
-  docker pull Kubernetes_Control_Plane_IP:30003/intel/nginx:latest
-=======
   docker pull {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
->>>>>>> 7668103c9299ad208ff601ff8d459a692bae10f0
  ```
 
 ### Harbor UI
@@ -224,6 +215,31 @@ Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admi
 ![](controller-edge-node-setup-images/harbor_ui.png)
 
 You should see the project - ```intel``` on the Web UI and manage the images. 
+
+### Harbor Proxy Cache
+
+1. Create a new registry endpoint
+
+   ![](controller-edge-node-setup-images/harbor-proxy-step1.png)
+
+   ![](controller-edge-node-setup-images/harbor-proxy-step2.png)
+
+2. Create a new project with proxy cache enabled.
+
+   ![](controller-edge-node-setup-images/harbor-proxy-step3.png)
+
+   ![](controller-edge-node-setup-images/harbor-proxy-step4.png)
+
+   
+
+To start using the proxy cache, configure your docker pull commands or pod manifests to reference the proxy cache project by adding `//` as a prefix to the image tag. For example:
+
+```bash
+> docker pull <harbor_server_name>/<proxy_project_name>/goharbor/harbor-core:dev
+
+# To pull offcial images, use the 'library' namespace
+> docker pull <harbor_server_name>/<proxy_project_name>/library/hello-world:latest
+```
 
 ## Kubernetes cluster networking plugins (Network Edge)
 
