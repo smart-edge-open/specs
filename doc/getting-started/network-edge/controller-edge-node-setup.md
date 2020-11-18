@@ -271,7 +271,7 @@ The detailed setup steps are shown as below:
    ## Docker registry mirrors
    ## https://docs.docker.com/registry/recipes/mirror/
    docker_registry_mirrors:
-   - "https://{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}"
+     - "https://{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}"
    ```
 
 
