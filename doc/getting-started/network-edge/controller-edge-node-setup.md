@@ -218,6 +218,8 @@ Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admi
 You should see the project - ```intel``` on the Web UI and manage the images. 
 
 ### Harbor Proxy Cache
+A proxy cache project is able to use the same features available to a normal Harbor project, except that you are not able to push images to a proxy cache project. 
+
 To address the concerns about throughput, performance and even rate limitation of Docker Hub or other public repository, can enable Harbor proxy cache feature. 
 Thus the Harbor deployed in the OpenNESS clusters will play as proxy cache registry as shown as below:
 ![](controller-edge-node-setup-images/harbor_proxy_setup.png)
