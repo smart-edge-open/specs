@@ -266,6 +266,18 @@ The detailed setup steps are shown as below:
      ... ...
        image: 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7 
    ```
+  Modify openness-experience-kits/group_vars/all/10-default.yml(Replace <docker-registry-host> with the `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}`):
+  ```yaml
+  ## Docker registry mirrors
+  ## https://docs.docker.com/registry/recipes/mirror/
+  docker_registry_mirrors:
+  - "https://{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}"
+
+  ```
+
+
+
+
 ## Kubernetes cluster networking plugins (Network Edge)
 
 Kubernetes uses 3rd party networking plugins to provide [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
