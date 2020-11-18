@@ -218,11 +218,23 @@ You should see the project - ```intel``` on the Web UI and manage the images.
 
 ### Harbor Proxy Cache
 
+You can use a proxy cache to pull images from a target Harbor or non-Harbor registry in an environment with limited or no access to the internet. You can also use a proxy cache to limit the amount of requests made to a public registry, avoiding consuming too much bandwidth or being throttled by the registry server.
+
+You can setup as below example where both deployed registry and target registry are Harbor registry.
+
+
 1. Create a new registry endpoint
 
    ![](controller-edge-node-setup-images/harbor-proxy-step1.png)
 
    ![](controller-edge-node-setup-images/harbor-proxy-step2.png)
+
+   - **Provider**: the type of target registry. 
+
+   - **Name**: the name of new registry endpoint and it can be whatever you want.
+   - **Endpoint URL**: the endpoint of target Harbor Registry and it's deployed with a default port `80` and the protocol `http`.
+   - **Access ID**:  default username of target Harbor Registry is `admin`.
+   - **Access Secret**: default password of target Harbor Registry is `Harbor12345`
 
 2. Create a new project with proxy cache enabled.
 
@@ -230,16 +242,31 @@ You should see the project - ```intel``` on the Web UI and manage the images.
 
    ![](controller-edge-node-setup-images/harbor-proxy-step4.png)
 
-   
+   - **Project Name**: the name of new Project and it can be whatever you want.
+   - **Proxy Cache**: select the target registry endpoint created in the previous step.
 
-To start using the proxy cache, configure your docker pull commands or pod manifests to reference the proxy cache project by adding `<harbor_server_name>/<proxy_project_name>/` as a prefix to the image tag. For example:
+3. Pull a image from the proxy cache.
 
-```bash
-> docker pull <harbor_server_name>/<proxy_project_name>/goharbor/harbor-core:dev
+   ```shell
+   > docker pull <harbor_server_name>/<proxy_project_name>/<target_registry_project>/<image_tag>
+   ```
 
-# To pull offcial images, use the 'library' namespace
-> docker pull <harbor_server_name>/<proxy_project_name>/library/hello-world:latest
-```
+   for example:
+
+   ```sh
+   > docker pull 172.16.182.211:30003/intel-proxy/library/nginx:v1 
+   ```
+
+   > The endpoint of deployed registry is `172.16.182.211:30003`.
+
+   If you are deploying a pod with a yaml file, configure the `image` field to reference the proxy cache project as `<harbor_server_name>/<proxy_project_name>/<target_registry_project>/<image_tag>` format.
+
+   ```yaml
+   spec:
+     containers:
+     ... ...
+       image: 172.16.182.211:30003/intel-proxy/library/nginx:v1 
+   ```
 
 ## Kubernetes cluster networking plugins (Network Edge)
 
