@@ -229,12 +229,11 @@ The detailed setup steps are shown as below:
 
    ![](controller-edge-node-setup-images/harbor-proxy-step2.png)
 
-   - **Provider**: the type of target registry. 
-
+   - **Provider**: the type of target registry, for example `Docker Hub`. 
    - **Name**: the name of new registry endpoint and it can be whatever you want.
-   - **Endpoint URL**: the endpoint of target Harbor Registry and it's deployed with a default port `80` and the protocol `http`.
-   - **Access ID**:  default username of target Harbor Registry is `admin`.
-   - **Access Secret**: default password of target Harbor Registry is `Harbor12345`
+   - **Endpoint URL**: the endpoint of target Registry. The endpoint url of Docker Hub is `https://hub.docker.com`.
+   - **Access ID**:  the username of target Registry. Here is a username of Docker Hub.
+   - **Access Secret**: the password of target Registry. Here is a password of Docker Hub.
 
 2. Create a new project with proxy cache enabled.
 
@@ -254,7 +253,7 @@ The detailed setup steps are shown as below:
    for example:
 
    ```sh
-   > docker pull 172.16.182.211:30003/intel-proxy/library/nginx:v1 
+   > docker pull 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7
    ```
 
    > The endpoint of deployed registry is `172.16.182.211:30003`.
@@ -265,9 +264,8 @@ The detailed setup steps are shown as below:
    spec:
      containers:
      ... ...
-       image: 172.16.182.211:30003/intel-proxy/library/nginx:v1 
+       image: 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7 
    ```
-
 ## Kubernetes cluster networking plugins (Network Edge)
 
 Kubernetes uses 3rd party networking plugins to provide [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
