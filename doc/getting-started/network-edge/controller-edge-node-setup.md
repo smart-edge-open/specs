@@ -266,7 +266,7 @@ The detailed setup steps are shown as below:
      ... ...
        image: 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7 
    ```
-   Also you can modify openness-experience-kits/group_vars/all/10-default.yml(Replace <docker-registry-host> with the `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}`) to change the docker mirrors:
+   Also you can modify openness-experience-kits/group_vars/all/10-default.yml(Replace <docker-registry-host> with the `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}`) to change the docker registry mirrors:
    ```yaml
    ## Docker registry mirrors
    ## https://docs.docker.com/registry/recipes/mirror/
