@@ -247,7 +247,7 @@ The detailed setup steps are shown as below:
 3. Pull a image from the proxy cache.
 
    ```shell
-   > docker pull <harbor_server_name>/<proxy_project_name>/<target_registry_project>/<image_tag>
+   > docker pull {Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}/{target_registry_project}/<image_tag>
    ```
 
    for example:
@@ -258,7 +258,7 @@ The detailed setup steps are shown as below:
 
    > The endpoint of deployed registry is `172.16.182.211:30003`.
 
-   If you are deploying a pod with a yaml file, configure the `image` field to reference the proxy cache project as `<harbor_server_name>/<proxy_project_name>/<target_registry_project>/<image_tag>` format.
+   If you are deploying a pod with a yaml file, configure the `image` field to reference the proxy cache project as `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}/{target_registry_project}/<image_tag>` format.
 
    ```yaml
    spec:
