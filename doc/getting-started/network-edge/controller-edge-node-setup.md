@@ -234,8 +234,8 @@ The detailed setup steps are shown as below:
    - **Provider**: the type of target registry, for example `Docker Hub`. 
    - **Name**: the name of new registry endpoint and it can be whatever you want.
    - **Endpoint URL**: the endpoint of target Registry. The endpoint url of Docker Hub is `https://hub.docker.com`.
-   - **Access ID**:  the username of target Registry. Here is a username of Docker Hub.
-   - **Access Secret**: the password of target Registry. Here is a password of Docker Hub.
+   - **Access ID**:  the username of target Registry. (Optional)
+   - **Access Secret**: the password of target Registry. (Optional)
 
 2. Create a new project with proxy cache enabled.
 
