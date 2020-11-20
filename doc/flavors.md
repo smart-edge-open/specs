@@ -65,7 +65,7 @@ This deployment flavor enables the following ingredients:
 * Kiali management console
 * Telemetry
 
-> **NOTE:** Kiali management console username & password can be changed by editing the variables `istio_kiali_username` & `istio_kiali_password`.
+> **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
 
 Following parameters in the flavor/all.yaml can be customize for Istio deployment:
 
@@ -75,7 +75,7 @@ istio_deployment_profile: "default"
 
 # Kiali 
 istio_kiali_username: "admin"
-istio_kiali_password: "admin"
+istio_kiali_password: "{{ lookup('password', '/dev/null length=16') }}"
 istio_kiali_nodeport: 30001
 ```
 
@@ -92,7 +92,7 @@ Steps to install this flavor are as follows:
     ```
 
 > **NOTE:** The video analytics services integrates with the OpenNESS service mesh when the flag `ne_istio_enable: true` is set.
-> **NOTE:** Kiali management console username & password can be changed by editing the variables `istio_kiali_username` & `istio_kiali_password`.
+> **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
