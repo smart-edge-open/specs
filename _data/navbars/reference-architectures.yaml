@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Reference Architectures"
+path: /reference-architectures/
+order: 4
+section:
+  - title: Core Network
+    path:
+    section:
+    - title: Evolved Packet Core (EPC)
+      path: /doc/reference-architectures/core-network/openness_epc
+      meta_title: Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC
+      meta_description: OpenNESS is an open source edge computing platform that enables Service Providers and Enterprises to deploy applications and services on a network edge.
+      
+    - title: Next-Gen Core (NGC)
+      path: /doc/reference-architectures/core-network/openness_ngc
+      meta_title: Edge Cloud Deployment with 3GPP 5G Stand Alone
+      meta_description: OpenNESS NGC provides reference REST-based APIs along with 3GPP standard traffic influencing APIs to address some of these major challenges in 5G edge deployments.
+      
+    - title: User Plane Function (UPF)
+      path: /doc/reference-architectures/core-network/openness_upf
+      meta_title: User Plane Function (UPF)
+      meta_description: User Plane Function is the evolution of Control and User Plane Separation which part of the Rel.14 in Evolved Packet core. CUPS enabled PGW to be split into PGW-C and PGW-U.
+
+  - title: Radio Access Network
+    path:
+    section:
+    - title: OpenNESS Radio Access Network
+      path: /doc/reference-architectures/ran/openness_ran
+      meta_title: OpenNESS Radio Access Network is the Edge of Wireless Network
+      meta_description: OpenNESS Radio Access Network is the edge of the wireless network. OpenNESS Intel FlexRAN uses as a reference 4G and 5G base station for 4G and 5G end-to-end testing.
+
+    - title: O-RAN Front Haul Sample Application in OpenNESS 
+      path: /doc/reference-architectures/ran/openness_xran
+      meta_title: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge
+      meta_description: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge.
