@@ -21,6 +21,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Harbor registry image push](#harbor-registry-image-push)
     - [Harbor registry image pull](#harbor-registry-image-pull)
     - [Harbor UI](#harbor-ui)
+    - [Harbor CLI](#harbor-registry-CLI)
     - [Harbor Proxy Cache](#harbor-proxy-cache)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
@@ -198,7 +199,7 @@ harborAdminPassword: Harbor12345(default)
 ### Harbor registry image push
 Use the Docker tag to create an alias of the image with the fully qualified path to your Harbor registry after the tag successfully pushes the image to the Harbor registry.
 
- ```ini
+ ```shell
   docker tag nginx:latest {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
   docker push {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
  ```
@@ -207,15 +208,34 @@ Now image the tag with the fully qualified path to your private registry. You ca
 ### Harbor registry image pull
 Use the `docker pull` command to pull the image from Harbor registry:
 
- ```ini
+ ```shell
   docker pull {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
  ```
+
+
 
 ### Harbor UI
 Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admin``` and password ```Harbor12345```:
 ![](controller-edge-node-setup-images/harbor_ui.png)
 
 You should see the project - ```intel``` on the Web UI and manage the images. 
+
+### Harbor CLI
+Apart for Harbor UI, you can also use ```curl``` to check Harbor projects and images.
+
+Use following example commands to check projects list:
+ ```shell
+ # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
+ 
+ [{"creation_time":"2020-11-20T05:26:21.760Z","current_user_role_id":1,"current_user_role_ids":[1],"cve_allowlist":{"creation_time":"2020-11-20T05:26:21.762Z","id":1,"items":[],"project_id":2,"update_time":"2020-11-20T05:26:21.762Z"},"metadata":{"public":"true"},"name":"intel","owner_id":1,"owner_name":"admin","project_id":2,"repo_count":5,"update_time":"2020-11-20T05:26:21.760Z"},{"creation_time":"2020-11-20T05:23:30.393Z","current_user_role_id":1,"current_user_role_ids":[1],"cve_allowlist":{"creation_time":"0001-01-01T00:00:00.000Z","items":[],"project_id":1,"update_time":"0001-01-01T00:00:00.000Z"},"metadata":{"public":"true"},"name":"library","owner_id":1,"owner_name":"admin","project_id":1,"update_time":"2020-11-20T05:23:30.393Z"}]
+
+ ```
+
+Use following example commands to check images list of project - ```intel```:
+ ```shell
+ # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
+[{"artifact_count":1,"creation_time":"2020-11-20T05:57:18.992Z","id":5,"name":"intel/node-feature-discovery","project_id":2,"pull_count":2,"update_time":"2020-11-23T02:53:32.111Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:04.361Z","id":4,"name":"intel/tas-controller","project_id":2,"update_time":"2020-11-20T05:56:04.361Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:00.788Z","id":3,"name":"intel/tas-extender","project_id":2,"update_time":"2020-11-20T05:56:00.788Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:33:20.189Z","id":2,"name":"intel/intel-gpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T03:04:47.051Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:31:05.995Z","id":1,"name":"intel/intel-vpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T02:43:44.572Z"}]
+ ```
 
 ### Harbor Proxy Cache
 A proxy cache project is able to use the same features available to a normal Harbor project, except that you are not able to push images to a proxy cache project. 
