@@ -173,10 +173,13 @@ On the OpenNESS edge nodes, openness-experience-kits will conduct the following 
 * The IP address of the Harbor registry will be: "Kubernetes_Control_Plane_IP"
 * The port number of the Harbor registry will be: 30003
 
+Two Harbor projects will be created by OEK as below:
+- ```library``` The registry project can be used by application developer to push and tag images
+- ```intel``` The registry project contains OpenNESS microservices and relevant kubernetes addon images. Can also be used for OpenNESS sample application images.
+
 
 ### Harbor login
 For the nodes inside of the OpenNESS cluster, openness-experience-kits ansible playbooks automatically login and prepare harbor CA certifications to access Harbor services. 
- 
 
 For the host outside of the OpenNESS cluster, can use following commands to access the Harbor Registry:
 
@@ -211,8 +214,6 @@ Use the `docker pull` command to pull the image from Harbor registry:
  ```shell
   docker pull {Kubernetes_Control_Plane_IP}:30003/intel/nginx:latest
  ```
-
-
 
 ### Harbor UI
 Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admin``` and password ```Harbor12345```:
