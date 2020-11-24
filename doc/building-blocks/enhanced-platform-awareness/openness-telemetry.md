@@ -89,7 +89,7 @@ In OpenNESS, Prometheus is deployed as a K8s Deployment with a single pod/replic
 
 ### Grafana
 
-Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on a control plane as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in OEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag. The password to gain access to the dashboard can be altered with the `telemetry_grafana_pass` flag.
+Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on a control plane as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in OEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag.
 
 #### Usage
 
@@ -100,8 +100,11 @@ Grafana is an open-source visualization and analytics software. It takes the dat
     http://<controller-ip>:32000
     ```
 
-2. Log in to the dashboard using the default credentials (login: admin, password: grafana)
-    ![Grafana login](telemetry-images/grafana_login.png)
+2. Access the dashboard
+    1. Extract grafana password by running the following command on Kubernetes controller:  
+        ```kubectl get secrets/grafana -n telemetry -o json | jq -r '.data."admin-password"' | base64 -d```
+    2. Log in to the dashboard using the password from the previous step and `admin` login
+        ![Grafana login](telemetry-images/grafana_login.png)
 3. To create a new dashboard, navigate to `http://<controller-ip>:32000/dashboards`.
     ![Grafana dash](telemetry-images/grafana-new-dash.png)
 4. Navigate to dashboard settings.
