@@ -232,10 +232,16 @@ Use following example commands to check projects list:
 
  ```
 
-Use following example commands to check images list of project - ```intel```:
+Use following example commands to check images repository list of project - ```intel```:
  ```shell
  # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
 [{"artifact_count":1,"creation_time":"2020-11-20T05:57:18.992Z","id":5,"name":"intel/node-feature-discovery","project_id":2,"pull_count":2,"update_time":"2020-11-23T02:53:32.111Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:04.361Z","id":4,"name":"intel/tas-controller","project_id":2,"update_time":"2020-11-20T05:56:04.361Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:00.788Z","id":3,"name":"intel/tas-extender","project_id":2,"update_time":"2020-11-20T05:56:00.788Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:33:20.189Z","id":2,"name":"intel/intel-gpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T03:04:47.051Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:31:05.995Z","id":1,"name":"intel/intel-vpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T02:43:44.572Z"}]
+ ```
+
+
+Use following example commands to delete the image repository of project - ```intel```, for example:
+ ```shell
+  # curl -X DELETE "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories/nginx" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.147:30003/harbor.crt -u "admin:Harbor12345"
  ```
 
 ### Harbor Proxy Cache
