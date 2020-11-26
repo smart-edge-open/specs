@@ -188,7 +188,7 @@ Two Harbor projects will be created by OEK as below:
 ### Harbor login
 For the nodes inside of the OpenNESS cluster, openness-experience-kits ansible playbooks automatically login and prepare harbor CA certifications to access Harbor services. 
 
-For the host outside of the OpenNESS cluster, can use following commands to access the Harbor Registry:
+For the external host outside of the OpenNESS cluster, can use following commands to access the Harbor Registry:
 
 ```shell
 # create directory for harbor's CA crt
@@ -233,6 +233,7 @@ Apart for Harbor UI, you can also use ```curl``` to check Harbor projects and im
 >**NOTE**: In the examples, 10.240.224.172 is IP address of {Kubernetes_Control_Plane_IP}
 >**NOTE**: If there is proxy connection issue with ```curl``` command, can add ```--proxy``` into the command options.
 
+#### CLI - List Project
 Use following example commands to check projects list:
  ```shell
  # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
@@ -241,12 +242,14 @@ Use following example commands to check projects list:
 
  ```
 
+#### CLI - List Image Repositories 
 Use following example commands to check images repository list of project - ```intel```:
  ```shell
  # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
 [{"artifact_count":1,"creation_time":"2020-11-20T05:57:18.992Z","id":5,"name":"intel/node-feature-discovery","project_id":2,"pull_count":2,"update_time":"2020-11-23T02:53:32.111Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:04.361Z","id":4,"name":"intel/tas-controller","project_id":2,"update_time":"2020-11-20T05:56:04.361Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:00.788Z","id":3,"name":"intel/tas-extender","project_id":2,"update_time":"2020-11-20T05:56:00.788Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:33:20.189Z","id":2,"name":"intel/intel-gpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T03:04:47.051Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:31:05.995Z","id":1,"name":"intel/intel-vpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T02:43:44.572Z"}]
  ```
 
+#### CLI - Delete Image 
 Use following example commands to delete the image repository of project - ```intel```, for example:
  ```shell
   # curl -X DELETE "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories/nginx" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
