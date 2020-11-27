@@ -22,7 +22,6 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Harbor registry image pull](#harbor-registry-image-pull)
     - [Harbor UI](#harbor-ui)
     - [Harbor CLI](#harbor-registry-CLI)
-    - [Harbor Proxy Cache](#harbor-proxy-cache)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -184,7 +183,6 @@ Two Harbor projects will be created by OEK as below:
 - ```library``` The registry project can be used by edge application developer as default images registries.
 - ```intel```   The registry project contains the registries for the OpenNESS microservices and relevant kubernetes addon images. Can also be used for OpenNESS sample application images.
 
-
 ### Harbor login
 For the nodes inside of the OpenNESS cluster, openness-experience-kits ansible playbooks automatically login and prepare harbor CA certifications to access Harbor services. 
 
@@ -226,12 +224,14 @@ Use the `docker pull` command to pull the image from Harbor registry:
 Open the https://{Kubernetes_Control_Plane_IP}:30003 with login username ```admin``` and password ```Harbor12345```:
 ![](controller-edge-node-setup-images/harbor_ui.png)
 
-You should see the project - ```intel``` on the Web UI and manage the images. 
+You could see two projects: ```intel``` and ```library``` on the Web UI. For more details about Harbor usage, can refer to [Harbor docs](https://goharbor.io/docs/2.1.0/working-with-projects/).
 
 ### Harbor CLI
 Apart for Harbor UI, you can also use ```curl``` to check Harbor projects and images. The examples will be shown as below.
->**NOTE**: In the examples, 10.240.224.172 is IP address of {Kubernetes_Control_Plane_IP}
->**NOTE**: If there is proxy connection issue with ```curl``` command, can add ```--proxy``` into the command options.
+```text
+In the examples, 10.240.224.172 is IP address of {Kubernetes_Control_Plane_IP}
+If there is proxy connection issue with ```curl``` command, can add ```--proxy``` into the command options.
+```
 
 #### CLI - List Project
 Use following example commands to check projects list:
@@ -330,68 +330,6 @@ Use following example commands to delete a specific image version:
  ```sh
  # curl -X DELETE "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories/nginx/artifacts/1.14.2" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
  ```
-
-### Harbor Proxy Cache
-A proxy cache project is able to use the same features available to a normal Harbor project, except that you are not able to push images to a proxy cache project. 
-To address the concerns about throughput, performance and even rate limitation of Docker Hub or other public repository, can enable Harbor proxy cache feature. 
-
-The Harbor deployed in the OpenNESS clusters can also be used by customer as proxy cache registry with manually setting as shown as below:
-![](controller-edge-node-setup-images/harbor_proxy_setup.png)
-
-The detailed setup steps are shown as below:
-1. Create a new registry endpoint
-
-   ![](controller-edge-node-setup-images/harbor-proxy-step1.png)
-
-   ![](controller-edge-node-setup-images/harbor-proxy-step2.png)
-
-   - **Provider**: the type of target registry, for example `Docker Hub`. 
-   - **Name**: the name of new registry endpoint and it can be whatever you want.
-   - **Endpoint URL**: the endpoint of target Registry. The endpoint url of Docker Hub is `https://hub.docker.com`.
-   - **Access ID**:  the username of target Registry. (Optional)
-   - **Access Secret**: the password of target Registry. (Optional)
-
-2. Create a new project with proxy cache enabled.
-
-   ![](controller-edge-node-setup-images/harbor-proxy-step3.png)
-
-   ![](controller-edge-node-setup-images/harbor-proxy-step4.png)
-
-   - **Project Name**: the name of new Project and it can be whatever you want.
-   - **Proxy Cache**: select the target registry endpoint created in the previous step.
-
-3. Pull a image from the proxy cache.
-
-   ```shell
-   > docker pull {Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}/{target_registry_project}/<image_tag>
-   ```
-
-   for example:
-
-   ```sh
-   > docker pull 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7
-   ```
-
-   > The endpoint of deployed registry is `172.16.182.211:30003`.
-
-   If you are deploying a pod with a yaml file, configure the `image` field to reference the proxy cache project as `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}/{target_registry_project}/<image_tag>` format.
-
-   ```yaml
-   spec:
-     containers:
-     ... ...
-       image: 172.16.182.211:30003/intel-proxy/cuizy/coredns:1.6.7 
-   ```
-   Also you can modify openness-experience-kits/group_vars/all/10-default.yml(Replace <docker-registry-host> with the `{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}`) to change the docker registry mirrors:
-   ```yaml
-   ## Docker registry mirrors
-   ## https://docs.docker.com/registry/recipes/mirror/
-   docker_registry_mirrors:
-     - "https://{Kubernetes_Control_Plane_IP}:30003/{proxy_project_name}"
-   ```
-
-
-
 
 ## Kubernetes cluster networking plugins (Network Edge)
 
