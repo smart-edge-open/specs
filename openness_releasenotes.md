@@ -181,7 +181,7 @@ This document provides high level system features, issues and limitations inform
      - xRAN Fronthaul with Helm CHart (xRAN app not part of the release) 
    - Helm Chart for Kubernetes enhancements 
      - NFD, CMK, SRIOV-Device plugin and Multus 
-     - Support for local Harbor registry setup  
+     - Support for local Docker registry setup  
    - Support for deployment specific Flavors 
      - Minimal
      - RAN - 4G and 5G     
