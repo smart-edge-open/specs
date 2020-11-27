@@ -774,7 +774,6 @@ Sample output:
     kubevirt      virt-handler-j9wcf                                           1/1     Running   7          2d13h
     kubevirt      virt-operator-559b8d88b7-4m99h                               1/1     Running   7          2d13h
     kubevirt      virt-operator-559b8d88b7-l9djj                               1/1     Running   7          2d13h
-    openness      docker-registry-deployment-6ff9f68454-w286l                  1/1     Running   0          2d13h
     openness      eaa-759fcc549-vhlwd                                          1/1     Running   7          2d13h
     openness      edgedns-swpk4                                                1/1     Running   7          2d13h
     openness      interfaceservice-ws8mn                                       1/1     Running   7          2d13h

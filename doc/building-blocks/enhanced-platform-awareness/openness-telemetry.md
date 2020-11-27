@@ -221,11 +221,11 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
 #### Usage
 
 1. Pull the Edge Apps repository.
-2. Build the sample telemetry application Docker image and push to the local Docker registry from the Edge Apps repo.
+2. Build the sample telemetry application Docker image and push to the local Harbor registry from the Edge Apps repo.
 
     ```shell
     cd edgeapps/applications/telemetry-sample-app/image/
-    ./build.sh push <docker _registry_ip> <port>
+    ./build.sh push <harbor_registry_ip> <port>
     ```
 
 3. Create a secret using a root-ca created as part of OEK telemetry deployment (this will authorize against the Collector certificates).
@@ -235,7 +235,7 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
    ./create-secret.sh
    ```
 
-4. Configure and deploy the sample telemetry application with the side-car OpenTelemetry agent from the Edge Apps repo using Helm. Edit `edgeapps/applications/telemetry-sample-app/opentelemetry-agent/values.yaml`, and change `app:image:repository: 10.0.0.1:5000/intel/metricapp` to the IP address of the Docker registry.
+4. Configure and deploy the sample telemetry application with the side-car OpenTelemetry agent from the Edge Apps repo using Helm. Edit `edgeapps/applications/telemetry-sample-app/opentelemetry-agent/values.yaml`, and change `app:image:repository: 10.0.0.1:30003/intel/metricapp` to the IP address of the Harbor registry.
   
     ```shell
     cd edgeapps/applications/telemetry-sample-app/
