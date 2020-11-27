@@ -236,17 +236,88 @@ Apart for Harbor UI, you can also use ```curl``` to check Harbor projects and im
 #### CLI - List Project
 Use following example commands to check projects list:
  ```shell
- # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
- 
- [{"creation_time":"2020-11-20T05:26:21.760Z","current_user_role_id":1,"current_user_role_ids":[1],"cve_allowlist":{"creation_time":"2020-11-20T05:26:21.762Z","id":1,"items":[],"project_id":2,"update_time":"2020-11-20T05:26:21.762Z"},"metadata":{"public":"true"},"name":"intel","owner_id":1,"owner_name":"admin","project_id":2,"repo_count":5,"update_time":"2020-11-20T05:26:21.760Z"},{"creation_time":"2020-11-20T05:23:30.393Z","current_user_role_id":1,"current_user_role_ids":[1],"cve_allowlist":{"creation_time":"0001-01-01T00:00:00.000Z","items":[],"project_id":1,"update_time":"0001-01-01T00:00:00.000Z"},"metadata":{"public":"true"},"name":"library","owner_id":1,"owner_name":"admin","project_id":1,"update_time":"2020-11-20T05:23:30.393Z"}]
+ # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345 | jq"
+ [
+  {
+    "creation_time": "2020-11-26T08:47:31.626Z",
+    "current_user_role_id": 1,
+    "current_user_role_ids": [
+      1
+    ],
+    "cve_allowlist": {
+      "creation_time": "2020-11-26T08:47:31.628Z",
+      "id": 1,
+      "items": [],
+      "project_id": 2,
+      "update_time": "2020-11-26T08:47:31.628Z"
+    },
+    "metadata": {
+      "public": "true"
+    },
+    "name": "intel",
+    "owner_id": 1,
+    "owner_name": "admin",
+    "project_id": 2,
+    "repo_count": 3,
+    "update_time": "2020-11-26T08:47:31.626Z"
+  },
+  {
+    "creation_time": "2020-11-26T08:39:13.707Z",
+    "current_user_role_id": 1,
+    "current_user_role_ids": [
+      1
+    ],
+    "cve_allowlist": {
+      "creation_time": "0001-01-01T00:00:00.000Z",
+      "items": [],
+      "project_id": 1,
+      "update_time": "0001-01-01T00:00:00.000Z"
+    },
+    "metadata": {
+      "public": "true"
+    },
+    "name": "library",
+    "owner_id": 1,
+    "owner_name": "admin",
+    "project_id": 1,
+    "update_time": "2020-11-26T08:39:13.707Z"
+  }
+ ]
 
  ```
 
 #### CLI - List Image Repositories 
 Use following example commands to check images repository list of project - ```intel```:
  ```shell
- # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories?page=1&page_size=10" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345"
-[{"artifact_count":1,"creation_time":"2020-11-20T05:57:18.992Z","id":5,"name":"intel/node-feature-discovery","project_id":2,"pull_count":2,"update_time":"2020-11-23T02:53:32.111Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:04.361Z","id":4,"name":"intel/tas-controller","project_id":2,"update_time":"2020-11-20T05:56:04.361Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:56:00.788Z","id":3,"name":"intel/tas-extender","project_id":2,"update_time":"2020-11-20T05:56:00.788Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:33:20.189Z","id":2,"name":"intel/intel-gpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T03:04:47.051Z"},{"artifact_count":1,"creation_time":"2020-11-20T05:31:05.995Z","id":1,"name":"intel/intel-vpu-plugin","project_id":2,"pull_count":1,"update_time":"2020-11-23T02:43:44.572Z"}]
+ # curl -X GET "https://10.240.224.172:30003/api/v2.0/projects/intel/repositories" -H "accept: application/json" -k --cacert /etc/docker/certs.d/10.240.224.172:30003/harbor.crt -u "admin:Harbor12345" | jq
+ [
+  {
+    "artifact_count": 1,
+    "creation_time": "2020-11-26T08:57:43.690Z",
+    "id": 3,
+    "name": "intel/sriov-device-plugin",
+    "project_id": 2,
+    "pull_count": 1,
+    "update_time": "2020-11-26T08:57:55.240Z"
+  },
+  {
+    "artifact_count": 1,
+    "creation_time": "2020-11-26T08:56:16.565Z",
+    "id": 2,
+    "name": "intel/sriov-cni",
+    "project_id": 2,
+    "update_time": "2020-11-26T08:56:16.565Z"
+  },
+  {
+    "artifact_count": 1,
+    "creation_time": "2020-11-26T08:49:25.453Z",
+    "id": 1,
+    "name": "intel/multus",
+    "project_id": 2,
+    "update_time": "2020-11-26T08:49:25.453Z"
+  }
+ ]
+
  ```
 
 #### CLI - Delete Image 
