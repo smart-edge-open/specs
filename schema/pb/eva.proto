@@ -34,7 +34,7 @@ service ApplicationLifecycleService {
 // Image sources will be added over time. For example, pulling from external
 // Docker registries may be supported with a source such as:
 //
-//    // Image will be downloaded from a Docker registry
+//    // Image will be downloaded from a Harbor registry
 //    message DockerRegistrySource {
 //        string repo = 1;
 //        string tag = 2;
