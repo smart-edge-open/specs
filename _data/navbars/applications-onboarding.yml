@@ -3,7 +3,7 @@
 
 title: "Application Onboarding"
 path: /applications-onboard/
-order: 2
+order: 3
 section:
   - title: Network Edge Applications Onboarding
     path: /doc/applications-onboard/network-edge-applications-onboarding
