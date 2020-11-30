@@ -12,7 +12,7 @@ This document introduces the supported deployment flavors that are deployable th
 - [Media Analytics Flavor with VCAC-A](#media-analytics-flavor-with-vcac-a)
 - [CDN Transcode Flavor](#cdn-transcode-flavor)
 - [CDN Caching Flavor](#cdn-caching-flavor)
-- [EMCO Flavor](#emco-flavor)
+- [Orchestration Flavor](#emco-flavor)
 
 ## Minimal Flavor
 The pre-defined *minimal* deployment flavor provisions the minimal set of configurations for bringing up the OpenNESS network edge deployment.
@@ -162,8 +162,8 @@ This deployment flavor enables the following ingredients:
 * Kubernetes Topology Manager policy: `single-numa-node`
 
 
-## EMCO Flavor
-The pre-defined *emco* deployment flavor provisions an optimized system configuration for emco(central orchestrator) workloads on Intel Xeon servers. It also provisions a set of central orchestrator services for [edge, multiple clusters orchestration](https://github.com/otcshare/specs/blob/master/doc/orchestration/openness-emco.md).
+## Orchestration Flavor
+The pre-defined *orchestration* deployment flavor provisions an optimized system configuration for emco (central orchestrator) workloads on Intel Xeon servers. It also provisions a set of central orchestrator services for [edge, multiple clusters orchestration](https://github.com/otcshare/specs/blob/master/doc/orchestration/openness-emco.md).
 
 Steps to install this flavor are as follows:
 1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
