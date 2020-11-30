@@ -8,7 +8,6 @@ Copyright (c) 2020 Intel Corporation
   - [Background](#background)
   - [EMCO Introduction](#emco-introduction)
     - [EMCO Architecture](#emco-architecture)
-      - [Cluster Registration with EMCO](#cluster-registration)
     - [EMCO API](#emco-api)
     - [EMCO Installation](#emco-installation)
   - [Practise with EMCO: SmartCityp Deployment](#smartcity-deployment-with-emco)
@@ -96,5 +95,63 @@ Then Place the EMCO server hostname in `[controller_group]` group in `inventory.
 Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry will be deployed to provide images services as well.
 
 ## Practise with EMCO: SmartCityp Deployment
-Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The whole application is composed of two parts: EdgeApp(multiple OpenNESS edge clusters) and WebApp(cloud application for additional post-processing such as calculating statistics and display/visualization). 
- 
+One OpenNESS edge nodes (representing regional office) and One legacy K8s Cluster (repsenting cloud) are connected to the OpenNESS EMCO cluster. Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The whole application is composed of two parts: EdgeApp(multiple OpenNESS edge clusters) and WebApp(cloud application for additional post-processing such as calculating statistics and display/visualization) as shown as below diagram.
+
+The following are the typical steps involved in the cluster registration and deployment of the application using OpenNESS EMCO.
+- Prerequisites
+  - Make One OpenNESS Edge Cluster Ready with any OpenNESS Flavor (OpenNESS Application Node Flavor is proposed)
+  - Make One Legacy K8s Cluster Ready (Simualte cloud cluster)
+  - Prepare One Server with a Vanilla CentOS for EMCO (Only one server is required for EMCO cluster)
+- EMCO Configuration
+- Create Cluster Provider
+- Clusters Registration
+- Create Project
+- DeploySmartCity Application
+
+### EMCO Configuration
+After [EMCO Installation](#emco-installation), logon the EMCO server, and prepare EMCO CLI `local-cfg.yaml` file as below
+```yaml
+  orchestrator:
+    host: localhost
+    port: 31298
+  clm:
+    host: localhost
+    port: 31856
+  ncm:
+    host: localhost
+    port: 32737
+  ovnaction:
+    host: localhost
+    port: 31072
+  dcm:
+    host: localhost
+    port: 31877
+```
+
+Prepared EMCO controller resource files for resource synchronization - 'controller.yaml' file as below
+```yaml
+---
+version: emco/v2
+resourceContext:
+   anchor: controllers
+metadata :
+   name: rsync
+spec:
+   host: "192.168.121.103"
+   port: 30546
+```
+> **NOTE**: `192.168.121.103` is example IP address of EMCO server.
+
+Use EMCO CLI to create the controller entry with expected result as below:
+```shell
+# /opt/emco/bin/emcoctl/emcoctl --config local-cfg.yaml apply -f controllers.yaml
+Using config file: local-cfg.yaml
+http://192.168.121.103:31298/v2URL: controllers Response Code: 201
+``` 
+
+### Create Cluster Provider
+Prepare 
+
+
+
+
