@@ -1,0 +1,87 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Building Blocks"
+path: /building-blocks/
+order: 2
+section:
+  - title: Data Plane
+    path:
+    section:
+    - title: Inter-App Communication
+      path: /doc/building-blocks/dataplane/openness-interapp
+      meta_title: Inter-App Communication Support in OpenNESS
+      meta_description: OpenNESS provides Inter-App Communication support for Network edge modes of OpenNESS.
+      
+    - title: OVN/OVS
+      path: /doc/building-blocks/dataplane/openness-ovn
+      meta_title: OpenNESS Support for OVS as Dataplane with OVN
+      meta_description: The primary objective of supporting OVN/OVS in OpenNESS is to demonstrate the capability of using a standard dataplane like OVS for an Edge Compute platform. 
+      
+    - title: Userspace CNI
+      path: /doc/building-blocks/dataplane/openness-userspace-cni
+      meta_title: OpenNESS Userspace CNI, Setup Userspace CNI
+      meta_description: Userspace CNI is a Container Network Interface Kubernetes plugin that was designed to simplify the process of deployment of DPDK based applications in Kubernetes pods.
+
+  - title: "Enhanced Platform Awareness"
+    path:
+    section:
+    - title: Hugepage Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-hugepage
+      meta_title: OpenNESS Enhanced Platform Awareness - Hugepage Support on OpenNESS
+      meta_description: Huge page support openness, added to Kubernetes v1.8, enables the discovery, scheduling, and allocation of huge pages as a native first-class resource.
+
+    - title: Node Feature Discovery Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-node-feature-discovery
+      meta_title: Enhanced Platform Awareness - Node Feature Discovery Support in OpenNESS
+      meta_description: OpenNESS Node Feature Discovery is one of the Intel technologies that supports targeting of intelligent configuration and capacity consumption of platform capabilities.
+
+    - title: Multiple Interface And PCIe SRIOV Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces
+      meta_title: Enhanced Platform Awareness - Multiple Interface And PCIe SRIOV Support in OpenNESS
+      meta_description: Multiple Interface and PCIe SRIOV support in OpenNESS, OpenNESS Network Edge uses the Multus container network interface is a container network interface plugin for Kubernetes.
+
+    - title: Dedicated CPU Core
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-dedicated-core
+      meta_title: Enhanced Platform Awareness - Dedicated CPU Core for Workload Support in OpenNESS
+      meta_description: Multi-core COTS platforms are typical in any cloud or Cloudnative deployment. Parallel processing on multiple cores helps achieve better density.
+
+    - title: BIOS and Firmware Configuration
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-bios
+      meta_title: BIOS and Firmware Configuration on OpenNESS Platform
+      meta_description: BIOS and Firmware are the fundamental platform configurations of a typical Commercial off-the-shelf (COTS) platform. 
+
+    - title: FPGA Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-fpga
+      meta_title: FPGA in OpenNESS - Programming, Resource Allocation and Configuration
+      meta_description: The FPGA Programmable acceleration card plays a key role in accelerating certain types of workloads which in-turn increases the overall compute capacity of a COTS platform.
+
+    - title: Intel® Movidius™ Myriad™ X HDDL Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness_hddl
+      meta_title: Intel® Movidius™ Myriad™ X HDDL Solution in OpenNESS
+      meta_description: Intel® Movidius™ Myriad™ X HDDL solution integrates multiple Myriad™ X SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high capacity deep learning solution.
+
+    - title: Visual Compute Accelerator Card - Analytics (VCAC-A)
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-vcac-a
+      meta_title: Visual Compute Accelerator Card - Analytics (VCAC-A)
+      meta_description: The Visual Cloud Accelerator Card - Analytics (VCAC-A) equips Intel® Xeon® Scalable Processor based platforms and Intel Movidius™ VPU to enhance the video codec, computer vision, and inference capabilities.
+
+    - title: Topology Manager Support
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-topology-manager
+      meta_title: Topology Manager Support in OpenNESS, Resource Locality Awareness
+      meta_description: Topology Manager is a solution permitting k8s components like CPU Manager and Device Manager, to coordinate the resources allocated to a workload.
+
+    - title: Resource Management Daemon
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-rmd
+      meta_title: Cache Allocation for Containers with Resource Management Daemon (RMD)
+      meta_description: Intel® Resource Director Technology (Intel® RDT) provides visibility and control over how shared resources such as last-level cache (LLC) and memory bandwidth are used by applications, virtual machines (VMs), and containers.
+
+    - title: Telemetry support in OpenNESS
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-telemetry
+      meta_title: Telemetry support in OpenNESS
+      meta_description: OpenNESS supports platform and application telemetry allowing users to retrieve information about the platform, the underlying hardware, cluster and applications deployed.
+
+    - title: Kubernetes Dashboard in OpenNESS
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-kubernetes-dashboard
+      meta_title: Kubernetes Dashboard in OpenNESS
+      meta_description: OpenNESS supports Kubernetes Dashboard that can be used to inspect and manage Kubernetes cluster.
