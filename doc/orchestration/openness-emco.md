@@ -5,12 +5,15 @@ Copyright (c) 2020 Intel Corporation
 # Multiple Clusters Orchestration(EMCO) support in OpenNESS
 
 - [Multiple Clusters Orchestration(EMCO) support in OpenNESS](#emco-support-in-openness)
-  - [Introduction](#introduction)
-  - [Overall Architecture](#architecture)
-  - [Installation for EMCO cluster with OpenNESS Flavor](#emco-installation)
-  - [Cluster Registration with EMCO](#cluster-registration)
+  - [Background](#background)
+  - [EMCO Introduction](#emco-introduction)
+    - [EMCO Architecture](#emco-architecture)
+      - [Cluster Registration with EMCO](#cluster-registration)
+    - [EMCO API](#emco-api)
+    - [EMCO Installation](#emco-installation)
+  - [Practise with EMCO: SmartCityp Deployment](#smartcity-deployment-with-emco)
 
-## Introduction
+## Background
 EMCO(Edge Multiple Clusters Orchestration) is Geo distributed application orchestrator for Kubernetes\*. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different 3rd parties. Thus it address the need for deploying 'composite applications' in multiple geographical locations. Few industry communities started to use the term 'composite application' to represent these complex applications & deployments.
 > **NOTE**: Composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations,  and get replicated in multiple locations.
 
@@ -22,34 +25,69 @@ Compared with other multipe-clusters orchestration, EMCO focuses on the below fu
 - Orchestrate edge services and network functions with deployment intents based on compute, acceleration, and storage requirements.
 - Support onboard multiple tenants from different enterprises while ensuring confidentiality and full isolation across the tenants.
 
-This document aims to familiarize the user with [OpenNESS deployment flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md) for EMCO installation and provsion, and provide instructions accordingly.
 
-## Overall Architecture 
-The below figure shows the architecture for the OpenNESS EMCO with an SmartCity applications example in this document.
-![OpenNESS EMCO](openness-emco-images/openness-emco-arch.png)
+The below figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters .
+![OpenNESS EMCO](openness-emco-images/openness-emco-topology.png)
 
-_Figure - EMCO Architecture in OpenNESS_
+_Figure - Topology Overview with OpenNESS EMCO_
 
 All the manged edge clusters and cloud clusters will be connected with EMCO cluster through WAN network. 
-- The central EMCO cluster installation can use [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). The EMCO includes micro services as below:
+- The central orchestration (EMCO) cluster installation can use [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
+- The edge clusters in the diagram can be installed and provisioned by using [OpenNESS Media Analytics Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md)
+- The cloud cluster in the diagram can be any types of cloud clusters, for example: Azure Cloud.
+- The composite application - SmartCity is composed of two parts: edge applications and web applications. 
+  - The edge application executes media processing and analytics on the multiple edge clusters to reduce latency.
+  - The web application is kinds of cloud application for additional post-processing such as calculating statistics and display/visualization on the cloud cluster side.
+  - EMCO user can deploy the smart city applications across the clusters. Besides that, EMCO supports override values profiles for operator to satisfy the need of deployments. 
+  - More details about refer to [SmartCity Deployment Practise with EMCO](#smartcity-deployment-with-emco).
+
+This document aims to familiarize the user with [OpenNESS deployment flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md) for EMCO installation and provsion, and provide instructions accordingly.
+## EMCO Introduction
+### EMCO Architecture
+The following diagram depicts a high level overview of the EMCO architecture.
+![OpenNESS EMCO](openness-emco-images/openness-emco-arch.png)
   - Cluster Registration Controller registers clusters by cluster owners.
-  - Network Configuration Management handles creation/management of virtual and provider networks.
   - Distributed Application Scheduler provides simplified, and extensible placement.
+  - Network Configuration Management handles creation/management of virtual and provider networks.
   - Hardware Platform Aware Controller enables scheduling with auto-discovery of platform features/ capabilities.
   - Distributed Cloud Manager presents a single logical cloud from multiple edges.
   - Secure Mesh Controller auto-configures both service mesh (ISTIO) and security policy (NAT, firewall).
   - Secure WAN Controller automates secure overlays across edge groups.
   - Resource Syncronizer manages instantiation of resources to clusters.
   - Monitoring covers distributed application.
-- The edge clusters in the diagram can be installed and provisioned by using [OpenNESS Media Analytics Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md)
-- As for cloud clusters, they can be any types of cloud clusters, for example: Azure Cloud.
+ 
+#### Cluster Registration
+After preparation of edge clusters and cloud clusters which can be any kubernetes clusters, user can onboard those clusters to EMCO by creating a Cluster Provider and then adding Clusters to the Cluster Provider. After cluster providers creation, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
 
-The example composite application - smart city is composed of two parts: edge applications and cloud applications. By using EMCO RESTAPI or CLI , operator can deploy the smart city services across the clusters. Besides that, EMCO supports override values profiles for operator to satisfy the need of deployments.
+Additionally, once a Cluster is created, labels and key value pairs may be added to the Cluster via the EMCO API.  Clusters can be specified by label when preparing placement intents.
+> **NOTE**: The cluster provider is somebody who owns clusters and registers them to EMCO.
+ 
+#### Distributed Application Scheduler
+The distrbuted application scheduler microservice provides functionalities:
+- Project Management provides multi-tenancy in the application from a user perspective
+- Composite App Management  manages composite apps that are collections of Helm Charts one per application
+- Composite Profile Management  manages composite profiles that are collections of profile one per application
+- Deployment Intent Group Management manages Intents for composite Applications
+- Controller Registration manages placement and action controller registration, priorities etc.
+- Status Notifier framework allows user to get on-demand status updates or notifications on status updates
+- Scheduler 
+  - Placement Controllers: Generic Placement Controller 
+  - Action Controllers
 
+#### Network Configuration Management
+The network configuratin mangement(NCM) microservice provdes functionalities:
+- Provider Network Management to create provider networks 
+- Virtual Network Management to create dynamic virtual networks 
+- Controller Registration manages network plugin controllers, priorities etc.
+- Status Notifier framework allows user to get on-demand status updates or notifications on status updates
+- Scheduler with Built in Controller - OVN-for-K8s-NFV Plugin Controller
+
+
+### EMCO API
 For user interaction, EMCO provides [RESTAPI](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
 > **NOTE**: The EMCO REST API is the foundation for the other interaction facilities like the EMCO CLI and even EMCO GUI (3rd party developed right now)
 
-## Installation for EMCO cluster with OpenNESS Flavor
+### EMCO Installation
 The first step is to prepare one server envionment which need to fulfill the [Preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
 
 Then Place the EMCO server hostname in `[controller_group]` group in `inventory.ini` file of openness-experience-kit. 
@@ -57,13 +95,6 @@ Then Place the EMCO server hostname in `[controller_group]` group in `inventory.
 
 Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry will be deployed to provide images services as well.
 
-## Cluster Registration with EMCO
-After preparation of edge clusters and cloud clusters which can be any kubernetes clusters, user can onboard those clusters to EMCO by creating a Cluster Provider and then adding Clusters to the Cluster Provider. After cluster providers creation, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
-
-Additionally, once a Cluster is created, labels and key value pairs may be added to the Cluster via the EMCO API.  Clusters can be specified by label when preparing placement intents.
-> **NOTE**: The cluster provider is somebody who owns clusters and registers them to EMCO.
-
-
-##
- 
+## Practise with EMCO: SmartCityp Deployment
+Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The whole application is composed of two parts: EdgeApp(multiple OpenNESS edge clusters) and WebApp(cloud application for additional post-processing such as calculating statistics and display/visualization). 
  
