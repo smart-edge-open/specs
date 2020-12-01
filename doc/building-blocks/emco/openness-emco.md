@@ -64,7 +64,7 @@ Additionally, once a Cluster is created, labels and key value pairs may be added
 > **NOTE**: The cluster provider is somebody who owns clusters and registers them to EMCO. If an Enterprise has clusters from say AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is somebody who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as Cluster provider in this context.
  
 #### Distributed Application Scheduler
-The distrbuted application scheduler microservice provides functionalities:
+The distributed application scheduler microservice provides functionalities:
 - Project Management provides multi-tenancy in the application from a user perspective
 - Composite App Management  manages composite apps that are collections of Helm Charts one per application
 - Composite Profile Management  manages composite profiles that are collections of profile one per application
@@ -76,7 +76,7 @@ The distrbuted application scheduler microservice provides functionalities:
   - Action Controllers
 
 #### Network Configuration Management
-The network configuratin mangement(NCM) microservice provdes functionalities:
+The network configuratin management (NCM) microservice provides functionalities:
 - Provider Network Management to create provider networks 
 - Virtual Network Management to create dynamic virtual networks 
 - Controller Registration manages network plugin controllers, priorities etc.
@@ -85,7 +85,7 @@ The network configuratin mangement(NCM) microservice provdes functionalities:
 
 
 #### Resource Syncronizer
-This micro-services is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various micro-services are used by this micro-service. It will take care of retrying in case the remote clusters are not reachable temporarily. 
+This micro-service is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various micro-services are used by this micro-service. It will take care of retrying in case the remote clusters are not reachable temporarily. 
 
 
 ### EMCO API
@@ -100,7 +100,7 @@ Then Place the EMCO server hostname in `[controller_group]` group in `inventory.
 
 Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry will be deployed to provide images services as well.
 
-## Practice with EMCO: SmartCityp Deployment
+## Practice with EMCO: SmartCity Deployment
 One OpenNESS edge nodes (representing regional office) and One legacy K8s Cluster (repsenting cloud) are connected to the OpenNESS EMCO cluster. Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The whole application is composed of two parts: EdgeApp(multiple OpenNESS edge clusters) and WebApp(cloud application for additional post-processing such as calculating statistics and display/visualization) as shown as below diagram.
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
