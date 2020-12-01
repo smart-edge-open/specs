@@ -3,7 +3,7 @@
 
 title: "Building Blocks"
 path: /building-blocks/
-order: 2
+order: 3
 section:
   - title: Data Plane
     path:
@@ -22,6 +22,14 @@ section:
       path: /doc/building-blocks/dataplane/openness-userspace-cni
       meta_title: OpenNESS Userspace CNI, Setup Userspace CNI
       meta_description: Userspace CNI is a Container Network Interface Kubernetes plugin that was designed to simplify the process of deployment of DPDK based applications in Kubernetes pods.
+
+  - title: "Edge Multiple Clusters Orchestration" 
+    path:
+    section:
+    - title: EMCO Support
+      path: /doc/building-blocks/emco/openness-emco
+      meta_title: Edge Multiple Clusters Orchestration Support in OpenNESS
+      meta_description: OpenNESS provides applications orchestration for geo-distributed multiple clusters.
 
   - title: "Enhanced Platform Awareness"
     path:

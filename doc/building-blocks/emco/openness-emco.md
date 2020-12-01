@@ -112,7 +112,12 @@ Then Place the EMCO server hostname in `[controller_group]` group in `inventory.
 Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry will be deployed to provide images services as well.
 
 ## Practice with EMCO: SmartCity Deployment
-One OpenNESS edge nodes (representing regional office) and One legacy K8s Cluster (repsenting cloud) are connected to the OpenNESS EMCO cluster. Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. The whole application is composed of two parts: EdgeApp(multiple OpenNESS edge clusters) and WebApp(cloud application for additional post-processing such as calculating statistics and display/visualization) as shown as below diagram.
+- One OpenNESS edge cluster (representing regional office) and One legacy K8s Cluster (representing cloud) are connected to the OpenNESS EMCO cluster. 
+- Smart City application is a sample application that is built on top of the OpenVINO & Open Visual Cloud software stacks for media processing and analytics. 
+  - The whole application is composed of two parts: 
+    - EdgeApp (multiple OpenNESS edge clusters) 
+    - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
+- The whole deployment architecture diagram is shown as below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
 The following are the typical steps involved in the cluster registration and deployment of the application using OpenNESS EMCO.
