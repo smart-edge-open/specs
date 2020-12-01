@@ -230,7 +230,7 @@ Under the application node, the following flavors are supported:
 
 ### Orchestration node flavor 
 Orchestration node here typically refers to central orchestration node deployed on the central cloud. It can orchestrate applications across edge clusters and cloud clusters with different locations.
-More details refer to [EMCO White Paper](https://github.com/otcshare/specs/blob/master/doc/orchestration/openness-emco.md).
+More details refer to [EMCO White Paper](building-blocks/emco/openness-emco.md).
 
 ### Microsoft Azure OpenNESS
 This flavor supports the installation of an OpenNESS Kubernetes cluster on a Microsoft\* Azure\* VM. This is typically used by a customer who requires the same Kubernetes cluster service on multiple clouds.

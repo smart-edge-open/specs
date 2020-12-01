@@ -163,7 +163,7 @@ This deployment flavor enables the following ingredients:
 
 
 ## Orchestration Flavor
-The pre-defined *orchestration* deployment flavor provisions an optimized system configuration for emco (central orchestrator) workloads on Intel Xeon servers. It also provisions a set of central orchestrator services for [edge, multiple clusters orchestration](https://github.com/otcshare/specs/blob/master/doc/orchestration/openness-emco.md).
+The pre-defined *orchestration* deployment flavor provisions an optimized system configuration for emco (central orchestrator) workloads on Intel Xeon servers. It also provisions a set of central orchestrator services for [edge, multiple clusters orchestration](building-blocks/emco/openness-emco.md).
 
 Steps to install this flavor are as follows:
 1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
