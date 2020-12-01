@@ -9,6 +9,7 @@ Copyright (c) 2020 Intel Corporation
   - [EMCO Introduction](#emco-introduction)
     - [EMCO Architecture](#emco-architecture)
     - [EMCO API](#emco-api)
+    - [EMCO Authentication](#emco-auth)
     - [EMCO Installation](#emco-installation)
   - [Practice with EMCO: SmartCityp Deployment](#smartcity-deployment-with-emco)
 
@@ -36,9 +37,9 @@ All the manged edge clusters and cloud clusters will be connected with EMCO clus
 - The central orchestration (EMCO) cluster installation can use [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
 - The edge clusters in the diagram can be installed and provisioned by using [OpenNESS Media Analytics Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md)
 - The cloud cluster in the diagram can be any types of cloud clusters, for example: Azure Cloud.
-- The composite application - SmartCity is composed of two parts: edge applications and web applications. 
+- The composite application - SmartCity is composed of two parts: edge applications and cloud (web) applications. 
   - The edge application executes media processing and analytics on the multiple edge clusters to reduce latency.
-  - The web application is kinds of cloud application for additional post-processing such as calculating statistics and display/visualization on the cloud cluster side.
+  - The cloud application is kind of web application for additional post-processing such as calculating statistics and display/visualization on the cloud cluster side.
   - EMCO user can deploy the smart city applications across the clusters. Besides that, EMCO supports override values profiles for operator to satisfy the need of deployments. 
   - More details about refer to [SmartCity Deployment Practise with EMCO](#smartcity-deployment-with-emco).
 
@@ -91,6 +92,16 @@ This micro-service is the one which deploys the resources in edge/cloud clusters
 ### EMCO API
 For user interaction, EMCO provides [RESTAPI](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
 > **NOTE**: The EMCO REST API is the foundation for the other interaction facilities like the EMCO CLI and even EMCO GUI (3rd party developed right now)
+
+### EMCO Authentication (FFS - Ritu)
+EMCO uses Istio and other open source solutions to provide Multi-tenancy solution leveraging Istio Authorization and Authentication frameworks. This is achieved without adding any logic in EMCO microservices.
+- Authentication for the EMCO users are done at the Isito Gateway, where all the traffic enters the cluster. 
+- Istio along with autherservice (istio ecosystem project) enables request-level authentication with JSON Web Token (JWT) validation. 
+- This can be achieved using a custom authentication provider or any OpenID Connect providers like KeyCloak, Auth0 etc. 
+
+Steps for EMCO Authentication Setup:
+- step1 FFS
+- step2 FFS
 
 ### EMCO Installation
 The first step is to prepare one server envionment which need to fulfill the [Preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
@@ -156,4 +167,99 @@ Using config file: local-cfg.yaml
 http://192.168.121.103:31298/v2URL: controllers Response Code: 201
 ``` 
 
-### Create Cluster Provider
+### Cluster Provider Creation and Clusters Registration
+
+
+
+### SmartCity Application Deployment
+#### Step1: Prepare SmartCity Images, Helm Chart and Override Profiles
+On the OpenNESS EMCO cluster. follow the guidance and commands as below:
+   ```shell
+   #Install cmake and m4 tools if not installed already
+   yum install cmake m4 -y
+
+   #On the OpenNESS EMCO cluster, clone the Smart City Reference Pipeline source code from GitHub and checkout the 577d483635856c1fa3ff0fbc051c6408af725712 commits
+   git clone https://github.com/OpenVisualCloud/Smart-City-Sample.git
+   cd Smart-City-Sample
+   git checkout 577d483635856c1fa3ff0fbc051c6408af725712
+   
+   #build the SmartCity images
+   mkdir build
+   cd build
+   cmake -DNOFFICES=2 -DREGISTRY=<harbor_registry_endpoint>/library # if you leave DREGISTRY empty, you need to follow the tag and push steps below
+   ../deployment/kubernetes/helm/build.sh    
+   make
+   make tunnels
+ 
+   # docker tag above image and push them to harbor registry(manually push images to registry when DREGISTRY empty)
+   docker tag smtc_database_tunnelled:latest <harbor_registry_endpoint>/library/smtc_database_tunnelled:latest
+   docker tag smtc_storage_manager_tunnelled:latest <harbor_registry_endpoint>/library/smtc_storage_manager_tunnelled:latest
+   docker tag smtc_smart_upload_tunnelled:latest <harbor_registry_endpoint>/library/smtc_smart_upload_tunnelled:latest
+   docker tag smtc_sensor_simulation:latest <harbor_registry_endpoint>/library/smtc_sensor_simulation:latest
+   docker tag smtc_onvif_discovery:latest <harbor_registry_endpoint>/library/smtc_onvif_discovery:latest
+   docker tag smtc_db_init:latest <harbor_registry_endpoint>/library/smtc_db_init:latest
+   docker tag smtc_alert:latest <harbor_registry_endpoint>/library/smtc_alert:latest
+   docker tag smtc_analytics_object_xeon_gst:latest <harbor_registry_endpoint>/library/smtc_analytics_object_xeon_gst:latest
+   docker tag smtc_mqtt2db:latest <harbor_registry_endpoint>/library/smtc_mqtt2db:latest
+   docker tag smtc_certificate:latest <harbor_registry_endpoint>/library/smtc_certificate:latest
+   docker tag smtc_web_cloud_tunnelled:latest <harbor_registry_endpoint>/library/smtc_web_cloud_tunnelled:latest
+   docker tag smtc_common:latest <harbor_registry_endpoint>/library/smtc_common:latest
+   docker tag eclipse-mosquitto:1.5.8 <harbor_registry_endpoint>/library/eclipse-mosquitto:1.5.8
+   # push all images to harbor registry after tagging them with 'docker push' command, as follows:
+   docker push <harbor_registry_endpoint>/library/<image_name>
+   ```
+
+Make sure the following images list exsiting in the harbor registry project - `library`
+   ```text
+   - smtc_database_tunnelled:latest
+   - smtc_storage_manager_tunnelled:latest
+   - smtc_smart_upload_tunnelled:latest
+   - smtc_sensor_simulation:latest
+   - smtc_onvif_discovery:latest
+   - smtc_db_init:latest
+   - smtc_alert:latest
+   - smtc_analytics_object_xeon_gst:latest
+   - smtc_mqtt2db:latest
+   - smtc_certificate:latest
+   - smtc_web_cloud_tunnelled:latest
+   - smtc_common:latest
+   - eclipse-mosquitto:1.5.8 
+   ```
+
+Packing the helm chart files used by SmartCity `edge` application and put them under `/opt`.
+   ```shell
+   cd Smart-City-Sample/deployment/kubernetes/helm
+   cp -r smtc smtc_edge_helmchart
+   rm smtc_edge_helmchart/templates/cloud* -rf
+   tar -zcvf smtc_edge_helmchart.tar.gz smtc_edge_helmchart
+   mv smtc_edge_helmchart.tar.gz /opt
+   ```
+
+Packing the helm chart files used by SmartCity `cloud` application and put them under `/opt`.
+   ```shell
+   cp -r smtc smtc_cloud_helmchart
+   rm smtc_cloud_helmchart/templates/* -rf
+   cp smtc/templates/*.tpl smtc_cloud_helmchart/templates/
+   cp smtc/templates/cloud* smtc_cloud_helmchart/templates/
+   tar -zcvf smtc_cloud_helmchart.tar.gz smtc_cloud_helmchart
+   mv smtc_cloud_helmchart.tar.gz /opt
+   ```
+
+Prepare Override Profiles - `manifest.yaml` file as below:
+```yaml
+---
+version: v1
+type:
+  values: "override_values.yaml"
+```
+
+Prepare Override Profiles - `override_values.yaml` file with empty content, 
+Pack the two files together as two tarball: `smtc_edge_profile.tar.gz` and `smtc_cloud_profile.tar.gz`.
+
+
+#### Step2: Onboard Helm Chart and Override Profiles
+
+
+#### Step3: Set Deployment Intent
+
+#### Step4: Approve and Instantiate
