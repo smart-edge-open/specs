@@ -86,10 +86,10 @@ section:
       meta_title: Kubernetes Dashboard in OpenNESS
       meta_description: OpenNESS supports Kubernetes Dashboard that can be used to inspect and manage Kubernetes cluster.
 
-  - title: "Edge Multiple Clusters Orchestration" 
+  - title: "Edge Multi-Cloud Orchestrator" 
     path:
     section:
-    - title: EMCO Support
+    - title: EMCO White Paper
       path: /doc/building-blocks/emco/openness-emco
-      meta_title: Edge Multiple Clusters Orchestration Support in OpenNESS
-      meta_description: OpenNESS provides applications orchestration for geo-distributed multiple clusters.
+      meta_title: Edge Multi-Cloud Orchestrator Support in OpenNESS
+      meta_description: OpenNESS provides Geo-Distributed multiple clusters application orchestration.

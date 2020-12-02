@@ -2,9 +2,9 @@
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2020 Intel Corporation
 ```
-# Multiple Clusters Orchestration(EMCO) support in OpenNESS
+# Edge Multi-Cloud Orchestrator (EMCO) support in OpenNESS
 
-- [Multiple Clusters Orchestration(EMCO) support in OpenNESS](#emco-support-in-openness)
+- [Edge Multi-Clould Orchestrator (EMCO) support in OpenNESS](#emco-support-in-openness)
   - [Background](#background)
   - [EMCO Introduction](#emco-introduction)
     - [EMCO Architecture](#emco-architecture)
@@ -14,7 +14,7 @@ Copyright (c) 2020 Intel Corporation
   - [Practice with EMCO: SmartCityp Deployment](#smartcity-deployment-with-emco)
 
 ## Background
-EMCO(Edge Multiple Clusters Orchestration) is Geo distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different 3rd parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes and Helm charts.
+EMCO(Edge Multi-Cloud Orchestration) is Geo distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different 3rd parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes and Helm charts.
 
 It address the need for deploying 'composite applications' in multiple geographical locations. Few industry communities started to use the term 'composite application' to represent these complex applications & deployments.
 > **NOTE**: Composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations,  and get replicated in multiple locations.
