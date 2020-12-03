@@ -597,7 +597,7 @@ Next, the VFs need to be manually bound to the `vfio-pci` driver using the follo
 Example:
 
 ```shell
-    /opt/dpdk-19.11/usertools/dpdk-devbind.py --bind=vfio_pci 0000:86:0a.1
+    /opt/openness/dpdk-19.11/usertools/dpdk-devbind.py --bind=vfio_pci 0000:86:0a.1
 ```
 
 Restart the SRIOV device plugin pods from the K8s control plane.

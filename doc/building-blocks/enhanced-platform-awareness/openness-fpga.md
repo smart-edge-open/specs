@@ -248,11 +248,11 @@ spec:
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 
 ### FEC VF configuration for OpenNESS Network Edge
-To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness-helm-charts/fpga_config`.
+To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness/helm-chartss/fpga_config`.
 
-Sample configMap, which can be configured by changing values if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness-helm-charts/fpga_config/templates/fpga-config.yaml` populated with values from `/opt/openness-helm-charts/fpga_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
+Sample configMap, which can be configured by changing values if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness/helm-chartss/fpga_config/templates/fpga-config.yaml` populated with values from `/opt/openness/helm-chartss/fpga_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
 
-Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness-helm-charts/` on Edge Controller:
+Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-chartss/` on Edge Controller:
 
 ```shell
 helm install --set nodeName=<node_name> intel-fpga-cfg fpga_config

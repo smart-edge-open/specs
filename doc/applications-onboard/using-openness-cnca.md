@@ -139,7 +139,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 4. After all the PODs are successfully up and running, few AF and OAM configuration parameters need to be updated (as per your deployment configuration) and then re-start the AF.
 
-   * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters.
+   * Open the file `/opt/openness/configs/ngc/af.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * `"NEFHostname": "localhost"` : Replace the `localhost` with `nefservice` ie., service name NEF POD.
    * Save and exit.
@@ -151,7 +151,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ![NGC list of PODS](using-openness-cnca-images/ngc_af_service_config_log.png)
 
 5. To update OAM configuration and restart OAM micro service:
-   * Open the file `/etc/openness/configs/ngc/oam.json` and modify the below parameters.
+   * Open the file `/opt/openness/configs/ngc/oam.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * Save and exit.
    * Now restart OAM POD using the below command:
