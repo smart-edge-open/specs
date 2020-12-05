@@ -134,8 +134,20 @@ The following are the typical steps involved in the cluster registration and dep
 - Create Project
 - DeploySmartCity Application
 
-### EMCO Configuration
-After [EMCO Installation](#emco-installation), logon the EMCO server, and prepare EMCO CLI `local-cfg.yaml` file as below
+### EMCO Configuration (SunHui TBD)
+
+1. After [EMCO Installation](#emco-installation), logon the EMCO server. And check ports used by EMCO micro services as below (SunHui TBD):
+```shell
+
+```
+
+2. To allow EMCO CLI communicate with EMCO microservices, need to open firewall port for the EMCO micro services as below (SunHui TBD, can it be automated by emco flavor??):
+```shell
+firewall-cmd --zone=public --permanent --add-port xxx/tcp
+firewall-cmd --reload
+```
+
+3. Prepare EMCO CLI configuration file - `remote.yaml` file as below:
 ```yaml
   orchestrator:
     host: localhost
@@ -148,39 +160,171 @@ After [EMCO Installation](#emco-installation), logon the EMCO server, and prepar
     port: 32737
   ovnaction:
     host: localhost
-    port: 31072
+    port: 31181
   dcm:
     host: localhost
     port: 31877
 ```
 
-Prepared EMCO controller resource files for resource synchronization - 'controller.yaml' file as below
+4. Prepare EMCO CLI values file - `values.yaml` file as below:
+```yaml
+ProjectName: project_smtc
+ClusterProvider: smartcity-cluster-provider
+ClusterEdge: edge01
+ClusterCloud: cloud01
+ClusterLogicEdge: lc-edge01
+ClusterLogicCloud: lc-cloud01
+AdminCloud: default
+ComposteApp: composite_smtc
+AppEdge: smtc_edge
+AppCloud: smtc_cloud
+KubeConfigEdge: /opt/clusters_config/edgecluster_config
+KubeConfigCloud: /opt/clusters_config/cloudcluster_config
+HelmEdgeApp: /opt/smtc_edge_helmchart.tar.gz
+HelmCloudApp: /opt/smtc_cloud_helmchart.tar.gz
+ProfileEdgeApp: /opt/smtc_edge_profile.tar.gz
+ProfileCloudApp:  /opt/smtc_cloud_profile.tar.gz
+DeploymentIntent: smtc-deployment-intent-group
+RsyncHost: 192.168.121.103
+RsyncPort: 32389
+```
+> **NOTE:**  RsyncHost IP address should be real IP address of EMCO host server.
+
+
+5. Prepared EMCO controller resource files for resource synchronization - 'controllers_template.yaml' file as below:
 ```yaml
 ---
 version: emco/v2
 resourceContext:
    anchor: controllers
-metadata :
+metadata:
    name: rsync
 spec:
-   host: "192.168.121.103"
-   port: 30546
+   host: {{ .RsyncHost }}
+   port: {{ .RsyncPort }}
 ```
-> **NOTE**: `192.168.121.103` is example IP address of EMCO server.
 
-Use EMCO CLI to create the controller entry with expected result as below:
+6. Use EMCO CLI to create the controller entry with expected result as below:
 ```shell
-# /opt/emco/bin/emcoctl/emcoctl --config local-cfg.yaml apply -f controllers.yaml
-Using config file: local-cfg.yaml
+# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f controllers_template.yaml
+Using config file: remote.yaml
 http://192.168.121.103:31298/v2URL: controllers Response Code: 201
 ``` 
 
 ### Cluster Provider Creation and Clusters Registration
+Prepare resource yaml file - `clusters_template.yaml` as below:
+```yaml
+---
+#clusters provider
+version: emco/v2
+resourceContext:
+  anchor: cluster-providers
+metadata:
+  name: {{ .ClusterProvider }}
 
+---
+#edge cluster
+version: emco/v2
+resourceContext:
+  anchor: cluster-providers/{{ .ClusterProvider }}/clusters
+metadata:
+  name: {{ .ClusterEdge }}
+file: {{ .KubeConfigEdge }}
+
+---
+#Add label to the edge cluster
+version: emco/v2
+resourceContext:
+  anchor: cluster-providers/{{ .ClusterProvider }}/clusters/{{ .ClusterEdge }}/labels
+label-name: LabelSmartCityEdge
+
+---
+#cloud cluster
+version: emco/v2
+resourceContext:
+  anchor: cluster-providers/{{ .ClusterProvider }}/clusters
+metadata:
+  name: {{ .ClusterCloud }}
+file: {{ .KubeConfigCloud }}
+
+---
+#Add label to the cloud cluster
+version: emco/v2
+resourceContext:
+  anchor: cluster-providers/{{ .ClusterProvider }}/clusters/{{ .ClusterCloud }}/labels
+label-name: LabelSmartCityCloud
+
+```
+
+Use EMCO CLI to apply the resource yaml file with expected result as below:
+
+```shell
+# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f clusters_template.yaml
+
+```
+
+### SmartCity Projects and Logical Clouds Creation
+Prepare resource yaml file - `projects_template.yaml` and apply it as below:
+```yaml
+#create project
+version: emco/v2
+resourceContext:
+  anchor: projects
+metadata:
+  name: {{ .ProjectName }}
+
+#create default logical cloud with admin permissions
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/logical-clouds
+metadata:
+  name: {{ .AdminCloud }}
+spec:
+  level: "0"
+
+#add cluster reference to logical cloud
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/logical-clouds/{{ .AdminCloud }}/cluster-references
+metadata:
+  name: {{ .ClusterLogicEdge }}
+spec:
+  cluster-provider: {{ .ClusterProvider }}
+  cluster-name: {{ .ClusterEdge }}
+  loadbalancer-ip: "0.0.0.0"
+
+#instantiate logical cloud
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/logical-clouds/{{ .AdminCloud }}/instantiate
+
+```
+
+```shell
+# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f projects_template.yaml
+
+```
+
+### SmartCity Composite Application Entry Creation
+Prepare resource yaml file - `composite_apps_template.yaml` and apply it as below:
+```yaml
+#creating smartcity composite app entry
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps
+metadata:
+  name: {{ .ComposteApp }}
+spec:
+  version: v1
+```
 
 
 ### SmartCity Application Deployment
-#### Step1: Prepare SmartCity Images, Helm Chart and Override Profiles
+#### Prepare SmartCity Images, Helm Chart and Override Profiles
 On the OpenNESS EMCO cluster. follow the guidance and commands as below:
    ```shell
    #Install cmake and m4 tools if not installed already
@@ -237,20 +381,20 @@ Make sure the following images list exsiting in the harbor registry project - `l
 Packing the helm chart files used by SmartCity `edge` application and put them under `/opt`.
    ```shell
    cd Smart-City-Sample/deployment/kubernetes/helm
-   cp -r smtc smtc_edge_helmchart
-   rm smtc_edge_helmchart/templates/cloud* -rf
-   tar -zcvf smtc_edge_helmchart.tar.gz smtc_edge_helmchart
-   mv smtc_edge_helmchart.tar.gz /opt
+   cp -r smtc smtc_edge
+   rm smtc_edge/templates/cloud* -rf
+   tar -zcvf smtc_edge.tar.gz smtc_edge
+   mv smtc_edge.tar.gz /opt
    ```
 
 Packing the helm chart files used by SmartCity `cloud` application and put them under `/opt`.
    ```shell
-   cp -r smtc smtc_cloud_helmchart
-   rm smtc_cloud_helmchart/templates/* -rf
-   cp smtc/templates/*.tpl smtc_cloud_helmchart/templates/
-   cp smtc/templates/cloud* smtc_cloud_helmchart/templates/
-   tar -zcvf smtc_cloud_helmchart.tar.gz smtc_cloud_helmchart
-   mv smtc_cloud_helmchart.tar.gz /opt
+   cp -r smtc smtc_cloud
+   rm smtc_cloud/templates/* -rf
+   cp smtc/templates/*.tpl smtc_cloud/templates/
+   cp smtc/templates/cloud* smtc_cloud/templates/
+   tar -zcvf smtc_cloud.tar.gz smtc_cloud
+   mv smtc_cloud.tar.gz /opt
    ```
 
 Prepare Override Profiles - `manifest.yaml` file as below:
@@ -265,9 +409,166 @@ Prepare Override Profiles - `override_values.yaml` file with empty content,
 Pack the two files together as two tarball: `smtc_edge_profile.tar.gz` and `smtc_cloud_profile.tar.gz`.
 
 
-#### Step2: Onboard Helm Chart and Override Profiles
+#### Onboard Helm Chart and Override Profiles
 
+Prepare resource - `helmcharts_profiles_template.yaml` file and apply it as below:
+```yaml
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/apps
+metadata:
+  name: smtc_edge
+file: {{ .HelmEdgeApp }}
 
-#### Step3: Set Deployment Intent
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/apps
+metadata:
+  name: smtc_cloud
+file: {{ .HelmCloudApp }}
 
-#### Step4: Approve and Instantiate
+#creating smtc composite profile entry
+# version: emco/v2
+# resourceContext:
+#   anchor: projects/project_smtc/composite-apps/composite_smtc/v1/composite-profiles
+# metadata :
+#   name: smtc_composite-profile
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/composite-profiles
+metadata:
+  name: smtc_composite-profile
+
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/composite-profiles/smtc_composite-profile/profiles
+metadata:
+  name: smtc_edge-profile
+spec:
+  app-name: {{ .AppEdge }}
+file: {{ .ProfileEdgeApp }}
+
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/composite-profiles/smtc_composite-profile/profiles
+metadata:
+  name: smtc_cloud-profile
+spec:
+  app-name: {{ .AppCloud }}
+file: {{ .ProfileCloudApp }}
+
+```
+
+```shell
+# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f projects_template.yaml
+
+```
+
+#### Set Deployment Intent
+
+Prepare resource - `intents_template.yaml` file and apply it as below:
+```yaml
+#create the deployment intent group
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups
+metadata:
+  name: {{ .DeploymentIntent }}
+  description: "smtc deployment intent group"
+  userData1: test1
+  userData2: test2
+spec:
+  profile: smtc_composite-profile
+  version: r1
+  logical-cloud: {{ .AdminCloud }}
+  override-values: []
+
+#create the intent in  deployment intent group
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{.ProjectName}}/composite-apps/{{.ComposteApp}}/v1/deployment-intent-groups/{{.DeploymentIntent}}/intents
+metadata:
+  name: {{ .DeploymentIntent }}
+  description: "smtc deployment intent"
+  userData1: test1
+  userData2: test2
+spec:
+  intent:
+    genericPlacementIntent: smtc-placement-intent
+
+# generic placement intent
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups/{{ .DeploymentIntent }}/generic-placement-intents
+metadata:
+  name: smtc-placement-intent
+  description: "smtc generic placement intent"
+  userData1: test1
+  userData2: test2
+
+#add edge app placement intent
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups/{{ .DeploymentIntent }}/generic-placement-intents/smtc-placement-intent/app-intents
+metadata:
+  name: smtcedge-placement-intent
+  description: "smtc edge app placement intent"
+  userData1: test1
+  userData2: test2
+spec:
+  app-name: smtc_edge
+  intent:
+    allOf:
+      - provider-name: {{ .ClusterProvider }}
+        cluster-label-name: LabelSmartCityEdge
+
+#add cloud app placement intent
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups/{{ .DeploymentIntent }}/generic-placement-intents/smtc-placement-intent/app-intents
+metadata:
+  name: smtccloud-placement-intent
+  description: "smtc cloud app placement intent"
+  userData1: test1
+  userData2: test2
+spec:
+  app-name: smtc_cloud
+  intent:
+    allOf:
+      - provider-name: {{ .ClusterProvider }}
+        cluster-label-name: LabelSmartCityCloud
+
+```
+
+```shell
+# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f projects_template.yaml
+
+```
+
+#### Approve and Instantiate
+Prepare resource - `instantiate_template.yaml` file and apply it as below:
+
+```yaml
+#Approve
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups/{{ .DeploymentIntent }}/approve
+
+#Instantiate
+---
+version: emco/v2
+resourceContext:
+  anchor: projects/{{ .ProjectName }}/composite-apps/{{ .ComposteApp }}/v1/deployment-intent-groups/{{ .DeploymentIntent }}/instantiate
+
+```
