@@ -133,9 +133,10 @@ metadata:
 spec:
   # Add fields here
   coreIds: ["INFERRED_CORE_ID"]
-  cache:
-    max: 6
-    min: 6
+  rdt:
+    cache:
+      max: 6
+      min: 6
   nodes: ["YOUR_WORKER_NODE_HERE"]
 ```
 Apply and validate it:
@@ -161,19 +162,10 @@ Events:           <none>
 ```
 ### Start monitoring the cache usage with the PQOS tool
 ```bash
-# Install - once off
-git clone https://github.com/intel/intel-cmt-cat.git
-make install
 # Run it
-pqos
+pqos -I
 ```
-If the PQOS tool fails to start, download the following tool:
-```bash
-git clone https://github.com/opcm/pcm.git
-make install
-pcm	# run it for a second, then ctrl-c
-```
-After you start and stop pcm, you should be able to run the pqos tool without a further problem. Look especially at the cores your pods got assigned. The LLC column (last level cache / L3 cache) should change after you run the `stress-ng` commands below.
+Look especially at the cores your pods got assigned. The LLC column (last level cache / L3 cache) should change after you run the `stress-ng` commands below.
 
 ### Starting the stress-ng command on the prepared pods
 Pod1
