@@ -19,7 +19,7 @@ EMCO (Edge Multi-Cloud Orchestration) is a Geo-distributed application orchestra
 EMCO addresses the need for deploying 'composite applications' in multiple geographical locations. Few industry communities started to use the term 'composite application' to represent these complex applications and deployments.
 > **NOTE**: A 'composite application' is a combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
 
-Compared with the other multipe-clusters orchestration, EMCO focuses on the following functionalies:
+Compared with other multipe-clusters orchestration, EMCO focuses on the following functionalies:
 - Enrolling multiple geographically distributed OpenNESS Clusters and third party Cloud Clusters.
 - Orchestrating composite applications (composed of multiple individual applications) across the edge clusters.
 - Deploying edge services and network functions on to different nodes spread across the different clusters.
