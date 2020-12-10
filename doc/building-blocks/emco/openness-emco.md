@@ -287,7 +287,7 @@ The typical steps involved in the cluster registration and deployment of the app
 
 ### EMCO Configuration
 
-1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server, and check ports used by EMCO micro services(SunHui TBD):
+1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server, and check ports used by EMCO micro services:
 ```shell
 # kubectl get svc -n emco
 NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
