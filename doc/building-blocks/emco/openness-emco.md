@@ -303,21 +303,7 @@ rsync          NodePort    10.106.10.79     <none>        9031:31405/TCP        
 
 ```
 
-2. To allow EMCO CLI to communicate with EMCO microservices, open firewall port for the EMCO micro services:
-```shell
-firewall-cmd --zone=public --permanent --add-port 31856/tcp
-firewall-cmd --zone=public --permanent --add-port 31877/tcp
-firewall-cmd --zone=public --permanent --add-port 32733/tcp
-firewall-cmd --zone=public --permanent --add-port 31182/tcp
-firewall-cmd --zone=public --permanent --add-port 32737/tcp
-firewall-cmd --zone=public --permanent --add-port 31298/tcp
-firewall-cmd --zone=public --permanent --add-port 30916/tcp
-firewall-cmd --zone=public --permanent --add-port 31181/tcp
-firewall-cmd --zone=public --permanent --add-port 31405/tcp
-firewall-cmd --reload
-```
-
-3. Prepare EMCO CLI configuration file - `remote.yaml` file:
+2. Prepare EMCO CLI configuration file - `remote.yaml` file:
 ```yaml
   orchestrator:
     host: localhost
@@ -339,7 +325,7 @@ firewall-cmd --reload
     port: 31280
 ```
 
-4. Prepare EMCO CLI values file - `values.yaml` file:
+3. Prepare EMCO CLI values file - `values.yaml` file:
 ```yaml
 ProjectName: project_smtc
 ClusterProvider: smartcity-cluster-provider
@@ -382,9 +368,9 @@ GacPort: 31261
 > **NOTE:**  GAC IP address should be real IP address of EMCO host server. GacPort is dynamically allocated by EMCO as shown as above.
 For Helm Charts, Profiles and ConfigMap json files , can get from [SmartCity EMCO Artifacts](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
 
-5. Download [controllers_template file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/01_controllers_template.yaml)
+4. Download [controllers_template file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/01_controllers_template.yaml)
 
-6. Use EMCO CLI to create the controller entry with expected result:
+5. Use EMCO CLI to create the controller entry with expected result:
 ```shell
 # /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f controllers_template.yaml
 Using config file: remote.yaml
