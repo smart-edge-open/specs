@@ -167,7 +167,7 @@ To acheive both the usecases, the controller exposes REST APIs to create, update
 |                        |                                                                                                                                  |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Cluster Provider       | The provider is someone who owns clusters and registers them.                                                                   |
-| Projects               | The projects resource provides means for a collection of application to be grouped.                                              |
+| Projects               | The project resource provides means for a collection of applications to be grouped.                                             |
 |                        | Several applications can exist under a specific project.                                                                         |
 |                        | Projects allows for grouping of applications under a common tenant to be defined.                                                |
 | Composite application  | Composite application is combination of multiple applications.                                                                   |
