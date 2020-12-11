@@ -10,7 +10,7 @@ Copyright © 2019 Intel Corporation
 	- [Client Simulator](#client-simulator)
 	- [OpenVINO Producer Application](#openvino-producer-application)
 	- [OpenVINO Consumer Application](#openvino-consumer-application)
-- [Execution Flow Between EAA, Producer & Consumer](#execution-flow-between-eaa-producer--consumer)
+- [Execution Flow Between CertSigner, EAA, Producer & Consumer](#execution-flow-between-certsigner-eaa-producer--consumer)
 - [Build & Deployment of OpenVINO Applications](#build--deployment-of-openvino-applications)
 	- [Docker Images Creation](#docker-images-creation)
 	- [Streaming & Displaying the Augmented Video](#streaming--displaying-the-augmented-video)
@@ -49,7 +49,7 @@ The client simulator is responsible for continuously transmitting a video stream
 
 The OpenVINO producer application is responsible for activating a service in OpenNESS Edge Node. This service is simply a publication of the inference model name, which can be used by the OpenVINO consumer application(s). This service involves sending periodic `openvino-inference` notifications, which in turn are absorbed by the consumer application(s).
 
-The producer application commences publishing notifications after it handshakes with the Edge Application Agent (EAA) over HTTPS REST API. This handshaking involves authentication and service activation.
+The producer application commences publishing notifications after it handshakes with the Edge Application Agent (EAA) over HTTPS REST API. This handshaking involves authentication and service activation. The authentication's certificate should be generated with using the Certificate Signer by sending a CSR via Certificate Requester.
 
 The `openvino-inference` provides information about the model name used in video inferencing and the acceleration type. Contents of the notification are defined by the below struct:
 
@@ -81,13 +81,17 @@ OpenVINO consumer application executes object detection on the received video st
 
 When the consumer application commences execution, it handshakes with EAA in a process that involves (a) authentication, (b) WebSocket connection establishment, (c) service discovery, and (d) service subscription. The WebSocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over the HTTPS REST API. Only subscribed-to notifications are forwarded to the WebSocket.
 
-## Execution Flow Between EAA, Producer & Consumer
+The authentication's certificate should be generated with using the Certificate Signer by sending a CSR via Certificate Requester.
+
+
+## Execution Flow Between CertSigner, EAA, Producer & Consumer
 
 The simplified execution flow of the consumer and producer applications with EAA is depicted in the sequence diagram below.
 
 ![Figure caption \label{OpenVINO Execution Flow}](app-guide/openness_openvinoexecflow.png)
 
 _Figure - OpenVINO Application Execution Flow_
+For more information about CSR, refer to [OpenNESS CertSigner](../applications-onboard/openness-certsigner.md)
 
 ## Build & Deployment of OpenVINO Applications
 
