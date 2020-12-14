@@ -31,6 +31,7 @@ Compared with other multipe-clusters orchestration, EMCO focuses on the followin
 
 The following figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters.
 ![OpenNESS EMCO](openness-emco-images/openness-emco-topology.png)
+
 _Figure - Topology Overview with OpenNESS EMCO_
 
 All the managed edge clusters and cloud clusters are connected with EMCO cluster through the WAN network. 
@@ -48,6 +49,7 @@ This document aims to familiarize the user with [OpenNESS deployment flavor](../
 ### EMCO Architecture
 The following diagram depicts a high level overview of the EMCO architecture.
 ![OpenNESS EMCO](openness-emco-images/openness-emco-arch.png)
+
 _Figure - EMCO Architecture_
   - Cluster Registration Controller registers clusters by cluster owners.
   - Distributed Application Scheduler provides a simplified and extensible placement.
@@ -108,6 +110,7 @@ A Logical Cloud is the overall target of a Deployment Intent Group and is a mand
 Due to the close relationship with Clusters, which are provided by Cluster Registration (clm) above, it is important to understand the mapping between the two. A Logical Cloud groups many Clusters together but a Cluster may also be grouped by multiple Logical Clouds, effectively turning the cluster multi-tenant. The partitioning/multi-tenancy of a particular Cluster, via the different Logical Clouds, is done today at the namespace level (different Logical Clouds access different namespace names, and the name is consistent across the multiple clusters of the Logical Cloud).
 
 ![Mapping between Logical Clouds and Clusters](openness-emco-images/openness-emco-lccl.png)
+
 _Figure - Mapping between Logical Clouds and Clusters_
 
 ##### Lifecycle Operations
@@ -196,11 +199,13 @@ EMCO uses Istio and other open source solutions to provide Multi-tenancy solutio
 The following figure shows various Emco services running in a cluster with Istio.
 
 ![OpenNESS EMCO](openness-emco-images/emco-istio-arch.png)
+
 _Figure - EMCO setup with Istio and Authservice_
 
 The following figure shows the authentication flow with EMCO, Istio and Authservice
 
 ![OpenNESS EMCO](openness-emco-images/emco-istio-auth.png)
+
 _Figure - EMCO Authenication with external OATH2 Server_
 
 Detailed steps for configuring EMCO with Istio can be found in [Emco Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
@@ -271,6 +276,7 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
     - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
 - The whole deployment architecture diagram is as shown below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
+
 _Figure - SmartCity Deployment Architecture Overview_
 
 The typical steps involved in the cluster registration and deployment of the application using OpenNESS EMCO are as following:
@@ -411,7 +417,9 @@ cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
 4. Verfiy Smart City GUI 
 From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
+
 _Figure - SmartCity UI_
+
 ### SmartCity Termination
 
 Run the command for the project setup with expected result as below.
