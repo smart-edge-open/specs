@@ -21,8 +21,8 @@ EMCO addresses the need for deploying 'composite applications' in multiple geogr
 > **NOTE**: A 'composite application' is a combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
 
 Compared with other multipe-clusters orchestration, EMCO focuses on the following functionalies:
-- Enrolling multiple geographically distributed OpenNESS Clusters and third party Cloud Clusters.
-- Orchestrating composite applications (composed of multiple individual applications) across the edge clusters.
+- Enrolling multiple geographically distributed OpenNESS clusters and third party cloud clusters.
+- Orchestrating composite applications (composed of multiple individual applications) across the clusters.
 - Deploying edge services and network functions on to different nodes spread across the different clusters.
 - Monitoring the health of the deployed edge services/network functions across the clusters.
 - Orchestrating edge services and network functions with deployment intents based on compute, acceleration, and storage requirements.
@@ -31,7 +31,6 @@ Compared with other multipe-clusters orchestration, EMCO focuses on the followin
 
 The following figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters.
 ![OpenNESS EMCO](openness-emco-images/openness-emco-topology.png)
-
 _Figure - Topology Overview with OpenNESS EMCO_
 
 All the managed edge clusters and cloud clusters are connected with EMCO cluster through the WAN network. 
@@ -109,6 +108,7 @@ A Logical Cloud is the overall target of a Deployment Intent Group and is a mand
 Due to the close relationship with Clusters, which are provided by Cluster Registration (clm) above, it is important to understand the mapping between the two. A Logical Cloud groups many Clusters together but a Cluster may also be grouped by multiple Logical Clouds, effectively turning the cluster multi-tenant. The partitioning/multi-tenancy of a particular Cluster, via the different Logical Clouds, is done today at the namespace level (different Logical Clouds access different namespace names, and the name is consistent across the multiple clusters of the Logical Cloud).
 
 ![Mapping between Logical Clouds and Clusters](openness-emco-images/openness-emco-lccl.png)
+_Figure - Mapping between Logical Clouds and Clusters_
 
 ##### Lifecycle Operations
 Prerequisites to using Logical Clouds:
@@ -271,7 +271,6 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
     - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
 - The whole deployment architecture diagram is as shown below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
-
 _Figure - SmartCity Deployment Architecture Overview_
 
 The typical steps involved in the cluster registration and deployment of the application using OpenNESS EMCO are as following:
@@ -412,7 +411,6 @@ cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
 4. Verfiy Smart City GUI 
 From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
-
 _Figure - SmartCity UI_
 ### SmartCity Termination
 
