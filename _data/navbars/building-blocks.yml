@@ -91,5 +91,5 @@ section:
     section:
     - title: EMCO White Paper
       path: /doc/building-blocks/emco/openness-emco
-      meta_title: Edge Multi-Cluster Orchestrator Support in OpenNESS
-      meta_description: OpenNESS provides Geo-Distributed multiple clusters application orchestration.
+      meta_title: Edge Multi-Cluster Orchestrator 
+      meta_description: Geo-Distributed multiple clusters application orchestration.
