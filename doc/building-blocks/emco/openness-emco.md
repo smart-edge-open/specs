@@ -265,7 +265,7 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
 
 ## Practise with EMCO: SmartCity Deployment
 - One OpenNESS edge cluster (representing regional office) and One legacy K8s Cluster (representing cloud) are connected to the OpenNESS EMCO cluster. 
-- SmartCity application is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. 
+- The SmartCity application is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. 
   - The whole application is composed of two parts: 
     - EdgeApp (multiple OpenNESS edge clusters) 
     - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
@@ -277,227 +277,154 @@ _Figure - SmartCity Deployment Architecture Overview_
 The typical steps involved in the cluster registration and deployment of the application using OpenNESS EMCO are as following:
 - Prerequisites
   - Make One OpenNESS Edge Cluster Ready with any OpenNESS Flavor (OpenNESS Application Node Flavor is proposed)
-  - Make One Legacy K8s Cluster Ready (Simualte cloud cluster)
+  - Make One Legacy K8s Cluster Ready (Simulate cloud cluster)
   - Prepare One Server with a Vanilla CentOS for EMCO (Only one server is required for EMCO cluster)
-- EMCO Configuration
-- Create Cluster Provider
-- Clusters Registration
-- Create Project
+- EMCO Installation
+- Clusters Setup
+- Project Setup
+- Logical Cloud Setup
 - Deploy SmartCity Application
 
-### EMCO Configuration
-
-1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server, and check ports used by EMCO micro services:
-```shell
-# kubectl get svc -n emco
-NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                         AGE
-clm            NodePort    10.97.14.239     <none>        9061:31856/TCP                  125m
-dcm            NodePort    10.107.241.154   <none>        9077:31877/TCP                  125m
-dtc            NodePort    10.110.138.168   <none>        9053:32733/TCP,9018:31182/TCP   125m
-etcd           ClusterIP   10.97.101.134    <none>        2379/TCP,2380/TCP               125m
-mongo          ClusterIP   10.104.168.175   <none>        27017/TCP                       125m
-ncm            NodePort    10.103.52.184    <none>        9081:32737/TCP                  125m
-orchestrator   NodePort    10.106.133.59    <none>        9015:31298/TCP                  125m
-ovnaction      NodePort    10.110.224.77    <none>        9032:30916/TCP,9051:31181/TCP   125m
-rsync          NodePort    10.106.10.79     <none>        9031:31405/TCP                  125m
-
-```
-
-2. Prepare EMCO CLI configuration file - `remote.yaml` file:
-```yaml
-  orchestrator:
-    host: localhost
-    port: 31298
-  clm:
-    host: localhost
-    port: 31856
-  ncm:
-    host: localhost
-    port: 32737
-  ovnaction:
-    host: localhost
-    port: 31181
-  dcm:
-    host: localhost
-    port: 31877
-  gac:
-    host: localhost
-    port: 31280
-```
-
-3. Prepare EMCO CLI values file - `values.yaml` file:
-```yaml
-ProjectName: project_smtc
-ClusterProvider: smartcity-cluster-provider
-ClusterEdge: edge01
-ClusterCloud: cloud01
-ClusterLogicEdge: lc-edge01
-ClusterLogicCloud: lc-cloud01
-AdminCloud: default
-CompositeApp: composite_smtc
-AppEdge: smtc_edge
-AppCloud: smtc_cloud
-KubeConfigEdge: /opt/clusters_config/edgecluster_config
-KubeConfigCloud: /opt/clusters_config/cloudcluster_config
-EdgeClusterLabel: LabelSmartCityEdge
-CloudClusterLabel: LabelSmartCityCloud
-HelmEdgeApp: /opt/smtc_edge_helmchart.tar.gz
-HelmCloudApp: /opt/smtc_cloud_helmchart.tar.gz
-ProfileEdgeAppName: smtc_edge-profile
-ProfileCloudAppName: smtc_cloud-profile
-ProfileEdgeApp: /opt/smtc_edge_profile.tar.gz
-ProfileCloudApp:  /opt/smtc_cloud_profile.tar.gz
-DeploymentIntent: smtc-deployment-intent-group
-CompositeProfile: smtc_composite-profile
-GenericPlacementIntent: smtc-placement-intent
-AppEdgePlacementIntent: smtcedge-placement-intent
-AppCloudPlacementIntent: smtccloud-placement-intent
-GenericK8sIntent: smtc-k8s-intent
-SmtcEdgeResources: smtcSensorConfig-edge-resources
-SmtcCloudResources: smtcSensorConfig-cloud-resources
-ResourceName: sensor-info
-SmtcEdgeCustomizations: smtcSensorConfig-edge-customizations
-SmtcCloudCustomizations: smtcSensorConfig-cloud-customizations
-ConfigMapFile: /opt/sensor-info.json
-RsyncHost: 172.16.182.96
-RsyncPort: 31048
-GacIP: 172.16.182.96
-GacPort: 31261
-```
-> **NOTE:**  RsyncHost IP address should be real IP address of EMCO host server. RsyncPort is dynamically allocated by EMCO as shown above.
-> **NOTE:**  GAC IP address should be real IP address of EMCO host server. GacPort is dynamically allocated by EMCO as shown above.
-For Helm Charts, Profiles and ConfigMap json files , can get from [SmartCity EMCO Artifacts](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
-
-4. Download [controllers_template file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/01_controllers_template.yaml)
-
-5. Use EMCO CLI to create the controller entry with expected result:
-```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f controllers_template.yaml
-Using config file: remote.yaml
-http://192.168.121.103:31298/v2URL: controllers Response Code: 201
-``` 
-
-### Creating Cluster Provider and Registering Clusters
-Download [clusters_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/02_cluster-provider_template.yaml).
-
-Use EMCO CLI to apply the resource yaml file with expected result:
-
-```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 02_cluster-provider_template.yaml
-
-```
-
-### SmartCity Projects and Creating Logical Clouds
-Download [projects_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/04_projects_template.yaml)
-
-Use EMCO CLI to apply the resource yaml file with expected result:
-
-```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 04_projects_template.yaml
-
-```
-
-### SmartCity Application Deployment
-#### Preparing SmartCity Images, Helm Chart and Overriding Profiles
-On the OpenNESS EMCO cluster. follow the guidance and commands as mentioned below:
-   ```shell
-   #Install cmake and m4 tools if not installed already
-   yum install cmake m4 -y
-
-   #On the OpenNESS EMCO cluster, clone the Smart City Reference Pipeline source code from GitHub and checkout the 577d483635856c1fa3ff0fbc051c6408af725712 commits
-   git clone https://github.com/OpenVisualCloud/Smart-City-Sample.git
-   cd Smart-City-Sample
-   git checkout 577d483635856c1fa3ff0fbc051c6408af725712
-   
-   #build the SmartCity images
-   mkdir build
-   cd build
-   cmake -DNOFFICES=2 -DREGISTRY=<harbor_registry_endpoint>/library # if you leave DREGISTRY empty, you need to follow the tag and push steps below
-   ../deployment/kubernetes/helm/build.sh    
-   make
-   make tunnels
+### Clusters Setup
+In the step, cluster provider will be created and clusters will be registred in the EMCO.
  
-   # docker tag above image and push them to harbor registry(manually push images to registry when DREGISTRY empty)
-   docker tag smtc_database_tunnelled:latest <harbor_registry_endpoint>/library/smtc_database_tunnelled:latest
-   docker tag smtc_storage_manager_tunnelled:latest <harbor_registry_endpoint>/library/smtc_storage_manager_tunnelled:latest
-   docker tag smtc_smart_upload_tunnelled:latest <harbor_registry_endpoint>/library/smtc_smart_upload_tunnelled:latest
-   docker tag smtc_sensor_simulation:latest <harbor_registry_endpoint>/library/smtc_sensor_simulation:latest
-   docker tag smtc_onvif_discovery:latest <harbor_registry_endpoint>/library/smtc_onvif_discovery:latest
-   docker tag smtc_db_init:latest <harbor_registry_endpoint>/library/smtc_db_init:latest
-   docker tag smtc_alert:latest <harbor_registry_endpoint>/library/smtc_alert:latest
-   docker tag smtc_analytics_object_xeon_gst:latest <harbor_registry_endpoint>/library/smtc_analytics_object_xeon_gst:latest
-   docker tag smtc_mqtt2db:latest <harbor_registry_endpoint>/library/smtc_mqtt2db:latest
-   docker tag smtc_certificate:latest <harbor_registry_endpoint>/library/smtc_certificate:latest
-   docker tag smtc_web_cloud_tunnelled:latest <harbor_registry_endpoint>/library/smtc_web_cloud_tunnelled:latest
-   docker tag smtc_common:latest <harbor_registry_endpoint>/library/smtc_common:latest
-   docker tag eclipse-mosquitto:1.5.8 <harbor_registry_endpoint>/library/eclipse-mosquitto:1.5.8
-   # push all images to harbor registry after tagging them with 'docker push' command, as follows:
-   docker push <harbor_registry_endpoint>/library/<image_name>
-   ```
+1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server and maker sure that Harbor and EMCO microservices are in running status.
 
-Make sure the following images list is existing in the harbor registry project - `library`
-   ```text
-   - smtc_database_tunnelled:latest
-   - smtc_storage_manager_tunnelled:latest
-   - smtc_smart_upload_tunnelled:latest
-   - smtc_sensor_simulation:latest
-   - smtc_onvif_discovery:latest
-   - smtc_db_init:latest
-   - smtc_alert:latest
-   - smtc_analytics_object_xeon_gst:latest
-   - smtc_mqtt2db:latest
-   - smtc_certificate:latest
-   - smtc_web_cloud_tunnelled:latest
-   - smtc_common:latest
-   - eclipse-mosquitto:1.5.8 
-   ```
-
-Download SmartCity `edge` application [helm chart tarball](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/smtc_edge_helmchart.tar.gz) and put it under `/opt`.
-
-Download SmartCity `cloud` application [helm chart tarball](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/smtc_cloud_helmchart.tar.gz) and put it under `/opt`.
-
-Download SmartCity `edge` application [profile tarball](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/smtc_edge_profile.tar.gz) and put it under `/opt`.
-
-Download SmartCity `cloud` application [profile tarball](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/smtc_cloud_profile.tar.gz) and put it under `/opt`.
-
-
-#### Onboarding Helm Chart and Overriding Profiles
-
-Download [composite_apps_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/06_composite-apps_template.yaml)
-
-Use EMCO CLI to apply the resource yaml file with expected result:
-
+2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server:
 ```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 06_composite-apps_template.yaml
+HARBORRHOST=<harbor_registry_host>
 
+cd /etc/docker/certs.d/
+mkdir ${HARBORRHOST}
+cd ${HARBORRHOST}
+echo -n | openssl s_client -showcerts -connect ${HARBORRHOST} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > harbor.crt
+
+HARBORRPW=Harbor12345
+docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
+```
+> **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
+
+3. On EMCO server, download the [scripts](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
+
+4. Run the command for the environment setup with success return as below:
+```shell
+# cd cli-scripts/
+# ./env_setup.sh
 ```
 
-#### Setting Deployment Intent
-
-
-Download [intent_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/09_apps_intent_group_template.yaml)
-
-Use EMCO CLI to apply the resource yaml file with expected result:
-
+5. Run the command for the clusters setup with expected result as below.
 ```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 09_apps_intent_group_template.yaml
+# cd cli-scripts/
+# ./01_apply.sh
 
+....
+URL: cluster-providers/smartcity-cluster-provider/clusters/edge01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityEdge"}
+URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
 ```
 
-#### Approving and Instantiating
-Download [approve_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/12_apps_approve_template.yaml)
+### Project Setup
 
-Use EMCO CLI to apply the resource yaml file with expected result:
-
+Run the command for the project setup with expected result as below.
 ```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 12_apps_approve_template.yaml
+# cd cli-scripts/
+# ./02_apply.sh
 
+Using config file: emco_cfg.yaml
+http://localhost:31298/v2
+URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","description":"","UserData1":"","UserData2":""}}
 ```
-Download [instantiate_template.yaml file](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco/13_apps_instantiate_template.yaml)
 
-Use EMCO CLI to apply the resource yaml file with expected result:
+### Logical Cloud Setup
 
+Run the command for the logical cloud setup with expected result as below.
 ```shell
-# /opt/emco/bin/emcoctl/emcoctl --config remote.yaml apply -v values.yaml -f 13_apps_instantiate_template.yaml
+# cd cli-scripts/
+# ./03_apply.sh
 
+Using config file: emco_cfg.yaml
+http://localhost:31877/v2
+URL: projects/project_smtc/logical-clouds Response Code: 201 Response: {"metadata":{"name":"default","description":"","userData1":"","userData2":""},"spec":{"namespace":"","level":"0","user":{"user-name":"","type":"","user-permissions":null}}}
+http://localhost:31877/v2
+URL: projects/project_smtc/logical-clouds/default/cluster-references Response Code: 201 Response: {"metadata":{"name":"lc-edge01","description":"","userData1":"","userData2":""},"spec":{"cluster-provider":"smartcity-cluster-provider","cluster-name":"edge01","loadbalancer-ip":"0.0.0.0","certificate":""}}
+http://localhost:31877/v2
+URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200 Response:
 ```
+
+### Deploy SmartCity Application
+
+1. Run the command for the SmartCity application deployment with expected result as below.
+```shell
+# cd cli-scripts/
+# ./04_apply.sh
+
+http://localhost:31298/v2
+URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/approve Response Code: 202 Response:
+http://localhost:31298/v2
+URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
+```
+
+2. Manually create specific secrets rquired by SmartCity
+On both edge cluster and cloud cluster, create `tunnel_secret` as below:
+```shell
+#!/usr/bin/env bash
+PRIKEY=/root/tunnel_secret/id_rsa
+PUBKEY=/root/tunnel_secret/id_rsa.pub
+KNOWHOSTS=/root/tunnel_secret/known_hosts
+kubectl create secret generic tunnel-secret --from-file=${PRIKEY} --from-file=${PUBKEY} --from-file=${KNOWHOSTS}
+```
+
+On the cloud cluster, creat `self-signed-certificate` as below:
+```shell
+#!/usr/bin/env bash
+CRT=/root/tunnel_secret/self.crt
+SELFKEY=/root//tunnel_secret/self.key
+kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
+```shell
+
+3. Verify SmartCity Application Deployment Information.
+The pods status on the edge cluster are in the running status:
+```shell
+# kubectl get pods
+NAME                                                READY   STATUS    RESTARTS   AGE
+traffic-office1-alert-5b56f5464c-ldwrf              1/1     Running   0          20h
+traffic-office1-analytics-traffic-6b995d4d6-nhf2p   1/1     Running   0          20h
+traffic-office1-camera-discovery-78bccbdb44-k2ffx   1/1     Running   0          20h
+traffic-office1-cameras-6cb67ccc84-8zkjg            1/1     Running   0          20h
+traffic-office1-db-84bcfd54cd-ht52s                 1/1     Running   1          20h
+traffic-office1-db-init-64fb9db988-jwjv9            1/1     Running   0          20h
+traffic-office1-mqtt-f9449d49c-dwv6l                1/1     Running   0          20h
+traffic-office1-mqtt2db-5649c4778f-vpxhq            1/1     Running   0          20h
+traffic-office1-smart-upload-588d95f78d-8x6dt       1/1     Running   1          19h
+traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1          19h
+...
+```
+
+The pods status on the cloud cluster are in the running status:
+```shell
+# kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+cloud-db-5d6b57f947-qhjz6        1/1     Running   0          20h
+cloud-storage-5658847d79-66bxz   1/1     Running   0          96m
+cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
+   
+```
+
+4. Verfiy Smart City GUI 
+From a web browser, launch the Smart City web UI at URL https://<cloudcluster-controller-node-ip>. The GUI shows like:      
+![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
+
+_Figure - SmartCity UI_
+### SmartCity Termination
+
+Run the command for the project setup with expected result as below.
+```shell
+# cd cli-scripts/
+# ./88_terminate.sh
+
+Using config file: emco_cfg.yaml
+http://localhost:31298/v2
+URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/terminate Response Code: 202 Response:
+```
+
+After termination, SmartCity Application will be deleted from the clusters.
+
