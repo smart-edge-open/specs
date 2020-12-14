@@ -60,13 +60,13 @@ _Figure - EMCO Architecture_
   - Secure WAN Controller automates secure overlays across edge groups.
   - Resource Syncronizer manages instantiation of resources to clusters.
   - Monitoring covers distributed application.
- 
+
 #### Cluster Registration
 A microservice exposes RESTful API. User can register cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any Kubernetes* cluster, user can onboard those clusters to EMCO by creating a cluster provider and then adding clusters to the cluster provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
 
 Additionally, after a cluster is created, labels and key value pairs can be added to the cluster via the EMCO API. Clusters can be specified by label when preparing placement intents.
 > **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as cluster provider in this context.
- 
+
 #### Distributed Application Scheduler
 The distributed application scheduler microservice provides the following functionalities:
 - Project Management provides multi-tenancy in the application from a user perspective.
@@ -292,7 +292,7 @@ The typical steps involved in the cluster registration and deployment of the app
 
 ### Clusters Setup
 In the step, cluster provider will be created and clusters will be registered in the EMCO.
- 
+
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server and maker sure that Harbor and EMCO microservices are in running status.
 
 2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server:
@@ -341,7 +341,7 @@ URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","d
 
 ### Logical Cloud Setup
 
-Run the command for the logical cloud setup with expected result as below:
+Run the command for the logical cloud setup with expected result as below.
 ```shell
 # cd cli-scripts/
 # ./03_apply.sh
@@ -368,8 +368,7 @@ http://localhost:31298/v2
 URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
 ```
 
-2. Manually create specific secrets rquired by SmartCity
-On both edge cluster and cloud cluster, create `tunnel_secret` as below:
+2. On both edge cluster and cloud cluster, manually create `tunnel_secret` as below:
 ```shell
 #!/usr/bin/env bash
 PRIKEY=/root/tunnel_secret/id_rsa
@@ -378,7 +377,7 @@ KNOWHOSTS=/root/tunnel_secret/known_hosts
 kubectl create secret generic tunnel-secret --from-file=${PRIKEY} --from-file=${PUBKEY} --from-file=${KNOWHOSTS}
 ```
 
-On the cloud cluster, creat `self-signed-certificate` as below:
+3. On the cloud cluster, manually create `self-signed-certificate` as below:
 ```shell
 #!/usr/bin/env bash
 CRT=/root/tunnel_secret/self.crt
@@ -386,8 +385,9 @@ SELFKEY=/root//tunnel_secret/self.key
 kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
 ```
 
-3. Verify SmartCity Application Deployment Information.
+4. Verify SmartCity Application Deployment Information.
 The pods on the edge cluster are in the running status as shown as below:
+
 ```shell
 # kubectl get pods
 NAME                                                READY   STATUS    RESTARTS   AGE
@@ -401,7 +401,6 @@ traffic-office1-mqtt-f9449d49c-dwv6l                1/1     Running   0         
 traffic-office1-mqtt2db-5649c4778f-vpxhq            1/1     Running   0          20h
 traffic-office1-smart-upload-588d95f78d-8x6dt       1/1     Running   1          19h
 traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1          19h
-...
 ```
 
 The pods on the cloud cluster are in the running status as shown as below:
@@ -411,10 +410,9 @@ NAME                             READY   STATUS    RESTARTS   AGE
 cloud-db-5d6b57f947-qhjz6        1/1     Running   0          20h
 cloud-storage-5658847d79-66bxz   1/1     Running   0          96m
 cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
-   
 ```
 
-4. Verfiy Smart City GUI 
+5. Verify Smart City GUI 
 From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
 
@@ -422,7 +420,7 @@ _Figure - SmartCity UI_
 
 ### SmartCity Termination
 
-Run the command for the project setup with expected result as below:
+Run the command for the SmartCity termination with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./88_terminate.sh
