@@ -291,7 +291,7 @@ The typical steps involved in the cluster registration and deployment of the app
 - Deploy SmartCity Application
 
 ### Clusters Setup
-In the step, cluster provider will be created and clusters will be registred in the EMCO.
+In the step, cluster provider will be created and clusters will be registered in the EMCO.
  
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server and maker sure that Harbor and EMCO microservices are in running status.
 
@@ -387,7 +387,7 @@ kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from
 ```shell
 
 3. Verify SmartCity Application Deployment Information.
-The pods status on the edge cluster are in the running status:
+The pods on the edge cluster are in the running status as shown as below:
 ```shell
 # kubectl get pods
 NAME                                                READY   STATUS    RESTARTS   AGE
@@ -404,7 +404,7 @@ traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1         
 ...
 ```
 
-The pods status on the cloud cluster are in the running status:
+The pods on the cloud cluster are in the running status as shown as below:
 ```shell
 # kubectl get pods
 NAME                             READY   STATUS    RESTARTS   AGE
