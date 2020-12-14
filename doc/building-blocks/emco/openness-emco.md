@@ -317,7 +317,7 @@ docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
 # ./env_setup.sh
 ```
 
-5. Run the command for the clusters setup with expected result as below.
+5. Run the command for the clusters setup with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./01_apply.sh
@@ -329,7 +329,7 @@ URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Respon
 
 ### Project Setup
 
-Run the command for the project setup with expected result as below.
+Run the command for the project setup with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./02_apply.sh
@@ -341,7 +341,7 @@ URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","d
 
 ### Logical Cloud Setup
 
-Run the command for the logical cloud setup with expected result as below.
+Run the command for the logical cloud setup with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./03_apply.sh
@@ -357,7 +357,7 @@ URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200
 
 ### Deploy SmartCity Application
 
-1. Run the command for the SmartCity application deployment with expected result as below.
+1. Run the command for the SmartCity application deployment with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./04_apply.sh
@@ -422,7 +422,7 @@ _Figure - SmartCity UI_
 
 ### SmartCity Termination
 
-Run the command for the project setup with expected result as below.
+Run the command for the project setup with expected result as below:
 ```shell
 # cd cli-scripts/
 # ./88_terminate.sh
