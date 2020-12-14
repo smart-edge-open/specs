@@ -37,7 +37,7 @@ This document provides high level system features, issues and limitations inform
   - [OpenNESS - 20.03](#openness---2003-3)
   - [OpenNESS - 20.06](#openness---2006-3)
   - [OpenNESS - 20.09](#openness---2009-3)
-  - [OpenNESS - 20.09](#openness---2009-4)
+  - [OpenNESS - 20.12](#openness---2012-1)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -45,7 +45,7 @@ This document provides high level system features, issues and limitations inform
   - [OpenNESS - 19.12](#openness---1912-4)
   - [OpenNESS - 20.03](#openness---2003-4)
   - [OpenNESS - 20.06](#openness---2006-4)
-  - [OpenNESS - 20.09](#openness---2009-5)
+  - [OpenNESS - 20.09](#openness---2009-4)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
   - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
@@ -54,13 +54,6 @@ This document provides high level system features, issues and limitations inform
 - [Package Versions](#package-versions)
 
 # Release history
-1. OpenNESS - 19.06
-2. OpenNESS - 19.06.01 
-3. OpenNESS - 19.09 
-4. OpenNESS - 19.12
-5. OpenNESS - 20.03
-6. OpenNESS - 20.06
-7. OpenNESS - 20.09
 
 ## OpenNESS - 19.06
 - Edge Cloud Deployment options  
@@ -364,7 +357,7 @@ There is one issue relevant to this release: it is not possible to remove applic
 - Calico cannot be used as secondary CNI with Multus in OpenNESS. It will work only as primary CNI. Calico must be the only network provider in each cluster. We do not currently support migrating a cluster with another network provider to use Calico networking. https://docs.projectcalico.org/getting-started/kubernetes/requirements
 - collectd Cache telemetry using RDT does not work when RMD is enabled because of resource conflict. Workaround is to disable collectd RDT plugin when using RMD - this by default is implemented globally. With this workaround customers will be able to allocate the Cache but not use Cache related telemetry. In case where RMD is not being enabled customers who desire RDT telemetry can re-enable collectd RDT.
 
-## OpenNESS - 20.09
+## OpenNESS - 20.12
 - CAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
 
 # Release Content
