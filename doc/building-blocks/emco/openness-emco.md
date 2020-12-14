@@ -410,7 +410,7 @@ cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
 ```
 
 4. Verfiy Smart City GUI 
-From a web browser, launch the Smart City web UI at URL https://<cloudcluster-controller-node-ip>. The GUI shows like:      
+From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
 
 _Figure - SmartCity UI_
