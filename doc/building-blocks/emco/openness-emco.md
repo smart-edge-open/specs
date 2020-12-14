@@ -2,9 +2,9 @@
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2020 Intel Corporation
 ```
-# Edge Multi-Cluster Orchestrator (EMCO) Support in OpenNESS
+# Edge Multi-Cluster Orchestrator (EMCO)
 
-- [Edge Multi-Cluster Orchestrator (EMCO) Support in OpenNESS](#edge-multi-cluster-orchestrator-emco-support-in-openness)
+- [Edge Multi-Cluster Orchestrator (EMCO)](#edge-multi-cluster-orchestrator-emco)
   - [Background](#background)
   - [EMCO Introduction](#emco-introduction)
     - [EMCO Architecture](#emco-architecture)
@@ -15,9 +15,9 @@ Copyright (c) 2020 Intel Corporation
   - [Practise with EMCO: SmartCity Deployment](#practise-with-emco-smartcity-deployment)
 
 ## Background
-EMCO (Edge Multi-Cluster Orchestration) is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes* and Helm charts.
+Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes* and Helm charts.
 
-EMCO addresses the need for deploying 'composite applications' in multiple geographical locations. Few industry communities started to use the term 'composite application' to represent these complex applications and deployments.
+EMCO addresses the need for deploying 'composite applications' in multiple geographical locations.
 > **NOTE**: A 'composite application' is a combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
 
 Compared with other multipe-clusters orchestration, EMCO focuses on the following functionalies:
@@ -26,7 +26,7 @@ Compared with other multipe-clusters orchestration, EMCO focuses on the followin
 - Deploying edge services and network functions on to different nodes spread across the different clusters.
 - Monitoring the health of the deployed edge services/network functions across the clusters.
 - Orchestrating edge services and network functions with deployment intents based on compute, acceleration, and storage requirements.
-- Supporting onboard for multiple tenants from different enterprises while ensuring confidentiality and full isolation across the tenants.
+- Supporting onboarding of multiple tenants from different enterprises while ensuring confidentiality and full isolation across the tenants.
 
 
 The following figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters.
@@ -39,9 +39,9 @@ All the managed edge clusters and cloud clusters are connected with EMCO cluster
 - The edge clusters in the diagram can be installed and provisioned by using [OpenNESS Media Analytics Flavor](../../flavors.md). 
 - The cloud cluster in the diagram can be any type of cloud cluster, for example: Azure Cloud.
 - The composite application - SmartCity is composed of two parts: edge applications and cloud (web) applications. 
-  - The edge application executes media processing and analytics on the multiple edge clusters to reduce latency.
+  - The edge application executes media processing and analytics on multiple edge clusters to reduce latency.
   - The cloud application is like a web application for additional post-processing, such as calculating statistics and display/visualization on the cloud cluster side.
-  - EMCO user can deploy the  SmartCity applications across the clusters. Besides that, EMCO supports override values, profiles for operator to satisfy the need of deployments. 
+  - An EMCO user can deploy the  SmartCity applications across the clusters. Besides that, EMCO supports override values, profiles for the operator to satisfy the need of deployments. 
   - For more details, refer to [SmartCity Deployment Practise with EMCO](#smartcity-deployment-practise-with-emco).
 
 This document aims to familiarize the user with [OpenNESS deployment flavor](../../flavors.md) for EMCO installation and provision, and provide instructions accordingly.
@@ -61,13 +61,13 @@ _Figure - EMCO Architecture_
   - Monitoring covers distributed application.
  
 #### Cluster Registration
-A micro-service exposes RESTful API. User can register Cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any kubernetes* clusters, user can onboard those clusters to EMCO by creating a Cluster Provider and then adding Clusters to the Cluster Provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
+A microservice exposes RESTful API. User can register cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any Kubernetes* cluster, user can onboard those clusters to EMCO by creating a cluster provider and then adding clusters to the cluster provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
 
-Additionally, after a Cluster is created, labels and key value pairs can be added to the Cluster via the EMCO API. Clusters can be specified by label when preparing placement intents.
-> **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as Cluster provider in this context.
+Additionally, after a cluster is created, labels and key value pairs can be added to the cluster via the EMCO API. Clusters can be specified by label when preparing placement intents.
+> **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as cluster provider in this context.
  
 #### Distributed Application Scheduler
-The distributed application scheduler microservice provides functionalities:
+The distributed application scheduler microservice provides the following functionalities:
 - Project Management provides multi-tenancy in the application from a user perspective.
 - Composite App Management manages composite apps that are collections of Helm Charts, one per application.
 - Composite Profile Management manages composite profiles that are collections of profile, one per application.
@@ -85,6 +85,7 @@ The Distributed Application Scheduler supports operations on a deployment intent
 - status: (may be invoked at any step) provides information on the status of the deployment intent group.
 - terminate: terminates the application resources of an instantiated application from all of the clusters to which it was deployed. In some cases, if a remote cluster is intermittently unreachable, the instantiate operation may still retry the instantiate operation for that cluster. The terminate operation will cause the instantiate operation to complete (i.e. fail), before the termination operation is performed.
 - stop: In some cases, if the remote cluster is intermittently unreachable, the Resource Synchronizer will continue retrying an instantiate or terminate operation. The stop operation can be used to force the retry operation to stop, and the instantiate or terminate  operation will complete (with a failed status). In the case of terminate, this allows the deployment intent group resource to be deleted via the API, since deletion is prevented until a deployment intent group resource has reached a completed terminate operation status.
+
 #### Network Configuration Management
 The network configuration management (NCM) microservice provides the following functionalities:
 - Provider Network Management to create provider networks. 
@@ -128,7 +129,6 @@ Apart from the creation/instantiation of Logical Clouds, the following operation
 * Terminate a Logical Cloud - this removes all of the Logical Cloud -related resources from all of the respective Clusters.
 * Delete a Logical Cloud - this eliminates all traces of the Logical Cloud in EMCO.
 
-
 ##### Level-1 Logical Clouds
 Logical Clouds were introduced to group and partition clusters in a multi-tenant way and across boundaries, improving flexibility and scalability. A Level-1 Logical Cloud is the default type of Logical Cloud providing just that much. When projects request a Logical Cloud to be created, they provide what permissions are available, resource quotas and clusters that compose it. The Distributed Cloud Manager, alongside the Resource Synchronizer, sets up all the clusters accordingly, with the necessary credentials, namespace/resources, and finally generating the kubeconfig files used to authenticate/reach each of those clusters in the context of the Logical Cloud.
 
@@ -142,21 +142,21 @@ The OVN Action Controller (ovnaction) microservice is an action controller which
 - ovnaction supports specifying interfaces which attach to networks created by the Network Configuration Management microservice.
 
 #### Traffic Controller
-The traffic controller micro-service provides a way to create network policy resources across edge clusters. It provides inbound RESTful APIs to create intents to open the traffic from clients, and provides change and delete APIs for update and deletion of traffic intents. Using the information provided through intents, it also creates a network policy resource for each of the application servers on the corresponding edge cluster.
+The traffic controller microservice provides a way to create network policy resources across edge clusters. It provides inbound RESTful APIs to create intents to open the traffic from clients, and provides change and delete APIs for update and deletion of traffic intents. Using the information provided through intents, it also creates a network policy resource for each of the application servers on the corresponding edge cluster.
 > **NOTE**:For network policy to work, edge cluster must have network policy support using CNI such as calico.
+
 #### Resource Syncronizer
-This micro-service is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various micro-services are used by this micro-service. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
+This microservice is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various microservices are used by this microservice. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
 
 #### Generic Action Controller
-
 The generic action controller microservice is an action controller which may be registered with the central orchestrator. It can acheive the following usecases:
 
-- <b>Create a new kubernetes* object</b> and deploy that along with a specific application which is part of the composite Application. There are two variations here: 
+- <b>Create a new Kubernetes* object</b> and deploy that along with a specific application which is part of the composite Application. There are two variations here: 
   
   - Default : Apply the new object to every instance of the app in every cluster where the app is deployed.
   - Cluster-Specific : Apply the new object only where the app is deployed to a specific cluster, denoted by a cluster-name or a list of clusters denoted by a cluster-label.
 
-- <b>Modify an existing kubernetes* object</b> which may have been deployed using the helm chart for an app, or may have been newly created by the above mentioned usecase. Modification may correspond to specific fields in the YAML definition of the object.
+- <b>Modify an existing Kubernetes* object</b> which may have been deployed using the helm chart for an app, or may have been newly created by the above mentioned usecase. Modification may correspond to specific fields in the YAML definition of the object.
 
 To acheive both the usecases, the controller exposes REST APIs to create, update and delete the following:
 
@@ -221,7 +221,7 @@ EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tre
 The first step is to prepare one server environment which needs to fulfill the [Preconditions](../../getting-started/network-edge/controller-edge-node-setup.md#preconditions).
 
 Then Place the EMCO server hostname in `[controller_group]` group in `inventory.ini` file of openness-experience-kit. 
-> **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the kubernetes* control plane node.
+> **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
 
 Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
 
