@@ -384,7 +384,7 @@ On the cloud cluster, creat `self-signed-certificate` as below:
 CRT=/root/tunnel_secret/self.crt
 SELFKEY=/root//tunnel_secret/self.key
 kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
-```shell
+```
 
 3. Verify SmartCity Application Deployment Information.
 The pods on the edge cluster are in the running status as shown as below:
