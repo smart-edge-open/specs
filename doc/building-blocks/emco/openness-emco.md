@@ -15,7 +15,7 @@ Copyright (c) 2020 Intel Corporation
   - [Practice with EMCO: SmartCity Deployment](#practice-with-emco-smartcity-deployment)
 
 ## Background
-Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes* and Helm charts.
+Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes\* and Helm charts.
 
 EMCO addresses the need for deploying 'composite applications' in multiple geographical locations.
 > **NOTE**: A 'composite application' is a combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
@@ -63,7 +63,7 @@ _Figure 2 - EMCO Architecture_
   - Monitoring covers distributed application.
 
 #### Cluster Registration
-A microservice exposes RESTful API. User can register cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any Kubernetes* cluster, user can onboard those clusters to EMCO by creating a cluster provider and then adding clusters to the cluster provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
+A microservice exposes RESTful API. User can register cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any Kubernetes\* cluster, user can onboard those clusters to EMCO by creating a cluster provider and then adding clusters to the cluster provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
 
 Additionally, after a cluster is created, labels and key value pairs can be added to the cluster via the EMCO API. Clusters can be specified by label when preparing placement intents.
 > **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as cluster provider in this context.
@@ -104,7 +104,7 @@ The Network Configuration Management microservice supports operations on the net
 - stop: In some cases, if the remote cluster is intermittently unreachable, the Resource Synchronizer will continue retrying an instantiate or terminate operation. The stop operation can be used to force the retry operation to stop, and the instantate or terminate  operation will be completed (with a failed status). In the case of terminate, this allows the deployment intent group resource to be deleted via the API, since deletion is prevented until a deployment intent group resource has reached a completed terminate operation status.
 
 #### Distributed Cloud Manager
-The Distributed Cloud Manager (DCM) provides the Logical Cloud abstraction and effectively completes the concept of "multi-cloud". One Logical Cloud is a grouping of one or many clusters, each with their own control plane, specific configurations and geo-location, which get partitioned for a particular EMCO project. This partitioning is made via the creation of distinct, isolated namespaces in each of the (Kubernetes*) clusters that thus make up the Logical Cloud.
+The Distributed Cloud Manager (DCM) provides the Logical Cloud abstraction and effectively completes the concept of "multi-cloud". One Logical Cloud is a grouping of one or many clusters, each with their own control plane, specific configurations and geo-location, which get partitioned for a particular EMCO project. This partitioning is made via the creation of distinct, isolated namespaces in each of the Kubernetes\* clusters that thus make up the Logical Cloud.
 
 A Logical Cloud is the overall target of a Deployment Intent Group and is a mandatory parameter (the specific applications under it further refine what gets run and in which location). A Logical Cloud must be explicitly created and instantiated before a Deployment Intent Group can be instantiated.
 
@@ -123,7 +123,7 @@ The basic flow of lifecycle operations to get a Logical Cloud up and running via
 * Create a Logical Cloud specifying the following attributes:
   - Level: either 1 or 0, depending on whether an admin or a custom/user cloud is sought - more on the differences below.
   - (*for Level-1 only*) Namespace name - the namespace to use in all of the Clusters of the Logical Cloud.
-  - (*for Level-1 only*) User name - the name of the user that will be authenticating to the Kubernetes* APIs to access the namespaces created.
+  - (*for Level-1 only*) User name - the name of the user that will be authenticating to the Kubernetes\* APIs to access the namespaces created.
   - (*for Level-1 only*) User permissions - permissions that the user specified will have in the namespace specified, in all of the clusters.
 * (*for Level-1 only*) Create resource quotas and assign them to the Logical Cloud created: this specifies what quotas/limits the user will face in the Logical Cloud, for each of the Clusters.
 * Assign the Clusters previously created with the project-less Cluster Registration API to the newly-created Logical Cloud.
@@ -168,24 +168,13 @@ To achieve both the usecases, the controller exposes RESTful APIs to create, upd
 - Customization - Specifies the modifications (using JSON Patching) to be applied on the objects.
 
 ### EMCO Terminology
-|                        |                                                                                                                                  |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Cluster Provider       | The provider is someone who owns clusters and registers them.                                                                    |
-| Projects               | The project resource provides means for a collection of applications to be grouped.                                              |
-|                        | Several applications can exist under a specific project.                                                                         |
-|                        | Projects allows for grouping of applications under a common tenant to be defined.                                                |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Composite application  | Composite application is combination of multiple applications.                                                                   |
-|                        | Based on the deployment intent, various applications of the composite application get deployed at various locations.             |
-|                        | Also, some applications of the composite application get replicated in multiple locations.                                       |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Deployment Intent      | EMCO does not expect the editing of Helm charts provided by application/Network-function vendors by DevOps admins.               |
-|                        | Any customization and additional K8s resources that need to be present with the application are specified as deployment intents. |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Placement Intent       | EMCO supports to create generic placement intents for a given composite application.                                             |
-|                        | Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application.       |
-|                        | Finally works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters.            |
-|------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| Term | Description |
+|:-----: | ----- | 
+| Cluster Provider | <p>The provider is someone who owns clusters and registers them.</p>|
+| Projects | <p>The project resource provides means for a collection of applications to be grouped. Several applications can exist under a specific project. Projects allows for grouping of applications under a common tenant to be defined.</p>|
+| Composite application | <p>Composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations. Also, some applications of the composite application get replicated in multiple locations. </p>|
+| Deployment Intent | <p>EMCO does not expect the editing of Helm charts provided by application/Network-function vendors by DevOps admins. Any customization and additional K8s resources that need to be present with the application are specified as deployment intents. </p>|
+| Placement Intent | <p>EMCO supports to create generic placement intents for a given composite application. Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application. Finally works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters. </p>|
 
 ### EMCO API
 For user interaction, EMCO provides [RESTful API](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
@@ -201,7 +190,7 @@ EMCO uses Istio and other open source solutions to provide Multi-tenancy solutio
 
 - Using Istio AuthorizationPolicy access to different EMCO resources can be controlled based on roles defined for the users.
 
-The following figure shows various Emco services running in a cluster with Istio.
+The following figure shows various EMCO services running in a cluster with Istio.
 
 ![OpenNESS EMCO](openness-emco-images/emco-istio-arch.png)
 
@@ -213,7 +202,7 @@ The following figure shows the authentication flow with EMCO, Istio and Authserv
 
 _Figure 5 - EMCO Authenication with external OATH2 Server_
 
-Detailed steps for configuring EMCO with Istio can be found in [Emco Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
+Detailed steps for configuring EMCO with Istio can be found in [EMCO Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
 
 Steps for EMCO Authentication and Authorization Setup:
 - Install and Configure Keycloak Server to be used in the setup. This server runs outside EMCO cluster
@@ -221,14 +210,14 @@ Steps for EMCO Authentication and Authorization Setup:
 - Install Istio in the Kubernetes* cluster where EMCO is running
 - Enable Sidecar Injection in EMCO namesapce
 - Install EMCO in EMCO namespace (with Istio sidecars)
-- Configure Istio Ingress gateway resources for Emco Services
+- Configure Istio Ingress gateway resources for EMCO Services
 - Configure Istio Ingess gateway to enable running along with Authservice
 - Apply EnvoyFilter for Authservice
 - Apply Authentication and Authorization Policies
 
 ### EMCO Installation With OpenNESS Flavor
 EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
-- The first step is to prepare one server environment which needs to fulfill the [Preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
+- The first step is to prepare one server environment which needs to fulfill the [preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
 - Then place the EMCO server hostname in `[controller_group]` group in `inventory.ini` file of openness-experience-kit. 
 > **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
 - Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
