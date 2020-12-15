@@ -362,7 +362,7 @@ There is one issue relevant to this release: it is not possible to remove the ap
 - collectd Cache telemetry using RDT does not work when RMD is enabled because of resource conflict. Workaround is to disable collectd RDT plugin when using RMD - this by default is implemented globally. With this workaround customers will be able to allocate the Cache but not use Cache related telemetry. In case where RMD is not being enabled customers who desire RDT telemetry can re-enable collectd RDT.
 
 ## OpenNESS - 20.12
-- cAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
+- CAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
 
 # Release Content
 
@@ -400,40 +400,40 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 
 ## 2nd Generation Intel® Xeon® Scalable Processors
 
-|              |                                                            |
-| ------------ | ---------------------------------------------------------- |
-| CLX-SP       | Compute Node based on CLX-SP(6252N)                        |
-| Board        | S2600WFT server board                                      |
-|              | 2 x Intel® Xeon® Gold 6252N CPU @ 2.30GHz                  |
-|              | 2 x associated Heatsink                                    |
-| Memory       | 12x Micron 16GB DDR4 2400MHz DIMMS* [2666 for PnP]         |
-| Chassis      | 2U Rackmount Server Enclosure                              |
-| Storage      | Intel M.2 SSDSCKJW360H6 360G                               |
-| NIC          | 1x Intel® Fortville NIC X710DA4 SFP+ ( PCIe card to CPU-0) |
-| QAT          | Intel® Quick Assist Adapter Device 37c8                    |
-|              | (Symmetrical design) LBG integrated                        |
-| NIC on board | Intel-Ethernet-Controller-I210 (for management)            |
-| Other card   | 2x PCIe Riser cards                                        |
+|                  |                                                               |
+|------------------|---------------------------------------------------------------|
+| CLX-SP           | Compute Node based on CLX-SP(6252N)                           |
+| Board            |  S2600WFT server board                                        |
+|                  | 2 x Intel® Xeon® Gold 6252N CPU @ 2.30GHz                     |
+|                  | 2 x associated Heatsink                                       |
+| Memory           | 12x Micron 16GB DDR4 2400MHz DIMMS* [2666 for PnP]            |
+| Chassis          | 2U Rackmount Server Enclosure                                 |
+| Storage          | Intel M.2 SSDSCKJW360H6 360G                                  |
+| NIC              | 1x Intel® Fortville NIC X710DA4 SFP+ ( PCIe card to CPU-0)    |
+| QAT              | Intel® Quick Assist Adapter Device 37c8                       |
+|                  | (Symmetrical design) LBG integrated                           |
+| NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
+| Other card       | 2x PCIe Riser cards                                           |
 
 ## Intel® Xeon® Scalable Processors
 
-|              |                                                                                                                                                                                                         |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SKX-SP       | Compute Node based on SKX-SP(6148)                                                                                                                                                                      |
-| Board        | WolfPass S2600WFQ server board(symmetrical QAT)CPU                                                                                                                                                      |
-|              | 2 x Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz                                                                                                                                                            |
-|              | 2 x associated Heatsink                                                                                                                                                                                 |
-| Memory       | 12x Micron 16GB DDR4 2400MHz DIMMS* [2666 for PnP]                                                                                                                                                      |
-| Chassis      | 2U Rackmount Server Enclosure                                                                                                                                                                           |
-| Storage      | Intel® M.2 SSDSCKJW360H6 360G                                                                                                                                                                           |
-| NIC          | 1x Intel® Fortville NIC X710DA4 SFP+ ( PCIe card to CPU-0)                                                                                                                                              |
-| QAT          | Intel® Quick Assist Adapter Device 37c8                                                                                                                                                                 |
-|              | (Symmetrical design) LBG integrated                                                                                                                                                                     |
-| NIC on board | Intel-Ethernet-Controller-I210 (for management)                                                                                                                                                         |
-| Other card   | 2x PCIe Riser cards                                                                                                                                                                                     |
-| HDDL-R       | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                                                                          |
-| VCAC-A       | [VCAC-A Accelerator for Media Analytics](https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/media-analytics-vcac-a-accelerator-card-by-celestica-datasheet.pdf)                    |
-| PAC-N3000    | [Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 ](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html) |
+|                  |                                                               |
+|------------------|---------------------------------------------------------------|
+| SKX-SP           | Compute Node based on SKX-SP(6148)                            |
+| Board            | WolfPass S2600WFQ server board(symmetrical QAT)CPU            |
+|                  | 2 x Intel(R) Xeon(R) Gold 6148 CPU @ 2.40GHz                  |
+|                  | 2 x associated Heatsink                                       |
+| Memory           | 12x Micron 16GB DDR4 2400MHz DIMMS* [2666 for PnP]            |
+| Chassis          | 2U Rackmount Server Enclosure                                 |
+| Storage          | Intel® M.2 SSDSCKJW360H6 360G                                 |
+| NIC              | 1x Intel® Fortville NIC X710DA4 SFP+ ( PCIe card to CPU-0)    |
+| QAT              | Intel® Quick Assist Adapter Device 37c8                       |
+|                  | (Symmetrical design) LBG integrated                           |
+| NIC on board     | Intel-Ethernet-Controller-I210 (for management)               |
+| Other card       | 2x PCIe Riser cards                                           |
+| HDDL-R           | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                 |
+| VCAC-A           | [VCAC-A Accelerator for Media Analytics](https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/media-analytics-vcac-a-accelerator-card-by-celestica-datasheet.pdf)                                                 |
+| PAC-N3000        | [Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 ](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html)                  |
 
 # Supported Operating Systems
 
