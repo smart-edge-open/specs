@@ -294,7 +294,7 @@ HARBORRHOST=<harbor_registry_host>
 cd /etc/docker/certs.d/
 mkdir ${HARBORRHOST}
 cd ${HARBORRHOST}
-echo -n | openssl s_client -showcerts -connect ${HARBORRHOST} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > harbor.crt
+curl -sk -X GET https://${HARBORRHOST}/api/v2.0/systeminfo/getcert -H "accept: application/json" -o harbor.crt 
 
 HARBORRPW=Harbor12345
 docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
@@ -306,7 +306,7 @@ docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
 4. Run the command for the environment setup with success return as below:
 ```shell
 # cd cli-scripts/
-# ./env_setup.sh
+# ./setup_env.sh
 ```
 
 5. Run the command for the clusters setup with expected result as below:
