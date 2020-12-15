@@ -296,7 +296,7 @@ The typical steps involved in the cluster registration and deployment of the app
 ### Cluster Setup
 In the step, cluster provider will be created. And both the edge cluster and the cloud cluster will be registered in the EMCO.
 
-1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server and maker sure that Harbor and EMCO microservices are in running status.
+1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
 
 2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server:
 ```shell
