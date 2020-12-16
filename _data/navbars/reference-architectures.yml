@@ -40,18 +40,3 @@ section:
       path: /doc/reference-architectures/ran/openness_xran
       meta_title: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge
       meta_description: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge.
-
-  - title: Converged Edge Reference Architecture Near Edge
-    path: /doc/reference-architectures/CERA-Near-Edge
-    meta_title: Converged Edge Reference Architecture Near Edge
-    meta_description: Reference architecture combines wireless and high performance compute for IoT, AI, video and other services.
-
-  - title: Converged Edge Reference Architecture On Premises Edge
-    path: /doc/reference-architectures/CERA-5G-On-Prem
-    meta_title: Converged Edge Reference Architecture On Premises Edge
-    meta_description: Reference architecture combines wireless and high performance compute for IoT, AI, video and other services.
-
-  - title: SDWAN in OpenNESS
-    path: /doc/reference-architectures/openness_sdwan
-    meta_title: SDWAN in OpenNESS
-    meta_description: OpenNESS provides a reference solution for SD-WAN consisting of building blocks for cloud-native deployments.
