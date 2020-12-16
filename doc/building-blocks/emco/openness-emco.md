@@ -38,7 +38,7 @@ _Figure 1 - Topology Overview with OpenNESS EMCO_
 All the managed edge clusters and cloud clusters are connected with the EMCO cluster through the WAN network. 
 - The central orchestration (EMCO) cluster installation can use the [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
 - The edge clusters in the diagram can be installed and provisioned by using the [OpenNESS Media Analytics Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
-- The cloud cluster in the diagram can be any type of cloud cluster, for example: Azure Cloud.
+- The cloud cluster in the diagram can be a legancy Kubernetes\* cluster.
 - The composite application - SmartCity is composed of two parts: edge applications and cloud (web) applications. 
   - The edge application executes media processing and analytics on multiple edge clusters to reduce latency.
   - The cloud application is like a web application for additional post-processing, such as calculating statistics and display/visualization on the cloud cluster side.
@@ -265,7 +265,7 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
   - The composite application is composed of two parts: 
     - EdgeApp (multiple OpenNESS edge clusters) 
     - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
-- One OpenNESS edge cluster (representing regional office) and One legacy K8s Cluster (representing cloud) are connected to the OpenNESS EMCO cluster. 
+- One OpenNESS edge cluster (representing regional office) and One legacy K8s Cluster (representing cloud) are connected to the OpenNESS EMCO. 
 - The whole deployment architecture diagram is as shown below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
@@ -376,6 +376,7 @@ CRT=/root/tunnel_secret/self.crt
 SELFKEY=/root//tunnel_secret/self.key
 kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
 ```
+> **NOTE**: Actually EMCO supports generic K8S resource configuration including secret for the clusters. But the SmartCity application needs the above manual steps to create secrets from the specific information which is only accessiable by th edge cluster and the cloud cluster. 
 
 4. Verify SmartCity Application Deployment Information.
 The pods on the edge cluster are in the running status as shown as below:
