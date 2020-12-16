@@ -371,7 +371,7 @@ CRT=/root/tunnel_secret/self.crt
 SELFKEY=/root//tunnel_secret/self.key
 kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
 ```
-> **NOTE**: Actually EMCO supports generic K8S resource configuration including configmap, secret and networkpolicy...etc. In the practice, only offer the example usage about how to use [EMCO for configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
+> **NOTE**: Actually EMCO supports generic K8S resource configuration including configmap, secret,etc. In the practice, only offer the example usage about how to use [EMCO for configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 > **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by th edge cluster and the cloud cluster, we use manual steps here.
 
 4. Verify SmartCity Application Deployment Information.
