@@ -66,19 +66,26 @@ When the Intel® FPGA PAC N3000 is programmed with a vRAN 5G image, it exposes t
 
 The full pipeline of preparing the device for workload deployment and deploying the workload can be divided into the following stages (subfeatures):
 
-- Programming the FPGA with RTL factory and user images: feature installation via Ansible\* automation and a K8s kubectl plugin are provided to use the feature.
+- Programming the FPGA with RTL user images: feature installation via Ansible\* automation and a K8s kubectl plugin are provided to use the feature.
 - Enabling SRIOV, binding devices to appropriate drivers, and the creation of VFs: delivered as part of the Edge Nodes Ansible automation.
-- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility: Docker\* image creation delivered as part of the Edge Nodes Ansible automation (dependency on the config utility from the FlexRAN package). The images being pushed to a local Harbor registry, sample pod (job) deployment via Helm charts.
+- Queue configuration of FPGAs PF/VFs with an aid of DPDK Baseband Device (BBDEV) config utility: Docker\* image creation delivered as part of the Edge Nodes Ansible automation. The images being pushed to a local Harbor registry, sample pod (job) deployment via Helm charts.
 - Enabling orchestration and allocation of the devices (VFs) to non-root pods requesting the devices: leveraging the support of FPGA SRIOV VFs from K8s SRIOV Device Plugin. K8s plugin deployment is delivered as part of the Edge Controller's Ansible automation.
-- Simple sample BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
+- Simple sample DPDK BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
 It is assumed that the FPGA is always used with the OpenNESS Network Edge, paired with the Multus\* plugin to enable the workload pod with a default K8s network interface. The Multus CNI is a container network interface (CNI) plugin for Kubernetes that enables attaching multiple network interfaces to pods.
+
+It is also assumed that the Intel® FPGA PAC N3000 MAX10 build version of the card used for OpenNESS setup is at least version 2.0.x and has RoT capability, ie:
+```shell
+Board Management Controller, MAX10 NIOS FW version D.2.0.19
+Board Management Controller, MAX10 Build version D.2.0.6
+```
+For information on how to update and flash the MAX10 to supported version see [Intel® FPGA PAC N3000 documentation](https://www.intel.com/content/www/us/en/programmable/documentation/xgz1560360700260.html#wzl1570122399760).
 
 ### FPGA (FEC) Ansible installation for OpenNESS Network Edge
 To run the OpenNESS package with FPGA (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
 #### OpenNESS Experience Kit
-To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` to `true`:
+To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` (or flavour alternative file) to `true`:
 ```yaml
 # group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
@@ -88,7 +95,7 @@ Additionally, SRIOV must be enabled in OpenNESS:
 ```yaml
 # group_vars/all/10-default.yml
 kubernetes_cnis:
-- kubeovn
+- <main CNI>
 - sriov
 ```
 
@@ -110,15 +117,11 @@ fpga_userspace_vf:
 
 The following packages need to be placed into specific directories for the feature to work:
 
-1. A clean copy of `bbdev_config_service` needs to be placed in the `openness-experience-kits/fpga_config` directory. The package can be obtained as part of the 19.10 release of FlexRAN. To obtain the package, contact your Intel representative or visit the [Resource Design Center](https://cdrdv2.intel.com/v1/dl/getContent/615743 ).
-
-2. The OPAE package `n3000-1-3-5-beta-rte-setup.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative or visit the [Resource Design Center](https://cdrdv2.intel.com/v1/dl/getContent/616082).
-
-3. The factory image configuration package `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative or visit the [Resource Design Center](https://cdrdv2.intel.com/v1/dl/getContent/616080).
+1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
 
 Run setup script `deploy_ne.sh`.
 
-After a successful deployment, the following pods will be available in the cluster:
+After a successful deployment, the following pods will be available in the cluster (CNI pods may vary depending on deployment):
 ```shell
 kubectl get pods -A
 
@@ -154,38 +157,49 @@ openness      syslog-ng-br92z                           1/1     Running   0     
 ```
 
 ### FPGA programming and telemetry on OpenNESS Network Edge
-To program the FPGA factory image (one-time secure upgrade) or the user image (5GN FEC vRAN) of the Intel® FPGA PAC N3000 via OPAE a `kubectl` plugin for K8s is provided. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs that run to completion on the desired host and display the logs/output of the command.
+It is expected the the factory image of the Intel® FPGA PAC N3000 is of version 2.0.x. To program the user image (5GN FEC vRAN) of the Intel® FPGA PAC N3000 via OPAE a `kubectl` plugin for K8s is provided - it is expected that the provided user image is signed or un-signed (development purposes) by the user, see the [documentation](https://www.intel.com/content/www/us/en/programmable/documentation/pei1570494724826.html) for more information on how to sign/un-sign the image file. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs that run to completion on the desired host and display the logs/output of the command.
 
 The following are the operations supported by the `kubectl rsu` K8s plugin. They are run from the Edge Controller:
 
-1. To display currently supported capabilities and information on how to use them, run:
+1. To check the version of the MAX10 image and FW run:
+```
+kubectl rsu get fme  -n <hostname>
 
+Board Management Controller, MAX10 NIOS FW version D.2.0.19
+Board Management Controller, MAX10 Build version D.2.0.6
+//****** FME ******//
+Object Id                     : 0xEF00000
+PCIe s:b:d.f                  : 0000:1b:00.0
+Device Id                     : 0x0b30
+Numa Node                     : 0
+Ports Num                     : 01
+Bitstream Id                  : 0x2315842A010601
+Bitstream Version             : 0.2.3
+Pr Interface Id               : a5d72a3c-c8b0-4939-912c-f715e5dc10ca
+Boot Page                     : user
+```
+2. To display currently supported capabilities and information on how to use them, run:
 ```
 kubectl rsu -h
 ```
-2. To run one time secure upgrade of the factory image, run:
-```
-kubectl rsu flash -n <hostname>
-```
-3. To display information about RSU supported devices that can be used to program the FPGA, and to list FPGA user images available on the host, run:
+2. To display information about RSU supported devices that can be used to program the FPGA, and to list FPGA user images available on the host, run:
 ```
 kubectl rsu discover -n <hostname>
 ```
-4. To copy and sign a user image to the desired platform, run the following command to copy an already signed image add `--no-sign` to the command:
-To obtain a user FPGA image for 5GNR vRAN such as `ldpc5g_2x2x25g`, contact your Intel Representative.
+3. To copy and the user image to the desired platform, run the following command.
+To obtain a user FPGA image for 5GNR vRAN such as `2x2x25G-5GLDPC-v1.6.1-3.0.0`, contact your Intel Representative.
 ```
 kubectl rsu load -f </path/to/image.bin> -n <hostname>
 ```
-5. To program the FPGA with user image (vRAN for 5GNR), run:
+4. To program the FPGA with user image (vRAN for 5GNR), run:
 ```
 kubectl rsu program -f <signed_RTL_image> -n <hostname> -d <RSU_PCI_bus_function_id>
 ```
-6. To obtain basic telemetry (temperature, power usage, and FPGA image information, etc.), run:
+5. To obtain basic telemetry (temperature, power usage, and FPGA image information, etc.), run:
 ```
 kubectl rsu get temp  -n <hostname>
 kubectl rsu get power  -n <hostname>
 kubectl rsu get fme  -n <hostname>
-
 
 # Sample output for correctly programmed card with `get fme` command
 //****** FME ******//
@@ -200,62 +214,28 @@ Pr Interface Id : a5d72a3c-c8b0-4939-912c-f715e5dc10ca
 Boot Page : user
 ```
 7. For more information on the usage of each `kubectl rsu` plugin capability, run each command with the `-h` argument.
+8. To monitor progress of deployed jobs run:
+```
+kubectl logs <job-name> -f
+```
 
 To run vRAN workloads on the Intel® FPGA PAC N3000, the FPGA must be programmed with the appropriate factory and user images per the instructions.
 
-Additionally, in a scenario where the user wants to manually deploy a K8s job for OPAE without the use of the `kubectl rsu` plugin, the following sample `.yml` specification can be used as a template. The provided `args` needs to be changed accordingly; this job can be run with `kubectl create -f sample.yml`:
-
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: fpga-opae-job
-spec:
-  template:
-    spec:
-      containers:
-      - securityContext:
-          privileged: true
-        name: fpga-opea
-        image: fpga-opae-pacn3000:1.0
-        imagePullPolicy: Never
-        command: [ "/bin/bash", "-c", "--" ]
-        args: [ "./check_if_modules_loaded.sh && fpgasupdate /root/images/<img_name> <RSU_PCI_bus_function_id> && rsu bmcimg (RSU_PCI_bus_function_id)" ]
-        volumeMounts:
-        - name: class
-          mountPath: /sys/devices
-          readOnly: false
-        - name: image-dir
-          mountPath: /root/images
-          readOnly: false
-      volumes:
-      - hostPath:
-          path: "/sys/devices"
-        name: class
-      - hostPath:
-          path: "/temp/vran_images"
-        name: image-dir
-      restartPolicy: Never
-      nodeSelector:
-        kubernetes.io/hostname: samplenodename
-
-  backoffLimit: 0
-```
 #### Telemetry monitoring
 
-  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-telemetry.md#collectd).
+  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
 
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 
 ### FEC VF configuration for OpenNESS Network Edge
-To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness/helm-chartss/fpga_config`.
+To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness/helm-charts/bb_config`.
 
-Sample configMap, which can be configured by changing values if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness/helm-chartss/fpga_config/templates/fpga-config.yaml` populated with values from `/opt/openness/helm-chartss/fpga_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
+Sample configMap, which can be configured by changing values if other than typical configuration is required, with a profile for the queue configuration, is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/fpga-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
 
-Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-chartss/` on Edge Controller:
+Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller:
 
 ```shell
-helm install --set nodeName=<node_name> intel-fpga-cfg fpga_config
+helm install --set nodeName=<node_name> intel-fpga-cfg bb_config
 ```
 
 Check if the job has completed and that the state of the pod created for this job is “Completed”. Check the logs of the pod to see a complete successful configuration.
@@ -268,7 +248,7 @@ Expected: `Mode of operation = VF-mode FPGA_LTE PF [0000:xx:00.0] configuration 
 To redeploy the job on another node, use the following command:
 
 ```
-helm upgrade --set nodeName=<another_node_name> intel-fpga-cfg fpga_config
+helm upgrade --set nodeName=<another_node_name> intel-fpga-cfg bb_config
 ```
 
 To uninstall the job, run:
@@ -286,7 +266,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin (`./fpga/configMap.yml`).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
 
 A sample pod requesting the FPGA (FEC) VF may look like this:
 
@@ -336,13 +316,11 @@ Navigate to:
 edgeapps/fpga-sample-app
 ```
 
-Copy the necessary `dpdk_19.11_new.patch` file into the directory. This patch is available as part of FlexRAN 20.02 release package. To obtain the FlexRAN patch allowing 5G functionality for BBDEV in DPDK, contact your Intel representative or visit the [Resource Design Center](https://cdrdv2.intel.com/v1/dl/getContent/615743).
-
 Build the image:
 
 `./build-image.sh`
 
-From the Edge Controller, deploy the application pod. The pod specification is located at `/fpga`:
+From the Edge Controlplane, deploy the application pod. The pod specification is located at `/opt/openness/edgenode/edgecontroller/fpga/fpga-sample-app.yaml`:
 
 ```
 kubectl create -f fpga-sample-app.yaml
@@ -354,7 +332,7 @@ Execute into the application pod and run the sample app:
 kubectl exec -it pod-bbdev-sample-app -- /bin/bash
 
 # run test application
-./test-bbdev.py --testapp-path ./testbbdev -e="-w ${PCIDEVICE_INTEL_COM_INTEL_FEC_5G}" -i -n 1 -b 1 -l 1 -c validation -v ./test_vectors/ldpc_dec_v7813.data
+./test-bbdev.py --testapp-path ./dpdk-test-bbdev -e="-w ${PCIDEVICE_INTEL_COM_INTEL_FEC_5G}" -i -n 1 -b 1 -l 1 -c validation -v ldpc_dec_v7813.data
 
 # sample output
 EAL: Detected 48 lcore(s)
