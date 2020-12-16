@@ -282,7 +282,7 @@ In the step, cluster provider will be created. And both the edge cluster and the
 
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
 
-2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server:
+2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
 ```shell
 HARBORRHOST=<harbor_registry_host>
 
