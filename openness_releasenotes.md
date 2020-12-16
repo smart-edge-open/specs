@@ -21,6 +21,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-1)
   - [OpenNESS - 20.06](#openness---2006-1)
   - [OpenNESS - 20.09](#openness---2009-1)
+  - [OpenNESS - 20.12](#openness---2012-1)
 - [Fixed Issues](#fixed-issues)
   - [OpenNESS - 19.06](#openness---1906-2)
   - [OpenNESS - 19.06.01](#openness---190601-1)
@@ -37,7 +38,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-3)
   - [OpenNESS - 20.06](#openness---2006-3)
   - [OpenNESS - 20.09](#openness---2009-3)
-  - [OpenNESS - 20.12](#openness---2012-1)
+  - [OpenNESS - 20.12](#openness---2012-2)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -46,11 +47,11 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-4)
   - [OpenNESS - 20.06](#openness---2006-4)
   - [OpenNESS - 20.09](#openness---2009-4)
-  - [OpenNESS - 20.12](#openness---2012-2)
+  - [OpenNESS - 20.12](#openness---2012-3)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
-  - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
-  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
-  - [Intel® Xeon® Scalable Processors](#intel%c2%ae-xeon%c2%ae-scalable-processors)
+  - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
+  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
+  - [Intel® Xeon® Scalable Processors](#intel-xeon-scalable-processors)
 - [Supported Operating Systems](#supported-operating-systems)
 - [Packages Version](#packages-version)
 
@@ -283,6 +284,9 @@ There are no unsupported or discontinued features relevant to this release.
 
 ## OpenNESS - 20.09
 - Native on-premises is now located in a dedicated repository with no further feature updates from previous release.
+
+## OpenNESS - 20.12
+There are no unsupported or discontinued features relevant to this release.
 
 # Fixed Issues
 
