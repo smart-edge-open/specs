@@ -46,6 +46,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-4)
   - [OpenNESS - 20.06](#openness---2006-4)
   - [OpenNESS - 20.09](#openness---2009-4)
+  - [OpenNESS - 20.12](#openness---2012-2)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
   - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
@@ -252,14 +253,11 @@ This document provides high-level system features, issues, and limitations infor
   - Experience Kit now supports multiple detection video's – Safety equipment detection, PCB default detection and also supports external video streams. 
 
 ## OpenNESS - 20.12
-- uCPE/SDWAN
-- EMCO-OpenNESS
-- Operators
-- Offline installer
-- Application Data delivery Performance
-- CERA on-premises (pushed from 20.09 due to CR for EIS support)
-- CSP support for Azure (will be released between 20.09 and 20.12)
-- Kubernetes certification for 1.19
+- Early access release of Edge Multi-Cluster Orchestration(EMCO), a Geo-distributed application orchestrator for Kubernetes. This release supports EMCO deploying and managing the life cycle of the Smart City Application pipeline on the edge cluster.
+- Reference implementation of the offline installation package for the Converged Edge Reference Architecture (CERA) Access Edge flavor enabling installation of Kubernetes and related enhancements for Access edge deployments.
+- Azure Development kit (Devkit) supporting the installation of an OpenNESS Kubernetes cluster on the Microsoft* Azure* cloud. This is typically used by a customer who wants to develop applications and services for the edge using OpenNESS building blocks.
+- Intel® vRAN Dedicated Accelerator ACC100: Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload. 
+- Major system Upgrades: Kubernetes 1.19.2, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2
 
 # Changes to Existing Features
 
@@ -327,14 +325,14 @@ There are no issues relevant to this release.
 There is one issue relevant to this release: it is not possible to remove the application from Edge Node in case of error during application deployment. The issue concerns applications in a Virtual Machine.
 
 ## OpenNESS - 19.09
-- Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+- Gateway in multi-node - will not work when few nodes will have the same public IP (they will be behind one common NAT)
 - Ansible in K8s can cause problems when rerun on a machine:
   - If after running all 3 scripts
   - Script 02 will be run again (it will not remove all necessary K8s related artifacts)
   - We would recommend cleaning up the installation on the node
 
 ## OpenNESS - 19.12
-- Gateway in multi-node -  will not work when few nodes will have the same public IP (they will be behind one common NAT)
+- Gateway in multi-node - will not work when few nodes will have the same public IP (they will be behind one common NAT)
 - OpenNESS On-Premises: Cannot remove a failed/disconnected the edge node information/state from the controller
 - The CNCA API (4G & 5G) supported in this release is an early access reference implementation and does not support authentication
 - Real-time kernel support has been temporarily disabled to address the Kubernetes 1.16.2 and Realtime kernel instability.
@@ -359,7 +357,7 @@ There is one issue relevant to this release: it is not possible to remove the ap
 ## OpenNESS - 20.09
 - Pod which uses hugepage get stuck in terminating state on deletion. This is a known issue on Kubernetes 1.18.x and is planned to be fixed in 1.19.x
 - Calico cannot be used as secondary CNI with Multus in OpenNESS. It will work only as primary CNI. Calico must be the only network provider in each cluster. We do not currently support migrating a cluster with another network provider to use Calico networking. https://docs.projectcalico.org/getting-started/kubernetes/requirements
-- collectd Cache telemetry using RDT does not work when RMD is enabled because of resource conflict. Workaround is to disable collectd RDT plugin when using RMD - this by default is implemented globally. With this workaround customers will be able to allocate the Cache but not use Cache related telemetry. In case where RMD is not being enabled customers who desire RDT telemetry can re-enable collectd RDT.
+- Collectd Cache telemetry using RDT does not work when RMD is enabled because of resource conflict. Workaround is to disable collectd RDT plugin when using RMD - this by default is implemented globally. With this workaround customers will be able to allocate the Cache but not use Cache related telemetry. In case where RMD is not being enabled customers who desire RDT telemetry can re-enable collectd RDT.
 
 ## OpenNESS - 20.12
 - cAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
@@ -388,7 +386,12 @@ OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, an
 ## OpenNESS - 20.09 
 - Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
-  > **NOTE**: Edge applications repo is common to Open Source and IDO
+
+## OpenNESS - 20.12 
+- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
+- IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
+
+> **NOTE**: Edge applications repo is common to Open Source and IDO
 
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
