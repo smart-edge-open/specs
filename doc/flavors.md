@@ -12,7 +12,7 @@ This document introduces the supported deployment flavors that are deployable th
 - [Media Analytics Flavor with VCAC-A](#media-analytics-flavor-with-vcac-a)
 - [CDN Transcode Flavor](#cdn-transcode-flavor)
 - [CDN Caching Flavor](#cdn-caching-flavor)
-- [Orchestration Flavor](#emco-flavor)
+- [Orchestration Flavor](#orchestration-flavor)
 
 ## Minimal Flavor
 The pre-defined *minimal* deployment flavor provisions the minimal set of configurations for bringing up the OpenNESS network edge deployment.
@@ -34,7 +34,12 @@ The pre-defined *flexran* deployment flavor provisions an optimized system confi
 
 Steps to install this flavor are as follows:
 1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Run OEK deployment script:
+2. Configure the flavor file to reflect desired deployment.
+   - Configure the CPUs selected for isolation and OS/K8s processes from command line in files [controller_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/controller_group.yml) and [edgenode_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/edgenode_group.yml) - please note that in single node mode the edgenode_group.yml is used to configure the CPU isolation.
+   - Configure the amount of CPUs reserved for K8s and OS from K8s level with `reserved_cpu` flag in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
+   - Configure whether the FPGA or eASIC support for FEC is desired or both in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
+  
+3. Run OEK deployment script:
     ```shell
     $ deploy_ne.sh -f flexran
     ```
@@ -45,6 +50,7 @@ This deployment flavor enables the following ingredients:
 * Telemetry
 * FPGA remote system update through OPAE
 * FPGA configuration
+* eASIC ACC100 configuration
 * RT Kernel
 * Tapology Manager
 * RMD operator

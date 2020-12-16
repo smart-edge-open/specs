@@ -300,10 +300,12 @@ This section guides users through the complete process of onboarding the OpenVIN
 1. An application `yaml` specification file for the OpenVINO producer that is used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
+   kubectl certificate approve openvino-prod-app
    ```
 2. An application `yaml` specification file for the OpenVINO consumer that is used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
+   kubectl certificate approve openvino-cons-app
    ```
 3. Verify that no errors show up in the logs of the OpenVINO consumer application:
    ```
