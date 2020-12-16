@@ -260,17 +260,14 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
 ```
 
 ## Practice with EMCO: SmartCity Deployment
-- The SmartCity application is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. 
-  - The composite application is composed of two parts: 
-    - EdgeApp (multiple OpenNESS edge clusters) 
-    - WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
-- One OpenNESS edge cluster (representing regional office) and One legacy K8s Cluster (representing cloud) are connected to the OpenNESS EMCO. 
-- The whole deployment architecture diagram is as shown below:
+- The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
+- The edge cluster (representing regional office), the cloud cluster and the EMCO are connected with each others.
+- The whole deployment architecture diagram is shown as below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
 _Figure 6 - SmartCity Deployment Architecture Overview_
 
-The typical steps involved in the cluster registration and deployment of the application using EMCO are as follows:
+The example steps are shown as follows:
 - Prerequisites
   - Make one edge cluster and one cloud cluster ready by using OpenNESS Flavor.
   - Prepare One server with a vanilla CentOS\* 7.8.2003 for EMCO (Only one server is required for EMCO installation).
