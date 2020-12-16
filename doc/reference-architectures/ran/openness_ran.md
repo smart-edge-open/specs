@@ -59,7 +59,13 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
    >**NOTE**: The environmental variables path must be updated according to your installation and file/directory names.  
 4. Build L1, WLS interface between L1, L2, and L2-Stub (testmac):    
    `./flexran_build.sh -r 5gnr_sub6 -m testmac -m wls -m l1app -b -c`
-5. Once the build has completed, copy the required binary files to the folder where the Docker\* image is built. The list of binary files that are used is documented in [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
+5. Once the build has completed, copy the required binary files to the folder where the Docker\* image is built. This can be done by using a provided example [build-du-dev-image.sh](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/du-dev/build-du-dev-image.sh) script from Edge Apps OpenNESS repository, it will copy the files from the paths provided as environmental variables in previous step. The script will copy the files into the right directory containing the Dockerfile and commence the docker build.
+   ```shell
+   git clone https://github.com/otcshare/edgeapps.git
+   cd edgeapps/network-functions/ran/5G/du-dev
+   ./build-du-dev-image.sh
+   ```
+   The list of binary files that are used is documented in [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
    - ICC, IPP mpi and mkl Runtime 
    - DPDK build target directory 
    - FlexRAN test vectors (optional) 
@@ -67,18 +73,23 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
    - FlexRAN SDK modules 
    - FlexRAN WLS share library 
    - FlexRAN CPA libraries 
-6. `cd` to the folder where the Docker image is built and start the docker build `docker build -t <name of image>:<tag> .` 
-The following example reflects the Docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/flexran/values.yaml):
+
+
+6. The following example reflects the Docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/du-dev/values.yaml), user needs to adjust the IP address and port of the Harbor registry where Docker image will be pushed:
    
    ```shell
-   docker build -t flexran5g:3.10.0-1062.12.1.rt56 .
+   image:
+     repository: <ip_address>:<port>/intel/flexran5g         # Change Me! - please provide IP address and port 
+                                                          # of Harbor registry where FlexRAN docker image is uploaded
+     tag: 3.10.0-1127.19.1.rt56                              # The tag identifying the FlexRAN docker   image,
+                                                             # the kernel version used to build FlexRAN can be used as tag
    ```
 7. Tag the image and push to a local Harbor registry (Harbor registry deployed as part of OpenNESS Experience Kit)
    
    ```shell
-   docker tag flexran5g <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
+   docker tag flexran5g <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
 
-   docker push <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1062.12.1.rt56
+   docker push <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
    ```
 
 By the end of step 7, the FlexRAN Docker image is created and available in the Harbor registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
@@ -99,7 +110,7 @@ Instructions on how to configure the kernel command line in OpenNESS can be foun
 
 # Deploying and Running the FlexRAN pod
 
-1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge).
+1. Deploy the OpenNESS cluster with [SRIOV for FPGA enabled](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#fpga-fec-ansible-installation-for-openness-network-edge).
 2. Confirm that there are no FlexRAN pods and the FPGA configuration pods are not deployed using `kubectl get pods`.
 3. Confirm that all the EPA microservice and enhancements (part of OpenNESS playbook) are deployed `kubectl get po --all-namespaces`.
   ```yaml
@@ -134,12 +145,12 @@ Instructions on how to configure the kernel command line in OpenNESS can be foun
   openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
   ```
 4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
-5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
-6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
+5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
+6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
 7. Deploy the FlexRAN Kubernetes pod using a helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
 
    ```shell
-   helm install flexran-pod flexran
+   helm install flexran-pod du-dev
    ```
 
 8. `exec` into FlexRAN pod `kubectl exec -it flexran -- /bin/bash`
