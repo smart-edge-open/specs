@@ -12,17 +12,17 @@ Copyright (c) 2020 Intel Corporation
     - [EMCO API](#emco-api)
     - [EMCO Authentication and Authorization](#emco-authentication-and-authorization)
     - [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor)
-  - [Practice with EMCO: SmartCity Deployment](#practice-with-emco-smartcity-deployment)
+  - [EMCO Example: SmartCity Deployment](#emco-example-smartcity-deployment)
 
 ## Background
 Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. EMCO operates at a higher level than Kubernetes and interacts with multiple of edges and clouds running Kubernetes. The main objective of EMCO is automation of the deployment of applications and services across multiple clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. 
 
 Increasingly we see a requirement of deploying 'composite applications' in multiple geographical locations. Some of the catalyst for this  change are:
 
--  Latency - Requirements for new low latency application use cases such as AR/VR. Need for ultra low latency response needed in IIOT and other cases. This requires running some parts of the applications on edges close to the user 
-- Bandwidth - processing data on edges to avoid costs associated with transporting the data to clouds for processing, 
+-  Latency - requirements for new low latency application use cases such as AR/VR. Need for ultra low latency response needed in IIOT and other cases. This requires running some parts of the applications on edges close to the user 
+-  Bandwidth - processing data on edges to avoid costs associated with transporting the data to clouds for processing, 
 -  Context/Promixity - running some part of the applications on edges near the user that require local context 
--  Privacy/Legal - Some data can have legal requirements to not leave a geographic location
+-  Privacy/Legal - some data can have legal requirements to not leave a geographic location
 
 ![OpenNESS EMCO](openness-emco-images/emco-geo-distributed.png)
 _Figure 1 - Orchestrate GeoDitributed Edge Applications_
@@ -33,13 +33,13 @@ Life cycle management of composite applications is complex. Instantiation and te
 
 Number of K8s clusters (Edges or clouds) could be in tens of thousands, number of complex applications that need to be managed could be in hundreds, number of applications in a complex application could be in tens and number of micro-services in each application of the complex application can be in tens. Moreover, there can be multiple deployments of the same complex applications for different purposes. To reduce the complexity, all these operations are to be automated. There shall be one-click deployment of the complex applications and one simple dashboard to know the status of the complex application deployment at any time. Hence, there is a need for Multi-Edge and Multi-Cloud distributed application orchestrator.
  
-Compared with other multipe-clusters orchestration, EMCO focuses on the following functionalities:
+Compared with other multiple-clusters orchestration, EMCO focuses on the following functionalities:
 - Enrolling multiple geographically distributed OpenNESS clusters and third party cloud clusters.
-- Orchestrating composite applications (composed of multiple individual applications) across the clusters.
-- Deploying edge services and network functions on to different nodes spread across the different clusters.
-- Monitoring the health of the deployed edge services/network functions across the clusters.
+- Orchestrating composite applications (composed of multiple individual applications) across different clusters.
+- Deploying edge services and network functions on to different nodes spread across different clusters.
+- Monitoring the health of the deployed edge services/network functions across different clusters.
 - Orchestrating edge services and network functions with deployment intents based on compute, acceleration, and storage requirements.
-- Supporting onboarding of multiple tenants from different enterprises while ensuring confidentiality and full isolation across the tenants.
+- Supporting multiple tenants from different enterprises while ensuring confidentiality and full isolation between the tenants.
 
 
 The following figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters. It also shows an example of deploying SmartCity with EMCO. 
@@ -53,8 +53,7 @@ All the managed edge clusters and cloud clusters are connected with the EMCO clu
 - The composite application - [SmartCity](https://github.com/OpenVisualCloud/Smart-City-Sample) is composed of two parts: edge application and cloud (web) application. 
   - The edge application executes media processing and analytics on multiple edge clusters to reduce latency.
   - The cloud application is like a web application for additional post-processing, such as calculating statistics and display/visualization on the cloud cluster side.
-  - The EMCO user can deploy the  SmartCity applications across the clusters. Besides that, EMCO allows the operator to override configurations and profiles to satisfy deployment needs.
-  - For more details about the practice, refer to [Practice with EMCO: SmartCity Deployment](#practice-with-emco-smartcity-deployment).
+  - The EMCO user can deploy the SmartCity applications across the clusters. Besides that, EMCO allows the operator to override configurations and profiles to satisfy deployment needs.
 
 This document aims to familiarize the user with EMCO and [OpenNESS deployment flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md) for EMCO installation and provision, and provide instructions accordingly.
 
@@ -90,10 +89,10 @@ _Figure 3 - EMCO Architecture_
 A microservice exposes RESTful API. User can register cluster providers and clusters of those providers via these APIs. After preparing edge clusters and cloud clusters, which can be any Kubernetes\* cluster, user can onboard those clusters to EMCO by creating a cluster provider and then adding clusters to the cluster provider. After cluster providers are created, the KubeConfig files of edge and cloud clusters should be provided to EMCO as part of the multi-part POST call to the Cluster API. 
 
 Additionally, after a cluster is created, labels and key value pairs can be added to the cluster via the EMCO API. Clusters can be specified by label when preparing placement intents.
-> **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since, AWS does not register their clusters here, AWS is not considered as cluster provider in this context.
+> **NOTE**: The cluster provider is someone who owns clusters and registers them to EMCO. If an Enterprise has clusters, for example from AWS, then the cluster provider for those clusters from AWS is still considered as from that Enterprise. AWS is not the provider. Here, the provider is someone who owns clusters and registers them here. Since AWS does not register their clusters here, AWS is not considered cluster provider in this context.
 
 #### Distributed Application Scheduler
-The distributed application scheduler microservice provides the following functionalities:
+The distributed application scheduler microservice:
 - Project Management provides multi-tenancy in the application from a user perspective.
 - Composite App Management manages composite apps that are collections of Helm Charts, one per application.
 - Composite Profile Management manages composite profiles that are collections of profile, one per application.
@@ -114,7 +113,7 @@ The Distributed Application Scheduler supports operations on a deployment intent
 Refer to [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md) for more details.
 
 #### Network Configuration Management
-The network configuration management (NCM) microservice provides the following functionalities:
+The network configuration management (NCM) microservice:
 - Provider Network Management to create provider networks. 
 - Virtual Network Management to create dynamic virtual networks. 
 - Controller Registration manages network plugin controllers, priorities etc.
@@ -222,13 +221,13 @@ _Figure 8 - Status Monitoring and Query Sequence_
 
 ### EMCO API
 For user interaction, EMCO provides [RESTful API](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
-> **NOTE**: The EMCO RESTful API is the foundation for the other interaction facilities like the EMCO CLI and even EMCO GUI (third party developed right now)
+> **NOTE**: The EMCO RESTful API is the foundation for the other interaction facilities like the EMCO CLI, EMCO GUI (available in the future) and other orchestrators.
 
 ### EMCO Authentication and Authorization
-EMCO uses Istio and other open source solutions to provide Multi-tenancy solution leveraging Istio Authorization and Authentication frameworks. This is achieved without adding any logic in EMCO microservices.
-- Authentication and Authorization for the EMCO users is done at the Istio Ingress Gateway, where all the traffic enters the cluster.
+EMCO uses Istio and other open source solutions to provide Multi-tenancy solution leveraging Istio Authorization and Authentication frameworks. This is achieved without adding any logic to EMCO microservices.
+- Authentication and Authorization for EMCO users is done at the Istio Ingress Gateway, where all the traffic enters the cluster.
 
-- Istio along with autherservice (istio ecosystem project) enables request-level authentication with JSON Web Token (JWT) validation. Authservice is an entity that works along side with Envoy proxy. It is used to work with external IAM systems (OAUTH2). Many Enterprises have their own OAUTH2 server for authenticating users and provide roles.
+- Istio along with autherservice (Istio ecosystem project) enables request-level authentication with JSON Web Token (JWT) validation. Authservice is an entity that works along side with Envoy proxy. It is used to work with external IAM systems (OAUTH2). Many Enterprises have their own OAUTH2 server for authenticating users and provide roles.
 
 - Authservice and ISTIO can be configured to talk to multiple OAUTH2 servers. Using this capability EMCO can support multiple tenants, for example one tenant belonging to one project.
 
@@ -249,13 +248,13 @@ _Figure 10 - EMCO Authenication with external OATH2 Server_
 Detailed steps for configuring EMCO with Istio can be found in [EMCO Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
 
 Steps for EMCO Authentication and Authorization Setup:
-- Install and Configure Keycloak Server to be used in the setup. This server runs outside EMCO cluster
+- Install and Configure Keycloak Server to be used in the setup. This server runs outside the EMCO cluster
   - Create a new realm, add users and roles to Keycloak
 - Install Istio in the Kubernetes* cluster where EMCO is running
 - Enable Sidecar Injection in EMCO namesapce
 - Install EMCO in EMCO namespace (with Istio sidecars)
 - Configure Istio Ingress gateway resources for EMCO Services
-- Configure Istio Ingess gateway to enable running along with Authservice
+- Configure Istio Ingress gateway to enable running along with Authservice
 - Apply EnvoyFilter for Authservice
 - Apply Authentication and Authorization Policies
 
@@ -268,43 +267,43 @@ EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tre
 
 ```shell
 # kubectl get pods -A
-NAMESPACE     NAME                                               READY   STATUS    RESTARTS   AGE
-emco          clm-6979f6c886-tjfrv                               1/1     Running   0          104m
-emco          dcm-549974b6fc-42fbm                               1/1     Running   0          104m
-emco          etcd-5f646586cb-p7ctj                              1/1     Running   0          104m
-emco          mongo-5f7d44fbc5-n74lm                             1/1     Running   0          104m
-emco          ncm-58b85b4688-tshmc                               1/1     Running   0          104m
-emco          orchestrator-78b76cb547-xrvz5                      1/1     Running   0          104m
-emco          ovnaction-5d8d4447f9-nn7l6                         1/1     Running   0          104m
-emco          rsync-58b75849dd-99z6t                             1/1     Running   0          104m
-harbor        harbor-app-harbor-chartmuseum-78c8d5567c-zfm68     1/1     Running   0          125m
-harbor        harbor-app-harbor-clair-779df4555b-bc4xv           2/2     Running   1          125m
-harbor        harbor-app-harbor-core-86745c7fdd-rqfl8            1/1     Running   0          125m
-harbor        harbor-app-harbor-database-0                       1/1     Running   0          125m
-harbor        harbor-app-harbor-jobservice-b44ffbcdd-kxxbm       1/1     Running   0          125m
-harbor        harbor-app-harbor-nginx-8f4b9595-mthng             1/1     Running   0          125m
-harbor        harbor-app-harbor-notary-server-64c6df8547-w6zxt   1/1     Running   0          125m
-harbor        harbor-app-harbor-notary-signer-68cf88854b-h97mk   1/1     Running   0          125m
-harbor        harbor-app-harbor-portal-fd5ff4bc9-qn9hq           1/1     Running   0          125m
-harbor        harbor-app-harbor-redis-0                          1/1     Running   0          125m
-harbor        harbor-app-harbor-registry-68699595cb-cdddd        2/2     Running   0          125m
-harbor        harbor-app-harbor-trivy-0                          1/1     Running   0          125m
-kube-system   coredns-f9fd979d6-j4j2m                            1/1     Running   0          125m
-kube-system   coredns-f9fd979d6-x546t                            1/1     Running   0          125m
-kube-system   etcd-211node                                       1/1     Running   0          128m
-kube-system   kube-apiserver-211node                             1/1     Running   0          128m
-kube-system   kube-controller-manager-211node                    1/1     Running   0          128m
-kube-system   kube-ovn-cni-pvbfl                                 1/1     Running   0          125m
-kube-system   kube-ovn-controller-54d8c5d5ff-jjgk6               1/1     Running   0          125m
-kube-system   kube-ovn-pinger-tst92                              1/1     Running   0          125m
-kube-system   kube-proxy-llqzr                                   1/1     Running   0          128m
-kube-system   kube-scheduler-211node                             1/1     Running   0          128m
-kube-system   ovn-central-54f768b868-vtmjl                       1/1     Running   0          127m
-kube-system   ovs-ovn-jq6dn                                      1/1     Running   0          127m
+NAMESPACE NAME                                             READY   STATUS   RESTARTS AGE
+emco      clm-6979f6c886-tjfrv                             1/1     Running  0        14m
+emco      dcm-549974b6fc-42fbm                             1/1     Running  0        14m
+emco      etcd-5f646586cb-p7ctj                            1/1     Running  0        14m
+emco      mongo-5f7d44fbc5-n74lm                           1/1     Running  0        14m
+emco      ncm-58b85b4688-tshmc                             1/1     Running  0        14m
+emco      orchestrator-78b76cb547-xrvz5                    1/1     Running  0        14m
+emco      ovnaction-5d8d4447f9-nn7l6                       1/1     Running  0        14m
+emco      rsync-58b75849dd-99z6t                           1/1     Running  0        14m
+harbor    harbor-app-harbor-chartmuseum-78c8d5567c-zfm68   1/1     Running  0        15m
+harbor    harbor-app-harbor-clair-779df4555b-bc4xv         2/2     Running  1        15m
+harbor    harbor-app-harbor-core-86745c7fdd-rqfl8          1/1     Running  0        15m
+harbor    harbor-app-harbor-database-0                     1/1     Running  0        15m
+harbor    harbor-app-harbor-jobservice-b44ffbcdd-kxxbm     1/1     Running  0        15m
+harbor    harbor-app-harbor-nginx-8f4b9595-mthng           1/1     Running  0        15m
+harbor    harbor-app-harbor-notary-server-64c6df8547-w6zxt 1/1     Running  0        15m
+harbor    harbor-app-harbor-notary-signer-68cf88854b-h97mk 1/1     Running  0        15m
+harbor    harbor-app-harbor-portal-fd5ff4bc9-qn9hq         1/1     Running  0        15m
+harbor    harbor-app-harbor-redis-0                        1/1     Running  0        15m
+harbor    harbor-app-harbor-registry-68699595cb-cdddd      2/2     Running  0        15m
+harbor    harbor-app-harbor-trivy-0                        1/1     Running  0        15m
+kube-system   coredns-f9fd979d6-j4j2m                      1/1     Running  0        15m
+kube-system   coredns-f9fd979d6-x546t                      1/1     Running  0        15m
+kube-system   etcd-211node                                 1/1     Running  0        18m
+kube-system   kube-apiserver-211node                       1/1     Running  0        18m
+kube-system   kube-controller-manager-211node              1/1     Running  0        18m
+kube-system   kube-ovn-cni-pvbfl                           1/1     Running  0        15m
+kube-system   kube-ovn-controller-54d8c5d5ff-jjgk6         1/1     Running  0        15m
+kube-system   kube-ovn-pinger-tst92                        1/1     Running  0        15m
+kube-system   kube-proxy-llqzr                             1/1     Running  0        18m
+kube-system   kube-scheduler-211node                       1/1     Running  0        18m
+kube-system   ovn-central-54f768b868-vtmjl                 1/1     Running  0        17m
+kube-system   ovs-ovn-jq6dn                                1/1     Running  0        17m
 
 ```
 
-## Practice with EMCO: SmartCity Deployment
+## EMCO Example: SmartCity Deployment
 - The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
 - The edge cluster (representing regional office), the cloud cluster and the EMCO are connected with each others.
 - The whole deployment architecture diagram is shown as below:
@@ -315,12 +314,12 @@ _Figure 11 - SmartCity Deployment Architecture Overview_
 The example steps are shown as follows:
 - Prerequisites
   - Make one edge cluster and one cloud cluster ready by using OpenNESS Flavor.
-  - Prepare One server with a vanilla CentOS\* 7.8.2003 for EMCO (Only one server is required for EMCO installation).
-- EMCO Installation
-- Cluster Setup
-- Project Setup
-- Logical Cloud Setup
-- Deploy SmartCity Application
+  - Prepare one server with a vanilla CentOS\* 7.8.2003 for EMCO installation.
+- EMCO installation
+- Cluster setup
+- Project setup
+- Logical cloud Setup
+- Deploy SmartCity application
 
 ### Cluster Setup
 In the step, cluster provider will be created. And both the edge cluster and the cloud cluster will be registered in the EMCO.
@@ -416,7 +415,7 @@ CRT=/root/tunnel_secret/self.crt
 SELFKEY=/root//tunnel_secret/self.key
 kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
 ```
-> **NOTE**: Actually EMCO supports generic K8S resource configuration including configmap, secret,etc. In the practice, only offer the example usage about how to use [EMCO for configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
+> **NOTE**: Actually EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 > **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by th edge cluster and the cloud cluster, we use manual steps here.
 
 4. Verify SmartCity Application Deployment Information.
