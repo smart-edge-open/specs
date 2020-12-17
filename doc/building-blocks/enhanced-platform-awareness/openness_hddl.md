@@ -28,8 +28,7 @@ The plugin for the Intel® Movidius™ Myriad™ X HDDL solution, or IE HDDL plu
 
 ## HDDL OpenNESS Integration
 OpenNESS provides support for the deployment of OpenVINO™ applications and workloads accelerated through Intel® Vision Accelerator Design with the Intel® Movidius™ VPU HDDL-R add-in card. As a prerequisite for enabling the support, it is required for the HDDL add-in card to be inserted into the PCI slot of the Edge Node platform. The support is then enabled by setting the appropriate flag - 'ne_hddl_enable' in the '/group_vars/all/10-default.yml' before running OEK playbooks.
-> **NOTE** 
-> * *No pre-defined flavor is provided for HDDL. If user wants to enable HDDL with flavor, can set flag - 'ne_hddl_enable' in the 'flavors/<flavor-name>/all.yml'.  
+> **NOTE** No pre-defined flavor is provided for HDDL. If user wants to enable HDDL with flavor, can set flag - 'ne_hddl_enable' in the 'flavors/<flavor-name>/all.yml'.  
 > * *node* with HDDL card inserted will be labelled as 'hddl-zone=true'.
 
 The OEK automation script for HDDL will involve the following steps:
@@ -40,8 +39,7 @@ The OEK automation script for HDDL will involve the following steps:
 - HDDL Daemon automatically brings up on the node with label 'hddl-zone=true'.
 
 The HDDL Daemon provides the backend service to manage VPUs and dispatch inference tasks to VPUs. OpenVINO™-based applications that utilizes HDDL hardware need to access the device node '/dev/ion' and domain socket under '/var/tmp' to communicate with the kernel and HDDL service.
-> **NOTE**
-> * *Due to kernel version or iommu incompatibility,the ion driver is not enabled. Then shared memory - '/dev/shm' will be used as fallback.
+> **NOTE** With the default kernel used by OpenNESS OEK, the ion driver will not enabled by OpenVINO™ toolkits, and the shared memory - '/dev/shm' will be used as fallback.  More details refer to [installing_openvino_docker_linux](https://docs.openvinotoolkit.org/2020.2/_docs_install_guides_installing_openvino_docker_linux.html) 
 
 
 ![HDDL-Block-Diagram](hddl-images/hddlservice.png)
