@@ -15,11 +15,24 @@ Copyright (c) 2020 Intel Corporation
   - [Practice with EMCO: SmartCity Deployment](#practice-with-emco-smartcity-deployment)
 
 ## Background
-Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes\* and Helm charts.
+Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. EMCO operates at a higher level than Kubernetes and interacts with multiple of edges and clouds running Kubernetes. The main objective of EMCO is automation of the deployment of applications and services across multiple clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. 
 
-EMCO addresses the need for deploying 'composite applications' in multiple geographical locations.
-> **NOTE**: A 'composite application' is a combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
+Increasingly we see a requirement of deploying 'composite applications' in multiple geographical locations. Some of the catalyst for this  change are:
 
+-  Latency - Requirements for new low latency application use cases such as AR/VR. Need for ultra low latency response needed in IIOT and other cases. This requires running some parts of the applications on edges close to the user 
+- Bandwidth - processing data on edges to avoid costs associated with transporting the data to clouds for processing, 
+-  Context/Promixity - running some part of the applications on edges near the user that require local context 
+-  Privacy/Legal - Some data can have legal requirements to not leave a geographic location
+
+![OpenNESS EMCO](openness-emco-images/emco-geo-distributed.png)
+_Figure 1 - Orchestrate GeoDitributed Edge Applications_
+
+> **NOTE**: A 'composite application' is a combination of multiple applications with each application packaged as a Helm chart. Based on the deployment intent, various applications of the composite application get deployed at various locations, and get replicated in multiple locations.
+
+Life cycle management of composite applications is complex. Instantiation and terminations of the complex application across multiple K8s clusters (Edges and Clouds), monitoring the status of the complex application deployment, Day 2 operations (Modification of the deployment intent, upgrades etc..) are few complex operations. 
+
+Number of K8s clusters (Edges or clouds) could be in tens of thousands, number of complex applications that need to be managed could be in hundreds, number of applications in a complex application could be in tens and number of micro-services in each application of the complex application can be in tens. Moreover, there can be multiple deployments of the same complex applications for different purposes. To reduce the complexity, all these operations are to be automated. There shall be one-click deployment of the complex applications and one simple dashboard to know the status of the complex application deployment at any time. Hence, there is a need for Multi-Edge and Multi-Cloud distributed application orchestrator.
+ 
 Compared with other multipe-clusters orchestration, EMCO focuses on the following functionalities:
 - Enrolling multiple geographically distributed OpenNESS clusters and third party cloud clusters.
 - Orchestrating composite applications (composed of multiple individual applications) across the clusters.
