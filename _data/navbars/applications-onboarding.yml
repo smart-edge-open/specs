@@ -20,6 +20,11 @@ section:
     meta_title: Edge Application Agent (EAA)
     meta_description: OpenNESS enables Edge Applications to produce, discover and consume services that are available on the OpenNESS cluster through the Edge Application Agent (EAA) APIs.
 
+  - title: Certificate Signing
+    path: /doc/applications-onboard/openness-certsigner
+    meta_title: Certificate Signing
+    meta_description: Each application that needs the TLS authentication certificate should generate it using the Certificate Signer by sending a CSR via Certificate Requester
+
   - title: Interface Service
     path: /doc/applications-onboard/openness-interface-service
     meta_title: OpenNESS Applications Onboard - OpenNESS Interface Service

@@ -41,7 +41,7 @@ cpu:
   # CPU policy - possible values: none (disabled), static (default)
   policy: "static"
   # Reserved CPUs
-  reserved_cpus: 1
+  reserved_cpus: "0,1"
 
 # Kubernetes Topology Manager policy - possible values: none (disabled), best-effort (default), restricted, single-numa-node
 topology_manager:
@@ -50,7 +50,7 @@ topology_manager:
 
 Where `<selected_policy>` can be `none`, `best-effort`, `restricted` or `single-numa-node`. Refer to the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/administer-cluster/topology-manager/) for details of these policies.
 
-You can also set `kubernetes_reserved_cpus` to a number that suits you best. This parameter specifies the number of logical CPUs that will be reserved for a Kubernetes system Pods.
+You can also set `reserved_cpus` to a number that suits you best. This parameter specifies the logical CPUs that will be reserved for a Kubernetes system Pods and OS daemons.
 
 ### Usage
 To use Topology Manager create a Pod with a `guaranteed` QoS class (requests equal to limits). For example:

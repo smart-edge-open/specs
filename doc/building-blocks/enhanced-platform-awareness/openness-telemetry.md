@@ -149,7 +149,7 @@ Node Exporter is a Prometheus exporter that exposes hardware and OS metrics of *
 
 #### VCAC-A
 
-Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file; this text file is used as an input to the Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md).
+Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file; this text file is used as an input to the Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md).
 
 ### cAdvisor
 
@@ -164,20 +164,7 @@ It collects and aggregates data about running containers such as resource usage,
 
 ### CollectD
 
-CollectD is a daemon/collector enabling the collection of hardware metrics from computers and network equipment. It provides support for CollectD plugins, which extends its functionality for specific metrics collection such as Intel® RDT, Intel PMU, and ovs-dpdk. The metrics collected are easily exposed to the Prometheus monitoring tool via the usage of the `write_prometheus` plugin. In OpenNESS, CollectD is supported with the help of the [OPNFV Barometer project](https://wiki.opnfv.org/display/fastpath/Barometer+Home) - using its Docker image and available plugins. As part of the OpenNESS release, a CollectD plugin for 
-
-Search Results
-
-
-Enter your search term:
-
-
-042
-
-Your search came up with the following results:
-
-Intel® FPGA Accelerator Packaging Utility
-Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 telemetry is now available from OpenNESS (power and temperature telemetry). In OpenNESS, the CollectD pod is deployed as a K8s `Daemonset` on every available Edge Node, and it is deployed as a privileged container.
+CollectD is a daemon/collector enabling the collection of hardware metrics from computers and network equipment. It provides support for CollectD plugins, which extends its functionality for specific metrics collection such as Intel® RDT, Intel PMU, and ovs-dpdk. The metrics collected are easily exposed to the Prometheus monitoring tool via the usage of the `write_prometheus` plugin. In OpenNESS, CollectD is supported with the help of the [OPNFV Barometer project](https://wiki.opnfv.org/display/fastpath/Barometer+Home) - using its Docker image and available plugins. As part of the OpenNESS release, a CollectD plugin for Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 telemetry is now available from OpenNESS (power and temperature telemetry). In OpenNESS, the CollectD pod is deployed as a K8s `Daemonset` on every available Edge Node, and it is deployed as a privileged container.
 
 #### Plugins
 
@@ -202,7 +189,7 @@ The various OEK flavors are enabled for CollectD deployment as follows:
 
 1. Select the flavor for the deployment of CollectD from the OEK during OpenNESS deployment; the flavor is to be selected with `telemetry_flavor: <flavor name>`.
 
-   In the event of using the `flexran` profile, `n3000-1-3-5-beta-cfg-2x2x25g-setup.zip` and `n3000-1-3-5-beta-rte-setup.zip` need to be available in `./openness-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#edge-controller)
+   In the event of using the `flexran` profile, `OPAE_SDK_1.3.7-5_el7.zip` needs to be available in `./openness-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#edge-controller)
 2. To access metrics available from CollectD, connect to the Prometheus [dashboard](#prometheus).
 3. Look up an example the CollectD metric by specifying the metric name (ie. `collectd_cpufreq`) and pressing `execute` under the `graph` tab.
    ![CollectD Metric](telemetry-images/collectd_metric.png)
@@ -211,10 +198,11 @@ The various OEK flavors are enabled for CollectD deployment as follows:
 
 OpenTelemetry is a project providing APIs and libraries that enable the collection of telemetry from edge services and network functions. This project provides a mechanism to capture application metrics and traces within applications with support for multiple programming languages. The captured metrics are exposed to OpenTelemetry agents and collectors responsible for the handling of data and forwarding it to the desired back-end application(s) for processing and analysis. Among the supported back-ends are popular projects such as Prometheus (metrics), Jaeger, and Zipkin (traces). A concept of receiver and exporter exists within the Open Telemetry agent and collector. The receiver provides a mechanism to receive the data into the agent or collector. Multiple receivers are supported and at least one or more must be configured. On the opposite end, an exporter provides a mechanism to export data to the receiver, similarly multiple exporters are supported and one or more must be set up.
 
-As part of the OpenNESS release, only the support for collecting metrics and exposing them to Prometheus is enabled. The deployment model chosen for Open Telemetry is to deploy a global collector pod receiving data from multiple agents, the agents are to be deployed as side-car containers for each instance of the application pod. 
+As part of the OpenNESS release, only the support for collecting metrics and exposing them to Prometheus is enabled. The deployment model chosen for Open Telemetry is to deploy a global collector pod receiving data from multiple agents, the agents are to be deployed as side-car containers for each instance of the application pod.
+
 -	The application exports data to the agent locally.
 -	The agent receives the data and exports it to the collector by specifying the collector’s K8s service name and port via TLS secured connection.
--	The collector exposes all the available data received from multiple agents on an endpoint which is being scraped by Prometheus. 
+-	The collector exposes all the available data received from multiple agents on an endpoint which is being scraped by Prometheus.
 
 OpenCensus exporter/receiver is used in the default OpenNESS configuration for agent and collector to collect metrics from an application. A sample application pod generating random numbers, aggregating those numbers and exposing the metrics, and containing a reference side-car OpenTelemetry agent is available in the Edge Apps repository.
 
@@ -273,10 +261,11 @@ Processor Counter Monitor (PCM) is an application programming interface (API) an
 
 ### TAS
 
-[Telemetry Aware Scheduler](https://github.com/intel/telemetry-aware-scheduling) enables the user to make K8s scheduling decisions based on the metrics available from telemetry. This is crucial for a variety of Edge use-cases and workloads where it is critical that the workloads are balanced and deployed on the best suitable node based on hardware ability and performance. The user can create a set of policies defining the rules to which pod placement must adhere. Functionality to de-schedule pods from given nodes if a rule is violated is also provided. TAS consists of a TAS Extender which is an extension to the K8s scheduler. It correlates the scheduling policies with deployment strategies and returns decisions to the K8s Scheduler. It also consists of a TAS Controller that consumes TAS policies and makes them locally available to TAS components. A metrics pipeline that exposes metrics to a K8s API must be established for TAS to be able to read in the metrics. In OpenNESS, the metrics pipeline consists of: 
+[Telemetry Aware Scheduler](https://github.com/intel/telemetry-aware-scheduling) enables the user to make K8s scheduling decisions based on the metrics available from telemetry. This is crucial for a variety of Edge use-cases and workloads where it is critical that the workloads are balanced and deployed on the best suitable node based on hardware ability and performance. The user can create a set of policies defining the rules to which pod placement must adhere. Functionality to de-schedule pods from given nodes if a rule is violated is also provided. TAS consists of a TAS Extender which is an extension to the K8s scheduler. It correlates the scheduling policies with deployment strategies and returns decisions to the K8s Scheduler. It also consists of a TAS Controller that consumes TAS policies and makes them locally available to TAS components. A metrics pipeline that exposes metrics to a K8s API must be established for TAS to be able to read in the metrics. In OpenNESS, the metrics pipeline consists of:
+
 - Prometheus: responsible for collecting and providing metrics.
 - Prometheus Adapter: exposes the metrics from Prometheus to a K8s API and is configured to provide metrics from Node Exporter and CollectD collectors.
-TAS is enabled by default in OEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
+TAS is enabled by default in OEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
 
 #### Usage
 

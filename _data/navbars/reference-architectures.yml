@@ -12,7 +12,12 @@ section:
       path: /doc/reference-architectures/core-network/openness_epc
       meta_title: Edge Cloud Deployment with 3GPP 4G LTE CUPS of EPC
       meta_description: OpenNESS is an open source edge computing platform that enables Service Providers and Enterprises to deploy applications and services on a network edge.
-      
+
+    - title: 5G Non-Stand Alone (NSA)
+      path: /doc/reference-architectures/core-network/openness_5g_nsa
+      meta_title: Edge Cloud Deployment with 3GPP 5G Non Stand Alone
+      meta_description: OpenNESS is an open source edge computing platform that enables Service Providers and Enterprises to deploy applications and services on a network edge.
+  
     - title: Next-Gen Core (NGC)
       path: /doc/reference-architectures/core-network/openness_ngc
       meta_title: Edge Cloud Deployment with 3GPP 5G Stand Alone
