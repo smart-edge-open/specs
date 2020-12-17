@@ -5,21 +5,21 @@ Copyright (c) 2019-2020 Intel Corporation
 <!-- omit in toc -->
 # Using ACC100 eASIC in OpenNESS: Resource Allocation, and Configuration
 - [Overview](#overview)
-- [Intel® vRAN Dedicated Accelerator ACC100 FlexRAN host interface overview](#intel-vran-dedicated-accelerator-acc100-flexran-host-interface-overview)
-- [Intel® vRAN Dedicated Accelerator ACC100 orchestration and deployment with Kubernetes\* for FlexRAN](#intel-vran-dedicated-accelerator-acc100-orchestration-and-deployment-with-kubernetes-for-flexran)
+- [Intel® vRAN Dedicated Accelerator ACC100 FlexRAN Host Interface Overview](#intel-vran-dedicated-accelerator-acc100-flexran-host-interface-overview)
+- [Intel® vRAN Dedicated Accelerator ACC100 Orchestration and Deployment with Kubernetes\* for FlexRAN](#intel-vran-dedicated-accelerator-acc100-orchestration-and-deployment-with-kubernetes-for-flexran)
 - [Using the Intel® vRAN Dedicated Accelerator ACC100 on OpenNESS](#using-the-intel-vran-dedicated-accelerator-acc100-on-openness)
-  - [ACC100 (FEC) Ansible installation for OpenNESS Network Edge](#acc100-fec-ansible-installation-for-openness-network-edge)
+  - [ACC100 (FEC) Ansible Installation for OpenNESS Network Edge](#acc100-fec-ansible-installation-for-openness-network-edge)
     - [OpenNESS Experience Kit](#openness-experience-kit)
-  - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
-  - [Requesting resources and running pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
-  - [Verifying Application POD access and usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
+  - [FEC VF Configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
+  - [Requesting Resources and Running Pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
+  - [Verifying Application POD Access and Usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
 - [Reference](#reference)
 
 ## Overview
 
 Intel® vRAN Dedicated Accelerator ACC100 plays a key role in accelerating 4G and 5G Virtualized Radio Access Networks (vRAN) workloads, which in turn increases the overall compute capacity of a commercial, off-the-shelf platform. 
 
-Intel® vRAN Dedicated Accelerator ACC100 provides following features:
+Intel® vRAN Dedicated Accelerator ACC100 provides the following features:
 
 - LDPC FEC processing for 3GPP 5G:
   - LDPC encoder/decoder
@@ -37,21 +37,21 @@ Intel® vRAN Dedicated Accelerator ACC100 provides following features:
 - Interface through the DPDK BBDev library and APIs
 
 Intel® vRAN Dedicated Accelerator ACC100 benefits include:
-- Reduced platform power, E2E latency and Intel® CPU core count requirements as well as increases cell capacity than existing programmable accelerator
+- Reduced platform power, E2E latency and Intel® CPU core count requirements as well as increase in cell capacity than existing programmable accelerator
 - Accelerates both 4G and 5G data concurrently
 - Lowers development cost using commercial off the shelf (COTS) servers
-- Accommodates space-constrained implementations via a low-profile PCIe card form factor.
+- Accommodates space-constrained implementations via a low-profile PCIe* card form factor.
 - Enables a variety of flexible FlexRAN deployments from small cell to macro to Massive
 MIMO networks
-- Supports extended temperature for the most challenging of RAN deployment scenario’s
+- Supports extended temperature for the most challenging of RAN deployment scenarios
 
-For more information on the [Intel® vRAN Dedicated Accelerator ACC100 see the product brief](https://builders.intel.com/docs/networkbuilders/intel-vran-dedicated-accelerator-acc100-product-brief.pdf).
+For more information, see product brief in [Intel® vRAN Dedicated Accelerator ACC100](https://builders.intel.com/docs/networkbuilders/intel-vran-dedicated-accelerator-acc100-product-brief.pdf).
 
 This document explains how the ACC100 resource can be used on the Open Network Edge Services Software (OpenNESS) platform for accelerating network functions and edge application workloads. We use the Intel® vRAN Dedicated Accelerator ACC100 to accelerate the LTE/5G Forward Error Correction (FEC) in the 5G or 4G L1 base station network function such as FlexRAN.
 
 FlexRAN is a reference layer 1 pipeline of 4G eNb and 5G gNb on Intel® architecture. The FlexRAN reference pipeline consists of an L1 pipeline, optimized L1 processing modules, BBU pooling framework, cloud and cloud-native deployment support, and accelerator support for hardware offload. Intel® vRAN Dedicated Accelerator ACC100 card is used by FlexRAN to offload FEC (Forward Error Correction) for 4G and 5G.
 
-## Intel® vRAN Dedicated Accelerator ACC100 FlexRAN host interface overview
+## Intel® vRAN Dedicated Accelerator ACC100 FlexRAN Host Interface Overview
 Intel® vRAN Dedicated Accelerator ACC100 card used in the FlexRAN solution exposes the following physical functions to the CPU host:
 - One FEC interface that can be used of 4G or 5G FEC acceleration
   - The LTE FEC IP components have turbo encoder/turbo decoder and rate matching/de-matching
@@ -59,8 +59,8 @@ Intel® vRAN Dedicated Accelerator ACC100 card used in the FlexRAN solution expo
 
 ![Intel® vRAN Dedicated Accelerator ACC100 support](acc100-images/acc100-diagram.png)
 
-## Intel® vRAN Dedicated Accelerator ACC100 orchestration and deployment with Kubernetes\* for FlexRAN
-FlexRAN is a low-latency network function that implements the FEC. FlexRAN uses the FEC resources from the ACC100 using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
+## Intel® vRAN Dedicated Accelerator ACC100 Orchestration and Deployment with Kubernetes\* for FlexRAN
+FlexRAN is a low-latency network function that implements the FEC. FlexRAN uses the FEC resources from the ACC100 using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes* provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes* (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
 
 ![Intel® vRAN Dedicated Accelerator ACC100 Orchestration and deployment with OpenNESS Network Edge for FlexRAN](acc100-images/acc100-k8s.png)
 
@@ -78,7 +78,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Enabling orchestration and allocation of the devices (VFs) to non-root pods requesting the devices: leveraging the support of "accelerator" SRIOV VFs from K8s SRIOV Device Plugin. K8s plugin deployment is delivered as part of the Edge Controller's Ansible automation.
 - Simple sample BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
-### ACC100 (FEC) Ansible installation for OpenNESS Network Edge
+### ACC100 (FEC) Ansible Installation for OpenNESS Network Edge
 To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed via the ["flexran" flavor of OpenNESS](https://github.com/otcshare/openness-experience-kits/tree/master/flavors/flexran).
 
 #### OpenNESS Experience Kit
@@ -144,9 +144,9 @@ openness      syslog-ng-br92z                           1/1     Running   0     
 ```
 
 ### FEC VF configuration for OpenNESS Network Edge
-To configure the VFs with the necessary number of queues for the vRAN workload the BBDEV configuration utility is going run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness/helm-charts/bb_config`.
+To configure the VFs with the necessary number of queues for the vRAN workload, the BBDEV configuration utility is going to run as a job within a privileged container. The configuration utility is available to run as a Helm chart available from `/opt/openness/helm-charts/bb_config`.
 
-Sample configMap, which can be configured by changing values if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/acc100-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment. Additionally the default values in Helm chart will deployed FPGA config, a flag needs to be provided to invoke ACC100 config.
+Sample configMap, which can be configured by changing values, if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/acc100-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment. Additionally, the default values in Helm chart will deploy FPGA config, a flag needs to be provided to invoke ACC100 config.
 
 Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller:
 
@@ -154,7 +154,7 @@ Install the Helm chart by providing configmap and BBDEV config utility job with 
 helm install --set nodeName=<node_name> --set device=ACC100 intel-acc100-cfg bb_config
 ```
 
-Check if the job has completed and that the state of the pod created for this job is “Completed”. Check the logs of the pod to see a complete successful configuration.
+Verify if the job has completed and that the state of the pod created for this job is “Completed”. Check the logs of the pod to see a complete successful configuration.
 ```
 kubectl get pods
 kubectl logs intel-acc100-cfg-<node_name>-xxxxx
@@ -172,7 +172,7 @@ To uninstall the job, run:
 helm uninstall intel-acc100-cfg
 ```
 
-### Requesting resources and running pods for OpenNESS Network Edge
+### Requesting Resources and Running Pods for OpenNESS Network Edge
 As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchestrate the ACC100 VFs (bound to the userspace driver) is running. This enables the scheduling of pods requesting this device. To check the number of devices available on the Edge Node from Edge Controller, run:
 
 ```shell
@@ -181,7 +181,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 "intel.com/intel_fec_acc100": "2"
 ```
 
-To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
+To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
 **NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
 
 A sample pod requesting the ACC100 (FEC) VF may look like this:
@@ -221,7 +221,7 @@ To check the number of devices currently allocated to pods, run (and search for 
 kubectl describe node <node_host_name>
 ```
 
-### Verifying Application POD access and usage of FPGA on OpenNESS Network Edge
+### Verifying Application POD Access and Usage of FPGA on OpenNESS Network Edge
 To verify the functionality of all the features are working together (SRIOV binding - K8s device plugin - BBDEV config) and functionality of the ACC100 (FEC) VF inside a non-root pod, build a Docker image and run a simple validation application for the device.
 
 The automation of the Docker image build is available from the Edge Apps package. The image must be built on the same node that it is meant to be deployed or a server with the same configuration as the node that will run the workload. This is due to the Kernel dependencies of DPDK during the application build.
