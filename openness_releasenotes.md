@@ -30,6 +30,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-2)
   - [OpenNESS - 20.06](#openness---2006-2)
   - [OpenNESS - 20.09](#openness---2009-2)
+  - [OpenNESS - 20.12](#openness---2012-2)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -38,7 +39,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-3)
   - [OpenNESS - 20.06](#openness---2006-3)
   - [OpenNESS - 20.09](#openness---2009-3)
-  - [OpenNESS - 20.12](#openness---2012-2)
+  - [OpenNESS - 20.12](#openness---2012-3)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -47,7 +48,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.03](#openness---2003-4)
   - [OpenNESS - 20.06](#openness---2006-4)
   - [OpenNESS - 20.09](#openness---2009-4)
-  - [OpenNESS - 20.12](#openness---2012-3)
+  - [OpenNESS - 20.12](#openness---2012-4)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
   - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
@@ -257,8 +258,8 @@ This document provides high-level system features, issues, and limitations infor
 - Early access release of Edge Multi-Cluster Orchestration(EMCO), a Geo-distributed application orchestrator for Kubernetes. This release supports EMCO deploying and managing the life cycle of the Smart City Application pipeline on the edge cluster.
 - Reference implementation of the offline installation package for the Converged Edge Reference Architecture (CERA) Access Edge flavor enabling installation of Kubernetes and related enhancements for Access edge deployments.
 - Azure Development kit (Devkit) supporting the installation of an OpenNESS Kubernetes cluster on the Microsoft* Azure* cloud. This is typically used by a customer who wants to develop applications and services for the edge using OpenNESS building blocks.
-- Intel® vRAN Dedicated Accelerator ACC100: Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload. 
-- Major system Upgrades: Kubernetes 1.19.2, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2
+- Support Intel® vRAN Dedicated Accelerator ACC100, Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload. 
+- Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
 
 # Changes to Existing Features
 
@@ -320,6 +321,10 @@ There are no non-Intel issues relevant to this release.
 - Further optimized the Kubernetes based deployment by supporting multiple Flavors
 - Network edge installation time is optimized using pre-built Docker images 
 - cAdvisor occasional failure issue is resolved
+
+## OpenNESS - 20.12
+- Known issue with Pod that uses hugepage get stuck in terminating state on deletion hs been fixed after upgrading to Kubernetes 1.19.3
+- Upgraded to Kube-OVN v1.5.2 for further Kube-OVN CNI enhancements
 
 # Known Issues and Limitations
 ## OpenNESS - 19.06
@@ -442,6 +447,7 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 | HDDL-R       | [Mouser Mustang-V100](https://www.mouser.ie/datasheet/2/763/Mustang-V100_brochure-1526472.pdf)                                                                                                          |
 | VCAC-A       | [VCAC-A Accelerator for Media Analytics](https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/media-analytics-vcac-a-accelerator-card-by-celestica-datasheet.pdf)                    |
 | PAC-N3000    | [Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000 ](https://www.intel.com/content/www/us/en/programmable/products/boards_and_kits/dev-kits/altera/intel-fpga-pac-n3000/overview.html) |
+| ACC100       | [Intel® vRAN Dedicated Accelerator ACC100](https://networkbuilders.intel.com/solutionslibrary/intel-vran-dedicated-accelerator-acc100-product-brief)                                                    |
 
 # Supported Operating Systems
 
@@ -450,4 +456,4 @@ OpenNESS was tested on CentOS Linux release 7.8.2003 (Core)
 
 # Packages Version
 
-Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.14.9 docker 19.03.12, kubernetes 1.19.3, dpdk 18.11.6, ovs 2.12.0, ovn 2.12.0, helm 3.0, kubeovn 1.0.1, flannel 0.12.0, calico 3.16.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS we build from specific commit "a13708825e854da919c6fdf05d50753113d04831"
+Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 19.03.12, kubernetes 1.19.3, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.1, flannel 0.12.0, calico 3.16.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS we build from specific commit "a13708825e854da919c6fdf05d50753113d04831"
