@@ -214,11 +214,11 @@ _Figure 7 - Instantiate a Deployment Intent Group_
 In this initial release of EMCO, a built-in generic placement controller is provided in the `orchestrator`.  As described above, the three provided action controllers are the OVN Action, Traffic and Generic Action controllers.
 
 #### Status Monitoring and Queries in EMCO
-When a resource like a Deployment Intent Group is instantiated, status information about both the deployment and the deployed resources in the cluster are collected and made available for query by the API. The following diagram illustrates the key components involved.  For more information about status queries see [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md) .
+When a resource like a Deployment Intent Group is instantiated, status information about both the deployment and the deployed resources in the cluster are collected and made available for query by the API. The following diagram illustrates the key components involved.  For more information about status queries see [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md).
 
 ![OpenNESS EMCO](openness-emco-images/emco-status-monitoring.png)
 
-_Figure 8 - Status Monitoring and Query Sequence
+_Figure 8 - Status Monitoring and Query Sequence_
 
 ### EMCO API
 For user interaction, EMCO provides [RESTful API](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
