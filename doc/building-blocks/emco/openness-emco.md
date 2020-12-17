@@ -266,41 +266,18 @@ EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tre
 - Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
 
 ```shell
-# kubectl get pods -A
-NAMESPACE NAME                                             READY   STATUS   RESTARTS AGE
-emco      clm-6979f6c886-tjfrv                             1/1     Running  0        14m
-emco      dcm-549974b6fc-42fbm                             1/1     Running  0        14m
-emco      etcd-5f646586cb-p7ctj                            1/1     Running  0        14m
-emco      mongo-5f7d44fbc5-n74lm                           1/1     Running  0        14m
-emco      ncm-58b85b4688-tshmc                             1/1     Running  0        14m
-emco      orchestrator-78b76cb547-xrvz5                    1/1     Running  0        14m
-emco      ovnaction-5d8d4447f9-nn7l6                       1/1     Running  0        14m
-emco      rsync-58b75849dd-99z6t                           1/1     Running  0        14m
-harbor    harbor-app-harbor-chartmuseum-78c8d5567c-zfm68   1/1     Running  0        15m
-harbor    harbor-app-harbor-clair-779df4555b-bc4xv         2/2     Running  1        15m
-harbor    harbor-app-harbor-core-86745c7fdd-rqfl8          1/1     Running  0        15m
-harbor    harbor-app-harbor-database-0                     1/1     Running  0        15m
-harbor    harbor-app-harbor-jobservice-b44ffbcdd-kxxbm     1/1     Running  0        15m
-harbor    harbor-app-harbor-nginx-8f4b9595-mthng           1/1     Running  0        15m
-harbor    harbor-app-harbor-notary-server-64c6df8547-w6zxt 1/1     Running  0        15m
-harbor    harbor-app-harbor-notary-signer-68cf88854b-h97mk 1/1     Running  0        15m
-harbor    harbor-app-harbor-portal-fd5ff4bc9-qn9hq         1/1     Running  0        15m
-harbor    harbor-app-harbor-redis-0                        1/1     Running  0        15m
-harbor    harbor-app-harbor-registry-68699595cb-cdddd      2/2     Running  0        15m
-harbor    harbor-app-harbor-trivy-0                        1/1     Running  0        15m
-kube-system   coredns-f9fd979d6-j4j2m                      1/1     Running  0        15m
-kube-system   coredns-f9fd979d6-x546t                      1/1     Running  0        15m
-kube-system   etcd-211node                                 1/1     Running  0        18m
-kube-system   kube-apiserver-211node                       1/1     Running  0        18m
-kube-system   kube-controller-manager-211node              1/1     Running  0        18m
-kube-system   kube-ovn-cni-pvbfl                           1/1     Running  0        15m
-kube-system   kube-ovn-controller-54d8c5d5ff-jjgk6         1/1     Running  0        15m
-kube-system   kube-ovn-pinger-tst92                        1/1     Running  0        15m
-kube-system   kube-proxy-llqzr                             1/1     Running  0        18m
-kube-system   kube-scheduler-211node                       1/1     Running  0        18m
-kube-system   ovn-central-54f768b868-vtmjl                 1/1     Running  0        17m
-kube-system   ovs-ovn-jq6dn                                1/1     Running  0        17m
-
+# kubectl get pods -n emco
+NAMESPACE NAME                           READY   STATUS   RESTARTS AGE
+emco      clm-6979f6c886-tjfrv           1/1     Running  0        14m
+emco      dcm-549974b6fc-42fbm           1/1     Running  0        14m
+emco      dtc-948874b6fc-p2fbx           1/1     Running  0        14m
+emco      etcd-5f646586cb-p7ctj          1/1     Running  0        14m
+emco      gac-788874b6fc-p1kjx           1/1     Running  0        14m
+emco      mongo-5f7d44fbc5-n74lm         1/1     Running  0        14m
+emco      ncm-58b85b4688-tshmc           1/1     Running  0        14m
+emco      orchestrator-78b76cb547-xrvz5  1/1     Running  0        14m
+emco      ovnaction-5d8d4447f9-nn7l6     1/1     Running  0        14m
+emco      rsync-99b85b4x88-ashmc         1/1     Running  0        14m
 ```
 
 ## EMCO Example: SmartCity Deployment
@@ -423,17 +400,17 @@ The pods on the edge cluster are in the running status as shown as below:
 
 ```shell
 # kubectl get pods
-NAME                                                READY   STATUS    RESTARTS   AGE
-traffic-office1-alert-5b56f5464c-ldwrf              1/1     Running   0          20h
-traffic-office1-analytics-traffic-6b995d4d6-nhf2p   1/1     Running   0          20h
-traffic-office1-camera-discovery-78bccbdb44-k2ffx   1/1     Running   0          20h
-traffic-office1-cameras-6cb67ccc84-8zkjg            1/1     Running   0          20h
-traffic-office1-db-84bcfd54cd-ht52s                 1/1     Running   1          20h
-traffic-office1-db-init-64fb9db988-jwjv9            1/1     Running   0          20h
-traffic-office1-mqtt-f9449d49c-dwv6l                1/1     Running   0          20h
-traffic-office1-mqtt2db-5649c4778f-vpxhq            1/1     Running   0          20h
-traffic-office1-smart-upload-588d95f78d-8x6dt       1/1     Running   1          19h
-traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1          19h
+NAME                                              READY STATUS  RESTARTS AGE
+traffic-office1-alert-5b56f5464c-ldwrf            1/1   Running 0        20h
+traffic-office1-analytics-traffic-6b995d4d6-nhf2p 1/1   Running 0        20h
+traffic-office1-camera-discovery-78bccbdb44-k2ffx 1/1   Running 0        20h
+traffic-office1-cameras-6cb67ccc84-8zkjg          1/1   Running 0        20h
+traffic-office1-db-84bcfd54cd-ht52s               1/1   Running 1        20h
+traffic-office1-db-init-64fb9db988-jwjv9          1/1   Running 0        20h
+traffic-office1-mqtt-f9449d49c-dwv6l              1/1   Running 0        20h
+traffic-office1-mqtt2db-5649c4778f-vpxhq          1/1   Running 0        20h
+traffic-office1-smart-upload-588d95f78d-8x6dt     1/1   Running 1        19h
+traffic-office1-storage-7889c67c57-kbkjd          1/1   Running 1        19h
 ```
 
 The pods on the cloud cluster are in the running status as shown as below:
