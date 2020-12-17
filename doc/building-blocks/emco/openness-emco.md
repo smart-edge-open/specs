@@ -45,7 +45,7 @@ Compared with other multipe-clusters orchestration, EMCO focuses on the followin
 The following figure shows the topology overview for the OpenNESS EMCO orchestration with edge and multiple clusters. It also shows an example of deploying SmartCity with EMCO. 
 ![OpenNESS EMCO](openness-emco-images/openness-emco-topology.png)
 
-_Figure 1 - Topology Overview with OpenNESS EMCO_
+_Figure 2 - Topology Overview with OpenNESS EMCO_
 
 All the managed edge clusters and cloud clusters are connected with the EMCO cluster through the WAN network. 
 - The central orchestration (EMCO) cluster can be installed and provisioned by using the [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
@@ -59,11 +59,23 @@ All the managed edge clusters and cloud clusters are connected with the EMCO clu
 This document aims to familiarize the user with EMCO and [OpenNESS deployment flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md) for EMCO installation and provision, and provide instructions accordingly.
 
 ## EMCO Introduction
+
+### EMCO Terminology
+| Term | Description |
+|:-----: | ----- | 
+| AppContext | <p>The AppContext is a set of records maintained in the EMCO etcd data store which maintains the collection of resources and clusters associated with a deployable EMCO resource (e.g. Deployment Intent Group)..</p>|
+| Cluster Provider | <p>The provider is someone who owns clusters and registers them.</p>|
+| Projects | <p>The project resource provides means for a collection of applications to be grouped. Several applications can exist under a specific project. Projects allows for grouping of applications under a common tenant to be defined.</p>|
+| Composite application | <p>The composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations. Also, some applications of the composite application get replicated in multiple locations. </p>|
+| Deployment Intent | <p>EMCO does not expect the editing of Helm charts provided by application/Network-function vendors by DevOps admins. Any customization and additional K8s resources that need to be present with the application are specified as deployment intents. </p>|
+| Deployment Intent Group | <p>The Deployment Intent Group represents an instance of a composite application that can be deployed with a specified composite profile and a specified set of deployment intents which will control the placement and other configuration of the application resources. </p>|
+| Placement | <p>EMCO supports to create generic placement intents for a given composite application. Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application. Finally works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters. </p>|
+
 ### EMCO Architecture
 The following diagram depicts a high level overview of the EMCO architecture.
 ![OpenNESS EMCO](openness-emco-images/openness-emco-arch.png)
 
-_Figure 2 - EMCO Architecture_
+_Figure 3 - EMCO Architecture_
   - Cluster Registration Controller registers clusters by cluster owners.
   - Distributed Application Scheduler provides a simplified and extensible placement.
   - Network Configuration Management handles creation/management of virtual and provider networks.
@@ -99,6 +111,7 @@ The Distributed Application Scheduler supports operations on a deployment intent
 - status: (may be invoked at any step) provides information on the status of the deployment intent group.
 - terminate: terminates the application resources of an instantiated application from all of the clusters to which it was deployed. In some cases, if a remote cluster is intermittently unreachable, the instantiate operation may still retry the instantiate operation for that cluster. The terminate operation will cause the instantiate operation to complete (i.e. fail), before the termination operation is performed.
 - stop: In some cases, if the remote cluster is intermittently unreachable, the Resource Synchronizer will continue retrying an instantiate or terminate operation. The stop operation can be used to force the retry operation to stop, and the instantiate or terminate  operation will complete (with a failed status). In the case of terminate, this allows the deployment intent group resource to be deleted via the API, since deletion is prevented until a deployment intent group resource has reached a completed terminate operation status.
+Refer to [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md) for more details.
 
 #### Network Configuration Management
 The network configuration management (NCM) microservice provides the following functionalities:
@@ -124,7 +137,7 @@ Due to the close relationship with Clusters, which are provided by Cluster Regis
 
 ![Mapping between Logical Clouds and Clusters](openness-emco-images/openness-emco-lccl.png)
 
-_Figure 3 - Mapping between Logical Clouds and Clusters_
+_Figure 4 - Mapping between Logical Clouds and Clusters_
 
 ##### Lifecycle Operations
 Prerequisites to using Logical Clouds:
@@ -161,9 +174,6 @@ The OVN Action Controller (ovnaction) microservice is an action controller which
 The traffic controller microservice provides a way to create network policy resources across edge clusters. It provides inbound RESTful APIs to create intents to open the traffic from clients, and provides change and delete APIs for update and deletion of traffic intents. Using the information provided through intents, it also creates a network policy resource for each of the application servers on the corresponding edge cluster.
 > **NOTE**:For network policy to work, edge cluster must have network policy support using CNI such as calico.
 
-#### Resource Synchronizer
-This microservice is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various microservices are used by this microservice. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
-
 #### Generic Action Controller
 The generic action controller microservice is an action controller which may be registered with the central orchestrator. It can achieve the following usecases:
 
@@ -179,14 +189,36 @@ To achieve both the usecases, the controller exposes RESTful APIs to create, upd
 - Resource - Specifies the newly defined object or an existing object.
 - Customization - Specifies the modifications (using JSON Patching) to be applied on the objects.
 
-### EMCO Terminology
-| Term | Description |
-|:-----: | ----- | 
-| Cluster Provider | <p>The provider is someone who owns clusters and registers them.</p>|
-| Projects | <p>The project resource provides means for a collection of applications to be grouped. Several applications can exist under a specific project. Projects allows for grouping of applications under a common tenant to be defined.</p>|
-| Composite application | <p>The composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations. Also, some applications of the composite application get replicated in multiple locations. </p>|
-| Deployment Intent | <p>EMCO does not expect the editing of Helm charts provided by application/Network-function vendors by DevOps admins. Any customization and additional K8s resources that need to be present with the application are specified as deployment intents. </p>|
-| Placement | <p>EMCO supports to create generic placement intents for a given composite application. Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application. Finally works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters. </p>|
+#### Resource Synchronizer
+This microservice is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various microservices are used by this microservice. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
+
+#### Placment and Action Controllers in EMCO
+This section illustrates some key aspects of the EMCO controller architecture.  Depending on the needs of a composite application, intents that handle specific operations for application resources (e.g. addition, modification, etc.) can be created via the APIs provided by the corresponding controller API.  The following diagram shows the sequence of interactions to register controllers with EMCO.
+
+![OpenNESS EMCO](openness-emco-images/emco-register-controllers.png)
+
+_Figure 5 - Register placement and action controllers with EMCO_
+
+This diagram illustrates the sequence of operations taken to prepare a Deployment Intent Group that utilizes some intents supported by controllers.  The desired set of controllers and associated intents are included in the definition of a Deployment Intent Group to satisfy the requirements of a specific deployed instance of a composite application.
+
+![OpenNESS EMCO](openness-emco-images/emco-dig-create.png)
+
+_Figure 6 - Create a Deployment Intent Group_
+
+When the Deployment Intent Group is instantiated, the identified set of controllers are invoked in order to perform their specific operations.
+
+![OpenNESS EMCO](openness-emco-images/emco-dig-instantiate.png)
+
+_Figure 7 - Instantiate a Deployment Intent Group_
+
+In this initial release of EMCO, a built-in generic placement controller is provided in the `orchestrator`.  As described above, the three provided action controllers are the OVN Action, Traffic and Generic Action controllers.
+
+#### Status Monitoring and Queries in EMCO
+When a resource like a Deployment Intent Group is instantiated, status information about both the deployment and the deployed resources in the cluster are collected and made available for query by the API. The following diagram illustrates the key components involved.  For more information about status queries see [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md) .
+
+![OpenNESS EMCO](openness-emco-images/emco-status-monitoring.png)
+
+_Figure 8 - Status Monitoring and Query Sequence
 
 ### EMCO API
 For user interaction, EMCO provides [RESTful API](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
@@ -206,13 +238,13 @@ The following figure shows various EMCO services running in a cluster with Istio
 
 ![OpenNESS EMCO](openness-emco-images/emco-istio-arch.png)
 
-_Figure 4 - EMCO setup with Istio and Authservice_
+_Figure 9 - EMCO setup with Istio and Authservice_
 
 The following figure shows the authentication flow with EMCO, Istio and Authservice
 
 ![OpenNESS EMCO](openness-emco-images/emco-istio-auth.png)
 
-_Figure 5 - EMCO Authenication with external OATH2 Server_
+_Figure 10 - EMCO Authenication with external OATH2 Server_
 
 Detailed steps for configuring EMCO with Istio can be found in [EMCO Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
 
@@ -278,7 +310,7 @@ kube-system   ovs-ovn-jq6dn                                      1/1     Running
 - The whole deployment architecture diagram is shown as below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
-_Figure 6 - SmartCity Deployment Architecture Overview_
+_Figure 11 - SmartCity Deployment Architecture Overview_
 
 The example steps are shown as follows:
 - Prerequisites
@@ -418,7 +450,7 @@ cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
 From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
 
-_Figure 7 - SmartCity UI_
+_Figure 12 - SmartCity UI_
 
 ### SmartCity Termination
 
