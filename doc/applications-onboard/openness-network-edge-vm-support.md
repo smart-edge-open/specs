@@ -164,6 +164,8 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
 >**NOTE**: Each stateful VM with a new Persistent Volume Claim (PVC) requires a new Persistent Volume (PV) to be created. See more in the [limitations section](#limitations). Also, CDI needs two PVs when creating a PVC and loading a VM image from the qcow2 file: one PV for the actual PVC to be created and one PV to translate the qcow2 image to raw input.
 
+>**NOTE**: An issue appears when the CDI upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. It is advised that the user uses other CNI such as Calico CNI when using CDI with OpenNESS.
+
   1. Create a persistent volume for the VM:
 
       - Edit the sample yaml with the hostname of the node:
@@ -254,6 +256,8 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
       ```shell
       [root@controller ~]# kubectl get vmi
       ```
+>**NOTE**: The user should verify that there is no K8s network policy that would block the traffic to the VM (ie. `block-all-ingress policy`). If such policy exists it should be either removed or a new policy should be created to allow traffic. To check current network policies run: `kubectl get networkpolicy -A`. See K8s [documentation for more information on network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
+      
   13. SSH into the VM:
       ```shell
       [root@controller ~]# ssh <vm_ip>
