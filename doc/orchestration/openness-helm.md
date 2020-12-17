@@ -2,14 +2,14 @@
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2020 Intel Corporation
 ```
+<!-- omit in toc -->
 # Helm support in OpenNESS
 
-- [Helm support in OpenNESS](#helm-support-in-openness)
-  - [Introduction](#introduction)
-  - [Architecture](#architecture)
-  - [Helm Installation](#helm-installation)
-  - [Helm Charts](#helm-charts)
-  - [References](#references)
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [Helm Installation](#helm-installation)
+- [Helm Charts](#helm-charts)
+- [References](#references)
 
 ## Introduction
 Helm is a package manager for Kubernetes\*. It allows developers and operators to easily package, configure, and deploy applications and services onto Kubernetes clusters. For details refer to the [Helm Website](https://helm.sh). With OpenNESS, Helm is used to extend the [OpenNESS Experience Kits](https://github.com/otcshare/openness-experience-kits) Ansible\* playbooks to deploy Kubernetes packages. Helm adds considerable flexibility. It enables users to upgrade an existing installation without requiring a re-install. It provides the option to selectively deploy individual microservices if a full installation of OpenNESS is not needed. And it provides a standard process to deploy different applications or network functions. This document aims to familiarize the user with Helm and provide instructions on how to use the specific Helm charts available for OpenNESS. 
@@ -55,12 +55,12 @@ OpenNESS provides the following helm charts:
 
 The EPA, Telemetry, and k8s plugins helm chart files will be saved in a specific directory on the OpenNESS controller. To modify the directory, change the following variable `ne_helm_charts_default_dir` in the `group_vars/all/10-default.yml` file:
    ```yaml
-   ne_helm_charts_default_dir: /opt/openness/helm-chartss/
+   ne_helm_charts_default_dir: /opt/openness/helm-charts/
    ```
 
 To check helm charts files, run the following command on the OpenNESS controller:
    ```bash
-   $ ls /opt/openness/helm-chartss/
+   $ ls /opt/openness/helm-charts/
    vpu-plugin gpu-plugin node-feature-discovery prometheus
    ```
 

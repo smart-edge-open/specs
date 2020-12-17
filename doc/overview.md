@@ -2,13 +2,16 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
-- [OpenNESS Overview](#openness-overview)
-  - [Introduction to OpenNESS](#introduction-to-openness)
-  - [Why consider OpenNESS](#why-consider-openness)
-  - [Building Blocks](#building-blocks)
-  - [Distributions](#distributions)
-  - [Consumption Models](#consumption-models)
+
+<!-- omit in toc -->
 # OpenNESS Overview
+
+- [Introduction to OpenNESS](#introduction-to-openness)
+- [Why consider OpenNESS](#why-consider-openness)
+- [Building Blocks](#building-blocks)
+- [Distributions](#distributions)
+- [Consumption Models](#consumption-models)
+
 ## Introduction to OpenNESS 
 
 OpenNESS is an edge computing software toolkit that enables highly optimized and performant edge platforms to on-board and manage applications and network functions with cloud-like agility across any type of network.
@@ -39,7 +42,7 @@ As the industry seeks to settle on a consistent cloud native platform approach c
 
 OpenNESS brings together the best of breed cloud native frameworks to build a horizontal edge computing platform to address these challenges.
 
-**Benefits of OpenNESS**: 
+**Benefits of OpenNESS**
 
 Edge Performant & Optimized: 
 
@@ -59,8 +62,6 @@ Ease of Use, Consumability & Time to Market (TTM)
 ## Building Blocks
 
 OpenNESS is composed of a set of Building Blocks, each intended to offer a set of capabilities for edge solutions.
-
-
 
 | Building Block                   | Summary                                                      |
 | -------------------------------- | ------------------------------------------------------------ |
