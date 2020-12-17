@@ -50,9 +50,9 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-4)
   - [OpenNESS - 20.12](#openness---2012-4)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
-  - [Intel® Xeon® D Processor](#intel%c2%ae-xeon%c2%ae-d-processor)
-  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel%c2%ae-xeon%c2%ae-scalable-processors)
-  - [Intel® Xeon® Scalable Processors](#intel%c2%ae-xeon%c2%ae-scalable-processors)
+  - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
+  - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
+  - [Intel® Xeon® Scalable Processors](#intel-xeon-scalable-processors)
 - [Supported Operating Systems](#supported-operating-systems)
 - [Packages Version](#packages-version)
 
