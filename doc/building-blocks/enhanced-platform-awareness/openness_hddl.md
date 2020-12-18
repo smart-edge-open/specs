@@ -27,16 +27,22 @@ Each implementation for each hardware is an inference engine plugin.
 The plugin for the Intel® Movidius™ Myriad™ X HDDL solution, or IE HDDL plugin for short, supports the Intel® Movidius™ Myriad™ X HDDL Solution hardware PCIe card. It communicates with the Intel® Movidius™ Myriad™ X HDDL HAL API to manage multiple Intel® Movidius™ Myriad™ X devices in the card, and it schedules deep-learning neural networks and inference tasks to these devices.
 
 ## HDDL OpenNESS Integration
+OpenNESS provides support for the deployment of OpenVINO™ applications and workloads accelerated through Intel® Vision Accelerator Design with the Intel® Movidius™ VPU HDDL-R add-in card. As a prerequisite for enabling the support, it is required for the HDDL add-in card to be inserted into the PCI slot of the Edge Node platform. The support is then enabled by setting the appropriate flag - 'ne_hddl_enable' in the '/group_vars/all/10-default.yml' before running OEK playbooks.
+> **NOTE** No pre-defined flavor is provided for HDDL. If user wants to enable HDDL with flavor, can set flag - 'ne_hddl_enable' in the 'flavors/<flavor-name>/all.yml'. The node with HDDL card inserted will be labelled as 'hddl-zone=true'.
 
-OpenNESS provides support for the deployment of OpenVINO™ applications and workloads accelerated through Intel® Vision Accelerator Design with the Intel® Movidius™ VPU HDDL-R add-in card. As a prerequisite for enabling the support, it is required for the HDDL add-in card to be inserted into the PCI slot of the Edge Node platform. The support is then enabled by setting the appropriate flag in a configuration file before deployment of the Edge Node software toolkit.
+The OEK automation script for HDDL will involve the following steps:
+- Download the HDDL DaemonSet yaml file from [Open Visual Cloud dockerfiles software](https://github.com/OpenVisualCloud/Dockerfiles) and templates it with specific configuration to satifiy OpenNESS need such as OpenVINO version...etc.
+- Download the OpenVINO™, install kernel-devel and then install HDDL dependencies.
+- Build the HDDLDdaemon image.
+- Label the node with 'hddl-zone=true'.
+- HDDL Daemon automatically brings up on the node with label 'hddl-zone=true'.
 
-With a correct configuration during the Edge Node bring up, an automated script will install all components necessary, such as kernel drivers required for the correct operation of the Vision Processing Units (VPUs) and 'udev rules' required for correct kernel driver assignment and booting of these devices on the Edge Node host platform.
+The HDDL Daemon provides the backend service to manage VPUs and dispatch inference tasks to VPUs. OpenVINO™-based applications that utilizes HDDL hardware need to access the device node '/dev/ion' and domain socket under '/var/tmp' to communicate with the kernel and HDDL service.
+> **NOTE** With the default kernel used by OpenNESS OEK, the ion driver will not enabled by OpenVINO™ toolkits, and the shared memory - '/dev/shm' will be used as fallback.  More details refer to [installing_openvino_docker_linux](https://docs.openvinotoolkit.org/2020.2/_docs_install_guides_installing_openvino_docker_linux.html) 
 
-After the OpenNESS automated script installs all necessary tools and components for Edge Node bring up, another automated script responsible for deployment of all micro-services is run. As part of this particular script, a Docker\* container running a 'hddl-service' is started if the option for HDDL support is enabled. This container, which is part of OpenNESS system services, is a privileged container with 'SYS_ADMIN' capabilities and access to the host’s devices.
-
-The 'hddl-service' container is running the HDDL Daemon which is responsible for bringing up the HDDL Service within the container. The HDDL Service enables the communication between the OpenVino™ applications required to run inference on HDDL devices and VPUs needed to run the workload. This communication is done via a socket, which is created by the HDDL service. The default location of the socket is the `/var/tmp/`directory of the Edge Node host. The application container requiring HDDL acceleration needs to be exposed to this socket.
 
 ![HDDL-Block-Diagram](hddl-images/hddlservice.png)
+
 
 ## Summary
 The Intel® Movidius™ Myriad™ X HDDL solution integrates multiple Intel® Movidius™ Myriad™ X brand SoCs in a PCIe add-in card form factor or a module form factor to build a scalable, high-capacity, deep-learning solution. OpenNESS provides a toolkit for customers to put together deep-learning solutions at the edge. To take it further for efficient resource usage, OpenNESS provides a mechanism to use CPU or VPU depending on the load or any other criteria.
