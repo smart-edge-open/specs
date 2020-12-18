@@ -246,7 +246,8 @@ This document provides high-level system features, issues, and limitations infor
   - Following from the previous release decision of pausing Native on-premises Development the code has been move to a dedicated repository “native-on-prem”
   - Kubernetes based solution will now support both Network and on-premises Edge
 - Service Mesh support
-  - Basic support for Service Mesh using istio within an OpenNESS cluster
+  - Basic support for Service Mesh using Istio Service Mesh within an OpenNESS cluster.
+    > **NOTE**: When deploying Istio Service Mesh in VMs, a minimum of 8 CPU core and 16GB RAM must be allocated to each worker VM so that Istio operates smoothly
   - Application of Service Mesh openness 5G and Media analytics - A dedicated network for service to service communications
 - EAA Update 
   - EAA microservices has been updated to be more cloud-native friendly
@@ -321,6 +322,8 @@ There are no non-Intel issues relevant to this release.
 - Further optimized the Kubernetes based deployment by supporting multiple Flavors
 - Network edge installation time is optimized using pre-built Docker images 
 - cAdvisor occasional failure issue is resolved
+- "Traffic rule creation: cannot parse filled and cleared fields" in Legacy OnPremises is fixed
+- Issue fixed when removing Edge Node from Controller when its offline and traffic policy is configured or app deployed
 
 ## OpenNESS - 20.12
 - Known issue with Pod that uses hugepage get stuck in terminating state on deletion hs been fixed after upgrading to Kubernetes 1.19.3
