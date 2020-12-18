@@ -7,6 +7,7 @@ Copyright (c) 2020 Intel Corporation
 
 - [Background](#background)
 - [EMCO Introduction](#emco-introduction)
+  - [EMCO Terminology](#emco-terminology)
   - [EMCO Architecture](#emco-architecture)
     - [Cluster Registration](#cluster-registration)
     - [Distributed Application Scheduler](#distributed-application-scheduler)
@@ -21,7 +22,6 @@ Copyright (c) 2020 Intel Corporation
     - [Traffic Controller](#traffic-controller)
     - [Resource Syncronizer](#resource-syncronizer)
     - [Generic Action Controller](#generic-action-controller)
-  - [EMCO Terminology](#emco-terminology)
   - [EMCO API](#emco-api)
   - [EMCO Authentication and Authorization](#emco-authentication-and-authorization)
   - [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor)
@@ -341,7 +341,6 @@ In the step, cluster provider will be created. And both the edge cluster and the
 
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
 
-
 2. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
 ```shell
 HARBORRHOST=<harbor_registry_host>
@@ -365,15 +364,13 @@ docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
 > **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by the edge cluster and the cloud cluster.  `setup_env.sh` will automate it.
 
 5. Run the command for the clusters setup with expected result as below:
-
-    ```shell
-    # cd cli-scripts/
-    # ./01_apply.sh
-
-    ....
-    URL: cluster-providers/smartcity-cluster-provider/clusters/edge01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityEdge"}
-    URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
-    ```
+```shell
+# cd cli-scripts/
+# ./01_apply.sh
+....
+URL: cluster-providers/smartcity-cluster-provider/clusters/edge01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityEdge"}
+URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
+```
 
 ### Project Setup
 
@@ -408,15 +405,15 @@ URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200
 ### Deploy SmartCity Application
 
 1. Run the command for the SmartCity application deployment with expected result as below:
-    ```shell
-    # cd cli-scripts/
-    # ./04_apply.sh
+```shell
+# cd cli-scripts/
+# ./04_apply.sh
 
-    http://localhost:31298/v2
-    URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/approve Response Code: 202 Response:
-    http://localhost:31298/v2
-    URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
-    ```
+http://localhost:31298/v2
+URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/approve Response Code: 202 Response:
+http://localhost:31298/v2
+URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
+```
 > **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 
 2. Verify SmartCity Application Deployment Information.
