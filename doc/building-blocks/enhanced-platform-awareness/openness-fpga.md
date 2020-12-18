@@ -223,7 +223,7 @@ To run vRAN workloads on the Intel® FPGA PAC N3000, the FPGA must be programmed
 
 #### Telemetry monitoring
 
-  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
+  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
 
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 
@@ -266,7 +266,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/open-ness/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
 
 A sample pod requesting the FPGA (FEC) VF may look like this:
 
