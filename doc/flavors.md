@@ -102,7 +102,8 @@ Steps to install this flavor are as follows:
     $ deploy_ne.sh -f media-analytics-vca
     ```
 
-> **NOTE:** At the time of writing this document, *Weave Net* is the only supported CNI for network edge deployments involving VCAC-A acceleration. The `weavenet` CNI is automatically selected by the *media-analytics-vca*.
+> **NOTE:** At the time of writing this document, *Weave Net* is the only supported CNI for network edge deployments involving VCAC-A acceleration. The `weavenet` CNI is automatically selected by the *media-analytics-vca*. 
+> **NOTE:** The flag `force_build_enable` (default true) supports force build VCAC-A system image (VCAD) by default, it is defined in flavors/media-analytics-vca/all.yml. By setting the flag as false, OEK will not rebuild the image and re-use the last system image built during deployment. If the flag is true, OEK will force build VCA host kernel and node system image which will take several hours.
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
