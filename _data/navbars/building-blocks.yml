@@ -56,6 +56,11 @@ section:
       meta_title: FPGA in OpenNESS - Programming, Resource Allocation and Configuration
       meta_description: The FPGA Programmable acceleration card plays a key role in accelerating certain types of workloads which in-turn increases the overall compute capacity of a COTS platform.
 
+    - title: Intel® vRAN Dedicated Accelerator ACC100
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-acc100
+      meta_title: Intel® vRAN Dedicated Accelerator ACC100
+      meta_description: Using ACC100 eASIC in OpenNESS, Resource Allocation, and Configuration
+
     - title: Intel® Movidius™ Myriad™ X HDDL Support
       path: /doc/building-blocks/enhanced-platform-awareness/openness_hddl
       meta_title: Intel® Movidius™ Myriad™ X HDDL Solution in OpenNESS

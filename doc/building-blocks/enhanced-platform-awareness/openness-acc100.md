@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019-2020 Intel Corporation
+Copyright (c) 2020 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using ACC100 eASIC in OpenNESS: Resource Allocation, and Configuration
@@ -10,7 +10,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Using the Intel® vRAN Dedicated Accelerator ACC100 on OpenNESS](#using-the-intel-vran-dedicated-accelerator-acc100-on-openness)
   - [ACC100 (FEC) Ansible Installation for OpenNESS Network Edge](#acc100-fec-ansible-installation-for-openness-network-edge)
     - [OpenNESS Experience Kit](#openness-experience-kit)
-  - [FEC VF Configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
+  - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
   - [Requesting Resources and Running Pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
   - [Verifying Application POD Access and Usage of FPGA on OpenNESS Network Edge](#verifying-application-pod-access-and-usage-of-fpga-on-openness-network-edge)
 - [Reference](#reference)
