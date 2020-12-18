@@ -3,7 +3,7 @@
 
 title: "Cloud Adapters"
 path: /cloud-adapters/
-order: 8
+order: 6
 section:
   - title: AWS Greengrass
     path: /doc/cloud-adapters/openness_awsgreengrass

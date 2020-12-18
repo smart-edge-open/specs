@@ -425,8 +425,10 @@ Istio service mesh can be deployed with OpenNESS using the OEK through the pre-d
 The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials: 
 
 * Username: `admin`
-* Password: `admin`
 * Nodeport set to `30001`
+
+To get the randomly generated password run the following command on Kubernetes controller:  
+`kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d`
 
 Prometheus and Grafana are deployed in the OpenNESS platform as part of the telemetry role and are integrated with the Istio service mesh.
 

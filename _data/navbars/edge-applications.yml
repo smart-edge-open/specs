@@ -3,7 +3,7 @@
 
 title: "Edge Applications"
 path: /applications/
-order: 7
+order: 5
 section:
   - title: Application Development & Porting Guide
     path: /doc/applications/openness_appguide

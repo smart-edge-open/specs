@@ -3,7 +3,7 @@
 
 title: "Application Onboarding"
 path: /applications-onboard/
-order: 2
+order: 3
 section:
   - title: Network Edge Applications Onboarding
     path: /doc/applications-onboard/network-edge-applications-onboarding
@@ -20,10 +20,15 @@ section:
     meta_title: Edge Application Agent (EAA)
     meta_description: OpenNESS enables Edge Applications to produce, discover and consume services that are available on the OpenNESS cluster through the Edge Application Agent (EAA) APIs.
 
+  - title: Certificate Signing
+    path: /doc/applications-onboard/openness-certsigner
+    meta_title: Certificate Signing
+    meta_description: Each application that needs the TLS authentication certificate should generate it using the Certificate Signer by sending a CSR via Certificate Requester
+
   - title: Interface Service
     path: /doc/applications-onboard/openness-interface-service
     meta_title: OpenNESS Applications Onboard - OpenNESS Interface Service
-    meta_description: OpenNESS Interface service is an application running in Kubernetes pod on every worker node of OpenNESS Kubernetes cluster and provides OVS bridge, enabling external traffic scenarios.
+    meta_description: OpenNESS Interface service is an application running in Kubernetes pod on every node of OpenNESS Kubernetes cluster and provides OVS bridge, enabling external traffic scenarios.
 
   - title: VM support in OpenNESS for Network Edge
     path: /doc/applications-onboard/openness-network-edge-vm-support

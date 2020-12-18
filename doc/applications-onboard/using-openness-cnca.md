@@ -40,7 +40,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the control plane node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
 Creation of the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command to post a userplane creation request onto Application Function (AF):
@@ -111,7 +111,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
   This role brings up the 5g OpenNESS setup in the loopback mode for testing and demonstrating its usability. This scenario is currently the default 5G OpenNESS scenario. The ansible scripts that are part of "ngc_test" role build, configure and start AF, NEF and OAM in the Network Edge. Within this role, AF, NEF and OAM are set up on the controller node.  Description of the configuration and setup of the NGC components provided in the next sections of this document refers to ngc_test role. The NGC componetns set up within ngc_test role can be fully integrated and tested with provided Kubectl plugin or CNCA UI.
 
 2. Role "ngc"
-  This role brings up 5g OpenNESS components - AF and NEF - to present the real deployment scenario, where the components can be further integrated with the real 5G core network. The ansible scripts that are part of this role build, configure and start AF and NEF components on separate nodes in Network Edg. The ansible scripts place AF again on the controller node, whereas NEF is placed on a worker node. Similar functionality will be added for OAM component in the future release. Currently, integration with CNCA UI and Kubectl is not complete due to missing OAM component - the services can not be created and accessed. In CNCA UI the "services" web page does not show any content. The user should proceed to "subscriptions" web page to view and modify subscriptions.
+  This role brings up 5g OpenNESS components - AF and NEF - to present the real deployment scenario, where the components can be further integrated with the real 5G core network. The ansible scripts that are part of this role build, configure and start AF and NEF components on separate nodes in Network Edg. The ansible scripts place AF again on the controller node, whereas NEF is placed on a node. Similar functionality will be added for OAM component in the future release. Currently, integration with CNCA UI and Kubectl is not complete due to missing OAM component - the services can not be created and accessed. In CNCA UI the "services" web page does not show any content. The user should proceed to "subscriptions" web page to view and modify subscriptions.
 
 ## Network Edge mode
 
@@ -139,7 +139,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 4. After all the PODs are successfully up and running, few AF and OAM configuration parameters need to be updated (as per your deployment configuration) and then re-start the AF.
 
-   * Open the file `/etc/openness/configs/ngc/af.json` and modify the below parameters.
+   * Open the file `/opt/openness/configs/ngc/af.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * `"NEFHostname": "localhost"` : Replace the `localhost` with `nefservice` ie., service name NEF POD.
    * Save and exit.
@@ -151,7 +151,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ![NGC list of PODS](using-openness-cnca-images/ngc_af_service_config_log.png)
 
 5. To update OAM configuration and restart OAM micro service:
-   * Open the file `/etc/openness/configs/ngc/oam.json` and modify the below parameters.
+   * Open the file `/opt/openness/configs/ngc/oam.json` and modify the below parameters.
    * `"UIEndpoint": "http://localhost:3020"` : Replace the `localhost` with `IP Address` of edge-controller, and no change to port number.
    * Save and exit.
    * Now restart OAM POD using the below command:
@@ -165,7 +165,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 For Network Edge mode, the CNCA provides a kubectl plugin to configure the 5G Core network. Kubernetes adopted plugin concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes ecosystem. The plugin performs remote callouts against NGC OAM and AF microservice on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the control plane node during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

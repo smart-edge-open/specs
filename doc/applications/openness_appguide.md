@@ -14,8 +14,8 @@ Copyright (c) 2019 Intel Corporation
     - [Execution Flow Between EAA, Producer, and Consumer](#execution-flow-between-eaa-producer-and-consumer)
   - [Cloud Adapter Edge compute Application](#cloud-adapter-edge-compute-application)
 - [Application On-boarding](#application-on-boarding)
+  - [Authentication](#authentication)
   - [OpenNESS-aware Applications](#openness-aware-applications)
-    - [Authentication](#authentication)
     - [Service Activation](#service-activation)
     - [Service Discovery and Subscription](#service-discovery-and-subscription)
     - [Service Notifications](#service-notifications)
@@ -56,13 +56,13 @@ OpenNESS application can be categorized in different ways depending on the scena
 
 ### Producer Application
 OpenNESS Producer applications are edge compute applications that provide services to other applications running on the edge compute platform. Producer applications do not serve end users traffic directly. They are sometimes referred to as Edge services. The following are some characteristics of a producer app:
-- All producer apps must authenticate and acquire TLS. 
+- All producer apps must be TLS-capable and communicate through HTTPS. 
 - All producer apps need to activate if the service provided by them needs to be discoverable by other edge applications.
 - A producer apps can have one or more fields for which it will provide notification updates. 
 
 ### Consumer Application
 OpenNESS Consumer applications are edge compute applications that serve end users traffic directly. Consumer applications may or may not subscribe to the services from other producer applications on the edge node. The following are some characteristics of a consumer app:
-- It is not mandatory for consumer apps to authenticate if they don't wish to call EAA APIs.  
+- It is not mandatory for consumer apps to be TLS-capable if they don't wish to call EAA APIs.  
 - A consumer application can subscribe to any number of services from producer apps. Future extensions can implement entitlements to consumer apps to create access control lists. 
 - Producer to Consumer update will use a web socket for notification. If there is further data to be shared between producer and consumer, other NFVi components such as OVS/VPP/NIC-VF can be used for data transfer. 
 
@@ -84,7 +84,7 @@ The consumer application is based on OpenVINO™ [OpenVINO] (https://software.in
 
 The OpenVINO producer application is responsible for activating a service in OpenNESS Edge Node. This service is simply a publication of the inference model name that can be used by the OpenVINO consumer application(s). This service involves sending periodic `openvino-model` notifications (its interval is defined by `NotificationInterval`), which in turn is absorbed by the consumer application(s).
 
-The producer application commences publishing notifications after it handshakes with the Edge Application Agent (EAA) over HTTPS REST API. This handshake involves authentication and service activation.
+The producer application commences publishing notifications after registration with the Edge Application Agent (EAA) over HTTPS REST API.
 
 This sample OpenVINO producer application represents a real-world application where city traffic behavior can is monitored by detecting humans and automobiles at different times of the day.
 
@@ -92,12 +92,11 @@ This sample OpenVINO producer application represents a real-world application wh
 
 The OpenVINO consumer application executes object detection on the received video stream (from the client simulator) using an OpenVINO pre-trained model. The model of use is designated by the model name received in the `openvino-model` notification. The corresponding model file is provided to the integrated OpenVINO C++ application.
 
-When the consumer application commences execution, it handshakes with EAA in a process that involves:
-- Authentication
-- Websocket connection establishment 
+When the consumer application commences execution, it communicates with EAA and perform operations involving:
+- Websocket connection establishment
 - Service discovery
-- Service subscription     
- 
+- Service subscription
+
 Websocket connection retains a channel for EAA to forward notifications to the consumer application whenever a notification is received from the producer application over HTTPS REST API. Only subscribed-to notifications are forwarded on to the websocket.
 
 This sample OpenVINO consumer application represents a real-world application and depending on the input object model, it can detect objects in the input video stream and annotate (count if needed). 
@@ -133,67 +132,101 @@ Applications to be onboarded on the OpenNESS framework must be self-contained in
 
 > **NOTE:** Code snippets given in this guide are written in Go language; this is purely for the ease of demonstration. All other programming languages should suffice for the same purposes.
 
-### OpenNESS-aware Applications
-Edge applications must introduce themselves to the OpenNESS framework and identify if they would like to activate new edge services or consume an existing service. The Edge Application Agent (EAA) component is the handler of all the edge applications hosted by the OpenNESS edge node and acts as their point of contact. All interactions with EAA are through REST APIs, which are defined in [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth) and [Edge Application API](https://www.openness.org/api-documentation/?api=eaa).
+### Authentication
 
-OpenNESS-awareness involves (a) authentication, (b) service activation/deactivation, (c) service discovery, (d) service subscription, and (e) Websocket connection establishment. The Websocket connection retains a channel for EAA for notification forwarding to pre-subscribed consumer applications. Notifications are generated by "producer" edge applications and absorbed by "consumer" edge applications.
+All communications over EAA REST APIs are secured with HTTPS and TLS (Transport Layer Security). Therefore, all applications that are onboarded on OpenNESS must obtain X.509 certificates from a Certificate Authority (CA). This is performed by [signing a certificate through the Kubernetes* API](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/). Each application that requires a certificate should generate it using the Certificate Signer by sending a CSR via Certificate Requester as detailed in [Certificate Signer guide](../applications-onboard/openness-certsigner.md). In brief, the application YAML specs must be extended to:
 
-The sequence of operations for the producer application are:
-1. Authenticate with an OpenNESS edge node
-2. Activate new service and include the list of notifications involved
-3. Send notifications to the OpenNESS edge node, according to business logic
+1. Include RBAC Service Account and Cluster Role Binding
+2. Include 2 Init Containers
+3. Create a ConfigMap with a JSON CSR config
 
-The sequence of operations for the consumer application:
-1. Authenticate with an OpenNESS edge node
-2. Discover the available services on OpenNESS edge platform
-3. Subscribe to services of interest and listen for notifications
+The above changes will enabled the application to exercise CSR with Kubernetes* API through the OpenNESS CertSigner service.
 
-#### Authentication
+The cluster admin should manually approve the certificate in order to complete the application onboarding:
 
-All communications over EAA REST APIs are secured with HTTPS and TLS (Transport Layer Security). Therefore, the wrapper program must authenticate itself by sending a Certificate Signing Request (CSR) to EAA to receive a digital identity certificate that is used in signing all the forthcoming HTTPS and Websocket communications. CSR is performed through the [Edge Application Authentication API](https://www.openness.org/api-documentation/?api=auth).
+```shell
+kubectl certificate approve <app-name>
+```
 
-Example of the authentication procedure with EAA is given below:
+> **NOTE:** The authentication steps is required when onboarding OpenNESS-aware and OpenNESS-agnostic applications.
+
+The below Golang sample represent the logic that the application can use to load the signed certificate and use it for subsequent HTTPS communications. The function `CreateEncryptedClient` loads the certificates from the container local file system and instantiates the Golang's [TLS client](https://golang.org/pkg/net/http/#Client) instance that is subsequently used in further HTTP messaging.
 
 ```golang
-certTemplate := x509.CertificateRequest{
-    Subject: pkix.Name{
-        CommonName:   "namespace:app-id",
-        Organization: []string{"OpenNESS Organization"},
-    },
-    SignatureAlgorithm: x509.ECDSAWithSHA256,
-    EmailAddresses:     []string{"hello@openness.org"},
+func CreateEncryptedClient() (*http.Client, error) {
+
+	cert, err := tls.LoadX509KeyPair(Cfg.CertPath, Cfg.KeyPath)
+	if err != nil {
+		return nil, errors.Wrap(err, "Failed to load client certificate")
+	}
+
+	certPool := x509.NewCertPool()
+	caCert, err := ioutil.ReadFile(Cfg.RootCAPath)
+	if err != nil {
+		return nil, errors.Wrap(err, "Failed to load CA Cert")
+	}
+	certPool.AppendCertsFromPEM(caCert)
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{RootCAs: certPool,
+				Certificates: []tls.Certificate{cert},
+				ServerName:   Cfg.EaaCommonName,
+			},
+		}}
+
+	log.Printf("%#v", client)
+
+	tlsResp, err := client.Get("https://" + "https://eaa.openness:443")
+	if err != nil {
+		return nil, errors.Wrap(err, "Encrypted connection failure")
+	}
+	defer func() {
+		if e := tlsResp.Body.Close(); e != nil {
+			log.Println("Failed to close response body " + e.Error())
+		}
+	}()
+	return client, nil
 }
 
-conCsrBytes, _ := x509.CreateCertificateRequest(rand.Reader,
-    &certTemplate, prvKey)
+func main() {
+    ...
 
-csrMem := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE REQUEST",
-    Bytes: conCsrBytes})
+    client, err := CreateEncryptedClient()
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
 
-conID := AuthIdentity{
-    Csr: string(csrMem),
-}
+    req, err := http.NewRequest("POST", "https://eaa.openness:443/services",
+        bytes.NewReader(payload))
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
 
-conIdBytes, _ := json.Marshal(conID)
+    resp, err := client.Do(req)
+    if err != nil {
+        log.Fatal(err)
+        return
+    }
 
-resp, _ := http.Post("http://eaa.openness:80/auth",
-    bytes.NewBuffer(conIdBytes))
-
-var conCreds AuthCredentials
-json.NewDecoder(resp.Body).Decode(&conCreds)
-
-x509Encoded, _ := x509.MarshalECPrivateKey(prvKey)
-
-pemEncoded := pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY",
-    Bytes: x509Encoded})
-conCert, _ := tls.X509KeyPair([]byte(conCreds.Certificate),
-    pemEncoded)
-
-conCertPool := x509.NewCertPool()
-for _, cert := range conCreds.CaPool {
-    ok := conCertPool.AppendCertsFromPEM([]byte(cert))
+    ...
 }
 ```
+
+### OpenNESS-aware Applications
+Edge applications must introduce themselves to the OpenNESS framework and identify if they would like to activate new edge services or consume an existing service. The Edge Application Agent (EAA) component is the handler of all the edge applications hosted by the OpenNESS edge node and acts as their point of contact. All interactions with EAA are through REST APIs, which are defined in [Edge Application API](https://www.openness.org/api-documentation/?api=eaa).
+
+OpenNESS-awareness involves (a) service activation/deactivation, (b) service discovery, (c) service subscription, and (c) Websocket connection establishment. The Websocket connection retains a channel for EAA for notification forwarding to pre-subscribed consumer applications. Notifications are generated by "producer" edge applications and absorbed by "consumer" edge applications.
+
+The sequence of operations for the producer application are:
+1. Activate new service and include the list of notifications involved
+2. Send notifications to the OpenNESS edge node, according to business logic
+
+The sequence of operations for the consumer application:
+1. Discover the available services on OpenNESS edge platform
+2. Subscribe to services of interest and listen for notifications
 
 #### Service Activation
 
@@ -344,7 +377,7 @@ In a situation where the developer has a legacy, pre-compiled or binary applicat
 
 Legacy, pre-compiled, or binary applications can be made OpenNESS-aware by following few steps without editing their code. This can be done by wrapping these applications with a separate program that is written purposefully to (a) communicate with OpenNESS Edge Node and (b) execute the legacy application.
 
-The wrapper program interacts with EAA for (a) authentication, (b) Websocket connection establishment, (c) service discovery, and (d) service subscription. And call the legacy application with the proper arguments based on the received notifications. Or, if the legacy application is intended to work as a producer application, then the wrapper programmer should activate the edge service with EAA and send the notifications based on the outcomes of the legacy application.
+The wrapper program interacts with EAA for (a) Websocket connection establishment, (b) service discovery, and (c) service subscription. And call the legacy application with the proper arguments based on the received notifications. Or, if the legacy application is intended to work as a producer application, then the wrapper programmer should activate the edge service with EAA and send the notifications based on the outcomes of the legacy application.
 
 The code below gives an example of an executable application being called at the operating system level when a notification is received from EAA. The executable application is separately compiled and exists on the file system. A similar approach has been followed with the OpenVINO sample application, which was originally written in C++ but is called from a wrapper Go-lang program.
 

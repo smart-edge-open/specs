@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2020 Intel Corporation
+
+title: "Development Kits"
+path: /devkits/
+order: 7
+section:
+  - title: OpenNESS Development Kit for Microsoft Azure
+    path: /doc/devkits/openness-azure-devkit
+    meta_title: OpenNESS Development Kit for Microsoft Azure
+    meta_description: This devkit supports the use of OpenNESS in cloud solutions. It leverages the Microsoft Azure Stack for OpenNESS deployment.

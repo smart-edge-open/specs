@@ -1,5 +1,5 @@
 ```text
-SPDX-License-Identifier: Apache-2.0       
+SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2020 Intel Corporation
 ```
 <!-- omit in toc -->
@@ -17,10 +17,10 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Onboarding OpenVINO application](#onboarding-openvino-application)
   - [Prerequisites](#prerequisites-1)
   - [Setting up networking interfaces](#setting-up-networking-interfaces)
-  - [Deploying the application](#deploying-the-application)
+  - [Deploying the Application](#deploying-the-application)
   - [Applying Kubernetes network policies](#applying-kubernetes-network-policies-1)
   - [Setting up Edge DNS](#setting-up-edge-dns)
-  - [Starting traffic from client simulator](#starting-traffic-from-client-simulator)
+  - [Starting traffic from Client Simulator](#starting-traffic-from-client-simulator)
 - [Onboarding Smart City sample application](#onboarding-smart-city-sample-application)
   - [Setting up networking interfaces](#setting-up-networking-interfaces-1)
   - [Building Smart City ingredients](#building-smart-city-ingredients)
@@ -29,7 +29,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Enhanced Platform Awareness](#enhanced-platform-awareness)
 - [VM support for Network Edge](#vm-support-for-network-edge)
 - [Troubleshooting](#troubleshooting)
-  - [Useful commands:](#useful-commands)
+  - [Useful Commands:](#useful-commands)
 
 # Introduction
 This document aims to familiarize users with the Open Network Edge Services Software (OpenNESS) application on-boarding process for the Network Edge. This document provides instructions on how to deploy an application from the Edge Controller to Edge Nodes in the cluster; it also provides sample deployment scenarios and traffic configuration for the application. The applications will be deployed from the Edge Controller via the Kubernetes `kubectl` command-line utility. Sample specification files for application onboarding are also provided.
@@ -40,13 +40,13 @@ The following application onboarding steps assume that OpenNESS was installed th
 # Building applications
 Users must provide the application to be deployed on the OpenNESS platform for Network Edge. The application must be provided in a Docker\* image format that is available either from an external Docker repository (Docker Hub) or a locally built Docker image. The image must be available on the Edge Node, which the application will be deployed on.
 
-> **Note**: The Docker registry setup is out of scope for this document. If users already have a docker container image file and would like to copy it to the node manually, they can use the `docker load` command to add the image. The success of using a pre-built Docker image depends on the application dependencies that users must know. 
+> **Note**: The Harbor registry setup is out of scope for this document. If users already have a docker container image file and would like to copy it to the node manually, they can use the `docker load` command to add the image. The success of using a pre-built Docker image depends on the application dependencies that users must know.
 
-The OpenNESS [edgeapps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. Pull the repository to your Edge Node to build the images.  
+The OpenNESS [edgeapps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. Pull the repository to your Edge Node to build the images.
 
-This document explains the build and deployment of two applications: 
-1. Sample application: a simple “Hello, World!” reference application for OpenNESS 
-2. OpenVINO™ application: A close to real-world inference application 
+This document explains the build and deployment of two applications:
+1. Sample application: a simple “Hello, World!” reference application for OpenNESS
+2. OpenVINO™ application: A close to real-world inference application
 
 ## Building sample application images
 The sample application is available in [the edgeapps repository](https://github.com/open-ness/edgeapps/tree/master/sample-app); further information about the application is contained within the `Readme.md` file.
@@ -86,7 +86,7 @@ The following steps are required to build the sample application Docker images f
 
 Additionally, an application to generate sample traffic is provided. The application should be built on a separate host, which generates the traffic.
 
-1. To build the client simulator application image from the application directory, navigate to the `./clientsim` directory and run: 
+1. To build the client simulator application image from the application directory, navigate to the `./clientsim` directory and run:
    ```
    ./build-image.sh
    ```
@@ -118,17 +118,17 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
    ```yml
    apiVersion: networking.k8s.io/v1
    kind: NetworkPolicy
-   metadata:  
+   metadata:
      name: eaa-prod-cons-policy
      namespace: default
    spec:
      podSelector: {}
-     policyTypes:  
+     policyTypes:
      - Ingress
      ingress:
-     - from:  
+     - from:
        - ipBlock:
-           cidr: 10.16.0.0/16  
+           cidr: 10.16.0.0/16
        ports:
        - protocol: TCP
          port: 80
@@ -146,40 +146,137 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
 <!-- what is the “short time”? Approximately how many seconds? Minutes? -->
 1. To deploy a sample producer application, create the following `sample_producer.yml` pod specification file.
    ```yml
+   ---
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: producer
+
+   ---
+   kind: ClusterRoleBinding
+   apiVersion: rbac.authorization.k8s.io/v1
+   metadata:
+     name: producer-csr-requester
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: csr-requester
+   subjects:
+     - kind: ServiceAccount
+       name: producer
+       namespace: default
+
+   ---
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: producer-csr-config
+   data:
+     certrequest.json: |
+       {
+           "CSR": {
+               "Name": "producer",
+               "Subject": {
+                   "CommonName": "ExampleNamespace:ExampleProducerAppID"
+               },
+               "DNSSANs": [],
+               "IPSANs": [],
+               "KeyUsages": [
+                   "digital signature", "key encipherment", "client auth"
+               ]
+           },
+           "Signer": "openness.org/certsigner",
+           "WaitTimeout": "5m"
+       }
+
+   ---
    apiVersion: apps/v1
    kind: Deployment
    metadata:
      name: producer
-   spec:  
+     labels:
+       app: producer
+   spec:
      replicas: 1
-     selector:  
-       matchLabels:  
-         app: producer  
-     template:  
+     selector:
+       matchLabels:
+         app: producer
+     template:
        metadata:
          labels:
            app: producer
        spec:
-         tolerations:
-         - key: node-role.kube-ovn/master
-           effect: NoSchedule
+         securityContext:
+           runAsUser: 1000
+           runAsGroup: 3000
+         serviceAccountName: producer
+         initContainers:
+           - name: alpine
+             image: alpine:latest
+             command: ["/bin/sh"]
+             args: ["-c", "cp /root/ca-certrequester/cert.pem /root/certs/root.pem"]
+             imagePullPolicy: IfNotPresent
+             securityContext:
+               runAsUser: 0
+               runAsGroup: 0
+             resources:
+               requests:
+                 cpu: "0.1"
+               limits:
+                 cpu: "0.1"
+                 memory: "128Mi"
+             volumeMounts:
+               - name: ca-certrequester
+                 mountPath: /root/ca-certrequester
+               - name: certs
+                 mountPath: /root/certs
+           - name: certrequester
+             image: certrequester:1.0
+             args: ["--cfg", "/home/certrequester/config/certrequest.json"]
+             imagePullPolicy: Never
+             resources:
+               requests:
+                 cpu: "0.1"
+               limits:
+                 cpu: "0.1"
+                 memory: "128Mi"
+             volumeMounts:
+               - name: config
+                 mountPath: /home/certrequester/config/
+               - name: certs
+                 mountPath: /home/certrequester/certs/
          containers:
-         - name: producer
-           image: producer:1.0
-           imagePullPolicy: Never
-           ports:
-           - containerPort: 80
-           - containerPort: 443
+           - name: producer
+             image: producer:1.0
+             imagePullPolicy: Never
+             volumeMounts:
+               - name: certs
+                 mountPath: /home/sample/certs/
+             ports:
+               - containerPort: 443
+         volumes:
+           - name: config
+             configMap:
+               name: producer-csr-config
+           - name: ca-certrequester
+             secret:
+               secretName: ca-certrequester
+           - name: certs
+             emptyDir: {}
    ```
 2. Deploy the pod:
    ```
    kubectl create -f sample_producer.yml
    ```
-3. Check that the pod is running:
+3. Accept the producer's CSR:
+   ```
+   kubectl certificate approve producer
+   ```
+4. Check that the pod is running:
    ```
    kubectl get pods | grep producer
    ```
-4. Verify logs of the sample application producer:
+5. Verify logs of the sample application producer:
    ```
    kubectl logs <producer_pod_name> -f
 
@@ -187,19 +284,65 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
    The Example Producer eaa.openness  [{ExampleNotification 1.0.0 Description for Event #1 by Example Producer}]}]}
    Sending notification
    ```
-5. Verify logs of EAA
+6. Verify logs of EAA
    ```
-   kubectl logs <eaa_pod_name> -f -n openness 
+   kubectl logs <eaa_pod_name> -f -n openness
 
    Expected output:
    RequestCredentials  request from CN: ExampleNamespace:ExampleProducerAppID, from IP: <IP_ADDRESS> properly handled
    ```
-6. To deploy a sample consumer application, create the following `sample_consumer.yml` pod specification file.
+7. To deploy a sample consumer application, create the following `sample_consumer.yml` pod specification file.
    ```yml
+   ---
+   apiVersion: v1
+   kind: ServiceAccount
+   metadata:
+     name: consumer
+
+   ---
+   kind: ClusterRoleBinding
+   apiVersion: rbac.authorization.k8s.io/v1
+   metadata:
+     name: consumer-csr-requester
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: csr-requester
+   subjects:
+     - kind: ServiceAccount
+       name: consumer
+       namespace: default
+
+   ---
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: consumer-csr-config
+   data:
+     certrequest.json: |
+       {
+           "CSR": {
+               "Name": "consumer",
+               "Subject": {
+                   "CommonName": "ExampleNamespace:ExampleConsumerAppID"
+               },
+               "DNSSANs": [],
+               "IPSANs": [],
+               "KeyUsages": [
+                   "digital signature", "key encipherment", "client auth"
+               ]
+           },
+           "Signer": "openness.org/certsigner",
+           "WaitTimeout": "5m"
+       }
+
+   ---
    apiVersion: apps/v1
    kind: Deployment
    metadata:
      name: consumer
+     labels:
+       app: consumer
    spec:
      replicas: 1
      selector:
@@ -210,33 +353,84 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
          labels:
            app: consumer
        spec:
-         tolerations:
-         - key: node-role.kube-ovn/master  
-           effect: NoSchedule
+         securityContext:
+           runAsUser: 1000
+           runAsGroup: 3000
+         serviceAccountName: consumer
+         initContainers:
+           - name: alpine
+             image: alpine:latest
+             command: ["/bin/sh"]
+             args: ["-c", "cp /root/ca-certrequester/cert.pem /root/certs/root.pem"]
+             imagePullPolicy: IfNotPresent
+             securityContext:
+               runAsUser: 0
+               runAsGroup: 0
+             resources:
+               requests:
+                 cpu: "0.1"
+               limits:
+                 cpu: "0.1"
+                 memory: "128Mi"
+             volumeMounts:
+               - name: ca-certrequester
+                 mountPath: /root/ca-certrequester
+               - name: certs
+                 mountPath: /root/certs
+           - name: certrequester
+             image: certrequester:1.0
+             args: ["--cfg", "/home/certrequester/config/certrequest.json"]
+             imagePullPolicy: Never
+             resources:
+               requests:
+                 cpu: "0.1"
+               limits:
+                 cpu: "0.1"
+                 memory: "128Mi"
+             volumeMounts:
+               - name: config
+                 mountPath: /home/certrequester/config/
+               - name: certs
+                 mountPath: /home/certrequester/certs/
          containers:
-         - name: consumer
-           image: consumer:1.0
-           imagePullPolicy: Never
-           ports:
-           - containerPort: 80
-           - containerPort: 443
+           - name: consumer
+             image: consumer:1.0
+             imagePullPolicy: Never
+             volumeMounts:
+               - name: certs
+                 mountPath: /home/sample/certs/
+             ports:
+               - containerPort: 443
+         volumes:
+           - name: config
+             configMap:
+               name: consumer-csr-config
+           - name: ca-certrequester
+             secret:
+               secretName: ca-certrequester
+           - name: certs
+             emptyDir: {}
    ```
-7. Deploy the pod:
+8. Accept the consumer's CSR:
+   ```
+   kubectl certificate approve consumer
+   ```
+9. Deploy the pod:
    ```
    kubectl create -f sample_consumer.yml
    ```
-8. Check that the pod is running:
+10. Check that the pod is running:
    ```
    kubectl get pods | grep consumer
    ```
-9. Verify logs of the sample application consumer:
+11. Verify logs of the sample application consumer:
    ```
    kubectl logs <consumer_pod_name> -f
 
    Expected output:
    Received notification
    ```
-10. Verify logs of EAA
+12. Verify logs of EAA
     ```
     kubectl logs <eaa_pod_name> -f
 
@@ -283,7 +477,7 @@ This section guides users through the complete process of onboarding the OpenVIN
    ...
    0000:86:00.0  |  3c:fd:fe:b2:42:d0  |  detached
    ...
-    
+
    kubectl interfaceservice attach <edge_node_host_name> 0000:86:00.0
    ...
    Interface: 0000:86:00.0 successfully attached
@@ -300,10 +494,12 @@ This section guides users through the complete process of onboarding the OpenVIN
 1. An application `yaml` specification file for the OpenVINO producer that is used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
+   kubectl certificate approve openvino-prod-app
    ```
 2. An application `yaml` specification file for the OpenVINO consumer that is used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
+   kubectl certificate approve openvino-cons-app
    ```
 3. Verify that no errors show up in the logs of the OpenVINO consumer application:
    ```
@@ -469,14 +665,14 @@ kubectl interfaceservice get <officeX_host_name>
 
 ## Building Smart City ingredients
 
-   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to the following: 1) Camera simulator machines, 2) OpenNESS Controller machine, and 3) Smart City cloud master machine.
+   1. Clone the Smart City Reference Pipeline source code from [GitHub](https://github.com/OpenVisualCloud/Smart-City-Sample.git) to the following: 1) Camera simulator machines, 2) OpenNESS Controller machine, and 3) Smart City cloud control plane machine.
 
    2. Build the Smart City application on all of the machines as explained in [Smart City deployment on OpenNESS](https://github.com/OpenVisualCloud/Smart-City-Sample/tree/openness-k8s/deployment/openness). At least 2 offices (edge nodes) must be installed on OpenNESS.
 
 ## Running Smart City
 
    1. On the Camera simulator machines, assign an IP address to the ethernet interface which the dataplane traffic will be transmitted through to the edge office1 and office2 nodes:
-   
+
       On camera-sim1:
       ```shell
       ip a a 192.168.1.10/24 dev <office1_interface_name>
@@ -502,7 +698,7 @@ kubectl interfaceservice get <officeX_host_name>
       make start_openness_camera
       ```
 
-   3. On the Smart City cloud master machine, run the Smart City cloud containers:
+   3. On the Smart City cloud control-plane machine, run the Smart City cloud containers:
        ```shell
        make start_openness_cloud
        ```
@@ -517,18 +713,18 @@ kubectl interfaceservice get <officeX_host_name>
    4. On the OpenNESS Controller machine, build and run the Smart City cloud containers:
        ```shell
        export CAMERA_HOSTS=192.168.1.10,192.168.2.10
-       export CLOUD_HOST=<cloud-master-node-ip>
+       export CLOUD_HOST=<cloud-control-plane-ip>
 
        make
        make update
        make start_openness_office
       ```
 
-       > **NOTE**: `<cloud-master-node-ip>` is where the Smart City cloud master machine can be reached on the management/cloud network.
+       > **NOTE**: `<cloud-control-plane-ip>` is where the Smart City cloud control plane machine can be reached on the management/cloud network.
 
-   5. From the web browser, launch the Smart City web UI at the URL `https://<cloud-master-node-ip>/`
+   5. From the web browser, launch the Smart City web UI at the URL `https://<cloud-control-plane-ip>/`
 
-## Inter application communication 
+## Inter application communication
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
 For more information on Kube-OVN, refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/open-ness/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
 

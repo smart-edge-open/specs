@@ -132,14 +132,14 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
 
 ## VM deployment
 Provided below are sample deployment instructions for different types of VMs.
-Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/open-ness/edgenode/edgecontroller/tree/master/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
+Please use sample `.yaml` specification files provided in the OpenNESS Edge Controller directory, [edgenode/edgecontroller/kubevirt/examples/](https://github.com/open-ness/edgenode/tree/master/edgecontroller/kubevirt/examples), to deploy the workloads. Some of the files require modification to suit the environment they will be deployed in. Specific instructions on modifications are provided in the following steps:
 
 ### Stateless VM deployment
 To deploy a sample stateless VM with containerDisk storage:
 
   1. Deploy the VM:
       ```shell
-      [root@controller ~]# kubectl create -f /opt/edgenode/edgecontroller/kubevirt/examples/statelessVM.yaml
+      [root@controller ~]# kubectl create -f /opt/openness/edgenode/edgecontroller/kubevirt/examples/statelessVM.yaml
       ```
   2. Start the VM:
       ```shell
@@ -150,7 +150,7 @@ To deploy a sample stateless VM with containerDisk storage:
       [root@controller ~]# kubectl get pods | grep launcher
       [root@controller ~]# kubectl get vms
       ```
-  4. Execute into the VM (pass/login cirros/gocubsgo):
+  4. Execute into the VM (login/pass cirros/gocubsgo):
       ```shell
       [root@controller ~]# kubectl virt console cirros-stateless-vm
       ```
@@ -164,11 +164,13 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
 >**NOTE**: Each stateful VM with a new Persistent Volume Claim (PVC) requires a new Persistent Volume (PV) to be created. See more in the [limitations section](#limitations). Also, CDI needs two PVs when creating a PVC and loading a VM image from the qcow2 file: one PV for the actual PVC to be created and one PV to translate the qcow2 image to raw input.
 
+>**NOTE**: An issue appears when the CDI upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. It is advised that the user uses other CNI such as Calico CNI when using CDI with OpenNESS.
+
   1. Create a persistent volume for the VM:
 
-      - Edit the sample yaml with the hostname of the worker node:
+      - Edit the sample yaml with the hostname of the node:
          ```yaml
-         # /opt/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
+         # /opt/openness/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
          # For both kv-pv0 and kv-pv1, enter the correct hostname:
          - key: kubernetes.io/hostname
                   operator: In
@@ -177,7 +179,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
          ```
       - Create the PV:
          ```shell
-         [root@controller ~]# kubectl create -f /opt/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
+         [root@controller ~]# kubectl create -f /opt/openness/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
          ```
       - Check that PV is created:
          ```shell
@@ -188,7 +190,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
          ```
   2. Download the Generic Cloud qcow image for CentOS 7:
       ```shell
-      [root@controller ~]# wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
+      [root@controller ~]# wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2003.qcow2
       ```
   3. Get the address of the CDI upload proxy:
       ```shell
@@ -197,7 +199,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
   4. Create and upload the image to PVC via CDI:
        >**NOTE**: There is currently a limitation when using the CDI together with CMK (Intel's CPU Manager for Kubernetes). The CDI upload pod will fail to deploy on the node due to K8s node taint provided by CMK. For a workaround, see the [limitations section](#cdi-image-upload-fails-when-cmk-is-enabled).
       ```shell
-      [root@controller ~]# kubectl virt image-upload dv centos-dv --image-path=/root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443
+      [root@controller ~]# kubectl virt image-upload dv centos-dv --image-path=/root/kubevirt/CentOS-7-x86_64-GenericCloud-2003.qcow2 --insecure --size=15Gi --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443
 
       DataVolume default/centos-dv created
       Waiting for PVC centos-dv upload pod to be ready...
@@ -208,7 +210,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
       Uploading data completed successfully, waiting for processing to complete, you can hit ctrl-c without interrupting the progress
       Processing completed successfully
-      Uploading /root/kubevirt/CentOS-7-x86_64-GenericCloud-1907.qcow2 completed successfully
+      Uploading /root/kubevirt/CentOS-7-x86_64-GenericCloud-2003.qcow2 completed successfully
       ```
   5. Check that PV, DV, and PVC are correctly created:
       ```shell
@@ -230,7 +232,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
       ```
   8. Edit the .yaml file for the VM with the updated public key:
       ```yaml
-          # /opt/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
+          # /opt/openness/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
           users:
                 - name: root
                   password: root
@@ -240,7 +242,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
       ```
   9.  Deploy the VM:
       ```shell
-      [root@controller ~]# kubectl create -f /opt/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
+      [root@controller ~]# kubectl create -f /opt/openness/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
       ```
   10. Start the VM:
       ```shell
@@ -254,6 +256,8 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
       ```shell
       [root@controller ~]# kubectl get vmi
       ```
+>**NOTE**: The user should verify that there is no K8s network policy that would block the traffic to the VM (ie. `block-all-ingress policy`). If such policy exists it should be either removed or a new policy should be created to allow traffic. To check current network policies run: `kubectl get networkpolicy -A`. See K8s [documentation for more information on network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
+      
   13. SSH into the VM:
       ```shell
       [root@controller ~]# ssh <vm_ip>
@@ -264,7 +268,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 To deploy a VM requesting SRIOV VF of NIC:
   1. Bind the SRIOV interface to the VFIO driver on Edge Node:
      ```shell
-     [root@worker ~]# /opt/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
+     [root@node ~]# /opt/openness/dpdk-18.11.6/usertools/dpdk-devbind.py --bind=vfio-pci <PCI.B.F.ID-of-VF>
      ```
   2. Delete/Restart SRIOV device plugin on the node:
      ```shell
@@ -272,7 +276,7 @@ To deploy a VM requesting SRIOV VF of NIC:
      ```
   3. Check that the SRIOV VF for VM is available as an allocatable resource for DP (wait a few seconds after restart):
      ```
-     [root@controller ~]# kubectl get node <worker-node-name> -o json | jq '.status.allocatable'
+     [root@controller ~]# kubectl get node <node-name> -o json | jq '.status.allocatable'
      {
      "cpu": "79",
      "devices.kubevirt.io/kvm": "110",
@@ -290,7 +294,7 @@ To deploy a VM requesting SRIOV VF of NIC:
      ```
   4. Deploy the VM requesting the SRIOV device (if a smaller amount is available on the platform, adjust the number of HugePages required in the .yaml file):
      ```shell
-      [root@controller ~]# kubectl create -f /opt/edgenode/edgecontroller/kubevirt/examples/sriovVM.yaml
+      [root@controller ~]# kubectl create -f /opt/openness/edgenode/edgecontroller/kubevirt/examples/sriovVM.yaml
       ```
   5. Start the VM:
      ```shell
@@ -348,7 +352,7 @@ Complete the following steps to create a snapshot:
   1. Log into the Edge Node
   2. Go to the virtual disk directory for the previously created VM:
      ```shell
-     [root@worker ~]# cd /var/vd/vol0/ && ls
+     [root@node ~]# cd /var/vd/vol0/ && ls
      ```
   3. Create a qcow2 snapshot image out of the virtual disk present in the directory (`disk.img`):
      ```shell
@@ -382,7 +386,7 @@ The following script is an example of how to perform the above steps:
 ```shell
 #!/bin/bash
 
-kubectl virt image-upload dv centos-dv --image-path=/root/CentOS-7-x86_64-GenericCloud-1907.qcow2 --insecure --size=15Gi  --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443 &
+kubectl virt image-upload dv centos-dv --image-path=/root/CentOS-7-x86_64-GenericCloud-2003.qcow2 --insecure --size=15Gi  --storage-class=local-storage --uploadproxy-url=https://<cdi-proxy-ip>:443 &
 
 sleep 5
 
@@ -396,7 +400,7 @@ kubectl apply -f cdiUploadCentosDvToleration.yaml
 
 sleep 5
 
-kubectl create -f /opt/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
+kubectl create -f /opt/openness/edgenode/edgecontroller/kubevirt/examples/persistentLocalVolume.yaml
 ```
 
 ## Useful Commands and Troubleshooting
@@ -427,9 +431,9 @@ Check that the IP address of the `cdi-upload-proxy` is correct and that the Netw
    ```
 
 2. Cannot SSH to stateful VM with Cloud Generic Image due to the public key being denied.
-Confirm that the public key provided in `/opt/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml` is valid and in a correct format. Example of a correct format:
+Confirm that the public key provided in `/opt/openness/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml` is valid and in a correct format. Example of a correct format:
    ```yaml
-   # /opt/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
+   # /opt/openness/edgenode/edgecontroller/kubevirt/examples/cloudGenericVM.yaml
    users:
          - name: root
            password: root
