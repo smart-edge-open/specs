@@ -43,7 +43,7 @@ This document provides high-level system features, issues, and limitations infor
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
-  - [OpenNESS 19.09](#openness-1909)
+  - [OpenNESS - 19.09](#openness---1909-3)
   - [OpenNESS - 19.12](#openness---1912-4)
   - [OpenNESS - 20.03](#openness---2003-4)
   - [OpenNESS - 20.06](#openness---2006-4)
@@ -384,7 +384,7 @@ OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications
 ## OpenNESS - 19.06.01
 OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications. 
 
-## OpenNESS 19.09
+## OpenNESS - 19.09
 OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications. 
 
 ## OpenNESS - 19.12
