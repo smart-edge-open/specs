@@ -15,9 +15,9 @@ Copyright (c) 2020 Intel Corporation
   - [EMCO Example: SmartCity Deployment](#emco-example-smartcity-deployment)
 
 ## Background
-Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. EMCO operates at a higher level than Kubernetes and interacts with multiple of edges and clouds running Kubernetes. The main objective of EMCO is automation of the deployment of applications and services across multiple clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. 
+Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. EMCO operates at a higher level than Kubernetes\* and interacts with multiple of edges and clouds running Kubernetes. The main objective of EMCO is automation of the deployment of applications and services across multiple clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. 
 
-Increasingly we see a requirement of deploying 'composite applications' in multiple geographical locations. Some of the catalyst for this  change are:
+Increasingly we see a requirement of deploying 'composite applications' in multiple geographical locations. Some of the catalysts for this change are:
 
 -  Latency - requirements for new low latency application use cases such as AR/VR. Need for ultra low latency response needed in IIOT and other cases. This requires running some parts of the applications on edges close to the user 
 -  Bandwidth - processing data on edges to avoid costs associated with transporting the data to clouds for processing, 
@@ -68,7 +68,7 @@ This document aims to familiarize the user with EMCO and [OpenNESS deployment fl
 | Composite application | <p>The composite application is combination of multiple applications. Based on the deployment intent, various applications of the composite application get deployed at various locations. Also, some applications of the composite application get replicated in multiple locations. </p>|
 | Deployment Intent | <p>EMCO does not expect the editing of Helm charts provided by application/Network-function vendors by DevOps admins. Any customization and additional K8s resources that need to be present with the application are specified as deployment intents. </p>|
 | Deployment Intent Group | <p>The Deployment Intent Group represents an instance of a composite application that can be deployed with a specified composite profile and a specified set of deployment intents which will control the placement and other configuration of the application resources. </p>|
-| Placement | <p>EMCO supports to create generic placement intents for a given composite application. Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application. Finally works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters. </p>|
+| Placement | <p>EMCO supports to create generic placement intents for a given composite application. Normally, EMCO scheduler calls placement controllers first to figure out the edge/cloud locations for a given application. Finally, it works with 'resource synchronizer & status collector' to deploy K8s resources on various Edge/Cloud clusters. </p>|
 
 ### EMCO Architecture
 The following diagram depicts a high level overview of the EMCO architecture.
@@ -282,7 +282,7 @@ emco      rsync-99b85b4x88-ashmc         1/1     Running  0        14m
 
 ## EMCO Example: SmartCity Deployment
 - The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
-- The edge cluster (representing regional office), the cloud cluster and the EMCO are connected with each others.
+- The edge cluster (representing regional office), the cloud cluster and the EMCO are connected with each other.
 - The whole deployment architecture diagram is shown as below:
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtc.png)
 
@@ -303,7 +303,7 @@ In the step, cluster provider will be created. And both the edge cluster and the
 
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
 
-2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
+2. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
 ```shell
 HARBORRHOST=<harbor_registry_host>
 
@@ -324,6 +324,8 @@ docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
 # cd cli-scripts/
 # ./setup_env.sh
 ```
+
+> **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by the edge cluster and the cloud cluster.  `setup_env.sh` will automate it.
 
 5. Run the command for the clusters setup with expected result as below:
 ```shell
@@ -376,26 +378,9 @@ http://localhost:31298/v2
 URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
 ```
 
-2. On both the edge cluster and the cloud cluster, manually create `tunnel_secret` as below:
-```shell
-#!/usr/bin/env bash
-PRIKEY=/root/tunnel_secret/id_rsa
-PUBKEY=/root/tunnel_secret/id_rsa.pub
-KNOWHOSTS=/root/tunnel_secret/known_hosts
-kubectl create secret generic tunnel-secret --from-file=${PRIKEY} --from-file=${PUBKEY} --from-file=${KNOWHOSTS}
-```
+> **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 
-3. On the cloud cluster, manually create `self-signed-certificate` as below:
-```shell
-#!/usr/bin/env bash
-CRT=/root/tunnel_secret/self.crt
-SELFKEY=/root//tunnel_secret/self.key
-kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
-```
-> **NOTE**: Actually EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
-> **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by th edge cluster and the cloud cluster, we use manual steps here.
-
-4. Verify SmartCity Application Deployment Information.
+2. Verify SmartCity Application Deployment Information.
 The pods on the edge cluster are in the running status as shown as below:
 
 ```shell
@@ -422,7 +407,7 @@ cloud-storage-5658847d79-66bxz   1/1     Running   0          96m
 cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
 ```
 
-5. Verify Smart City GUI 
+3. Verify Smart City GUI 
 From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
 ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
 
