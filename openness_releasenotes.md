@@ -256,7 +256,7 @@ This document provides high-level system features, issues, and limitations infor
   - Experience Kit now supports multiple detection video's – Safety equipment detection, PCB default detection and also supports external video streams. 
 
 ## OpenNESS - 20.12
-- Early access release of Edge Multi-Cluster Orchestration(EMCO), a Geo-distributed application orchestrator for Kubernetes. This release supports EMCO deploying and managing the life cycle of the Smart City Application pipeline on the edge cluster.
+- Early access release of Edge Multi-Cluster Orchestration(EMCO), a Geo-distributed application orchestrator for Kubernetes. This release supports EMCO deploying and managing the life cycle of the Smart City Application pipeline on the edge cluster. More details in the [EMCO Release Notes](https://github.com/otcshare/EMCO/blob/main/ReleaseNotes.md).
 - Reference implementation of the offline installation package for the Converged Edge Reference Architecture (CERA) Access Edge flavor enabling installation of Kubernetes and related enhancements for Access edge deployments.
 - Azure Development kit (Devkit) supporting the installation of an OpenNESS Kubernetes cluster on the Microsoft* Azure* cloud. This is typically used by a customer who wants to develop applications and services for the edge using OpenNESS building blocks.
 - Support Intel® vRAN Dedicated Accelerator ACC100, Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload. 
