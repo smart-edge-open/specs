@@ -2,17 +2,35 @@
 SPDX-License-Identifier: Apache-2.0       
 Copyright (c) 2020 Intel Corporation
 ```
+<!-- omit in toc -->
 # Edge Multi-Cluster Orchestrator (EMCO)
 
-- [Edge Multi-Cluster Orchestrator (EMCO)](#edge-multi-cluster-orchestrator-emco)
-  - [Background](#background)
-  - [EMCO Introduction](#emco-introduction)
-    - [EMCO Architecture](#emco-architecture)
-    - [EMCO Terminology](#emco-terminology)
-    - [EMCO API](#emco-api)
-    - [EMCO Authentication and Authorization](#emco-authentication-and-authorization)
-    - [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor)
-  - [Practise with EMCO: SmartCity Deployment](#practise-with-emco-smartcity-deployment)
+- [Background](#background)
+- [EMCO Introduction](#emco-introduction)
+  - [EMCO Architecture](#emco-architecture)
+    - [Cluster Registration](#cluster-registration)
+    - [Distributed Application Scheduler](#distributed-application-scheduler)
+      - [Lifecycle Operations](#lifecycle-operations)
+    - [Network Configuration Management](#network-configuration-management)
+      - [Lifecycle Operations](#lifecycle-operations-1)
+    - [Distributed Cloud Manager](#distributed-cloud-manager)
+      - [Lifecycle Operations](#lifecycle-operations-2)
+      - [Level-1 Logical Clouds](#level-1-logical-clouds)
+      - [Level-0 Logical Clouds](#level-0-logical-clouds)
+    - [OVN Action Controller](#ovn-action-controller)
+    - [Traffic Controller](#traffic-controller)
+    - [Resource Syncronizer](#resource-syncronizer)
+    - [Generic Action Controller](#generic-action-controller)
+  - [EMCO Terminology](#emco-terminology)
+  - [EMCO API](#emco-api)
+  - [EMCO Authentication and Authorization](#emco-authentication-and-authorization)
+  - [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor)
+- [Practise with EMCO: SmartCity Deployment](#practise-with-emco-smartcity-deployment)
+  - [Clusters Setup](#clusters-setup)
+  - [Project Setup](#project-setup)
+  - [Logical Cloud Setup](#logical-cloud-setup)
+  - [Deploy SmartCity Application](#deploy-smartcity-application)
+  - [SmartCity Termination](#smartcity-termination)
 
 ## Background
 Edge Multi-Cluster Orchestration(EMCO), an OpenNESS Building Block, is a Geo-distributed application orchestrator for Kubernetes\*. The main objective of EMCO is automation of the deployment of applications and services across clusters. It acts as a central orchestrator that can manage edge services and network functions across geographically distributed edge clusters from different third parties. Finally, the resource orchestration within a cluster of nodes will leverage Kubernetes* and Helm charts.
@@ -167,10 +185,11 @@ To acheive both the usecases, the controller exposes REST APIs to create, update
 - Customization - Specifies the modifications(using JSON Patching) to be applied on the objects.
 
 ### EMCO Terminology
+
 |                        |                                                                                                                                  |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| Cluster Provider       | The provider is someone who owns clusters and registers them.                                                                   |
-| Projects               | The project resource provides means for a collection of applications to be grouped.                                             |
+| Cluster Provider       | The provider is someone who owns clusters and registers them.                                                                    |
+| Projects               | The project resource provides means for a collection of applications to be grouped.                                              |
 |                        | Several applications can exist under a specific project.                                                                         |
 |                        | Projects allows for grouping of applications under a common tenant to be defined.                                                |
 | Composite application  | Composite application is combination of multiple applications.                                                                   |
@@ -296,40 +315,45 @@ In the step, cluster provider will be created and clusters will be registered in
 1. After [EMCO Installation With OpenNESS Flavor](#emco-installation), logon to the EMCO server and maker sure that Harbor and EMCO microservices are in running status.
 
 2. On the edge and cloud cluster, run the following command to make Docker logon the Harbor deployed on the EMCO server:
-```shell
-HARBORRHOST=<harbor_registry_host>
 
-cd /etc/docker/certs.d/
-mkdir ${HARBORRHOST}
-cd ${HARBORRHOST}
-echo -n | openssl s_client -showcerts -connect ${HARBORRHOST} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > harbor.crt
+    ```shell
+    HARBORRHOST=<harbor_registry_host>
 
-HARBORRPW=Harbor12345
-docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
-```
-> **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
+    cd /etc/docker/certs.d/
+    mkdir ${HARBORRHOST}
+    cd ${HARBORRHOST}
+    echo -n | openssl s_client -showcerts -connect ${HARBORRHOST} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > harbor.crt
+
+    HARBORRPW=Harbor12345
+    docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
+    ```
+
+    > **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
 
 3. On EMCO server, download the [scripts](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
 
 4. Run the command for the environment setup with success return as below:
-```shell
-# cd cli-scripts/
-# ./env_setup.sh
-```
+
+    ```shell
+    # cd cli-scripts/
+    # ./env_setup.sh
+    ```
 
 5. Run the command for the clusters setup with expected result as below:
-```shell
-# cd cli-scripts/
-# ./01_apply.sh
 
-....
-URL: cluster-providers/smartcity-cluster-provider/clusters/edge01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityEdge"}
-URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
-```
+    ```shell
+    # cd cli-scripts/
+    # ./01_apply.sh
+
+    ....
+    URL: cluster-providers/smartcity-cluster-provider/clusters/edge01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityEdge"}
+    URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
+    ```
 
 ### Project Setup
 
 Run the command for the project setup with expected result as below:
+
 ```shell
 # cd cli-scripts/
 # ./02_apply.sh
@@ -341,7 +365,8 @@ URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","d
 
 ### Logical Cloud Setup
 
-Run the command for the logical cloud setup with expected result as below.
+Run the command for the logical cloud setup with expected result as below:
+
 ```shell
 # cd cli-scripts/
 # ./03_apply.sh
@@ -358,69 +383,73 @@ URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200
 ### Deploy SmartCity Application
 
 1. Run the command for the SmartCity application deployment with expected result as below:
-```shell
-# cd cli-scripts/
-# ./04_apply.sh
 
-http://localhost:31298/v2
-URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/approve Response Code: 202 Response:
-http://localhost:31298/v2
-URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
-```
+    ```shell
+    # cd cli-scripts/
+    # ./04_apply.sh
+
+    http://localhost:31298/v2
+    URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/approve Response Code: 202 Response:
+    http://localhost:31298/v2
+    URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
+    ```
 
 2. On both edge cluster and cloud cluster, manually create `tunnel_secret` as below:
-```shell
-#!/usr/bin/env bash
-PRIKEY=/root/tunnel_secret/id_rsa
-PUBKEY=/root/tunnel_secret/id_rsa.pub
-KNOWHOSTS=/root/tunnel_secret/known_hosts
-kubectl create secret generic tunnel-secret --from-file=${PRIKEY} --from-file=${PUBKEY} --from-file=${KNOWHOSTS}
-```
+
+    ```shell
+    #!/usr/bin/env bash
+    PRIKEY=/root/tunnel_secret/id_rsa
+    PUBKEY=/root/tunnel_secret/id_rsa.pub
+    KNOWHOSTS=/root/tunnel_secret/known_hosts
+    kubectl create secret generic tunnel-secret --from-file=${PRIKEY} --from-file=${PUBKEY} --from-file=${KNOWHOSTS}
+    ```
 
 3. On the cloud cluster, manually create `self-signed-certificate` as below:
-```shell
-#!/usr/bin/env bash
-CRT=/root/tunnel_secret/self.crt
-SELFKEY=/root//tunnel_secret/self.key
-kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
-```
 
-4. Verify SmartCity Application Deployment Information.
-The pods on the edge cluster are in the running status as shown as below:
+    ```shell
+    #!/usr/bin/env bash
+    CRT=/root/tunnel_secret/self.crt
+    SELFKEY=/root//tunnel_secret/self.key
+    kubectl create secret generic self-signed-certificate --from-file=${CRT}  --from-file=${SELFKEY}
+    ```
 
-```shell
-# kubectl get pods
-NAME                                                READY   STATUS    RESTARTS   AGE
-traffic-office1-alert-5b56f5464c-ldwrf              1/1     Running   0          20h
-traffic-office1-analytics-traffic-6b995d4d6-nhf2p   1/1     Running   0          20h
-traffic-office1-camera-discovery-78bccbdb44-k2ffx   1/1     Running   0          20h
-traffic-office1-cameras-6cb67ccc84-8zkjg            1/1     Running   0          20h
-traffic-office1-db-84bcfd54cd-ht52s                 1/1     Running   1          20h
-traffic-office1-db-init-64fb9db988-jwjv9            1/1     Running   0          20h
-traffic-office1-mqtt-f9449d49c-dwv6l                1/1     Running   0          20h
-traffic-office1-mqtt2db-5649c4778f-vpxhq            1/1     Running   0          20h
-traffic-office1-smart-upload-588d95f78d-8x6dt       1/1     Running   1          19h
-traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1          19h
-```
+4. Verify SmartCity Application Deployment Information. The pods on the edge cluster are in the running status as shown as below:
 
-The pods on the cloud cluster are in the running status as shown as below:
-```shell
-# kubectl get pods
-NAME                             READY   STATUS    RESTARTS   AGE
-cloud-db-5d6b57f947-qhjz6        1/1     Running   0          20h
-cloud-storage-5658847d79-66bxz   1/1     Running   0          96m
-cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
-```
+    ```shell
+    # kubectl get pods
+    NAME                                                READY   STATUS    RESTARTS   AGE
+    traffic-office1-alert-5b56f5464c-ldwrf              1/1     Running   0          20h
+    traffic-office1-analytics-traffic-6b995d4d6-nhf2p   1/1     Running   0          20h
+    traffic-office1-camera-discovery-78bccbdb44-k2ffx   1/1     Running   0          20h
+    traffic-office1-cameras-6cb67ccc84-8zkjg            1/1     Running   0          20h
+    traffic-office1-db-84bcfd54cd-ht52s                 1/1     Running   1          20h
+    traffic-office1-db-init-64fb9db988-jwjv9            1/1     Running   0          20h
+    traffic-office1-mqtt-f9449d49c-dwv6l                1/1     Running   0          20h
+    traffic-office1-mqtt2db-5649c4778f-vpxhq            1/1     Running   0          20h
+    traffic-office1-smart-upload-588d95f78d-8x6dt       1/1     Running   1          19h
+    traffic-office1-storage-7889c67c57-kbkjd            1/1     Running   1          19h
+    ```
 
-5. Verify Smart City GUI 
-From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
-![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
+    The pods on the cloud cluster are in the running status as shown as below:
 
-_Figure - SmartCity UI_
+    ```shell
+    # kubectl get pods
+    NAME                             READY   STATUS    RESTARTS   AGE
+    cloud-db-5d6b57f947-qhjz6        1/1     Running   0          20h
+    cloud-storage-5658847d79-66bxz   1/1     Running   0          96m
+    cloud-web-64fb95884f-m9fns       1/1     Running   0          20h
+    ```
+
+5. Verify Smart City GUI. From a web browser, launch the Smart City web UI at URL `https://<cloudcluster-controller-node-ip>`. The GUI shows like:      
+
+    ![OpenNESS EMCO](openness-emco-images/openness-emco-smtcui.png)
+
+    _Figure - SmartCity UI_
 
 ### SmartCity Termination
 
 Run the command for the SmartCity termination with expected result as below:
+
 ```shell
 # cd cli-scripts/
 # ./88_terminate.sh
@@ -431,4 +460,3 @@ URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-gr
 ```
 
 After termination, SmartCity Application will be deleted from the clusters.
-
