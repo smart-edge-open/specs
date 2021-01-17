@@ -540,7 +540,7 @@ By default, in a Network Edge environment, all *ingress* traffic is blocked (ser
    spec:
      podSelector:
        matchLabels:
-         name: openvino-cons-app
+         app: openvino-cons-app
      policyTypes:
      - Ingress
      ingress:
