@@ -45,8 +45,11 @@ The following set of actions must be completed to set up the Open Network Edge S
 3. Run the [deployment helper script](#running-playbooks) for the Ansible\* playbook:
 
    ```shell
-   ./deploy_ne.sh
+   ./deploy_ne.sh -f <flavor>
    ```
+
+**Note:**
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
 
 # Preconditions
 
@@ -76,12 +79,15 @@ The following subsections describe the playbooks in more detail.
 
 For convenience, playbooks can be executed by running helper deployment scripts from the Ansible host. These scripts require that the Edge Controller and Edge Nodes be configured on different hosts (for deployment on a single node, refer to [Single-node Network Edge cluster](#single-node-network-edge-cluster)). This is done by configuring the Ansible playbook inventory, as described later in this document.
 
-The command syntax for the scripts is: `action_mode.sh [-f flavor] [group]`, i.e.,
+The command syntax for the scripts is: `action_mode.sh -f <flavor> [group]`, i.e.,
 
-  - `deploy_ne.sh [-f flavor] [ controller | nodes ]`
-  - `cleanup_ne.sh [-f flavor] [ controller | nodes ] `
+  - `deploy_ne.sh -f <flavor> [ controller | nodes ]`
+  - `cleanup_ne.sh -f <flavor> [ controller | nodes ] `
 
 The parameter `controller` or `nodes` in each case deploys or cleans up the Edge Controller or the Edge Nodes, respectively.
+
+**Note:**
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
 
 For an initial installation, `deploy_ne.sh controller` must be run before `deploy_ne.sh nodes`. During the initial installation, the hosts may reboot. After reboot, the deployment script that was last run should be run again.
 
@@ -139,7 +145,10 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 3. Settings regarding the kernel, grub, HugePages\*, and tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
    
    > Default settings in the single-node cluster mode are those of the Edge Node (i.e., kernel and tuned customization enabled).
-4. Single-node cluster can be deployed by running command: `./deploy_ne.sh single`
+4. Single-node cluster can be deployed by running command: `./deploy_ne.sh -f <flavor> single`
+
+**Note:**
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
 
 ## Harbor registry
 

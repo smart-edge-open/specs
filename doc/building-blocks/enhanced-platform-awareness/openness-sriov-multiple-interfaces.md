@@ -135,11 +135,11 @@ SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm
 #### Edge Node SR-IOV interfaces configuration
 
 For the installer to turn on the specified number of SR-IOV VFs for a selected network interface of node, provide that information in the format `{interface_name: VF_NUM, ...}` in the `sriov.network_interfaces` variable inside the config files in `host_vars` Ansible directory.
-For technical reasons, each node must be configured separately. Copy the example file `host_vars/node01.yml` and then create a similar one for each node being deployed.
+For technical reasons, each node must be configured separately. Copy the example file `host_vars/node01/10-default.yml` and then create a similar one for each node being deployed.
 
 Also, each node must be added to the Ansible inventory file `inventory.ini`.
 
-For example, providing `host_vars/node01.yml` with the following options will enable 4 VFs for network interface (PF) `ens787f0` and 8 VFs for network interface `ens787f1` of `node1`.
+For example, providing `host_vars/node01/10-default.yml` with the following options will enable 4 VFs for network interface (PF) `ens787f0` and 8 VFs for network interface `ens787f1` of `node1`.
 
 ```yaml
 sriov:

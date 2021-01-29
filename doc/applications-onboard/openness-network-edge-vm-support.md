@@ -97,7 +97,7 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           ```
       - Enable necessary Network Interfaces with SRIOV:
           ```yaml
-          # host_vars/node01.yml
+          # host_vars/node01/10-default.yml
           sriov:
             network_interfaces: {<interface_name>: 1}
           ```
@@ -108,7 +108,9 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           kubevirt_default_pv_vol_name: vol
           kubevirt_pv_vm_max_num:  64
           ```
- 2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy_ne.sh` script in the OpenNESS experience kit top-level directory.
+ 2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy_ne.sh -f <flavor>` script in the OpenNESS experience kit top-level directory.
+
+Note: Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
 
  3. On successful deployment, the following pods will be in a running state:
     ```shell

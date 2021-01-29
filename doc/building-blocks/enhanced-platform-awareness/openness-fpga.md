@@ -85,7 +85,7 @@ For information on how to update and flash the MAX10 to supported version see [I
 To run the OpenNESS package with FPGA (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
 #### OpenNESS Experience Kit
-To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` (or flavour alternative file) to `true`:
+To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
 ```yaml
 # group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
@@ -119,7 +119,10 @@ The following packages need to be placed into specific directories for the featu
 
 1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
 
-Run setup script `deploy_ne.sh`.
+Run setup script `deploy_ne.sh -f <flavor>`.
+
+**Note:**
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
 
 After a successful deployment, the following pods will be available in the cluster (CNI pods may vary depending on deployment):
 ```shell

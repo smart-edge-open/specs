@@ -33,11 +33,11 @@ OEKs allow a user to customize kernel, grub parameters, and tuned profiles by le
 
 > **NOTE**: `groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in `host_vars` to change on per node basis while `group_vars/all` contains cluster wide variables.
 
-OEKs contain a `host_vars/` directory that can be used to place a YAML file (`nodes-inventory-name.yml`, e.g., `node01.yml`). The file would contain variables that would override roles' default values.
+OEKs contain a `host_vars/` directory in which we can create another directory (`nodes-inventory-name`) and place a YAML file (`10-default.yml`, e.g., `node01/10-default.yml`). The file would contain variables that would override roles' default values.
 
 > **NOTE**: Despite the ability to customize parameters (kernel), it is required to have a clean CentOS\* 7.8.2003 operating system installed on hosts (from a minimal ISO image) that will be later deployed from Ansible scripts. This OS shall not have any user customizations.
 
-To override the default value, place the variable's name and new value in the host's vars file. For example, the contents of `host_vars/node01.yml` that would result in skipping kernel customization on that node:
+To override the default value, place the variable's name and new value in the host's vars file. For example, the contents of `host_vars/node01/10-default.yml` that would result in skipping kernel customization on that node:
 
 ```yaml
 kernel_skip: true

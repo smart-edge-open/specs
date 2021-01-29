@@ -118,10 +118,10 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ### Bring-up of NGC components in Network Edge mode
 
 1. If the Edge controller is not yet deployed through openness-experience-kit then:
-   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` before running `deploy_ne.sh controller` or `deploy_ne.sh` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
+   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` before running `deploy_ne.sh -f <flavor> controller` or `deploy_ne.sh -f <flavor>` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` and then re-run `deploy_ne.sh controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` and then re-run `deploy_ne.sh -f <flavor> controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
 
     **NOTE:**
     In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.

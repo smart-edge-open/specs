@@ -426,7 +426,7 @@ Additional configuration steps are provided below.
    kubeovn_dpdk: false
 ```
 
-2. Modify `host_vars/<node_name>.yml`. Provide the physical addresses of the connected interface to be used by the xRAN sample application and the number of VFs to be created on each of the connected physical ports. Each port needs to have 2 VFs. The SRIOV setting should look similar to:
+2. Modify `host_vars/<node_name>/10-default.yml`. Provide the physical addresses of the connected interface to be used by the xRAN sample application and the number of VFs to be created on each of the connected physical ports. Each port needs to have 2 VFs. The SRIOV setting should look similar to:
 
 ```yaml
     sriov:
@@ -491,11 +491,11 @@ To enable PTP synchronization, modify one setting in `./group_vars/all.sh`:
     ptp_sync_enable: true
 ```
 
-For the two nodes that are to be synchronized with PTP, modify files `host_vars/nodeXX.yml`
+For the two nodes that are to be synchronized with PTP, modify files `host_vars/nodeXX/10-default.yml`
 
 Example:
 
-For node "node01", modify file `host_vars/node01.yml`
+For node "node01", modify file `host_vars/node01/10-default.yml`
 
 1. For PTP Configuration 1 [see](#xran-sample-app-deployment-in-openness)
 
@@ -543,8 +543,11 @@ Example:
 ### Deploy Openness NE
 Run the deployment script:
 ```shell
-    ./deploy_ne.sh
+    ./deploy_ne.sh -f <flavor>
 ```
+**Note:**
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+
 Check the `/proc/cmd` output. It should look similar to:
 
 ```shell
