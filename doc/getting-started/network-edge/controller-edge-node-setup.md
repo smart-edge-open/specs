@@ -5,6 +5,7 @@ Copyright (c) 2019-2020 Intel Corporation
 <!-- omit in toc -->
 
 # OpenNESS Network Edge: Controller and Edge node setup
+- [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Quickstart](#quickstart)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -17,11 +18,17 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Single-node Network Edge cluster](#single-node-network-edge-cluster)
   - [Harbor registry](#harbor-registry)
     - [Deploy Harbor registry](#deploy-harbor-registry)
+      - [System Prerequisite](#system-prerequisite)
+      - [Ansible Playbooks](#ansible-playbooks)
+      - [Projects](#projects)
     - [Harbor login](#harbor-login)
     - [Harbor registry image push](#harbor-registry-image-push)
     - [Harbor registry image pull](#harbor-registry-image-pull)
     - [Harbor UI](#harbor-ui)
-    - [Harbor CLI](#harbor-registry-CLI)
+    - [Harbor CLI](#harbor-cli)
+      - [CLI - List Project](#cli---list-project)
+      - [CLI - List Image Repositories](#cli---list-image-repositories)
+      - [CLI - Delete Image](#cli---delete-image)
   - [Kubernetes cluster networking plugins (Network Edge)](#kubernetes-cluster-networking-plugins-network-edge)
     - [Selecting cluster networking plugins (CNI)](#selecting-cluster-networking-plugins-cni)
     - [Adding additional interfaces to pods](#adding-additional-interfaces-to-pods)
@@ -559,6 +566,8 @@ and check to make sure that only the key(s) you wanted were added.
 
 To make sure the key is copied successfully, try to SSH into the host: `ssh 'root@host'`. It should not ask for the password.
 
+>**NOTE**: Where non-root user is used for example `openness` the command should be replaced to `ssh openness@host`. For more information about non-root user please refer to: 
+[The non-root user on the OpenNESS Platform](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-nonroot.md)
 ## Setting proxy
 
 If a proxy is required to connect to the Internet, it is configured via the following steps:
