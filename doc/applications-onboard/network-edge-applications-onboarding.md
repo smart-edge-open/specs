@@ -411,13 +411,13 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
            - name: certs
              emptyDir: {}
    ```
-8. Accept the consumer's CSR:
-   ```
-   kubectl certificate approve consumer
-   ```
-9. Deploy the pod:
+8. Deploy the pod:
    ```
    kubectl create -f sample_consumer.yml
+   ```
+9. Accept the consumer's CSR:
+   ```
+   kubectl certificate approve consumer
    ```
 10. Check that the pod is running:
    ```
