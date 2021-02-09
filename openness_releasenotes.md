@@ -31,6 +31,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006-2)
   - [OpenNESS - 20.09](#openness---2009-2)
   - [OpenNESS - 20.12](#openness---2012-2)
+  - [OpenNESS - 20.12.02](#openness---201202)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -40,6 +41,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006-3)
   - [OpenNESS - 20.09](#openness---2009-3)
   - [OpenNESS - 20.12](#openness---2012-3)
+  - [OpenNESS - 20.12.02](#openness---201202-1)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -49,6 +51,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006-4)
   - [OpenNESS - 20.09](#openness---2009-4)
   - [OpenNESS - 20.12](#openness---2012-4)
+  - [OpenNESS - 20.12.02](#openness---201202-2)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
   - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
@@ -329,6 +332,13 @@ There are no non-Intel issues relevant to this release.
 - Known issue with Pod that uses hugepage get stuck in terminating state on deletion hs been fixed after upgrading to Kubernetes 1.19.3
 - Upgraded to Kube-OVN v1.5.2 for further Kube-OVN CNI enhancements
 
+## OpenNESS - 20.12.02
+- Fixed EdgeDNS service building failure resulting in deployment failure
+- Fixed FlexRAN and FlexRAN Telemetry flavors to eliminate deployment failures
+- Fixed Calico and SR-IOV deployment failures
+- Fixed TAS deployment
+- Updated SR-IOV CNI and device plugin to fix issues with image build in offline package creator
+
 # Known Issues and Limitations
 ## OpenNESS - 19.06
 There are no issues relevant to this release.
@@ -376,6 +386,9 @@ There is one issue relevant to this release: it is not possible to remove the ap
 - An issue appears when the KubeVirt Containerized Data Importer (CDI) upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. It is advised that the user uses other CNI such as Calico CNI when using CDI with OpenNESS
 - Telemetry deployment with PCM enabled will cause a deployment failure in single node cluster deployments due to PCM dashboards for Grafana not being found
 
+## OpenNESS - 20.12.02
+- Offline deployment issues related to zlib-devel version 1.2.7-19
+
 # Release Content
 
 ## OpenNESS - 19.06
@@ -406,6 +419,10 @@ OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, an
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
 
 > **NOTE**: Edge applications repo is common to Open Source and IDO
+
+## OpenNESS - 20.12.02
+- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit.
+- IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
 
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
