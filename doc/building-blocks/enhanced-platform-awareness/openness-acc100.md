@@ -79,7 +79,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Simple sample BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
 ### ACC100 (FEC) Ansible Installation for OpenNESS Network Edge
-To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed via the ["flexran" flavor of OpenNESS](https://github.com/otcshare/openness-experience-kits/tree/master/flavors/flexran).
+To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed via the ["flexran" flavor of OpenNESS](https://github.com/open-ness/openness-experience-kits/tree/master/flavors/flexran).
 
 #### OpenNESS Experience Kit
 To enable ACC100 support from OEK, SRIOV must be enabled in OpenNESS:
@@ -182,7 +182,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/open-ness/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
 
 A sample pod requesting the ACC100 (FEC) VF may look like this:
 

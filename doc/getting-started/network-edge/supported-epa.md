@@ -12,11 +12,11 @@ Enhanced Platform Awareness (EPA) features are supported in on-premises using Ku
 
 ## Features 
 The following EPA features are supported in Open Network Edge Services Software (OpenNESS) Network Edge:
-   * [<b>openness-hugepage.md</b>: Hugepages support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-hugepage.md)
-   * [<b>openness-node-feature-discovery.md</b>: Edge node hardware and software feature discovery support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md)
-   * [<b>openness-sriov-multiple-interfaces.md</b>: Dedicated physical network interface allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
-   * [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-dedicated-core.md)
-   * [<b>openness-bios.md</b>: Edge platform BIOS and firmware and configuration support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md)
-   * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
-   * [<b>openness-topology-manager.md</b>: Resource locality awareness support through topology manager in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
+   * [<b>openness-hugepage.md</b>: Hugepages support for edge applications and network functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-hugepage.md)
+   * [<b>openness-node-feature-discovery.md</b>: Edge node hardware and software feature discovery support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md)
+   * [<b>openness-sriov-multiple-interfaces.md</b>: Dedicated physical network interface allocation support for edge applications and network functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
+   * [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for edge applications and network functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-dedicated-core.md)
+   * [<b>openness-bios.md</b>: Edge platform BIOS and firmware and configuration support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md)
+   * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for edge applications and network functions](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
+   * [<b>openness-topology-manager.md</b>: Resource locality awareness support through topology manager in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
 

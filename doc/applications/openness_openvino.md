@@ -100,14 +100,14 @@ For more information about CSR, refer to [OpenNESS CertSigner](../applications-o
 
 Applications are deployed on the OpenNESS Edge Node as Docker containers. Three docker containers need to be built to get the OpenVINO pipeline working: `clientsim`, `producer`, and `consumer`. The `clientsim` Docker image must be built and executed on the client simulator machine while the `producer` and `consumer` containers/pods should be onboarded on the OpenNESS Edge Node.
 
-On the client simulator, clone the [OpenNESS edgeapps](https://github.com/otcshare/edgeapps) and execute the following command to build the `client-sim` container:
+On the client simulator, clone the [OpenNESS edgeapps](https://github.com/open-ness/edgeapps) and execute the following command to build the `client-sim` container:
 
 ```shell
 cd <edgeapps-repo>/openvino/clientsim
 ./build-image.sh
 ```
 
-On the OpenNESS Edge Node, clone the [OpenNESS edgeapps](https://github.com/otcshare/edgeapps) and execute the following command to build the `producer` and `consumer` containers:
+On the OpenNESS Edge Node, clone the [OpenNESS edgeapps](https://github.com/open-ness/edgeapps) and execute the following command to build the `producer` and `consumer` containers:
 ```shell
 cd <edgeapps-repo>/openvino/producer
 ./build-image.sh
