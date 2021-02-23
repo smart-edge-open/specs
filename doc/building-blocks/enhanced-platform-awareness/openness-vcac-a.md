@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2020 Intel Corporation
+Copyright (c) 2020-2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using Visual Compute Accelerator Card - Analytics (VCAC-A) in OpenNESS
@@ -27,7 +27,7 @@ Equipped with a CPU, the VCAC-A card is installed with a standalone operating sy
 > * The full acronym *VCAC-A* is loosely used when talking about the PCIe card.
 
 The VCAC-A installation involves a [two-stage build](https://github.com/OpenVisualCloud/VCAC-SW-Analytics/):
-1. VCA host kernel build and configuration: this stage patches the CentOS\* 7.8 kernel and builds the necessary modules and dependencies.
+1. VCA host kernel build and configuration: this stage patches the CentOS\* 7.9 kernel and builds the necessary modules and dependencies.
 2. VCAC-A system image (VCAD) generation: this stage builds an Ubuntu\*-based (VCAD) image that is loaded on the VCAC-A card.
 
 The OEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical node to the OpenNESS cluster. The OEK supports force build VCAC-A system image (VCAD) via flag (force\_build\_enable: true (default value)), it also allows the customer to disable the flag to re-use last system image built. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
@@ -170,7 +170,7 @@ The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision a
 
 The VCAC-A installation in OEK performs the following tasks:
 - Pull the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies
-- Apply CentOS 7.8 kernel patches and build kernel RPM
+- Apply CentOS 7.9 kernel patches and build kernel RPM
 - Apply module patches and build driver RPM
 - Build daemon utilities RPM
 - Install docker-ce and kubernetes on the VCA host

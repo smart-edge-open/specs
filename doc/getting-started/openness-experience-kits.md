@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # OpenNESS Experience Kits
@@ -35,7 +35,7 @@ OEKs allow a user to customize kernel, grub parameters, and tuned profiles by le
 
 OEKs contain a `host_vars/` directory in which we can create another directory (`nodes-inventory-name`) and place a YAML file (`10-default.yml`, e.g., `node01/10-default.yml`). The file would contain variables that would override roles' default values.
 
-> **NOTE**: Despite the ability to customize parameters (kernel), it is required to have a clean CentOS\* 7.8.2003 operating system installed on hosts (from a minimal ISO image) that will be later deployed from Ansible scripts. This OS shall not have any user customizations.
+> **NOTE**: Despite the ability to customize parameters (kernel), it is required to have a clean CentOS\* 7.9.2009 operating system installed on hosts (from a minimal ISO image) that will be later deployed from Ansible scripts. This OS shall not have any user customizations.
 
 To override the default value, place the variable's name and new value in the host's vars file. For example, the contents of `host_vars/node01/10-default.yml` that would result in skipping kernel customization on that node:
 
@@ -74,11 +74,11 @@ Here are several default values:
 # --- machine_setup/custom_kernel
 kernel_skip: false  # use this variable to disable custom kernel installation for host
 
-kernel_repo_url: http://linuxsoft.cern.ch/cern/centos/7.8.2003/rt/CentOS-RT.repo
-kernel_repo_key: http://linuxsoft.cern.ch/cern/centos/7.8.2003/os/x86_64/RPM-GPG-KEY-cern
+kernel_repo_url: http://linuxsoft.cern.ch/cern/centos/7.9.2009/rt/CentOS-RT.repo
+kernel_repo_key: http://linuxsoft.cern.ch/cern/centos/7.9.2009/os/x86_64/RPM-GPG-KEY-cern
 kernel_package: kernel-rt-kvm
 kernel_devel_package: kernel-rt-devel
-kernel_version: 3.10.0-1127.19.1.rt56.1116.el7.x86_64
+kernel_version: 3.10.0-1160.11.1.rt56.1145.el7.x86_64
 
 kernel_dependencies_urls: []
 kernel_dependencies_packages: []
@@ -95,8 +95,8 @@ additional_grub_params: ""
 # --- machine_setup/configure_tuned
 tuned_skip: false   # use this variable to skip tuned profile configuration for host
 tuned_packages:
-  - tuned-2.11.0-8.el7
-  - http://linuxsoft.cern.ch/scientific/7.8/x86_64/os/Packages/tuned-profiles-realtime-2.11.0-8.el7.noarch.rpm
+  - tuned-2.11.0-9.el7
+  - http://ftp.scientificlinux.org/linux/scientific/7/x86_64/os/Packages/tuned-profiles-realtime-2.11.0-9.el7.noarch.rpm
 tuned_profile: realtime
 tuned_vars: |
   isolated_cores=2-3
@@ -105,7 +105,7 @@ tuned_vars: |
 ```
 
 ### Use different realtime kernel (3.10.0-1062)
-By default, `kernel-rt-kvm-3.10.0-1127.19.1.rt56.1116.el7.x86_64` from buil-in repository is installed.
+By default, `kernel-rt-kvm-3.10.0-1160.11.1.rt56.1145.el7.x86_64` from buil-in repository is installed.
 
 To use another version (e.g., `kernel-rt-kvm-3.10.0-1062.9.1.rt56.1033.el7.x86_64`), create a `host_var` file for the host with content:
 ```yaml
