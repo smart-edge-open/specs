@@ -61,7 +61,7 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
    ```yaml
    # CMK - Number of cores in exclusive pool
    cmk_num_exclusive_cores: "4"
-   # CMK - Number of cores in shared poolgit
+   # CMK - Number of cores in shared pool
    cmk_num_shared_cores: "1"
    # CMK - Comma separated list of nodes' hostnames
    cmk_host_list: "node01,node02"
