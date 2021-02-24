@@ -1,10 +1,10 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019-2020 Intel Corporation
+Copyright (c) 2019-2021 Intel Corporation
 ```
 <!-- omit in toc -->
-# Release Notes 
-This document provides high-level system features, issues, and limitations information for Open Network Edge Services Software (OpenNESS). 
+# Release Notes
+This document provides high-level system features, issues, and limitations information for Open Network Edge Services Software (OpenNESS).
 - [Release history](#release-history)
   - [OpenNESS - 19.06](#openness---1906)
   - [OpenNESS - 19.09](#openness---1909)
@@ -81,7 +81,7 @@ This document provides high-level system features, issues, and limitations infor
   - CentOS\* 7.6 / CentOS 7.6 + RT kernel
   - Basic telemetry support
 - Sample Reference Applications
-  - OpenVINO™  based Consumer Application 
+  - OpenVINO™  based Consumer Application
   - Producer Application supporting OpenVINO™
 - Dataplane
   - DPDK/KNI based Dataplane – NTS
@@ -99,7 +99,7 @@ This document provides high-level system features, issues, and limitations infor
 
 ## OpenNESS - 19.09
 - Edge Cloud Deployment options
-  - Async method for image download to avoid timeout. 
+  - Async method for image download to avoid timeout.
 - Dataplane
   - Support for OVN/OVS based Dataplane and network overlay for Network Edge (based on Kubernetes)
 - Cloud Adapters
@@ -164,13 +164,13 @@ This document provides high-level system features, issues, and limitations infor
 - Support for VM deployments on Kubernetes mode
   -  Kubevirt based VM deployment support
   -  EPA Support for SRIOV Virtual function allocation to the VMs deployed using Kubernetes
-- EPA support - OnPremises 
+- EPA support - OnPremises
   - Support for dedicated core allocation to applications running as VMs or Containers
   - Support for dedicated SRIOV VF allocation to applications running in VM or containers
   - Support for system resource allocation into the application running as a container
      - Mount point for shared storage
      - Pass environment variables
-     - Configure the port rules  
+     - Configure the port rules
 - Core Network Feature (5G)
   - PFD Management API support (3GPP 23.502  Sec. 52.6.3 PFD Management service)
     - AF: Added support for PFD Northbound API
@@ -179,12 +179,12 @@ This document provides high-level system features, issues, and limitations infor
   - WEB UI: Enhanced CNCA WEB UI to configure PFD params in OnPerm mode
   - Auth2 based authentication between 5G Network functions: (as per 3GPP Standard)
     - Implemented oAuth2 based authentication and validation
-    - AF and NEF communication channel is updated to authenticated based on oAuth2 JWT token in addition to HTTP2. 
+    - AF and NEF communication channel is updated to authenticated based on oAuth2 JWT token in addition to HTTP2.
   - HTTPS support
     - Enhanced the 5G OAM, CNCA (web-ui and kube-ctl) to HTTPS interface
 - Modular Playbook
   - Support for customers to choose real-time or non-realtime kernel for an edge node
-  - Support for customers to choose CNIs - Validated with Kube-OVN and Calico 
+  - Support for customers to choose CNIs - Validated with Kube-OVN and Calico
 - Edge Apps
   - FlexRAN: Dockerfile and pod specification for the deployment of 4G or 5G FlexRAN
   - AF: Dockerfile and pod specification
@@ -209,7 +209,7 @@ This document provides high-level system features, issues, and limitations infor
   - Provide ansible and Helm -playbook support for OVC codecs Intel® Xeon® CPU mode - video analytics service (REST API) for developers
 - Edge Applications
   - Smart City Application Pipeline supporting CPU or VCAC-A mode with Helm chart
-  - CDN Content Delivery using NGINX with SR-IOV capability for higher performance with Helm chart 
+  - CDN Content Delivery using NGINX with SR-IOV capability for higher performance with Helm chart
   - CDN transcode sample application using Intel® Xeon® CPU optimized media SDK with Helm chart
   - Support for Transcoding Service using Intel® Xeon® CPU optimized media SDK with Helm chart
   - Intel Edge Insights application support with Helm chart
@@ -230,9 +230,9 @@ This document provides high-level system features, issues, and limitations infor
   - CDN - Transcode
   - CDN - Content Delivery
   - Azure - Deployment of OpenNESS cluster on Microsoft\* Azure\* cloud
-- Support for OpenNESS on CSP Cloud 
+- Support for OpenNESS on CSP Cloud
   - Azure - Deployment of OpenNESS cluster on Microsoft\* Azure\* cloud
-- Telemetry Support 
+- Telemetry Support
   - Support for Collectd backend with hardware from Intel and custom metrics
   - cpu, cpufreq, load, hugepages, intel_pmu, intel_rdt, ipmi, ovs_stats, ovs_pmd_stats
   - FPGA – PACN3000 (collectd) - Temp, Power draw
@@ -252,18 +252,21 @@ This document provides high-level system features, issues, and limitations infor
   - Basic support for Service Mesh using Istio Service Mesh within an OpenNESS cluster.
     > **NOTE**: When deploying Istio Service Mesh in VMs, a minimum of 8 CPU core and 16GB RAM must be allocated to each worker VM so that Istio operates smoothly
   - Application of Service Mesh openness 5G and Media analytics - A dedicated network for service to service communications
-- EAA Update 
+- EAA Update
   - EAA microservices has been updated to be more cloud-native friendly
 - Edge Insights Application (update)
   - Industrial Edge Insights Software update to version 2.3.
-  - Experience Kit now supports multiple detection video's – Safety equipment detection, PCB default detection and also supports external video streams. 
+  - Experience Kit now supports multiple detection video's – Safety equipment detection, PCB default detection and also supports external video streams.
 
 ## OpenNESS - 20.12
 - Early access release of Edge Multi-Cluster Orchestration(EMCO), a Geo-distributed application orchestrator for Kubernetes. This release supports EMCO deploying and managing the life cycle of the Smart City Application pipeline on the edge cluster. More details in the [EMCO Release Notes](https://github.com/otcshare/EMCO/blob/main/ReleaseNotes.md).
 - Reference implementation of the offline installation package for the Converged Edge Reference Architecture (CERA) Access Edge flavor enabling installation of Kubernetes and related enhancements for Access edge deployments.
 - Azure Development kit (Devkit) supporting the installation of an OpenNESS Kubernetes cluster on the Microsoft* Azure* cloud. This is typically used by a customer who wants to develop applications and services for the edge using OpenNESS building blocks.
-- Support Intel® vRAN Dedicated Accelerator ACC100, Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload. 
+- Support Intel® vRAN Dedicated Accelerator ACC100, Kubernetes Cloud-native deployment supporting higher capacity 4G/LTE and 5G vRANs cells/carriers for FEC offload.
 - Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
+
+## OpenNESS - 21.03
+- Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Docker 20.10.2
 
 # Changes to Existing Features
 
@@ -278,14 +281,14 @@ There are no unsupported or discontinued features relevant to this release.
 
 ## OpenNESS - 19.12
 - NTS Dataplane support for Network edge is discontinued.
-- Controller UI for Network edge has been discontinued except for the CNCA configuration. Customers can optionally leverage the Kubernetes dashboard to onboard applications. 
+- Controller UI for Network edge has been discontinued except for the CNCA configuration. Customers can optionally leverage the Kubernetes dashboard to onboard applications.
 - Edge node only supports non-realtime kernel.
 
 ## OpenNESS - 20.03
-- Support for HDDL-R only restricted to non-real-time or non-customized CentOS 7.6 default kernel. 
+- Support for HDDL-R only restricted to non-real-time or non-customized CentOS 7.6 default kernel.
 
 ## OpenNESS - 20.06
-- Offline install for Native mode OnPremises has be deprecated 
+- Offline install for Native mode OnPremises has be deprecated
 
 ## OpenNESS - 20.09
 - Native on-premises is now located in a dedicated repository with no further feature updates from previous release.
@@ -312,18 +315,18 @@ There are no non-Intel issues relevant to this release.
 - Application memory field is in MB
 
 ## OpenNESS - 19.12
-- Improved usability/automation in Ansible scripts 
+- Improved usability/automation in Ansible scripts
 
 ## OpenNESS - 20.03
 - Realtime Kernel support for network edge with K8s.
 - Modular playbooks
 
 ## OpenNESS - 20.06
-- Optimized the Kubernetes based deployment by supporting multiple Flavors 
+- Optimized the Kubernetes based deployment by supporting multiple Flavors
 
 ## OpenNESS - 20.09
 - Further optimized the Kubernetes based deployment by supporting multiple Flavors
-- Network edge installation time is optimized using pre-built Docker images 
+- Network edge installation time is optimized using pre-built Docker images
 - cAdvisor occasional failure issue is resolved
 - "Traffic rule creation: cannot parse filled and cleared fields" in Legacy OnPremises is fixed
 - Issue fixed when removing Edge Node from Controller when its offline and traffic policy is configured or app deployed
@@ -360,18 +363,18 @@ There is one issue relevant to this release: it is not possible to remove the ap
 - Real-time kernel support has been temporarily disabled to address the Kubernetes 1.16.2 and Realtime kernel instability.
 
 ## OpenNESS - 20.03
-- On-Premises edge installation takes more than 1.5 hours because of the Docker image build for OVS-DPDK 
+- On-Premises edge installation takes more than 1.5 hours because of the Docker image build for OVS-DPDK
 - Network edge installation takes more than 1.5 hours because of the Docker image build for OVS-DPDK
 - OpenNESS controller allows management NICs to be in the pool of configuration, which might allow configuration by mistake. Thus, disconnecting the node from control plane
 - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network. This overwrites the OVNCNI network setting configured before this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
 - Cannot remove Edge Node from Controller when its offline and traffic policy is configured or the app is deployed.
 
 ## OpenNESS - 20.06
-- On-Premises edge installation takes 1.5hrs because of the Docker image build for OVS-DPDK 
+- On-Premises edge installation takes 1.5hrs because of the Docker image build for OVS-DPDK
 - Network edge installation takes 1.5hrs because of docker image build for OVS-DPDK
 - OpenNESS controller allows management NICs to be in the pool of configuration, which might allow configuration by mistake and thereby disconnect the node from control plane
 - When using the SRIOV EPA feature added in 20.03 with OVNCNI, the container cannot access the CNI port. This is due to the SRIOV port being set by changing the network used by the container from default to a custom network, This overwrites the OVNCNI network setting configured prior to this to enable the container to work with OVNCNI. Another issue with the SRIOV, is that this also overwrites the network configuration with the EAA and edgedns, agents, which prevents the SRIOV enabled container from communicating with the agents.
-- Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed. 
+- Cannot remove Edge Node from Controller when its offline and traffic policy is configured or app is deployed.
 - Legacy OnPremises - Traffic rule creation: cannot parse filled and cleared fields
 - There is an issue with using CDI when uploading VM images when CMK is enabled due to missing CMK taint toleration. The CDI upload pod does not get deployed and the `virtctl` plugin command times out waiting for the action to complete. A workaround for the issue is to invoke the CDI upload command, edit the taint toleration for the CDI upload to tolerate CMK, update the pod, create the PV, and let the pod run to completion.
 - There is a known issue with cAdvisor which in certain scenarios occasionally fails to expose the metrics for the Prometheus endpoint. See the following GitHub\* link: https://github.com/google/cadvisor/issues/2537
@@ -392,30 +395,30 @@ There is one issue relevant to this release: it is not possible to remove the ap
 # Release Content
 
 ## OpenNESS - 19.06
-OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications. 
+OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications.
 
 ## OpenNESS - 19.06.01
-OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications. 
+OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications.
 
 ## OpenNESS - 19.09
-OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications. 
+OpenNESS Edge node, OpenNESS Controller, Common, Spec, and OpenNESS Applications.
 
 ## OpenNESS - 19.12
-OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, and Experience kit. 
+OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, and Experience kit.
 
 ## OpenNESS - 20.03
-OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, and Experience kit. 
+OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, and Experience kit.
 
 ## OpenNESS - 20.06
-- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications, and Experience kit. 
+- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications, and Experience kit.
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec, and IDO Experience kit.
 
-## OpenNESS - 20.09 
-- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
+## OpenNESS - 20.09
+- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit.
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
 
-## OpenNESS - 20.12 
-- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit. 
+## OpenNESS - 20.12
+- Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit.
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
 
 > **NOTE**: Edge applications repo is common to Open Source and IDO
@@ -472,9 +475,9 @@ OpenNESS Edge Node has been tested using the following hardware specification:
 
 # Supported Operating Systems
 
-OpenNESS was tested on CentOS Linux release 7.8.2003 (Core)
-> **NOTE**: OpenNESS is tested with CentOS 7.8 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is no requirement from OpenNESS software to run on a Pre-empt RT kernel.
+OpenNESS was tested on CentOS Linux release 7.9.2009 (Core)
+> **NOTE**: OpenNESS is tested with CentOS 7.9 Pre-empt RT kernel to ensure VNFs and Applications can co-exist. There is no requirement from OpenNESS software to run on a Pre-empt RT kernel.
 
 # Packages Version
 
-Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 19.03.12, kubernetes 1.19.3, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.2, flannel 0.12.0, calico 3.16.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831")
+Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.2, flannel 0.12.0, calico 3.16.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i
