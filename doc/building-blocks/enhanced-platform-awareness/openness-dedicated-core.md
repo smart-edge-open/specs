@@ -50,7 +50,7 @@ CMK documentation available on GitHub\* includes:
 - [operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md)
 - [user manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/user.md)
 
-CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart used in OpenNESS deployment is available on the following GitHub repository: [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/cmk-install).
+CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart used in OpenNESS deployment is available on the following GitHub repository: [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/cmk_install).
 
 ### Setup
 
@@ -61,7 +61,7 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
    ```yaml
    # CMK - Number of cores in exclusive pool
    cmk_num_exclusive_cores: "4"
-   # CMK - Number of cores in shared pool
+   # CMK - Number of cores in shared poolgit
    cmk_num_shared_cores: "1"
    # CMK - Comma separated list of nodes' hostnames
    cmk_host_list: "node01,node02"

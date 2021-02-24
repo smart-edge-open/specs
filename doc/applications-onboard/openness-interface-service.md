@@ -78,7 +78,7 @@ Currently, interface service supports the following values of the `driver` param
 
 ## Userspace (DPDK) bridge
 
-The default DPDK-enabled bridge `br-userspace` is only available if OpenNESS is deployed with support for [Userspace CNI](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md) and at least one pod was deployed using the Userspace CNI. You can check if the `br-userspace` bridge exists by running the following command on your node:
+The default DPDK-enabled bridge `br-userspace` is only available if OpenNESS is deployed with support for [Userspace CNI](https://github.com/otcshare/specs/blob/master/doc/building-blocks/dataplane/openness-userspace-cni.md) and at least one pod was deployed using the Userspace CNI. You can check if the `br-userspace` bridge exists by running the following command on your node:
 
 ```shell
 ovs-vsctl list-br

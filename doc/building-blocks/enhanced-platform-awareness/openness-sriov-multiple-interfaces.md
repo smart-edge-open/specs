@@ -61,7 +61,7 @@ kubernetes_cnis:
 
 ### Multus usage
 
-Multus CNI is deployed in OpenNESS using a Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/master/files/multus-cni). The Multus image is pulled by Ansible\* Multus role and pushed to a local Docker\* registry on Edge Controller.
+Multus CNI is deployed in OpenNESS using a Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/multus/controlplane/files/multus-cni). The Multus image is pulled by Ansible\* Multus role and pushed to a local Docker\* registry on Edge Controller.
 
 [Custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#custom-resources) (CRD) is used to define an additional network that can be used by Multus.
 
@@ -130,7 +130,7 @@ kubernetes_cnis:
 - sriov
 ```
 
-SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/sriov/master/files/sriov). Additional chart templates for SR-IOV device plugin can be downloaded from [container-experience-kits repository](https://github.com/intel/container-experience-kits/tree/master/roles/sriov-dp-install/charts/sriov-net-dp/templates). SR-IOV images are built from source by the Ansible SR-IOV role and pushed to a local Harbor registry on Edge Controller.
+SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm chart is available in [openness-experience-kits](https://github.com/otcshare/openness-experience-kits/tree/master/roles/kubernetes/cni/sriov/controlplane/files/sriov). Additional chart templates for SR-IOV device plugin can be downloaded from [container-experience-kits repository](https://github.com/intel/container-experience-kits/tree/master/roles/sriov_dp_install/charts/sriov-net-dp/templates). SR-IOV images are built from source by the Ansible SR-IOV role and pushed to a local Harbor registry on Edge Controller.
 
 #### Edge Node SR-IOV interfaces configuration
 

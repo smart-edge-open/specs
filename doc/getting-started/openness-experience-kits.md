@@ -226,4 +226,4 @@ The following are basic prechecks that are currently executed:
     include_tasks: kube-ovn.yml
     when: "'kubeovn' in kubernetes_cnis"
   ```
-* If the CNI is used as an additional CNI (with Multus\*), the network attachment definition must be supplied ([refer to Multus docs for more info](https://github.com/intel/multus-cni/blob/master/doc/quickstart.md#storing-a-configuration-as-a-custom-resource)).
+* If the CNI is used as an additional CNI (with Multus\*), the network attachment definition must be supplied ([refer to Multus docs for more info](https://github.com/intel/multus-cni/blob/master/docs/quickstart.md#storing-a-configuration-as-a-custom-resource)).
