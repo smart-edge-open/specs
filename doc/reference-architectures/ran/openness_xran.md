@@ -546,7 +546,7 @@ Run the deployment script:
     ./deploy_ne.sh -f <flavor>
 ```
 **Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
 
 Check the `/proc/cmd` output. It should look similar to:
 
