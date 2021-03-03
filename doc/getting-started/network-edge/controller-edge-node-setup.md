@@ -56,7 +56,7 @@ The following set of actions must be completed to set up the Open Network Edge S
    ```
 
 **Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
 
 # Preconditions
 
@@ -94,7 +94,7 @@ The command syntax for the scripts is: `action_mode.sh -f <flavor> [group]`, i.e
 The parameter `controller` or `nodes` in each case deploys or cleans up the Edge Controller or the Edge Nodes, respectively.
 
 **Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
 
 For an initial installation, `deploy_ne.sh controller` must be run before `deploy_ne.sh nodes`. During the initial installation, the hosts may reboot. After reboot, the deployment script that was last run should be run again.
 
@@ -155,7 +155,7 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh -f <flavor> single`
 
 **Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
 
 ## Harbor registry
 
