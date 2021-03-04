@@ -55,7 +55,7 @@ _Figure - SR-IOV Device plugin_
 In Network Edge mode, the Multus CNI, which provides the possibility for attaching multiple interfaces to the pod, is deployed automatically when the `kubernetes_cnis` variable list (in the `group_vars/all/10-default.yml` file) contains at least two elements, e.g.,:
 ```yaml
 kubernetes_cnis:
-- kubeovn
+- calico
 - sriov
 ```
 
@@ -117,7 +117,7 @@ EOF
        valid_lft forever preferred_lft forever
   308: eth0@if309: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP
     link/ether 0a:00:00:10:00:12 brd ff:ff:ff:ff:ff:ff link-netnsid 0
-    inet 10.16.0.17/16 brd 10.16.255.255 scope global eth0
+    inet 10.245.0.17/16 brd 10.245.255.255 scope global eth0
        valid_lft forever preferred_lft forever
 ```
 
@@ -126,7 +126,7 @@ EOF
 To deploy the OpenNESS' Network Edge with SR-IOV, `sriov` must be added to the `kubernetes_cnis` list in `group_vars/all/10-default.yml`:
 ```yaml
 kubernetes_cnis:
-- kubeovn
+- calico
 - sriov
 ```
 
@@ -207,7 +207,7 @@ spec:
          valid_lft forever preferred_lft forever
    169: eth0@if170: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UP group default
        link/ether 0a:00:00:10:00:0b brd ff:ff:ff:ff:ff:ff link-netnsid 0
-       inet 10.16.0.10/16 brd 10.16.255.255 scope global eth0
+       inet 10.245.0.10/16 brd 10.245.255.255 scope global eth0
          valid_lft forever preferred_lft forever
    ```
 
