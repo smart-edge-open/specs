@@ -129,7 +129,7 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * Telemetry
 
 ## CERA CDN Caching Flavor
