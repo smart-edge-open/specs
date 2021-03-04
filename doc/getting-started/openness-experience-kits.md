@@ -216,7 +216,7 @@ kubeovn_dpdk_lcore_mask: "0x2"   # DPDK lcore mask
 The following are basic prechecks that are currently executed:
   * Check if any CNI is requested (i.e., `kubernetes_cni` is not empty).
   * Check if `sriov` is not requested as primary (first on the list) or standalone (only on the list).
-  * Check if `calico` is requested as a primary (first on the list) or standalone (only on the list).
+  * Check if `calico` is requested as a primary (first on the list).
   * Check if `kubeovn` is requested as a primary (first on the list).
   * Check if the requested CNI is available (check if some CNI is requested that isn't present in the `available_kubernetes_cnis` list).
 * CNI roles should be as self-contained as possible (unless necessary, CNI-specific tasks should not be present in `kubernetes/{controlplane,node,common}` or `openness/network_edge/{controlplane,node}`).
