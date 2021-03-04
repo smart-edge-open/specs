@@ -54,7 +54,7 @@ Following files specify the CIDR for CNIs and interfaces. These are the IP addre
 
 ```yaml
 flavors/media-analytics-vca/all.yml:19:vca_cidr: "172.32.1.0/12"
-group_vars/all/10-default.yml:90:calico_cidr: "10.243.0.0/16"
+group_vars/all/10-default.yml:90:calico_cidr: "10.245.0.0/16"
 group_vars/all/10-default.yml:93:flannel_cidr: "10.244.0.0/16"
 group_vars/all/10-default.yml:96:weavenet_cidr: "10.32.0.0/12"
 group_vars/all/10-default.yml:99:kubeovn_cidr: "10.16.0.0/16,100.64.0.0/16,10.96.0.0/12"
