@@ -184,7 +184,7 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Harbor Registry
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * EMCO services
 
 ## Reference Service Mesh
