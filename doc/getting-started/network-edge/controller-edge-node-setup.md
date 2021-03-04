@@ -358,14 +358,15 @@ The following CNIs are currently supported:
 * [kube-ovn](https://github.com/alauda/kube-ovn)
   * **Only as primary CNI**
   * CIDR: 10.16.0.0/16
+* [calico](https://github.com/projectcalico/cni-plugin)
+  * **Only as primary CNI**
+  * IPAM: host-local
+  * CIDR: 10.245.0.0/16
+  * Network attachment definition: openness-calico
 * [flannel](https://github.com/coreos/flannel)
   * IPAM: host-local
   * CIDR: 10.244.0.0/16
   * Network attachment definition: openness-flannel
-* [calico](https://github.com/projectcalico/cni-plugin)
-  * IPAM: host-local
-  * CIDR: 10.243.0.0/16
-  * Network attachment definition: openness-calico
 * [weavenet](https://github.com/weaveworks/weave)
   * CIDR: 10.32.0.0/12
 * [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
@@ -377,21 +378,21 @@ Multiple CNIs can be requested to be set up for the cluster. To provide such fun
 
 ### Selecting cluster networking plugins (CNI)
 
-The default CNI for OpenNESS is kube-ovn. Non-default CNIs may be configured with OpenNESS by editing the file `group_vars/all/10-default.yml`.
+The default CNI for OpenNESS is calico. Non-default CNIs may be configured with OpenNESS by editing the file `group_vars/all/10-default.yml`.
 To add a non-default CNI, the following edits must be carried out:
 
-- The CNI name is added to the `kubernetes_cnis` variable. The CNIs are applied in the order in which they appear in the file. By default, `kube-ovn` is defined. That is,
+- The CNI name is added to the `kubernetes_cnis` variable. The CNIs are applied in the order in which they appear in the file. By default, `calico` is defined. That is,
 
   ```yaml
   kubernetes_cnis:
-  - kubeovn
+  - calico
   ```
 
 - To add a CNI, such as SR-IOV, the `kubernetes_cnis` variable is edited as follows:
 
   ```yaml
   kubernetes_cnis:
-  - kubeovn
+  - calico
   - sriov
   ```
 
