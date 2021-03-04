@@ -266,7 +266,7 @@ This document provides high-level system features, issues, and limitations infor
 - Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
 
 ## OpenNESS - 21.03
-- Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Docker 20.10.2
+- Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Calico 3.17 and Docker 20.10.2
 
 # Changes to Existing Features
 
