@@ -78,7 +78,7 @@ To use the playbooks, several preconditions must be fulfilled. These preconditio
 
 # Running playbooks
 
-The Network Edge deployment and cleanup is carried out via Ansible playbooks. The playbooks are run from the Ansible host (it might be the same machine as the Edge Controller). Before running the playbooks, an inventory file `inventory.ini` must be configured.
+The Network Edge deployment and cleanup is carried out via Ansible playbooks. The playbooks are run from the Ansible host (it might be the same machine as the Edge Controller). Before running the playbooks, an inventory file `inventory/default/inventory.ini` must be configured.
 
 The following subsections describe the playbooks in more detail.
 
@@ -103,7 +103,7 @@ The `cleanup_ne.sh` script is used when a configuration error in the Edge Contro
 ## Network Edge playbooks
 
 The `network_edge.yml` and `network_edge_cleanup.yml` files contain playbooks for Network Edge mode.
-Playbooks can be customized by enabling and configuring features in the `group_vars/all/10-default.yml` file.
+Playbooks can be customized by enabling and configuring features in the `inventory/default/group_vars/all/10-default.yml` file.
 
 ### Cleanup playbooks
 
@@ -129,7 +129,7 @@ Refer to the [network-edge-applications-onboarding](https://github.com/otcshare/
 
 Network Edge can be deployed on just a single machine working as a control plane & node.<br>
 To deploy Network Edge in a single-node cluster scenario, follow the steps below:
-1. Modify `inventory.ini`<br>
+1. Modify `inventory/default/inventory.ini`<br>
    > Rules for inventory:
    > - IP address (`ansible_host`) for both controller and node must be the same
    > - `edgenode_group` and `controller_group` groups must contain exactly one host
@@ -148,8 +148,8 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 
    [edgenode_vca_group]
    ```
-2. Features can be enabled in the `group_vars/all/10-default.yml` file by tweaking the configuration variables.
-3. Settings regarding the kernel, grub, HugePages\*, and tuned can be customized in `group_vars/edgenode_group/10-default.yml`.
+2. Features can be enabled in the `inventory/default/group_vars/all/10-default.yml` file by tweaking the configuration variables.
+3. Settings regarding the kernel, grub, HugePages\*, and tuned can be customized in `inventory/default/group_vars/edgenode_group/10-default.yml`.
    
    > Default settings in the single-node cluster mode are those of the Edge Node (i.e., kernel and tuned customization enabled).
 4. Single-node cluster can be deployed by running command: `./deploy_ne.sh -f <flavor> single`
@@ -377,7 +377,7 @@ Multiple CNIs can be requested to be set up for the cluster. To provide such fun
 
 ### Selecting cluster networking plugins (CNI)
 
-The default CNI for OpenNESS is kube-ovn. Non-default CNIs may be configured with OpenNESS by editing the file `group_vars/all/10-default.yml`.
+The default CNI for OpenNESS is kube-ovn. Non-default CNIs may be configured with OpenNESS by editing the file `inventory/default/group_vars/all/10-default.yml`.
 To add a non-default CNI, the following edits must be carried out:
 
 - The CNI name is added to the `kubernetes_cnis` variable. The CNIs are applied in the order in which they appear in the file. By default, `kube-ovn` is defined. That is,
@@ -450,12 +450,12 @@ The following interfaces are available: `calico@if142`, `flannel@if143`, and `et
 To allow for correct certificate verification, OpenNESS requires system time to be synchronized among all nodes and controllers in a system.
 
 OpenNESS provides the possibility to synchronize a machine's time with the NTP server.
-To enable NTP synchronization, change `ntp_enable` in `group_vars/all/10-default.yml`:
+To enable NTP synchronization, change `ntp_enable` in `inventory/default/group_vars/all/10-default.yml`:
 ```yaml
 ntp_enable: true
 ```
 
-Servers to be used instead of default ones can be provided using the `ntp_servers` variable in `group_vars/all/10-default.yml`:
+Servers to be used instead of default ones can be provided using the `ntp_servers` variable in `inventory/default/group_vars/all/10-default.yml`:
 ```yaml
 ntp_servers: ["ntp.local.server"]
 ```
@@ -480,7 +480,7 @@ In addition to being a unique hostname within the cluster, the hostname must als
 
 ## Configuring inventory
 
-To execute playbooks, `inventory.ini` must be configured to specify the hosts on which the playbooks are executed.
+To execute playbooks, `inventory/default/inventory.ini` must be configured to specify the hosts on which the playbooks are executed.
 
 The OpenNESS inventory contains three groups: `all`, `controller_group`, and `edgenode_group`.
 
@@ -572,11 +572,11 @@ To make sure the key is copied successfully, try to SSH into the host: `ssh 'roo
 
 If a proxy is required to connect to the Internet, it is configured via the following steps:
 
--  Edit the `proxy_` variables in the `group_vars/all/10-default.yml` file.
--  Set the `proxy_enable` variable in `group_vars/all/10-default.yml` file to `true`.
--  Append the network CIDR (e.g., `192.168.0.1/24`) to the `proxy_noproxy` variable in `group_vars/all/10-default.yml`.
+-  Edit the `proxy_` variables in the `inventory/default/group_vars/all/10-default.yml` file.
+-  Set the `proxy_enable` variable in `inventory/default/group_vars/all/10-default.yml` file to `true`.
+-  Append the network CIDR (e.g., `192.168.0.1/24`) to the `proxy_noproxy` variable in `inventory/default/group_vars/all/10-default.yml`.
 
-Sample configuration of `group_vars/all/10-default.yml`:
+Sample configuration of `inventory/default/group_vars/all/10-default.yml`:
 
 ```yaml
 # Setup proxy on the machine - required if the Internet is accessible via proxy
@@ -613,11 +613,11 @@ To clone private repositories, a GitHub token must be provided.
 
 To generate a GitHub token, refer to [GitHub help - Creating a personal access token for the command line](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
 
-To provide the token, edit the value of `git_repo_token` variable in `group_vars/all/10-default.yml`.
+To provide the token, edit the value of `git_repo_token` variable in `inventory/default/group_vars/all/10-default.yml`.
 
 ### Customize tag/branch/sha to checkout
 
-A specific tag, branch, or commit SHA can be checked out by setting the `controller_repository_branch` and the `edgenode_repository_branch` variables in `group_vars/all/10-default.yml` for Edge Nodes and Kubernetes control plane / Edge Controller, respectively.
+A specific tag, branch, or commit SHA can be checked out by setting the `controller_repository_branch` and the `edgenode_repository_branch` variables in `inventory/default/group_vars/all/10-default.yml` for Edge Nodes and Kubernetes control plane / Edge Controller, respectively.
 
 ```yaml
 controller_repository_branch: master

@@ -56,7 +56,7 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
 
 **Edge Controller / Kubernetes control plane**
 
-1. In `group_vars/all/10-default.yml`, change `ne_cmk_enable` to `true` and adjust the settings if needed.
+1. In `inventory/default/group_vars/all/10-default.yml`, change `ne_cmk_enable` to `true` and adjust the settings if needed.
    CMK default settings are:
    ```yaml
    # CMK - Number of cores in exclusive pool
@@ -70,8 +70,8 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
 
 **Edge Node / Kubernetes node**
 
-1. In `group_vars/all/10-open.yml`, change `ne_cmk_enable` to “true”.
-2. To change core isolation set isolated cores in `group_vars/edgenode_group/10-default.yml` as `additional_grub_params` for your node e.g. in `group_vars/edgenode_group/10-default.yml`, set `additional_grub_params: "isolcpus=1-10,49-58"`.
+1. In `inventory/default/group_vars/all/10-open.yml`, change `ne_cmk_enable` to “true”.
+2. To change core isolation set isolated cores in `inventory/default/group_vars/edgenode_group/10-default.yml` as `additional_grub_params` for your node e.g. in `inventory/default/group_vars/edgenode_group/10-default.yml`, set `additional_grub_params: "isolcpus=1-10,49-58"`.
 3. Deploy the node with `deploy_ne.sh -f <flavor> node`.
 
 The environment setup can be validated using steps from the [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).

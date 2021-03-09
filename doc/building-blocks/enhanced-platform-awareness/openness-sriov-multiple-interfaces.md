@@ -52,7 +52,7 @@ _Figure - SR-IOV Device plugin_
 
 ## Details - Multiple Interface and PCIe\* SRIOV support in OpenNESS
 
-In Network Edge mode, the Multus CNI, which provides the possibility for attaching multiple interfaces to the pod, is deployed automatically when the `kubernetes_cnis` variable list (in the `group_vars/all/10-default.yml` file) contains at least two elements, e.g.,:
+In Network Edge mode, the Multus CNI, which provides the possibility for attaching multiple interfaces to the pod, is deployed automatically when the `kubernetes_cnis` variable list (in the `inventory/default/group_vars/all/10-default.yml` file) contains at least two elements, e.g.,:
 ```yaml
 kubernetes_cnis:
 - kubeovn
@@ -123,7 +123,7 @@ EOF
 
 ### SR-IOV configuration and usage
 
-To deploy the OpenNESS' Network Edge with SR-IOV, `sriov` must be added to the `kubernetes_cnis` list in `group_vars/all/10-default.yml`:
+To deploy the OpenNESS' Network Edge with SR-IOV, `sriov` must be added to the `kubernetes_cnis` list in `inventory/default/group_vars/all/10-default.yml`:
 ```yaml
 kubernetes_cnis:
 - kubeovn
@@ -134,12 +134,12 @@ SR-IOV CNI and device plugin are deployed in OpenNESS using Helm chart. The Helm
 
 #### Edge Node SR-IOV interfaces configuration
 
-For the installer to turn on the specified number of SR-IOV VFs for a selected network interface of node, provide that information in the format `{interface_name: VF_NUM, ...}` in the `sriov.network_interfaces` variable inside the config files in `host_vars` Ansible directory.
-For technical reasons, each node must be configured separately. Copy the example file `host_vars/node01/10-default.yml` and then create a similar one for each node being deployed.
+For the installer to turn on the specified number of SR-IOV VFs for a selected network interface of node, provide that information in the format `{interface_name: VF_NUM, ...}` in the `sriov.network_interfaces` variable inside the config files in `inventory/default/host_vars` Ansible directory.
+For technical reasons, each node must be configured separately. Copy the example file `inventory/default/host_vars/node01/10-default.yml` and then create a similar one for each node being deployed.
 
-Also, each node must be added to the Ansible inventory file `inventory.ini`.
+Also, each node must be added to the Ansible inventory file `inventory/default/inventory.ini`.
 
-For example, providing `host_vars/node01/10-default.yml` with the following options will enable 4 VFs for network interface (PF) `ens787f0` and 8 VFs for network interface `ens787f1` of `node1`.
+For example, providing `inventory/default/host_vars/node01/10-default.yml` with the following options will enable 4 VFs for network interface (PF) `ens787f0` and 8 VFs for network interface `ens787f1` of `node1`.
 
 ```yaml
 sriov:

@@ -16,17 +16,17 @@ Userspace CNI is a Container Network Interface (CNI) Kubernetes\* plugin that wa
 
 ## Setup Userspace CNI
 
-OpenNESS for Network Edge has been integrated with Userspace CNI to allow users to easily run DPDK- based applications inside Kubernetes pods. To install OpenNESS Network Edge with Userspace CNI support, add the value `userspace` to variable `kubernetes_cnis` in `group_vars/all/10-default.yml` and set value of the variable `kubeovn_dpdk` in `group_vars/all/10-default.yml` to `true`:
+OpenNESS for Network Edge has been integrated with Userspace CNI to allow users to easily run DPDK- based applications inside Kubernetes pods. To install OpenNESS Network Edge with Userspace CNI support, add the value `userspace` to variable `kubernetes_cnis` in `inventory/default/group_vars/all/10-default.yml` and set value of the variable `kubeovn_dpdk` in `inventory/default/group_vars/all/10-default.yml` to `true`:
 
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 kubernetes_cnis:
 - kubeovn
 - userspace
 ```
 
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 kubeovn_dpdk: true
 ```
 
@@ -35,19 +35,19 @@ kubeovn_dpdk: true
 DPDK apps require that a specific number of HugePages are enabled. By default, the Ansible\* scripts will enable 1024 of 2M HugePages on a system and then start OVS-DPDK with 1Gb of those HugePages. To change this setting to reflect your specific requirements, set the Ansible variables as defined in the example below. This example enables 4 of 1GB HugePages and appends 1 GB to OVS-DPDK, leaving 3 pages for DPDK applications that will be running in the pods.
 
 ```yaml
-# group_vars/controller_group/10-default.yml
+# inventory/default/group_vars/controller_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
 ```
 
 ```yaml
-# group_vars/edgenode_group/10-default.yml
+# inventory/default/group_vars/edgenode_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
 ```
 
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 # Hugepage size to be used with DPDK: 2Mi or 1Gi
 kubeovn_dpdk_hugepage_size: "1Gi"
 # Overall amount of hugepages available to DPDK

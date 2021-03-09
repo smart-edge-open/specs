@@ -85,21 +85,21 @@ For information on how to update and flash the MAX10 to supported version see [I
 To run the OpenNESS package with FPGA (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
 #### OpenNESS Experience Kit
-To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
+To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `inventory/default/group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
 ```
 
 Additionally, SRIOV must be enabled in OpenNESS:
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 kubernetes_cnis:
 - <main CNI>
 - sriov
 ```
 
-Also, enable the following options in `group_vars/all/10-default.yml`:
+Also, enable the following options in `inventory/default/group_vars/all/10-default.yml`:
 The following device config is the default config for the Intel® FPGA PAC N3000 with a 5GNR vRAN user image tested (this configuration is common to both the EdgeNode and EdgeController setup).
 ```yaml
 # group_var/all/10-default.yml

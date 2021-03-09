@@ -53,7 +53,7 @@ For more information about cache allocation and available cache pools, refer to 
 This feature is for the OpenNESS Network Edge deployment mode.
 
 ## Usage
-Enable the RMD feature in *group_vars/all/10-default.yml* when installing OpenNESS (Under the Network Edge section):
+Enable the RMD feature in *inventory/default/group_vars/all/10-default.yml* when installing OpenNESS (Under the Network Edge section):
 > rmd_operator_enable: True
 > 
 This will install the underlying infrastructure.

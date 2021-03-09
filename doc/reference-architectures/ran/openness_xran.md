@@ -410,7 +410,7 @@ Before starting the deployment script, OpenNESS should be configured according t
 Additional configuration steps are provided below.
 
 ### Setting up SRIOV 
-1. Modify the `group_vars/all/10-default.yml` file as follows:
+1. Modify the `inventory/default/group_vars/all/10-default.yml` file as follows:
 
 ```yaml
     kubernetes_cnis:
@@ -426,7 +426,7 @@ Additional configuration steps are provided below.
    kubeovn_dpdk: false
 ```
 
-2. Modify `host_vars/<node_name>/10-default.yml`. Provide the physical addresses of the connected interface to be used by the xRAN sample application and the number of VFs to be created on each of the connected physical ports. Each port needs to have 2 VFs. The SRIOV setting should look similar to:
+2. Modify `inventory/default/host_vars/<node_name>/10-default.yml`. Provide the physical addresses of the connected interface to be used by the xRAN sample application and the number of VFs to be created on each of the connected physical ports. Each port needs to have 2 VFs. The SRIOV setting should look similar to:
 
 ```yaml
     sriov:
@@ -456,7 +456,7 @@ Modify SRIOV ConfigMap. In the file `roles/kubernetes/cni/sriov/controlplane/fil
 
 ### Amend GRUB and tuned configuration
 
-In file `./group_vars/edgenode_group.yml`, change the following settings:
+In file `./inventory/default/group_vars/edgenode_group.yml`, change the following settings:
 
 >**NOTE**: These configuration settings are for real-time kernels. The expected kernel version is - 3.10.0-1062.12.1.rt56.1042.el7.x86_64
 
@@ -485,17 +485,17 @@ Instructions on how to configure the kernel command line in OpenNESS can be foun
 
 ### PTP Synchronization
 
-To enable PTP synchronization, modify one setting in `./group_vars/all.sh`:
+To enable PTP synchronization, modify one setting in `./inventory/default/group_vars/all/10-default.yml`:
 
 ```yaml
     ptp_sync_enable: true
 ```
 
-For the two nodes that are to be synchronized with PTP, modify files `host_vars/nodeXX/10-default.yml`
+For the two nodes that are to be synchronized with PTP, modify files `inventory/default/host_vars/nodeXX/10-default.yml`
 
 Example:
 
-For node "node01", modify file `host_vars/node01/10-default.yml`
+For node "node01", modify file `inventory/default/host_vars/node01/10-default.yml`
 
 1. For PTP Configuration 1 [see](#xran-sample-app-deployment-in-openness)
 
