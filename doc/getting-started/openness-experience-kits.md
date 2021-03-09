@@ -174,9 +174,9 @@ additional_grub_params: "debug"
 ```
 
 ### Configure OVS-DPDK in kube-ovn
-By default, OVS-DPDK is enabled. To disable it, set a flag:
+By default, OVS-DPDK is disabled (due to set calico as a default cni). To enable it, set a flag:
 ```yaml
-kubeovn_dpdk: false
+kubeovn_dpdk: true
 ```
 
 >**NOTE**: This flag should be set in `roles/kubernetes/cni/kubeovn/common/defaults/main.ym` or added to `inventory/default/group_vars/all/10-default.yml`.
@@ -216,6 +216,7 @@ kubeovn_dpdk_lcore_mask: "0x2"   # DPDK lcore mask
 The following are basic prechecks that are currently executed:
   * Check if any CNI is requested (i.e., `kubernetes_cni` is not empty).
   * Check if `sriov` is not requested as primary (first on the list) or standalone (only on the list).
+  * Check if `calico` is requested as a primary (first on the list).
   * Check if `kubeovn` is requested as a primary (first on the list).
   * Check if the requested CNI is available (check if some CNI is requested that isn't present in the `available_kubernetes_cnis` list).
 * CNI roles should be as self-contained as possible (unless necessary, CNI-specific tasks should not be present in `kubernetes/{controlplane,node,common}` or `openness/network_edge/{controlplane,node}`).
