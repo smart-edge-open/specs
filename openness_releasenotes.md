@@ -267,7 +267,7 @@ This document provides high-level system features, issues, and limitations infor
 
 ## OpenNESS - 21.03
 - Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Calico 3.17 and Docker 20.10.2.
-- Set Calico as a default cni for cdn-transcode, central_orchestrator, core-cplane, core-uplane and minimal flavor.
+- Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
 
 # Changes to Existing Features
 
