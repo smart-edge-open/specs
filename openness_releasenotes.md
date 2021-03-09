@@ -481,4 +481,4 @@ OpenNESS was tested on CentOS Linux release 7.9.2009 (Core)
 
 # Packages Version
 
-Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.2, flannel 0.12.0, calico 3.17.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i
+Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.2, flannel 0.13.0, calico 3.17.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i

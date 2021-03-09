@@ -126,7 +126,7 @@ During the deployment of the offline version of the OEK the archived files creat
 
 The following are the specific steps to enable offline/air-gaped deployment from OEK:
 
-Enable the offline deployment in [openness-experience-kits/group_vars/all/10-default.yml](https://github.com/otcshare/openness-experience-kits/blob/master/group_vars/all/10-default.yml)
+Enable the offline deployment in [openness-experience-kits/inventory/default/group_vars/all/10-default.yml](https://github.com/otcshare/openness-experience-kits/blob/master/inventory/default/group_vars/all/10-default.yml)
 
 ```yaml
 ## Offline Mode support

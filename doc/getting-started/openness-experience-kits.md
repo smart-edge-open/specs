@@ -31,13 +31,13 @@ The OpenNESS Experience Kit (OEK) repository contains a set of Ansible\* playboo
 
 OEKs allow a user to customize kernel, grub parameters, and tuned profiles by leveraging Ansible's feature of `host_vars`.
 
-> **NOTE**: `groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in `host_vars` to change on per node basis while `group_vars/all` contains cluster wide variables.
+> **NOTE**: `inventory/default/groups_vars/[edgenode|controller|edgenode_vca]_group` directories contain variables applicable for the respective groups and they can be used in `inventory/default/host_vars` to change on per node basis while `inventory/default/group_vars/all` contains cluster wide variables.
 
-OEKs contain a `host_vars/` directory in which we can create another directory (`nodes-inventory-name`) and place a YAML file (`10-default.yml`, e.g., `node01/10-default.yml`). The file would contain variables that would override roles' default values.
+OEKs contain a `inventory/default/host_vars/` directory in which we can create another directory (`nodes-inventory-name`) and place a YAML file (`10-default.yml`, e.g., `node01/10-default.yml`). The file would contain variables that would override roles' default values.
 
 > **NOTE**: Despite the ability to customize parameters (kernel), it is required to have a clean CentOS\* 7.9.2009 operating system installed on hosts (from a minimal ISO image) that will be later deployed from Ansible scripts. This OS shall not have any user customizations.
 
-To override the default value, place the variable's name and new value in the host's vars file. For example, the contents of `host_vars/node01/10-default.yml` that would result in skipping kernel customization on that node:
+To override the default value, place the variable's name and new value in the host's vars file. For example, the contents of `inventory/default/host_vars/node01/10-default.yml` that would result in skipping kernel customization on that node:
 
 ```yaml
 kernel_skip: true
@@ -54,10 +54,10 @@ Following files specify the CIDR for CNIs and interfaces. These are the IP addre
 
 ```yaml
 flavors/media-analytics-vca/all.yml:19:vca_cidr: "172.32.1.0/12"
-group_vars/all/10-default.yml:90:calico_cidr: "10.245.0.0/16"
-group_vars/all/10-default.yml:93:flannel_cidr: "10.244.0.0/16"
-group_vars/all/10-default.yml:96:weavenet_cidr: "10.32.0.0/12"
-group_vars/all/10-default.yml:99:kubeovn_cidr: "10.16.0.0/16,100.64.0.0/16,10.96.0.0/12"
+inventory/default/group_vars/all/10-default.yml:90:calico_cidr: "10.245.0.0/16"
+inventory/default/group_vars/all/10-default.yml:93:flannel_cidr: "10.244.0.0/16"
+inventory/default/group_vars/all/10-default.yml:96:weavenet_cidr: "10.32.0.0/12"
+inventory/default/group_vars/all/10-default.yml:99:kubeovn_cidr: "10.16.0.0/16,100.64.0.0/16,10.96.0.0/12"
 roles/kubernetes/cni/kubeovn/controlplane/templates/crd_local.yml.j2:13:  cidrBlock: "192.168.{{ loop.index0 + 1 }}.0/24"
 ```
 
@@ -179,7 +179,7 @@ By default, OVS-DPDK is disabled (due to set calico as a default cni). To enable
 kubeovn_dpdk: true
 ```
 
->**NOTE**: This flag should be set in `roles/kubernetes/cni/kubeovn/common/defaults/main.ym` or added to `group_vars/all/10-default.yml`.
+>**NOTE**: This flag should be set in `roles/kubernetes/cni/kubeovn/common/defaults/main.ym` or added to `inventory/default/group_vars/all/10-default.yml`.
 
 Additionally, HugePages in the OVS pod can be adjusted once default HugePage settings are changed.
 ```yaml

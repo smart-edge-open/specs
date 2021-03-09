@@ -43,7 +43,7 @@ Intel SYSCFG must be manually downloaded by the user after accepting the license
 To enable BIOSFW, perform the following steps:
 1. The SYSCFG package must be downloaded and stored inside OpenNESS Experience Kits' `biosfw/` directory as a `syscfg_package.zip`:
 `openness-experience-kits/biosfw/syscfg_package.zip`
-2. Change the variable `ne_biosfw_enable` in `group_vars/all/10-default.yml` to “true”:
+2. Change the variable `ne_biosfw_enable` in `inventory/default/group_vars/all/10-default.yml` to “true”:
    ```yaml
    ne_biosfw_enable: true
    ```
