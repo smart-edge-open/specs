@@ -5,6 +5,7 @@ Copyright (c) 2019-2020 Intel Corporation
 <!-- omit in toc -->
 # Dedicated CPU core for workload support in OpenNESS
 - [Overview](#overview)
+  - [What is Kubernetes Native CPU management?](#what-is-kubernetes-native-cpu-management)
 - [Details - CPU Manager support in OpenNESS](#details---cpu-manager-support-in-openness)
   - [Setup](#setup)
   - [CPU Manager QoS classes](#cpu-manager-qos-classes)
@@ -21,9 +22,9 @@ The following are typical usages of this feature.
 - Consider an edge application that uses an AI library such as OpenVINO™ for inference. This library uses a special instruction set on the CPU to get a higher performance for the AI algorithm. To achieve a deterministic inference rate, the application thread executing the algorithm needs a dedicated CPU core so that there is no interference from other threads or other application pods (noisy neighbor).
 
 
-What is Kubernetes Native CPU management?
+### What is Kubernetes Native CPU management?
 
-- If the workload already uses a threading library (e.g., pthread) and uses set affinity like APIs, Kbernetes CPU Management may not be needed. For such workloads, to provide cores to use for deployment, Kubernetes ConfigMaps are the recommended methodology. ConfigMaps can be used to pass the CPU core mask to the application for use. However, Kubernetes CPU Management offers transparent and out of the box support for cpu management which does not need any additional configuration. Another issue is threading aware sowtware can interfere with Kubernetes when Kubernetes is configured to use CPU Manager.
+- If the workload already uses a threading library (e.g., pthread) and uses set affinity like APIs, Kbernetes CPU Management may not be needed. For such workloads, to provide cores to use for deployment, Kubernetes ConfigMaps are the recommended methodology. ConfigMaps can be used to pass the CPU core mask to the application for use. However, Kubernetes CPU Management offers transparent and out of the box support for cpu management which does not need any additional configuration. The only issue is threading aware software can interfere with Kubernetes when Kubernetes is configured to use CPU Manager.
 - The workload is a medium to long-lived process with interarrival times on the order of ones to tens of seconds or greater.
 - After a workload has started executing, there is no need to dynamically update its CPU assignments.
 - Kubernetes CPU management does not need to perform additional tuning to IRQ affinity, CFS settings, or process scheduling classes.
@@ -40,11 +41,11 @@ When POD is qualified as `Guaranteed` QoS class then kubelet removes requested C
 
 **Deployment setup**
 
-1. Kubernetes CPU Management needs CPU Manager Policy to be set to `static` which is a default option in Openness. This can be examined in `inventory/default/group_vars/all/10-default.yml` file
+1. Kubernetes CPU Management needs CPU Manager Policy to be set to `static` which is a default option in Openness. This can be examined in `inventory/default/group_vars/all/10-default.yml` file.
    ```yaml
    # CPU policy - possible values: none (disabled), static (default)
    policy: "static"   ```
-2. Amount of CPUs reserved for Kubernetes and operating system is defined in `inventory/default/group_vars/all/10-default.yml` file
+2. Amount of CPUs reserved for Kubernetes and operating system is defined in `inventory/default/group_vars/all/10-default.yml` file.
    ```yaml
    # Reserved CPUs for K8s and OS daemons - list of reserved CPUs
    reserved_cpus: "0,1"
@@ -60,13 +61,13 @@ No setup needed.
 No setup needed.
 
 ### CPU Manager QoS classes
-Kubernetes CPU Manager deines three quality of service classes for PODs.
+Kubernetes CPU Manager defines three quality of service classes for PODs.
 - Best effort
-  `Besteffort` QoS class is assigned to PODs which do not define any memory and CPU limits and requests. PODs from this QoC class run in the shared pool
+  `BestEffort` QoS class is assigned to PODs which do not define any memory and CPU limits and requests. PODs from this QoC class run in the shared pool
 - Burstable
   `Bustrable` QoS class is assigned to PODS which define memory or CPU limits and requests which do not match. PODs from `Bustrable` QoS class run in the shared pool.
 - Guaranteed
-  `Guaranteed` QosC class is assigned to PODs which define memory and CPU limits and requests and those two values are equal. The values set to CPU limits and request have to be integral, factional CPU specified caused the POD to be run on the shared pool. 
+  `Guaranteed` QoS class is assigned to PODs which define memory and CPU limits and requests and those two values are equal. The values set to CPU limits and request have to be integral, factional CPU specified caused the POD to be run on the shared pool. 
 
 ### POD definitions
 POD defined without any constraints. This will ne assigned `BestEffort` QoS class and will run on shared poll.
@@ -92,7 +93,7 @@ spec:
         cpu: "1"
 ```
 
-POD defined with constrains, limits are equal to requests and CPU is integral bigger than or equal to one. This will be assigned `Guaranteed` QoS classs and will run exclusively on CPUs assigned by Kubernetes.
+POD defined with constraints, limits are equal to requests and CPU is integral bigger than or equal to one. This will be assigned `Guaranteed` QoS classs and will run exclusively on CPUs assigned by Kubernetes.
 ```yaml
 spec:
   containers:
@@ -107,7 +108,7 @@ spec:
         cpu: "2"
 ```
 
-POD defined with constraints even when limits are equal to request but CPU is specified as a fractional number will not get explucive CPUs but will be run on the shared pool. Still, QoS class for such a pod is `Guaranteed`
+POD defined with constraints even when limits are equal to request but CPU is specified as a fractional number will not get exclusive CPUs but will be run on the shared pool. Still, QoS class for such a pod is `Guaranteed`.
 
 
 ### Examples
@@ -136,7 +137,7 @@ spec:
   ```
 
 
-  Scheduled POD is assigned `Guaranteed` quality of service class, this can be checked by issuing `kubectl describe pod/test-pod`
+  Scheduled POD is assigned `Guaranteed` quality of service class, this can be examined by issuing `kubectl describe pod/test-pod`.
 
 Part of sample ouput is:
   ```yaml
@@ -144,7 +145,7 @@ Part of sample ouput is:
   ```
 
 Invidual processes/threads processor affinity can be checked on the node where the pod was scheduled with `taskset` command.
-Process started by a container with `Guaranteed` QoS class has set CPU affinity according to the POD definition. It runs exclusively on CPUs removed from shared poll. Other processes spawned from container starting process or PODs assigned to `BestEffort` and `Bustrable` QoS classed are scheduled to run on shared pool. This can be checked give example nginx container.
+Process started by a container with `Guaranteed` QoS class has set CPU affinity according to the POD definition. It runs exclusively on CPUs removed from shared poll. Other processes spawned from container starting process or PODs assigned to `BestEffort` and `Bustrable` QoS classed are scheduled to run on shared pool. This can be examined with example nginx container.
 
 ```bash
 [root@vm ~]# for p in `top -n 1 -b|grep nginx|gawk '{print $1}'`; do taskset -c -p $p; done
