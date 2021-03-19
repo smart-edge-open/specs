@@ -13,6 +13,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006)
   - [OpenNESS - 20.09](#openness---2009)
   - [OpenNESS - 20.12](#openness---2012)
+  - [OpenNESS - 21.03](#openness---2103)
 - [Changes to Existing Features](#changes-to-existing-features)
   - [OpenNESS - 19.06](#openness---1906-1)
   - [OpenNESS - 19.06.01](#openness---190601)
@@ -268,6 +269,7 @@ This document provides high-level system features, issues, and limitations infor
 ## OpenNESS - 21.03
 - Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Calico 3.17 and Docker 20.10.2.
 - Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
+- Intel CMK support deprecated in favour of Kubernetes native CPU Manaher
 
 # Changes to Existing Features
 
