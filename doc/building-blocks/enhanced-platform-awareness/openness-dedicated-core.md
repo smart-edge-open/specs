@@ -145,7 +145,7 @@ Part of sample ouput is:
   ```
 
 Invidual processes/threads processor affinity can be checked on the node where the pod was scheduled with `taskset` command.
-Process started by a container with `Guaranteed` QoS class has set CPU affinity according to the POD definition. It runs exclusively on CPUs removed from shared poll. Other processes spawned from container starting process or PODs assigned to `BestEffort` and `Bustrable` QoS classed are scheduled to run on shared pool. This can be examined with example nginx container.
+Process started by a container with `Guaranteed` POD QoS class has set CPU affinity according to the POD definition. It runs exclusively on CPUs removed from shared pool. All processes spawned from POD assigned to `Guaranteed`  QoS class are scheduled to run on the same exclusive CPU. Processes from `Burstable` and `BestEffort` QoS classes PODs are scheduled to run on shared pool CPUs. This can be examined with example nginx container.
 
 ```bash
 [root@vm ~]# for p in `top -n 1 -b|grep nginx|gawk '{print $1}'`; do taskset -c -p $p; done
