@@ -94,7 +94,7 @@ To request the device as a resource in the pod, add the request for the resource
 
 A sample pod requesting the Intel® QuickAssist Adapter VF may look like this:
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
