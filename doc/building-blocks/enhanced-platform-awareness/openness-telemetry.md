@@ -54,7 +54,7 @@ The deployment of telemetry components in OpenNESS is easily configurable from t
 - smartcity
 - corenetwork
 
-Further information on what plugins each flavor enables can be found in the [CollectD section](#collectd). All flags can be changed in `./group_vars/all/10-default.yml` for the default configuration or in `./flavors` in a configuration for a specific platform flavor.
+Further information on what plugins each flavor enables can be found in the [CollectD section](#collectd). All flags can be changed in `./inventory/default/group_vars/all/10-default.yml` for the default configuration or in `./flavors` in a configuration for a specific platform flavor.
 
 ## Telemetry features
 

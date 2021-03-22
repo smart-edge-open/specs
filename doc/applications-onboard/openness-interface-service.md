@@ -12,16 +12,16 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Userspace (DPDK) bridge](#userspace-dpdk-bridge)
 - [HugePages (DPDK)](#hugepages-dpdk)
 - [Examples](#examples)
-  - [Getting information about node interfaces](#getting-information-about-node-interfaces)
-  - [Attaching kernel interfaces](#attaching-kernel-interfaces)
-  - [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
-  - [Detaching interfaces](#detaching-interfaces)
+	- [Getting information about node interfaces](#getting-information-about-node-interfaces)
+	- [Attaching kernel interfaces](#attaching-kernel-interfaces)
+	- [Attaching DPDK interfaces](#attaching-dpdk-interfaces)
+	- [Detaching interfaces](#detaching-interfaces)
 
 ## Overview
 
 Interface service is an application running in the Kubernetes\* pod on each node of the OpenNESS Kubernetes cluster. It allows users to attach additional network interfaces of the node to the provided OVS bridge, enabling external traffic scenarios for applications deployed in the Kubernetes\* pods. Services on each node can be controlled from the control plane using kubectl plugin.
 
-Interface service can attach both kernel and user space (DPDK) network interfaces to the appropriate OVS bridges.
+Interface service can attach both kernel and user space (DPDK) network interfaces to the appropriate OVS bridges. To perform that operation Kube-OVN needs to be set as main CNI.
 
 ## Traffic from the external host
 
@@ -104,19 +104,19 @@ ovs-vsctl add-br br-userspace -- set bridge br-userspace datapath_type=netdev
 DPDK apps require a specific amount of HugePages\* enabled. By default, the Ansible scripts will enable 1024 of 2M HugePages in a system, and then start OVS-DPDK with 1GB of those HugePages reserved for NUMA node 0. To change this setting to reflect specific requirements, set the Ansible variables as defined in the following example. This example enables four of 1GB HugePages and appends 2GB to OVS-DPDK, leaving two pages for DPDK applications that run in the pods. This example uses the Edge Node with 2 NUMA nodes, each one with 1GB of HugePages reserved.
 
 ```yaml
-# group_vars/controller_group/10-default.yml
+# inventory/default/group_vars/controller_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
 ```
 
 ```yaml
-# group_vars/edgenode_group/10-default.yml
+# inventory/default/group_vars/edgenode_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
 ```
 
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 kubeovn_dpdk_socket_mem: "1024,1024" # Will reserve 1024MB of hugepages for NUNA node 0 and NUMA node 1, respectively.
 kubeovn_dpdk_hugepage_size: "1Gi" # This is the size of single hugepage to be used by DPDK. Can be 1Gi or 2Mi.
 kubeovn_dpdk_hugepages: "2Gi" # This is overall amount of hugepags available to DPDK.

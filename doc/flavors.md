@@ -32,10 +32,10 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * Telemetry
 
-To customize this flavor we recommend creating additional file in openness-experience-kits that will override any variables used in previous configuration. This file should be placed in location: `openness-experiance-kits/group_vars/all` and filenames should start withnumber greater than highest value currently present (e.g. `40-overrides.yml`).
+To customize this flavor we recommend creating additional file in openness-experience-kits that will override any variables used in previous configuration. This file should be placed in location: `openness-experience-kits/inventory/default/group_vars/all` and filenames should start with number greater than highest value currently present (e.g. `40-overrides.yml`).
 
 
 ## CERA Access Edge Flavor
@@ -81,7 +81,7 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * Video analytics services
 * Telemetry
 * Istio service mesh - conditional
@@ -93,12 +93,12 @@ The pre-defined *media-analytics-vca* deployment flavor provisions an optimized 
 
 Steps to install this flavor are as follows:
 1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Add the VCA host name in the `[edgenode_vca_group]` group in `inventory.ini` file of the OEK, e.g:
+2. Add the VCA host name in the `[edgenode_vca_group]` group in `inventory/default/inventory.ini` file of the OEK, e.g:
     ```
     [edgenode_vca_group]
     silpixa00400194
     ```
-    > **NOTE:** The VCA host name should *only* be placed once in the `inventory.ini` file and under the `[edgenode_vca_group]` group. 
+    > **NOTE:** The VCA host name should *only* be placed once in the `inventory/default/inventory.ini` file and under the `[edgenode_vca_group]` group. 
 
 3. Run OEK deployment script:
     ```shell
@@ -129,7 +129,7 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * Telemetry
 
 ## CERA CDN Caching Flavor
@@ -184,7 +184,7 @@ Steps to install this flavor are as follows:
 
 This deployment flavor enables the following ingredients:
 * Harbor Registry
-* The default Kubernetes CNI: `kube-ovn`
+* The default Kubernetes CNI: `calico`
 * EMCO services
 
 ## Reference Service Mesh

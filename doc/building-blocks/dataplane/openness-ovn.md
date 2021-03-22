@@ -18,7 +18,7 @@ The diagram below shows OVS as a dataplane and OVN overlay. This mode of deploym
 
 ![OpenNESS with NTS as dataplane overview](ovn_images/openness_ovn.png)
 
-[Kube-OVN](https://github.com/alauda/kube-ovn) has been chosen as the CNI implementation for OpenNESS. Additionally, in the following configuration, OpenNESS applications on Edge Nodes are deployed as DaemonSet Pods (in separate "openness" namespace) and exposed to client applications by k8s services.
+[Kube-OVN](https://github.com/alauda/kube-ovn) has been chosen as the CNI implementation for OVN/OVS in OpenNESS. Additionally, in the following configuration, OpenNESS applications on Edge Nodes are deployed as DaemonSet Pods (in separate "openness" namespace) and exposed to client applications by k8s services.
 
 OVN/OVS is used as the default networking infrastructure for:
 - Dataplane Interface: UE's to edge applications

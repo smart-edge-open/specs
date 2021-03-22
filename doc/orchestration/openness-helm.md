@@ -53,7 +53,7 @@ OpenNESS provides the following helm charts:
     - [xRAN Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/xran/helmcharts/xranchart)
     - [UPF Helm Charts](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
-The EPA, Telemetry, and k8s plugins helm chart files will be saved in a specific directory on the OpenNESS controller. To modify the directory, change the following variable `ne_helm_charts_default_dir` in the `group_vars/all/10-default.yml` file:
+The EPA, Telemetry, and k8s plugins helm chart files will be saved in a specific directory on the OpenNESS controller. To modify the directory, change the following variable `ne_helm_charts_default_dir` in the `inventory/default/group_vars/all/10-default.yml` file:
    ```yaml
    ne_helm_charts_default_dir: /opt/openness/helm-charts/
    ```
