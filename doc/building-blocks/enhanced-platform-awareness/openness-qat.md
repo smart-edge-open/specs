@@ -2,13 +2,13 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-<!-- omit in toc -->
+<!-- omit in doc -->
 # Using Intel® QuickAssist Adapter in OpenNESS: Resource Allocation, and Configuration
 - [Overview](#overview)
-- [Intel® QuickAssist Adapter FlexRAN Host Interface Overview](#intel%c2%ae-quickassist-adapter-flexran-host-interface-overview)
-- [Intel® QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for FlexRAN](#intel%c2%ae-quickassist-adapter-device-plugin-deployment-with-kubernetes-for-flexran)
-- [Using the Intel® QuickAssist Adapter on OpenNESS](#using-the-intel%c2%ae-quickassist-adapter-on-openness)
-  - [Intel® QuickAssist Adapter for OpenNESS Network Edge](#intel%c2%ae-quickassist-adapter-for-openness-network-edge)
+- [Intel® QuickAssist Adapter FlexRAN Host Interface Overview](#Intel®-QuickAssist-Adapter-CU/DU-Host-Interface-Overview)
+- [Using the Intel® QuickAssist Adapter on OpenNESS](#using-the-intel®-quicksssist-adapter-on-OpenNESS)
+  - [Intel® QuickAssist Adapter Ansible Installation for OpenNESS Network Edge](#intel®-quickassist-adapter-for-openness-network-edge)
+    - [OpenNESS Experience Kit](#openness-experience-kit)
   - [Requesting Resources and Running Pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
 - [Reference](#reference)
 
@@ -36,19 +36,15 @@ Intel® QuickAssist Adapter benefits include:
 
 For more information, see product brief in [Intel® QuickAssist Adapter](https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/quickassist-adapter-8960-8970-brief.pdf).
 
-<!--
-This document explains how the qat.intel.com/generic resource can be used on the Open Network Edge Services Software (OpenNESS) platform for accelerating network functions and edge application workloads. We use the Intel® QuickAssist Adapter to accelerate the LTE/5G encryption tasks in the 5G or 4G L1 base station network function such as FlexRAN.
+This document explains how the qat.intel.com/generic resource can be used on the Open Network Edge Services Software (OpenNESS) platform for accelerating network functions and edge application workloads. We use the Intel® QuickAssist Adapter to accelerate the LTE/5G encryption tasks in the CU/DU.
 
-FlexRAN is a reference layer 1 pipeline of 4G eNb and 5G gNb on Intel® architecture. The FlexRAN reference pipeline consists of an L1 pipeline, optimized L1 processing modules, BBU pooling framework, cloud and cloud-native deployment support, and accelerator support for hardware offload. Intel® vRAN Dedicated Accelerator ACC100 card is used by FlexRAN to offload FEC (Forward Error Correction) for 4G and 5G.
--->
+## Intel® QuickAssist Adapter CU/DU Host Interface Overview
+Intel® QuickAssist Adapter used in the CU/DU solution exposes the following Physical Functions (PF) to the CPU host:
+- Three interfaces, that can provide 16 Virtual Functions each.
 
-## Intel® QuickAssist Adapter FlexRAN Host Interface Overview
-Intel® QuickAssist Adapter used in the FlexRAN solution exposes the following Physical Functions (PF) to the CPU host:
-- Three interfaces, that can provide 16 Virtual Functions each
-<!--
-## Intel® QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for FlexRAN
-FlexRAN is a low-latency network function that implements the FEC. FlexRAN uses the FEC resources from the Intel® QuickAssist Adapter using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes* provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes* (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
--->
+## Intel® QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for CU/DU
+CU/DU aplications use the qat.intel.com/generic resources from the Intel® QuickAssist Adapter using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes* provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes* (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
+
 ## Using the Intel® QuickAssist Adapter on OpenNESS
 Further sections provide instructions on how to use the Intel® QuickAssist Adapter features: configuration and accessing from an application on the OpenNESS Network Edge.
 
@@ -62,12 +58,12 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Binding QAT's PFs/VFs to igb_uio driver.
 
 ### Intel® QuickAssist Adapter for OpenNESS Network Edge
-To deploy an OpenNESS edge cluster with Intel® QuickAssist Adapter Device Plugin, its Ansible role needs to be enabled on the Edge Controller and Edge Nodes that has QAT card plugged in. It can be deployed by setting the following variable:
-
+To run the OpenNESS package with Intel® QuickAssist Adapter Device Plugin functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed by setting the following variable:
 ```yaml
 qat_device_plugin_enable: true
 ```
 
+#### OpenNESS Experience Kit
 To enable Intel® QuickAssist Adapter Device Plugin support from OEK, SRIOV must be enabled in OpenNESS:
 ```yaml
 kubernetes_cnis:
@@ -98,7 +94,7 @@ To request the device as a resource in the pod, add the request for the resource
 
 A sample pod requesting the Intel® QuickAssist Adapter VF may look like this:
 
-```yaml
+```
 apiVersion: v1
 kind: Pod
 metadata:
