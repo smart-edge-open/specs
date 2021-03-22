@@ -301,7 +301,7 @@ Steps for EMCO Authentication and Authorization Setup:
 - Apply Authentication and Authorization Policies
 
 ### EMCO Installation With OpenNESS Flavor
-EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
+EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
 - The first step is to prepare one server environment which needs to fulfill the [preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
 - Then place the EMCO server hostname in `[controller_group]` group in `inventory/default/inventory.ini` file of openness-experience-kit. 
 > **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.

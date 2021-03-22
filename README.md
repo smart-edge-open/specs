@@ -21,7 +21,7 @@ Below is the complete list of OpenNESS solution documentation
 ## Getting Started - Setup
 
 * [<b>getting-started</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started)
-   * [<b>openness-experience-kits.md</b>: Overview of the OpenNESS Experience kits that are used to install the Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md)
+   * [<b>converged-edge-experience-kits.md</b>: Overview of the OpenNESS Experience kits that are used to install the Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md)
    * [<b>network-edge</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge)
      * [<b>controller-edge-node-setup.md</b>: Started here for installing and trying OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
      * [<b>supported-epa.md</b>: List of Silicon and Software EPA that are features that are supported in OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md)

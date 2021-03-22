@@ -3,9 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019-2021 Intel Corporation
 ```
 <!-- omit in toc -->
-
 # OpenNESS Network Edge: Controller and Edge node setup
-- [OpenNESS Network Edge: Controller and Edge node setup](#openness-network-edge-controller-and-edge-node-setup)
 - [Quickstart](#quickstart)
 - [Preconditions](#preconditions)
 - [Running playbooks](#running-playbooks)
@@ -67,22 +65,16 @@ The following set of actions must be completed to set up the Open Network Edge S
 To use the playbooks, several preconditions must be fulfilled. These preconditions are described in the [Q&A](#qa) section below. The preconditions are:
 
 - CentOS\* 7.9.2009 must be installed on all the nodes (the controller and edge nodes) where the product is deployed. It is highly recommended to install the operating system using a minimal ISO image on nodes that will take part in deployment (obtained from inventory file). Also, do not make customizations after a fresh manual install because it might interfere with Ansible scripts and give unpredictable results during deployment.
-
 - Hosts for the Edge Controller (Kubernetes control plane) and Edge Nodes (Kubernetes nodes) must have proper and unique hostnames (i.e., not `localhost`). This hostname must be specified in `/etc/hosts` (refer to [Setup static hostname](#setup-static-hostname)).
-
 - SSH keys must be exchanged between hosts (refer to [Exchanging SSH keys between hosts](#exchanging-ssh-keys-between-hosts)).
-
 - A proxy may need to be set (refer to [Setting proxy](#setting-proxy)).
-
 - If a private repository is used, a Github\* token must be set up (refer to [GitHub token](#github-token)).
-
 - Refer to the [Configuring time](#configuring-time) section for how to enable Network Time Protocol (NTP) clients.
-
-- The Ansible inventory must be configured (refer to [Configuring inventory](#configuring-inventory)).
+- The Ansible inventory must be configured (refer to [Configuring the Inventory file](#configuring-the-inventory-file)).
 
 # Running playbooks
 
-The Network Edge deployment and cleanup is carried out via Ansible playbooks. The playbooks are run from the Ansible host. Before running the playbooks, an inventory file `inventory.yml` must be defined. The provided [deployment helper script](#running-playbooks) supports deploying multiple clusters as defined in the Inventory file.
+The Network Edge deployment and cleanup is carried out via Ansible playbooks. The playbooks are run from the Ansible host. Before running the playbooks, an inventory file `inventory.yml` must be defined. The provided [deployment helper scripts](#deployment-scripts) support deploying multiple clusters as defined in the Inventory file.
 
 The following subsections describe the playbooks in more details.
 
@@ -106,10 +98,10 @@ To get started with deploying an OpenNESS edge cluster using the Converged Edge 
     ---
     all:
       vars:
-        cluster_name: 5g_near_edge    # NOTE: Use `_` instead of spaces.
-        flavor: cera_5g_near_edge     # NOTE: Flavors can be found in `flavors` directory.
-        single_node_deployment: false # Request single node deployment (true/false).
-        limit:                        # Limit ansible deployment to certain inventory group or hosts
+        cluster_name: 5g_near_edge
+        flavor: cera_5g_near_edge
+        single_node_deployment: false
+        limit:
     controller_group:
       hosts:
         ctrl.openness.org:
@@ -133,7 +125,7 @@ To get started with deploying an OpenNESS edge cluster using the Converged Edge 
 
     > **NOTE**: To deploy multiple clusters in one command run, append the same set of YAML specs separated by `---`
 
-3. Additional configurations should be applied to the default group_vars file: `inventory/default/group_vars/all/10-default.yml`. More details on the default values is explained in the [Getting Started Guide](../openness-experience-kits.md#default-values).
+3. Additional configurations should be applied to the default group_vars file: `inventory/default/group_vars/all/10-default.yml`. More details on the default values is explained in the [Getting Started Guide](../converged-edge-experience-kits.md#default-values).
 
 4. Get the deployment started by executing the deploy script
 
@@ -172,21 +164,21 @@ For example, when installing Docker\*, the RPM repository is added and Docker is
 To execute cleanup procedure
 
 ```shell
-$ python3 deploy.py --clean
+$ sudo python3 deploy.py --clean
 ```
 
 > **NOTE**: There may be leftovers created by the installed software. For example, DPDK and Golang installations, found in `/opt`, are not rolled back.
 
 ### Supported EPA features
 
-Several enhanced platform capabilities and features are available in OpenNESS for Network Edge. For the full list of supported features, see [Enhanced Platform Awareness Features](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md). The documents referenced in this list provide a detailed description of the features, and step-by-step instructions for enabling them. Users should become familiar with available features before executing the deployment playbooks.
+Several enhanced platform capabilities and features are available in OpenNESS for Network Edge. For the full list of supported features, see [Enhanced Platform Awareness Features](./supported-epa.md). The documents referenced in this list provide a detailed description of the features, and step-by-step instructions for enabling them. Users should become familiar with available features before executing the deployment playbooks.
 
 ### VM support for Network Edge
-Support for VM deployment on OpenNESS for Network Edge is available and enabled by default. Certain configurations and prerequisites may need to be satisfied to use all VM capabilities. The user is advised to become familiar with the VM support documentation before executing the deployment playbooks. See [openness-network-edge-vm-support](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-network-edge-vm-support.md) for more information.
+Support for VM deployment on OpenNESS for Network Edge is available and enabled by default. Certain configurations and prerequisites may need to be satisfied to use all VM capabilities. The user is advised to become familiar with the VM support documentation before executing the deployment playbooks. See [openness-network-edge-vm-support](../../applications-onboard/openness-network-edge-vm-support.md) for more information.
 
 ### Application on-boarding
 
-Refer to the [network-edge-applications-onboarding](https://github.com/otcshare/specs/blob/master/doc/aplications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
+Refer to the [network-edge-applications-onboarding](../../applications-onboard/network-edge-applications-onboarding.md) document for instructions on how to deploy edge applications for OpenNESS Network Edge.
 
 ### Single-node Network Edge cluster
 
@@ -206,10 +198,10 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
     ---
     all:
       vars:
-        cluster_name: 5g_central_office # NOTE: Use `_` instead of spaces.
-        flavor: cera_5g_central_office  # NOTE: Flavors can be found in `flavors` directory.
-        single_node_deployment: true    # Request single node deployment (true/false).
-        limit:                          # Limit ansible deployment to certain inventory group or hosts
+        cluster_name: 5g_central_office
+        flavor: cera_5g_central_office
+        single_node_deployment: true   
+        limit:  
     controller_group:
       hosts:
         node.openness.org:
@@ -246,7 +238,7 @@ Harbor registry is an open source cloud native registry which can support images
 ### Deploy Harbor registry
 
 #### System Prerequisite
-* The available system disk should be reserved at least 20G for Harbor PV/PVC usage. The defaut disk PV/PVC total size is 20G. The values can be configurable in the ```roles/harbor_registry/controlplane/defaults/main.yaml```.
+* The available system disk should be reserved at least 20G for Harbor PV/PVC usage. The defaut disk PV/PVC total size is 20G. The values can be configured in the ```roles/harbor_registry/controlplane/defaults/main.yaml```.
 * If huge pages enabled, need 1G(hugepage size 1G) or 300M(hugepage size 2M) to be reserved for Harbor usage.
  
 #### Ansible Playbooks 
@@ -451,12 +443,12 @@ The following CNIs are currently supported:
   * Network attachment definition: openness-flannel
 * [weavenet](https://github.com/weaveworks/weave)
   * CIDR: 10.32.0.0/12
-* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
-* [Userspace](https://github.com/intel/userspace-cni-network-plugin) (cannot be used as a standalone or primary CNI - [Userspace CNI setup](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-userspace-cni.md)
+* [SR-IOV](https://github.com/intel/sriov-cni) (cannot be used as a standalone or primary CNI - [sriov setup](../../building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md))
+* [Userspace](https://github.com/intel/userspace-cni-network-plugin) (cannot be used as a standalone or primary CNI - [Userspace CNI setup](../../building-blocks/dataplane/openness-userspace-cni.md)
 
 Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [the Multus CNI](https://github.com/intel/multus-cni) is used.
 
->**NOTE**: For a guide on how to add new a CNI role to the OpenNESS Experience Kits, refer to [the OpenNESS Experience Kits guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge).
+>**NOTE**: For a guide on how to add new a CNI role to the OpenNESS Experience Kits, refer to [the OpenNESS Experience Kits guide](../../getting-started/converged-edge-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge).
 
 ### Selecting cluster networking plugins (CNI)
 
@@ -551,7 +543,7 @@ The following command is used in CentOS\* to set a static hostname:
 hostnamectl set-hostname <host_name>
 ```
 
-As shown in the following example, the hostname must also be defined in `/etc/host`:
+As shown in the following example, the hostname must also be defined in `/etc/hosts`:
 
 ```shell
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 <host_name>
@@ -582,10 +574,10 @@ Example:
 ---
 all:
   vars:
-    cluster_name: 5g_near_edge    # NOTE: Use `_` instead of spaces.
-    flavor: cera_5g_near_edge     # NOTE: Flavors can be found in `flavors` directory.
-    single_node_deployment: false # Request single node deployment (true/false).
-    limit:                        # Limit ansible deployment to certain inventory group or hosts
+    cluster_name: central_office
+    flavor: minimal          
+    single_node_deployment: false
+    limit:
 controller_group:
   hosts:
     ctrl.openness.org:
@@ -607,7 +599,7 @@ ptp_slave_group:
   hosts:
 ```
 
-In this example, a cluster named as `5g_near_edge` is deployed using the pre-defined deployment flavor `cera_5g_near_edge` that is composed of one controller node `ctrl.openness.org` and 2 edge nodes: `node01.openness.org` and `node02.openness.org`.
+In this example, a cluster named as `central_office` is deployed using the pre-defined deployment flavor `minimal` that is composed of one controller node `ctrl.openness.org` and 2 edge nodes: `node01.openness.org` and `node02.openness.org`.
 
 ## Exchanging SSH keys between hosts
 
@@ -665,7 +657,7 @@ and check to make sure that only the key(s) you wanted were added.
 To make sure the key is copied successfully, try to SSH into the host: `ssh 'root@host'`. It should not ask for the password.
 
 >**NOTE**: Where non-root user is used for example `openness` the command should be replaced to `ssh openness@host`. For more information about non-root user please refer to: 
-[The non-root user on the OpenNESS Platform](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-nonroot.md)
+[The non-root user on the OpenNESS Platform](../../building-blocks/enhanced-platform-awareness/openness-nonroot.md)
 ## Setting proxy
 
 If a proxy is required to connect to the Internet, it is configured via the following steps:
@@ -727,4 +719,5 @@ edgenode_repository_branch: openness-20.03
 
 ## Customization of kernel, grub parameters, and tuned profile
 
-OpenNESS Experience Kits provide an easy way to customize the kernel version, grub parameters, and tuned profile. For more information, refer to [the OpenNESS Experience Kits guide](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+Converged Edge Experience Kits provide an easy way to customize the kernel version, grub parameters, and tuned profile. For more information, refer to the [Converged Edge Experience Kits guide](../../getting-started/converged-edge-experience-kits.md).
+
