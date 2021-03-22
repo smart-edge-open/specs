@@ -52,7 +52,7 @@ Node Feature Discovery is enabled by default. It does not require any configurat
 
 The connection between `nfd-nodes` and `nfd-control-plane` is secured by certificates generated before running NFD pods.
 
-Node Feature Discovery is deployed in OpenNESS using a Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd-install/charts/node-feature-discovery) repository.
+Node Feature Discovery is deployed in OpenNESS using a Helm chart downloaded from [container-experience-kits](https://github.com/intel/container-experience-kits/tree/master/roles/nfd_install/charts/node-feature-discovery) repository.
 
 #### Usage
 
