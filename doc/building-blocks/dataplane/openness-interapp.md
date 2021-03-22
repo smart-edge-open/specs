@@ -15,7 +15,7 @@ Multi-core edge cloud platforms typically host multiple containers or virtual ma
 
 ## InterApp Communication support in OpenNESS Network Edge
 
-InterApp communication on the OpenNESS Network Edge is supported using Open Virtual Network for Open vSwitch [OVN/OVS](https://github.com/otcshare/x-specs/blob/master/doc/building-blocks/dataplane/openness-ovn.md) as the infrastructure. OVN/OVS in the network edge is supported through the Kubernetes kube-OVN Container Network Interface (CNI).
+InterApp communication on the OpenNESS Network Edge is supported using Open Virtual Network for Open vSwitch [OVN/OVS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/dataplane/openness-ovn.md) as the infrastructure. OVN/OVS in the network edge is supported through the Kubernetes kube-OVN Container Network Interface (CNI).
 
 >**NOTE**: The InterApps Communication also works with Calico cni. Calico is supported as a default cni in Openness from 21.03 release.
 
