@@ -56,7 +56,7 @@ This feature is for the OpenNESS Network Edge deployment mode.
 Enable the RMD feature in *inventory/default/group_vars/all/10-default.yml* when installing OpenNESS (Under the Network Edge section):
 > rmd_operator_enable: True
 > 
-This will install the underlying infrastructure.
+This will install the underlying infrastructure. Please note you need to use the FlexRAN flavor for RMD to work.
 Next, use the following shell function to determine which cores are used by your container:
 ```bash
 #!/bin/sh
