@@ -54,7 +54,7 @@ Available in Intel Distribution of OpenNESS
 
 ## CERA Media Analytics Flavor
 
-The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel� Xeon� platforms. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
+The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel® Xeon® platforms. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
 
 The following are steps to install this flavor:
 1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
@@ -85,7 +85,7 @@ This deployment flavor enables the following ingredients:
 
 ## CERA Media Analytics Flavor with VCAC-A
 
-The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging Visual Cloud Accelerator Card � Analytics (VCAC-A) acceleration. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
+The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging Visual Cloud Accelerator Card for Analytics (VCAC-A) acceleration. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
 
 The following are steps to install this flavor:
 1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
@@ -99,7 +99,7 @@ The following are steps to install this flavor:
     ```
     > **NOTE:** The VCA host name should *only* be placed once in the `inventory.yml` file and under the `edgenode_vca_group:` group. 
 
-2. Update the `inventory.yaml` file by setting the deployment flavor as `media-analytics-vca`
+3. Update the `inventory.yaml` file by setting the deployment flavor as `media-analytics-vca`
     ```yaml
     ---
     all:
@@ -109,7 +109,7 @@ The following are steps to install this flavor:
     ... 
     ```
 
-3. Run CEEK deployment script:
+4. Run CEEK deployment script:
     ```shell
     $ python3 deploy.py
     ```

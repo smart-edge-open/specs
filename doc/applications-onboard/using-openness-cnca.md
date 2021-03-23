@@ -9,7 +9,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
 - [5G NGC components bring up and Configuration using CNCA](#5g-ngc-components-bring-up-and-configuration-using-cnca)
   - [Network Edge mode](#network-edge-mode)
-    - [Bring up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
+    - [Bring-up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
     - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
       - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
@@ -40,7 +40,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
 Creation of the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command to post a userplane creation request onto Application Function (AF):
