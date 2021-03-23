@@ -406,7 +406,7 @@ Verify the i40e driver version of the NIC to be used and the firmware version on
 
 ## Deploy xRAN sample app O-DU and O-RU in OpenNESS Network Edge
 
-Before starting the deployment script, OpenNESS should be configured according to the instructions available [here](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+Before starting the deployment script, OpenNESS should be configured according to the instructions available [here](../../getting-started/network-edge/controller-edge-node-setup.md)
 Additional configuration steps are provided below.
 
 ### Setting up SRIOV 
@@ -437,7 +437,7 @@ Additional configuration steps are provided below.
       vm_vf_ports: 0
 ```
 
-Detailed instructions on configuring SRIOV for OpenNESS can be found [here](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
+Detailed instructions on configuring SRIOV for OpenNESS can be found [here](../../building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
 
 3. Modify SRIOV ConfigMap
 
@@ -481,7 +481,7 @@ In file `./inventory/default/group_vars/edgenode_group.yml`, change the followin
 
 Host kernel version should be - 3.10.0-1062.12.1.rt56.1042.el7.x86_64
 
-Instructions on how to configure the kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
+Instructions on how to configure the kernel command line in OpenNESS can be found in [OpenNESS getting started documentation](../../getting-started/converged-edge-experience-kits.md#customizing-kernel-grub-parameters-and-tuned-profile--variables-per-host)
 
 ### PTP Synchronization
 
@@ -541,12 +541,11 @@ Example:
 ```
 
 ### Deploy Openness NE
-Run the deployment script:
+Define the `inventory.yml` and then run the deployment script:
 ```shell
-    ./deploy_ne.sh -f <flavor>
+    python3 deploy.py
 ```
-**Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 Check the `/proc/cmd` output. It should look similar to:
 

@@ -66,18 +66,39 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
    # CMK - Comma separated list of nodes' hostnames
    cmk_host_list: "node01,node02"
    ```
-2. Deploy the controller with `deploy_ne.sh -f <flavor> controller`.
+2. Update the `inventory.yaml` file with specified flavor and limit set to `controller`
+    ```yaml
+    ---
+    all:
+      vars:
+        cluster_name: <cluster_name>
+        flavor: <flavor>
+        ...
+        limit: controller
+    ... 
+    ```
+3. Deploy the controller with `deploy.py`.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 **Edge Node / Kubernetes node**
 
 1. In `inventory/default/group_vars/all/10-open.yml`, change `ne_cmk_enable` to “true”.
 2. To change core isolation set isolated cores in `inventory/default/group_vars/edgenode_group/10-default.yml` as `additional_grub_params` for your node e.g. in `inventory/default/group_vars/edgenode_group/10-default.yml`, set `additional_grub_params: "isolcpus=1-10,49-58"`.
-3. Deploy the node with `deploy_ne.sh -f <flavor> node`.
+3. Update the `inventory.yaml` file with specified flavor and limit set to `node`
+    ```yaml
+    ---
+    all:
+      vars:
+        cluster_name: <cluster_name>
+        flavor: <flavor>
+        ...
+        limit: node
+    ... 
+    ```
+4. Deploy the node with `deploy.py`.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 The environment setup can be validated using steps from the [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
-
-**Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
 
 ### Usage
 
