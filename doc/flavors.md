@@ -18,7 +18,6 @@ This document introduces the supported deployment flavors that are deployable th
 - [CERA Near Edge Flavor](#cera-near-edge-flavor)
 - [CERA 5G On-Prem Flavor](#cera-5g-on-prem-flavor)
 - [Central Orchestrator Flavor](#central-orchestrator-flavor)
-- [Reference Service Mesh](#reference-service-mesh)
 
 ## CERA Minimal Flavor
 
@@ -47,7 +46,6 @@ This deployment flavor enables the following ingredients:
 
 To customize this flavor we recommend creating additional file in converged-edge-experience-kits that will override any variables used in previous configuration. This file should be placed in location: `converged-edge-experience-kits/inventory/default/group_vars/all` and filenames should start with number greater than highest value currently present (e.g. `40-overrides.yml`).
 
-
 ## CERA Access Edge Flavor
 
 Available in Intel Distribution of OpenNESS
@@ -74,6 +72,7 @@ The following are steps to install this flavor:
 
 > **NOTE:** The video analytics services integrates with the OpenNESS service mesh when the flag `ne_istio_enable: true` is set.
 > **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
+> **NOTE:** Istio deployment can be customized using parameters in the `flavor/media-analytics/all.yaml` (parameters set in the flavor file override default parameters set in `inventory/default/group_vars/all/10-default.yml`).
 
 This deployment flavor enables the following ingredients:
 * Node feature discovery
@@ -222,48 +221,3 @@ This deployment flavor enables the following ingredients:
 * Harbor Registry
 * The default Kubernetes CNI: `calico`
 * EMCO services
-
-## Reference Service Mesh
-
-The pre-defined *service-mesh* deployment flavor installs the OpenNESS service mesh that is based on [Istio](https://istio.io/).
-
-> **NOTE**: When deploying Istio Service Mesh in VMs, a minimum of 8 CPU core and 16GB RAM must be allocated to each worker VM so that Istio operates smoothly
-
-The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Update the `inventory.yaml` file by setting the deployment flavor as `service-mesh`
-    ```yaml
-    ---
-    all:
-      vars:
-        cluster_name: service_mesh_cluster
-        flavor: service-mesh
-    ... 
-    ```
-3. Run CEEK deployment script:
-    ```shell
-    $ python3 deploy.py
-    ```
-
-This deployment flavor enables the following ingredients:
-* Node feature discovery
-* The default Kubernetes CNI: `kube-ovn`
-* Istio service mesh
-* Kiali management console
-* Telemetry
-
-> **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
-
-Following parameters in the flavor/all.yaml can be customize for Istio deployment:
-
-```code 
-# Istio deployment profile possible values: default, demo, minimal, remote
-istio_deployment_profile: "default"
-
-# Kiali 
-istio_kiali_username: "admin"
-istio_kiali_password: "{{ lookup('password', '/dev/null length=16') }}"
-istio_kiali_nodeport: 30001
-```
-
-> **NOTE:** If creating a customized flavor, the Istio service mesh installation can be included in the Ansible playbook by setting the flag `ne_istio_enable: true` in the flavor file.
