@@ -37,33 +37,9 @@ This deployment flavor enables the following ingredients:
 
 To customize this flavor we recommend creating additional file in openness-experience-kits that will override any variables used in previous configuration. This file should be placed in location: `openness-experience-kits/inventory/default/group_vars/all` and filenames should start with number greater than highest value currently present (e.g. `40-overrides.yml`).
 
-
 ## CERA Access Edge Flavor
 
-The pre-defined *flexran* deployment flavor provisions an optimized system configuration for vRAN workloads on Intel Xeon servers. It also provisions for deployment of PACN3000 FPGA tools and components enabling the offload of acceleration of FEC (Forward Error Correction) to the FPGA.
-
-Steps to install this flavor are as follows:
-1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Configure the flavor file to reflect desired deployment.
-   - Configure the CPUs selected for isolation and OS/K8s processes from command line in files [controller_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/controller_group.yml) and [edgenode_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/edgenode_group.yml) - please note that in single node mode the edgenode_group.yml is used to configure the CPU isolation.
-   - Configure the amount of CPUs reserved for K8s and OS from K8s level with `reserved_cpu` flag in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
-   - Configure whether the FPGA or eASIC support for FEC is desired or both in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
-  
-3. Run OEK deployment script:
-    ```shell
-    $ deploy_ne.sh -f flexran
-    ```
-This deployment flavor enables the following ingredients:
-* Node Feature Discovery
-* SRIOV device plugin with FPGA configuration
-* Calico CNI
-* Telemetry
-* FPGA remote system update through OPAE
-* FPGA configuration
-* eASIC ACC100 configuration
-* RT Kernel
-* Tapology Manager
-* RMD operator
+Available in Intel Distribution of OpenNESS
 
 ## CERA Media Analytics Flavor
 
