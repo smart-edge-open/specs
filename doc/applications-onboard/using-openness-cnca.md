@@ -121,7 +121,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
    Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` before running `deploy.py` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` and then re-run `deploy.py` with specified `limit: controller` variable in `inventory.yml` (define only one cluster on which the role should be enabled) as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` and then re-run `deploy.py` with `limit` set to `controller_group` in `inventory.yml` (define only one cluster on which the role should be enabled) as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
 
     **NOTE:**
     In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.
