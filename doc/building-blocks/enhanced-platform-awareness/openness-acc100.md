@@ -82,7 +82,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed via the ["flexran" flavor of OpenNESS](https://github.com/otcshare/converged-edge-experience-kits/tree/master/flavors/flexran).
 
 #### Converged Edge Experience Kits
-To enable ACC100 support from OEK, SRIOV must be enabled in OpenNESS:
+To enable ACC100 support from CEEK, SRIOV must be enabled in OpenNESS:
 ```yaml
 # flavors/flexran/all.yml
 kubernetes_cnis:
@@ -184,7 +184,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/templates/configMap.yml.j2).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/converged-edge-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/templates/configMap.yml.j2).
 
 A sample pod requesting the ACC100 (FEC) VF may look like this:
 

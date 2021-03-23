@@ -105,7 +105,7 @@ policy:
 
 # 5G NGC components bring up and Configuration using CNCA
 
-OpenNESS provides ansible scripts for setting up NGC components for two scenarios. Each of the scenarios is supported by a separate role in the OpenNESS Experience Kit:
+OpenNESS provides ansible scripts for setting up NGC components for two scenarios. Each of the scenarios is supported by a separate role in the Converged Edge Experience Kits:
 
 1. Role "ngc_test"
   This role brings up the 5g OpenNESS setup in the loopback mode for testing and demonstrating its usability. This scenario is currently the default 5G OpenNESS scenario. The ansible scripts that are part of "ngc_test" role build, configure and start AF, NEF and OAM in the Network Edge. Within this role, AF, NEF and OAM are set up on the controller node.  Description of the configuration and setup of the NGC components provided in the next sections of this document refers to ngc_test role. The NGC componetns set up within ngc_test role can be fully integrated and tested with provided Kubectl plugin or CNCA UI.
@@ -165,7 +165,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 For Network Edge mode, the CNCA provides a kubectl plugin to configure the 5G Core network. Kubernetes adopted plugin concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes ecosystem. The plugin performs remote callouts against NGC OAM and AF microservice on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

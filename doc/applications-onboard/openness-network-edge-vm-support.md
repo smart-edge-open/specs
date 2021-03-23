@@ -77,7 +77,7 @@ docker build -t centosimage:1.0 .
 ```
 ## Enabling in OpenNESS
 
-The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the OpenNESS experience kit via Ansible\* automation. In this default state, it does not support SRIOV in a VM and additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in the BIOS of the Edge Node.
+The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the Converged Edge Experience Kits via Ansible\* automation. In this default state, it does not support SRIOV in a VM and additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in the BIOS of the Edge Node.
 
  1. Configure Ansible for KubeVirt:
     KubeVirt is deployed by default. To provide SRIOV support, configure the following settings:

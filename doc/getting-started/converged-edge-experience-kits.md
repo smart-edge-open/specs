@@ -299,7 +299,7 @@ kernel_version: 3.10.0-1062.9.1.rt56.1033.el7.x86_64
 ```
 
 ### Use different non-rt kernel (3.10.0-1062)
-The OEK installs a real-time kernel by default. However, the non-rt kernel is present in the official CentOS repository. Therefore, to use a different non-rt kernel, the following overrides must be applied:
+The CEEK installs a real-time kernel by default. However, the non-rt kernel is present in the official CentOS repository. Therefore, to use a different non-rt kernel, the following overrides must be applied:
 ```yaml
 kernel_repo_url: ""                           # package is in default repository, no need to add new repository
 kernel_package: kernel                        # instead of kernel-rt-kvm

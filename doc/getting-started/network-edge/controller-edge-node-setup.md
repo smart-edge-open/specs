@@ -250,7 +250,7 @@ role: harbor_registry/controlplane
 role: harbor_registry/node
 ```
 
-The following steps are processed by openness-experience-kits during the Harbor registry installation on the OpenNESS control plane node.
+The following steps are processed by converged-edge-experience-kits during the Harbor registry installation on the OpenNESS control plane node.
 
 * Download Harbor Helm Charts on the Kubernetes Control plane Node.
 * Check whether huge pages is enabled and templates values.yaml file accordingly.
@@ -260,7 +260,7 @@ The following steps are processed by openness-experience-kits during the Harbor 
 * Docker login the Harbor Registry, thus enable pulling, pushing and tag images with the Harbor Registry
 
 
-On the OpenNESS edge nodes, openness-experience-kits will conduct the following steps:
+On the OpenNESS edge nodes, converged-edge-experience-kits will conduct the following steps:
 * Get harbor.crt from the OpenNESS control plane node and save into the host location
   /etc/docker/certs.d/<Kubernetes_Control_Plane_IP:port>
 * Docker login the Harbor Registry, thus enable pulling, pushing and tag images with the Harbor Registry
@@ -270,12 +270,12 @@ On the OpenNESS edge nodes, openness-experience-kits will conduct the following 
 
 
 #### Projects 
-Two Harbor projects will be created by OEK as below:
+Two Harbor projects will be created by CEEK as below:
 - ```library``` The registry project can be used by edge application developer as default images registries.
 - ```intel```   The registry project contains the registries for the OpenNESS microservices and relevant kubernetes addon images. Can also be used for OpenNESS sample application images.
 
 ### Harbor login
-For the nodes inside of the OpenNESS cluster, openness-experience-kits ansible playbooks automatically login and prepare harbor CA certifications to access Harbor services. 
+For the nodes inside of the OpenNESS cluster, converged-edge-experience-kits ansible playbooks automatically login and prepare harbor CA certifications to access Harbor services. 
 
 For the external host outside of the OpenNESS cluster, can use following commands to access the Harbor Registry:
 
@@ -427,7 +427,7 @@ Use following example commands to delete a specific image version:
 Kubernetes uses 3rd party networking plugins to provide [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/).
 These plugins are based on the [CNI (Container Network Interface) specification](https://github.com/containernetworking/cni).
 
-OpenNESS Experience Kits provide several ready-to-use Ansible roles deploying CNIs.
+Converged Edge Experience Kits provide several ready-to-use Ansible roles deploying CNIs.
 The following CNIs are currently supported:
 
 * [kube-ovn](https://github.com/alauda/kube-ovn)
@@ -449,7 +449,7 @@ The following CNIs are currently supported:
 
 Multiple CNIs can be requested to be set up for the cluster. To provide such functionality [the Multus CNI](https://github.com/intel/multus-cni) is used.
 
->**NOTE**: For a guide on how to add new a CNI role to the OpenNESS Experience Kits, refer to [the OpenNESS Experience Kits guide](../../getting-started/converged-edge-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge).
+>**NOTE**: For a guide on how to add new a CNI role to the Converged Edge Experience Kits, refer to [the Converged Edge Experience Kits guide](../../getting-started/converged-edge-experience-kits.md#adding-new-cni-plugins-for-kubernetes-network-edge).
 
 ### Selecting cluster networking plugins (CNI)
 

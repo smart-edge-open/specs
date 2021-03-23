@@ -83,7 +83,7 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
      tag: 3.10.0-1127.19.1.rt56                              # The tag identifying the FlexRAN docker   image,
                                                              # the kernel version used to build FlexRAN can be used as tag
    ```
-7. Tag the image and push to a local Harbor registry (Harbor registry deployed as part of OpenNESS Experience Kit)
+7. Tag the image and push to a local Harbor registry (Harbor registry deployed as part of Converged Edge Experience Kits)
    
    ```shell
    docker tag flexran5g <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
