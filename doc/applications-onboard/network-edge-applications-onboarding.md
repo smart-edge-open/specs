@@ -504,12 +504,8 @@ This section guides users through the complete process of onboarding the OpenVIN
 3. Verify that no errors show up in the logs of the OpenVINO consumer application:
    ```
    kubectl logs openvino-cons-app
-   ```
-4. Log into the consumer application pod and modify `analytics.openness` entry in `/etc/hosts` with the IP address set in step one of [Setting up Networking Interfaces](#Setting-up-Networking-Interfaces) (192.168.1.10 by default, the physical interface connected to traffic generating host).
-   ```
-   kubectl exec -it openvino-cons-app /bin/sh
-   apt-get install vim
-   vim /etc/hosts
+   kubectl get po -o custom-columns=NAME:.metadata.name,IP:.status.podIP | grep cons-app | awk '{print $2}'
+   <ip>
    ```
 
 ## Applying Kubernetes network policies
