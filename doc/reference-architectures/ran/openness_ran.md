@@ -65,7 +65,7 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
    cd edgeapps/network-functions/ran/5G/du-dev
    ./build-du-dev-image.sh
    ```
-   The list of binary files that are used is documented in [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/flexRAN-gnb/Dockerfile)
+   The list of binary files that are used is documented in [dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/5G/du-dev/Dockerfile)
    - ICC, IPP mpi and mkl Runtime 
    - DPDK build target directory 
    - FlexRAN test vectors (optional) 
@@ -76,7 +76,6 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
 
 
 6. The following example reflects the Docker image [expected by Helm chart](https://github.com/otcshare/edgeapps/blob/master/network-functions/ran/charts/du-dev/values.yaml), user needs to adjust the IP address and port of the Harbor registry where Docker image will be pushed:
-   
    ```shell
    image:
      repository: <ip_address>:<port>/intel/flexran5g         # Change Me! - please provide IP address and port 
@@ -92,7 +91,7 @@ This section explains the steps involved in building the FlexRAN image. Only L1 
    docker push <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
    ```
 
-By the end of step 7, the FlexRAN Docker image is created and available in the Harbor registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
+By the end of step 7, the FlexRAN Docker image is created and available in the Harbor registry. This image is copied to the edge node where FlexRAN will be deployed and that is installed with OpenNESS Network edge with all the required EPA features including Intel® FPGA Programmable Acceleration Card (Intel® FPGA PAC) N3000. Please refer to the document [Using FPGA in OpenNESS: Programming, Resource Allocation, and Configuration](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md) for details on setting up Intel® FPGA PAC N3000 with  vRAN FPGA image.
 
 # FlexRAN hardware platform configuration 
 ## BIOS 
@@ -144,7 +143,7 @@ Instructions on how to configure the kernel command line in OpenNESS can be foun
   openness      syslog-master-894hs                       1/1     Running   0          7d19h
   openness      syslog-ng-n7zfm                           1/1     Running   16         7d19h
   ```
-4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
+4. Deploy the Kubernetes job to program the [FPGA](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#fpga-programming-and-telemetry-on-openness-network-edge)
 5. Deploy the Kubernetes job to configure the [BIOS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-bios.md) (note: only works on select Intel development platforms)
 6. Deploy the Kubernetes job to configure the [Intel PAC N3000 FPGA](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#fec-vf-configuration-for-openness-network-edge)
 7. Deploy the FlexRAN Kubernetes pod using a helm chart provided in Edge Apps repository at `edgeapps/network-functions/ran/charts`:
