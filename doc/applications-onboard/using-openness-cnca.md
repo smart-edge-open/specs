@@ -40,7 +40,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](../getting-started/converged-edge-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
 Creation of the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command to post a userplane creation request onto Application Function (AF):

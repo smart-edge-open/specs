@@ -109,8 +109,7 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           kubevirt_pv_vm_max_num:  64
           ```
  2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy.py` script in the Converged Edge Experience kits top-level directory.
-
- > **NOTE**: for more details about deployment please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+    > **NOTE**: for more details about deployment please refer to [CEEK](../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
  3. On successful deployment, the following pods will be in a running state:
     ```shell

@@ -121,7 +121,7 @@ The following packages need to be placed into specific directories for the featu
 
 Run setup script `deploy.py` with defined `inventory.yml` file.
 
-> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 After a successful deployment, the following pods will be available in the cluster (CNI pods may vary depending on deployment):
 ```shell
@@ -225,7 +225,7 @@ To run vRAN workloads on the Intel® FPGA PAC N3000, the FPGA must be programmed
 
 #### Telemetry monitoring
 
-  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
+  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](../../building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
 
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 

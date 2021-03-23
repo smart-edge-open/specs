@@ -108,7 +108,7 @@ acc100_userspace_vf:
 
 Run setup script `deploy.py` with `flexran` flavor defined in `inventory.yml` for specific cluster.
 
-> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 After a successful deployment, the following pods will be available in the cluster:
 ```shell

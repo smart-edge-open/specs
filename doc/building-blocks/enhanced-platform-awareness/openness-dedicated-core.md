@@ -78,7 +78,7 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
     ... 
     ```
 3. Deploy the controller with `deploy.py`.
-> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 **Edge Node / Kubernetes node**
 
@@ -96,7 +96,7 @@ CMK can be deployed using a [Helm chart](https://helm.sh/). The CMK Helm chart u
     ... 
     ```
 4. Deploy the node with `deploy.py`.
-> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 The environment setup can be validated using steps from the [CMK operator manual](https://github.com/intel/CPU-Manager-for-Kubernetes/blob/master/docs/operator.md#validating-the-environment).
 
