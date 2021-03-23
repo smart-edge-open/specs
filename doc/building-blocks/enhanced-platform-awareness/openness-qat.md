@@ -59,7 +59,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Binding QAT's PFs/VFs to igb_uio driver.
 
 ### Intel QuickAssist Adapter for OpenNESS Network Edge
-To run the OpenNESS package with Intel® QuickAssist Adapter Device Plugin functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed by setting the following variable in the Converged Edge Experience Kits:
+To run the OpenNESS package with Intel® QuickAssist Adapter Device Plugin functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed by setting the following variable in the flavor or *group_vars/all* file in Converged Edge Experience Kits:
 ```yaml
 qat_device_plugin_enable: true
 ```
@@ -68,11 +68,17 @@ qat_device_plugin_enable: true
 To enable Intel® QuickAssist Adapter Device Plugin support from CEEK, SRIOV must be enabled in OpenNESS:
 ```yaml
 kubernetes_cnis:
-- <main CNI>
+- <primary CNI>
 - sriov
 ```
+---
+**NOTE**
 
-It's enabled by default in the `cera_5g_on_prem` flavor:
+`sriov` cannot be the primary CNI.
+
+---
+
+Intel® QuickAssist Adapter Device Plugin is enabled by default in the `cera_5g_on_prem` flavor:
 
 After a successful deployment, the following pods will be available in the cluster:
 ```shell
@@ -83,7 +89,7 @@ intel-qat-plugin-dl42c      1/1     Running   0          7d9h
 ```
 
 ### Requesting Resources and Running Pods for OpenNESS Network Edge
-As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchestrate the Intel® QuickAssist Adapter VFs (bound to the userspace driver) is running. This enables the scheduling of pods requesting this device. To check the number of devices available on the Edge Node from Edge Controller, run:
+As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchestrate the Intel® QuickAssist Adapter VFs (bound to the userspace driver) is deployed and running. This enables the scheduling of pods requesting this device. To check the number of devices available on the Edge Node from Edge Controller, run:
 
 ```shell
 kubectl get node $(hostname) -o json | jq '.status.allocatable'
@@ -91,7 +97,7 @@ kubectl get node $(hostname) -o json | jq '.status.allocatable'
 "qat.intel.com/generic": "48"
 ```
 
-To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
+To request the QAT VFs as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
 
 A sample pod requesting the Intel® QuickAssist Adapter VF may look like this:
 
@@ -124,9 +130,24 @@ Once the pod is in the 'Running' state, check that the device was allocated to t
 kubectl exec -it test -- ls /dev
 kubectl exec -it test -- printenv | grep QAT
 ```
+Sample output:
+```shell
+[...]
+crw------- 1 root root 241, 18 Mar 22 14:11 uio18
+crw------- 1 root root 241, 39 Mar 22 14:11 uio39
+crw------- 1 root root 241, 46 Mar 22 14:11 uio46
+crw------- 1 root root 241,  8 Mar 22 14:11 uio8
+[...]
+```
+```shell
+QAT3=0000:1e:02.6
+QAT2=0000:1c:01.2
+QAT1=0000:1e:01.7
+QAT0=0000:1a:02.0
+```
 To check the number of devices currently allocated to pods, run (and search for 'Allocated Resources'):
 
-```
+```shell
 kubectl describe node $(hostname)
 ```
 
