@@ -10,7 +10,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Intel(R) FPGA PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intelr-fpga-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
 - [Using an FPGA on OpenNESS](#using-an-fpga-on-openness)
   - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
-    - [OpenNESS Experience Kit](#openness-experience-kit)
+    - [Converged Edge Experience Kits](#openness-experience-kit)
   - [FPGA programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
     - [Telemetry monitoring](#telemetry-monitoring)
   - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
@@ -84,8 +84,8 @@ For information on how to update and flash the MAX10 to supported version see [I
 ### FPGA (FEC) Ansible installation for OpenNESS Network Edge
 To run the OpenNESS package with FPGA (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
-#### OpenNESS Experience Kit
-To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `inventory/default/group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
+#### Converged Edge Experience Kits
+To enable FPGA support from CEEK, change the variable `ne_opae_fpga_enable` in `inventory/default/group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
 ```yaml
 # inventory/default/group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
@@ -268,7 +268,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/templates/configMap.yml.j2).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/converged-edge-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/templates/configMap.yml.j2).
 
 A sample pod requesting the FPGA (FEC) VF may look like this:
 
