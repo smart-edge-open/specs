@@ -37,7 +37,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 This deployment flavor enables the following ingredients:
@@ -69,7 +69,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 > **NOTE:** The video analytics services integrates with the OpenNESS service mesh when the flag `ne_istio_enable: true` is set.
@@ -111,7 +111,7 @@ The following are steps to install this flavor:
 
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 > **NOTE:** At the time of writing this document, *Weave Net*\* is the only supported CNI for network edge deployments involving VCAC-A acceleration. The `weavenet` CNI is automatically selected by the *media-analytics-vca*. 
@@ -142,7 +142,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 This deployment flavor enables the following ingredients:
@@ -167,7 +167,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 This deployment flavor enables the following ingredients:
@@ -215,7 +215,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 This deployment flavor enables the following ingredients:
@@ -242,7 +242,7 @@ The following are steps to install this flavor:
     ```
 3. Run CEEK deployment script:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 This deployment flavor enables the following ingredients:

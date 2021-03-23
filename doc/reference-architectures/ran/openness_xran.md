@@ -541,12 +541,11 @@ Example:
 ```
 
 ### Deploy Openness NE
-Run the deployment script:
+Define the `inventory.yml` and then run the deployment script:
 ```shell
-    ./deploy_ne.sh -f <flavor>
+    python3 deploy.py
 ```
-**Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 Check the `/proc/cmd` output. It should look similar to:
 

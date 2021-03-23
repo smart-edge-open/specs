@@ -301,11 +301,22 @@ Steps for EMCO Authentication and Authorization Setup:
 - Apply Authentication and Authorization Policies
 
 ### EMCO Installation With OpenNESS Flavor
-EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
+EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
 - The first step is to prepare one server environment which needs to fulfill the [preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
-- Then place the EMCO server hostname in `[controller_group]` group in `inventory/default/inventory.ini` file of openness-experience-kit. 
-> **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
-- Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
+- Place the EMCO server hostname in `controller_group/hosts/ctrl.openness.org:` dictionary in `inventory.yml` file of converged-edge-experience-kit.
+- Update the `inventory.yaml` file by setting the deployment flavor as `central_orchestrator`
+    ```yaml
+    ---
+    all:
+      vars:
+        cluster_name: central_orchestrator_cluster
+        flavor: central_orchestrator
+    ... 
+    ```
+> **NOTE**: `edgenode_group:` and `edgenode_vca_group:` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
+
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+- Run script `python3 deploy.py`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
 
 ```shell
 # kubectl get pods -n emco

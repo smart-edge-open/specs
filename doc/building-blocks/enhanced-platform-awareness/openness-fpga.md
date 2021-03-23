@@ -117,12 +117,11 @@ fpga_userspace_vf:
 
 The following packages need to be placed into specific directories for the feature to work:
 
-1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
+1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `converged-edge-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
 
-Run setup script `deploy_ne.sh -f <flavor>`.
+Run setup script `deploy.py` with defined `inventory.yml` file.
 
-**Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 After a successful deployment, the following pods will be available in the cluster (CNI pods may vary depending on deployment):
 ```shell

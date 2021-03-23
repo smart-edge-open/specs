@@ -130,22 +130,22 @@ To get started with deploying an OpenNESS edge cluster using the Converged Edge 
 4. Get the deployment started by executing the deploy script
 
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
     > **NOTE**: This script parses the values provided in the inventory.yml file.
     > **NOTE**: If want to enforce deployment termination in case of any failure, use arguments `-f` or `--any-errors-fatal`, e.g.:
     > ```shell
-    > $ sudo python3 deploy.py --any-errors-fatal
+    > $ python3 deploy.py --any-errors-fatal
     > ```
 
 5. To cleanup an existing deployment, execute with `-c` or `--clean`, e.g:
 
     ```shell
-    $ sudo python3 deploy.py --clean
+    $ python3 deploy.py --clean
     ```
     > **NOTE**: If it is intended to do the cleanup manually, i.e: one cluster at a time, update the `inventory.yml` with only the intended cluster configuration
 
-For an initial installation, `deploy_ne.sh controller` must be run before `deploy_ne.sh nodes`. During the initial installation, the hosts may reboot. After reboot, the deployment script that was last run should be run again.
+For an initial installation, `deploy.py` with `all/vars/limit: controller` must be run before `deploy.py` with `all/vars/limit: nodes`. During the initial installation, the hosts may reboot. After reboot, the deployment script that was last run should be run again.
 
 
 ## Network Edge playbooks
@@ -164,7 +164,7 @@ For example, when installing Docker\*, the RPM repository is added and Docker is
 To execute cleanup procedure
 
 ```shell
-$ sudo python3 deploy.py --clean
+$ python3 deploy.py --clean
 ```
 
 > **NOTE**: There may be leftovers created by the installed software. For example, DPDK and Golang installations, found in `/opt`, are not rolled back.
@@ -228,7 +228,7 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
 
 4. Single-node cluster can be deployed by running command:
     ```shell
-    $ sudo python3 deploy.py
+    $ python3 deploy.py
     ```
 
 ## Harbor registry
