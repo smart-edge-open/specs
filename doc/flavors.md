@@ -37,33 +37,9 @@ This deployment flavor enables the following ingredients:
 
 To customize this flavor we recommend creating additional file in openness-experience-kits that will override any variables used in previous configuration. This file should be placed in location: `openness-experience-kits/inventory/default/group_vars/all` and filenames should start with number greater than highest value currently present (e.g. `40-overrides.yml`).
 
-
 ## CERA Access Edge Flavor
 
-The pre-defined *flexran* deployment flavor provisions an optimized system configuration for vRAN workloads on Intel Xeon servers. It also provisions for deployment of PACN3000 FPGA tools and components enabling the offload of acceleration of FEC (Forward Error Correction) to the FPGA.
-
-Steps to install this flavor are as follows:
-1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Configure the flavor file to reflect desired deployment.
-   - Configure the CPUs selected for isolation and OS/K8s processes from command line in files [controller_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/controller_group.yml) and [edgenode_group.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/edgenode_group.yml) - please note that in single node mode the edgenode_group.yml is used to configure the CPU isolation.
-   - Configure the amount of CPUs reserved for K8s and OS from K8s level with `reserved_cpu` flag in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
-   - Configure whether the FPGA or eASIC support for FEC is desired or both in [all.yml](https://github.com/otcshare/openness-experience-kits/blob/master/flavors/flexran/all.yml) file.
-  
-3. Run OEK deployment script:
-    ```shell
-    $ deploy_ne.sh -f flexran
-    ```
-This deployment flavor enables the following ingredients:
-* Node Feature Discovery
-* SRIOV device plugin with FPGA configuration
-* Calico CNI
-* Telemetry
-* FPGA remote system update through OPAE
-* FPGA configuration
-* eASIC ACC100 configuration
-* RT Kernel
-* Tapology Manager
-* RMD operator
+Available in Intel Distribution of OpenNESS
 
 ## CERA Media Analytics Flavor
 
@@ -78,6 +54,7 @@ Steps to install this flavor are as follows:
 
 > **NOTE:** The video analytics services integrates with the OpenNESS service mesh when the flag `ne_istio_enable: true` is set.
 > **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
+> **NOTE:** Istio deployment can be customized using parameters in the `flavor/media-analytics/all.yaml` (parameters set in the flavor file override default parameters set in `inventory/default/group_vars/all/10-default.yml`).
 
 This deployment flavor enables the following ingredients:
 * Node Feature Discovery
@@ -186,39 +163,3 @@ This deployment flavor enables the following ingredients:
 * Harbor Registry
 * The default Kubernetes CNI: `calico`
 * EMCO services
-
-## Reference Service Mesh
-
-The pre-defined *service-mesh* deployment flavor installs the OpenNESS service mesh that is based on [Istio](https://istio.io/).
-
-> **NOTE**: When deploying Istio Service Mesh in VMs, a minimum of 8 CPU core and 16GB RAM must be allocated to each worker VM so that Istio operates smoothly
-
-Steps to install this flavor are as follows:
-1. Configure OEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
-2. Run OEK deployment script:
-    ```shell
-    $ deploy_ne.sh -f service-mesh
-    ```
-
-This deployment flavor enables the following ingredients:
-* Node Feature Discovery
-* The default Kubernetes CNI: `kube-ovn`
-* Istio service mesh
-* Kiali management console
-* Telemetry
-
-> **NOTE:** Kiali management console username can be changed by editing the variable `istio_kiali_username`. By default `istio_kiali_password` is randomly generated and can be retirieved by running `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d` on the Kubernetes controller.
-
-Following parameters in the flavor/all.yaml can be customize for Istio deployment:
-
-```
-# Istio deployment profile possible values: default, demo, minimal, remote
-istio_deployment_profile: "default"
-
-# Kiali 
-istio_kiali_username: "admin"
-istio_kiali_password: "{{ lookup('password', '/dev/null length=16') }}"
-istio_kiali_nodeport: 30001
-```
-
-> **NOTE:** If creating a customized flavor, the Istio service mesh installation can be included in the Ansible playbook by setting the flag `ne_istio_enable: true` in the flavor file.

@@ -19,7 +19,7 @@ Copyright (c) 2020 Intel Corporation
   - [Circuit Breaker](#circuit-breaker)
 - [Prometheus, Grafana & Kiali integration](#prometheus-grafana--kiali-integration)
 - [Getting Started](#getting-started)
-  - [Enabling Service Mesh through the Service Mesh Flavor](#enabling-service-mesh-through-the-service-mesh-flavor)
+  - [Enabling Service Mesh through enabling the Service Mesh Role](#enabling-service-mesh-through-enabling-the-service-mesh-role)
   - [Enabling Service Mesh with the Media Analytics Flavor](#enabling-service-mesh-with-the-media-analytics-flavor)
 - [References](#references)
 
@@ -419,15 +419,28 @@ _Figure - Istio Telemetry with Grafana_
 
 ## Getting Started
 
-### Enabling Service Mesh through the Service Mesh Flavor
+### Enabling Service Mesh through enabling the Service Mesh Role
 
-Istio service mesh can be deployed with OpenNESS using the OEK through the pre-defined *service-mesh* flavor as described in [Service Mesh Flavor](../flavors.md#service-mesh-flavor) section. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/). 
-The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials: 
+Istio service mesh can be deployed with OpenNESS using the OEK through the defined istio role. Istio role is enabled with setting parameter `ne_istio_enable: true`. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
+The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials:
 
 * Username: `admin`
 * Nodeport set to `30001`
 
-To get the randomly generated password run the following command on Kubernetes controller:  
+The above settings can be customized by adjusting following parameters in the `inventory/default/group_vars/all/10-default.yml`:
+
+```yml
+# Istio deployment profile possible values: default, demo, minimal, remote
+istio_deployment_profile: "default"
+# Istio is deployed to "default" namespace in the cluster
+istio_deployment_namespace: "default"
+# Kiali 
+istio_kiali_username: "admin"
+istio_kiali_password: "{{ lookup('password', '/dev/null length=16') }}"
+istio_kiali_nodeport: 30001
+```
+
+To get the randomly generated password run the following command on Kubernetes controller:
 `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d`
 
 Prometheus and Grafana are deployed in the OpenNESS platform as part of the telemetry role and are integrated with the Istio service mesh.
@@ -468,8 +481,8 @@ Status:       Active
 ```
 
 Users can change the namespace labeled with istio label using the parameter `istio_deployment_namespace`
-* in `flavors/service-mesh/all.yml` for deployment with service-mesh flavor
 * in `flavors/media-analytics/all.yml` for deployment with media-analytics flavor
+* in `inventory/default/group_vars/all/10-default.yml` for deployment with any flavor (and istio role enabled)
 
 > **NOTE**: The default OpenNESS network policy applies to pods in the `default` namespace and blocks all ingress traffic. Users must remove the default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to the [Kubernetes NetworkPolicies](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from `192.168.1.0/24` subnet on a specific port.
 

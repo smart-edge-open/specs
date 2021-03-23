@@ -38,12 +38,14 @@ DPDK apps require that a specific number of HugePages are enabled. By default, t
 # inventory/default/group_vars/controller_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
+default_grub_params: "default_hugepagesz={{ hugepage_size }} hugepagesz={{ hugepage_size }} hugepages={{ hugepage_amount }} intel_iommu=on iommu=pt"
 ```
 
 ```yaml
 # inventory/default/group_vars/edgenode_group/10-default.yml
 hugepage_size: "1G"
 hugepage_amount: "4"
+default_grub_params: "default_hugepagesz={{ hugepage_size }} hugepagesz={{ hugepage_size }} hugepages={{ hugepage_amount }} intel_iommu=on iommu=pt"
 ```
 
 ```yaml
