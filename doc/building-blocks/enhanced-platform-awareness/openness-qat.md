@@ -2,13 +2,14 @@
 SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2020 Intel Corporation
 ```
-<!-- omit in doc -->
+<!-- omit in toc -->
 # Using Intel® QuickAssist Adapter in OpenNESS: Resource Allocation, and Configuration
 - [Overview](#overview)
-- [Intel® QuickAssist Adapter FlexRAN Host Interface Overview](#Intel®-QuickAssist-Adapter-CU/DU-Host-Interface-Overview)
-- [Using the Intel® QuickAssist Adapter on OpenNESS](#using-the-intel®-quicksssist-adapter-on-OpenNESS)
-  - [Intel® QuickAssist Adapter Ansible Installation for OpenNESS Network Edge](#intel®-quickassist-adapter-for-openness-network-edge)
-    - [OpenNESS Experience Kit](#openness-experience-kit)
+- [Intel QuickAssist Adapter CU/DU Host Interface Overview](#intel-quickassist-adapter-cudu-host-interface-overview)
+- [Intel QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for CU/DU](#intel-quickassist-adapter-device-plugin-deployment-with-kubernetes-for-cudu)
+- [Using the Intel QuickAssist Adapter on OpenNESS](#using-the-intel-quickassist-adapter-on-openness)
+  - [Intel QuickAssist Adapter for OpenNESS Network Edge](#intel-quickassist-adapter-for-openness-network-edge)
+    - [Converged Edge Experience Kits (CEEK)](#converged-edge-experience-kits-ceek)
   - [Requesting Resources and Running Pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
 - [Reference](#reference)
 
@@ -36,16 +37,16 @@ Intel® QuickAssist Adapter benefits include:
 
 For more information, see product brief in [Intel® QuickAssist Adapter](https://www.intel.com/content/dam/www/public/us/en/documents/product-briefs/quickassist-adapter-8960-8970-brief.pdf).
 
-This document explains how the qat.intel.com/generic resource can be used on the Open Network Edge Services Software (OpenNESS) platform for accelerating network functions and edge application workloads. We use the Intel® QuickAssist Adapter to accelerate the LTE/5G encryption tasks in the CU/DU.
+This document explains how the Intel® QuickAssist (QAT) device plugin is enabled and used on the Open Network Edge Services Software (OpenNESS) platform for accelerating network functions and edge application workloads. The Intel® QuickAssist Adapter is used to accelerate the LTE/5G encryption tasks in the CU/DU.
 
-## Intel® QuickAssist Adapter CU/DU Host Interface Overview
+## Intel QuickAssist Adapter CU/DU Host Interface Overview
 Intel® QuickAssist Adapter used in the CU/DU solution exposes the following Physical Functions (PF) to the CPU host:
 - Three interfaces, that can provide 16 Virtual Functions each.
 
-## Intel® QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for CU/DU
-CU/DU aplications use the qat.intel.com/generic resources from the Intel® QuickAssist Adapter using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes* provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes* (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
+## Intel QuickAssist Adapter Device Plugin Deployment with Kubernetes\* for CU/DU
+CU/DU applications use the `qat.intel.com/generic` resources from the Intel® QuickAssist Adapter using POD resource allocation and the Kubernetes\* device plugin framework. Kubernetes* provides a device plugin framework that is used to advertise system hardware resources to the Kubelet. Instead of customizing the code for Kubernetes* (K8s) itself, vendors can implement a device plugin that can be deployed either manually or as a DaemonSet. The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand\* adapters, and other similar computing resources that may require vendor-specific initialization and setup.
 
-## Using the Intel® QuickAssist Adapter on OpenNESS
+## Using the Intel QuickAssist Adapter on OpenNESS
 Further sections provide instructions on how to use the Intel® QuickAssist Adapter features: configuration and accessing from an application on the OpenNESS Network Edge.
 
 When the Intel® QuickAssist Adapter is available on the Edge Node platform it exposes three Root I/O Virtualization (SRIOV) Physical Functions (PF) devices which can be used to create Virtual Functions. To take advantage of this functionality for a cloud-native deployment, the PF (Physical Function) of the device must be bound to the DPDK IGB_UIO userspace driver to create several VFs (Virtual Functions). Once the VFs are created, they must also be bound to a DPDK userspace driver to allocate them to specific K8s pods running the vRAN workload.
@@ -57,27 +58,21 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Queue configuration of QAT's PFs/VFs.
 - Binding QAT's PFs/VFs to igb_uio driver.
 
-### Intel® QuickAssist Adapter for OpenNESS Network Edge
-To run the OpenNESS package with Intel® QuickAssist Adapter Device Plugin functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed by setting the following variable in the flavor or *group_vars/all* file:
+### Intel QuickAssist Adapter for OpenNESS Network Edge
+To run the OpenNESS package with Intel® QuickAssist Adapter Device Plugin functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed by setting the following variable in the Converged Edge Experience Kits:
 ```yaml
 qat_device_plugin_enable: true
 ```
 
-#### OpenNESS Experience Kit
-To enable Intel® QuickAssist Adapter Device Plugin support from OEK, SRIOV must be enabled in OpenNESS:
+#### Converged Edge Experience Kits (CEEK)
+To enable Intel® QuickAssist Adapter Device Plugin support from CEEK, SRIOV must be enabled in OpenNESS:
 ```yaml
 kubernetes_cnis:
-- <primary CNI>
+- <main CNI>
 - sriov
 ```
----
-**NOTE**
 
-`sriov` cannot be the primary CNI.
-
----
-
-Intel® QuickAssist Adapter Device Plugin is enabled by default in the `cera_5g_on_prem` flavor:
+It's enabled by default in the `cera_5g_on_prem` flavor:
 
 After a successful deployment, the following pods will be available in the cluster:
 ```shell
@@ -88,7 +83,7 @@ intel-qat-plugin-dl42c      1/1     Running   0          7d9h
 ```
 
 ### Requesting Resources and Running Pods for OpenNESS Network Edge
-As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchestrate the Intel® QuickAssist Adapter VFs (bound to the userspace driver) is deployed and running. This enables the scheduling of pods requesting this device. To check the number of devices available on the Edge Node from Edge Controller, run:
+As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchestrate the Intel® QuickAssist Adapter VFs (bound to the userspace driver) is running. This enables the scheduling of pods requesting this device. To check the number of devices available on the Edge Node from Edge Controller, run:
 
 ```shell
 kubectl get node $(hostname) -o json | jq '.status.allocatable'
@@ -96,7 +91,7 @@ kubectl get node $(hostname) -o json | jq '.status.allocatable'
 "qat.intel.com/generic": "48"
 ```
 
-To request the QAT VFs as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
+To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
 
 A sample pod requesting the Intel® QuickAssist Adapter VF may look like this:
 
@@ -129,24 +124,9 @@ Once the pod is in the 'Running' state, check that the device was allocated to t
 kubectl exec -it test -- ls /dev
 kubectl exec -it test -- printenv | grep QAT
 ```
-Sample output:
-```shell
-[...]
-crw------- 1 root root 241, 18 Mar 22 14:11 uio18
-crw------- 1 root root 241, 39 Mar 22 14:11 uio39
-crw------- 1 root root 241, 46 Mar 22 14:11 uio46
-crw------- 1 root root 241,  8 Mar 22 14:11 uio8
-[...]
-```
-```shell
-QAT3=0000:1e:02.6
-QAT2=0000:1c:01.2
-QAT1=0000:1e:01.7
-QAT0=0000:1a:02.0
-```
 To check the number of devices currently allocated to pods, run (and search for 'Allocated Resources'):
 
-```shell
+```
 kubectl describe node $(hostname)
 ```
 
