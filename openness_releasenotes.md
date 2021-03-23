@@ -267,7 +267,9 @@ This document provides high-level system features, issues, and limitations infor
 - Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
 
 ## OpenNESS - 21.03
-- Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Calico 3.17 and Docker 20.10.2.
+- Major system upgrades: CentOS 7.9, Kubernetes 1.20.0, Docker 20.10.2, QEMU 5.2 and Golang 1.16.
+- Kubernetes CNI upgrades: Calico 3.17, SR-IOV CNI 2.6, Flannel 0.13.0.
+- Telemetry upgrades: CAdvisor 0.37.5, Grafana 7.4.2, Prometheus 2.24.0, Prometheus Node Exporter 1.0.1.
 - Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
 - Intel CMK support deprecated in favour of Kubernetes native CPU Manaher
 
@@ -483,4 +485,4 @@ OpenNESS was tested on CentOS Linux release 7.9.2009 (Core)
 
 # Packages Version
 
-Package: telemetry, cadvisor 0.37.5, grafana 7.4.2, prometheus 2.24.0, prometheus: node exporter 1.0.1, golang 1.16, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11.1, ovs 2.14.0, ovn 2.14.0, helm 3.1.2, kubeovn 1.5.2, flannel 0.13.0, calico 3.17.0, multus 3.6, sriov cni 2.6, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i
+Package: telemetry, cadvisor 0.37.5, grafana 7.4.2, prometheus 2.24.0, prometheus: node exporter 1.0.1, golang 1.16, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11.1, ovs 2.14.0, ovn 2.14.0, helm 3.1.2, kubeovn 1.5.2, flannel 0.13.0, calico 3.17.0, multus 3.6, sriov cni 2.6, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i, QEMU 5.2
