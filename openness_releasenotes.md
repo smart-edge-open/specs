@@ -33,6 +33,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-2)
   - [OpenNESS - 20.12](#openness---2012-2)
   - [OpenNESS - 20.12.02](#openness---201202)
+  - [OpenNESS - 21.03](#openness---2103-1)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -43,6 +44,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-3)
   - [OpenNESS - 20.12](#openness---2012-3)
   - [OpenNESS - 20.12.02](#openness---201202-1)
+  - [OpenNESS - 21.03](#openness---2103-2)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -347,6 +349,9 @@ There are no non-Intel issues relevant to this release.
 - Fixed TAS deployment
 - Updated SR-IOV CNI and device plugin to fix issues with image build in offline package creator
 
+## OpenNESS - 21.03
+- Offline deployment issues related to zlib-devel version 1.2.7-19
+
 # Known Issues and Limitations
 ## OpenNESS - 19.06
 There are no issues relevant to this release.
@@ -396,6 +401,11 @@ There is one issue relevant to this release: it is not possible to remove the ap
 
 ## OpenNESS - 20.12.02
 - Offline deployment issues related to zlib-devel version 1.2.7-19
+
+## OpenNESS - 21.03
+- cAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
+- An issue appears when the KubeVirt Containerized Data Importer (CDI) upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. Calico CNI is used by default in OpenNESS when using CDI
+- Telemetry deployment with PCM enabled will cause a deployment failure in single node cluster deployments due to conflict with CollectD deployment, it is advised to not use PCM and CollectD at the same time in OpenNESS at this time
 
 # Release Content
 
