@@ -143,7 +143,7 @@ This document provides high-level system features, issues, and limitations infor
   - Non-Privileged Container: Support deployment of non-privileged pods (CNFs and Applications as reference)
 - Edge Compute EPA features support for On-Premises
   - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
-- OpenNESS Experience Kit for Network and OnPremises edge
+- Converged Edge Experience Kits for Network and OnPremises edge
   - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremises version of OpenNESS without the need for Internet access.
 - 5G NR Edge Cloud deployment support
   - 5G NR edge cloud deployment support with SA mode

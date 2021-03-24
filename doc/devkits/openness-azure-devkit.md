@@ -14,4 +14,4 @@ for automated depoyment, and supports deployment using Porter. It enables cloud 
 ## Getting Started
 
 Following document contains steps for quick deployment on Azure:
-* [<b>openness-experience-kits/cloud/README.md</b>: Deployment and setup guide](https://github.com/open-ness/openness-experience-kits/blob/master/cloud/README.md)
+* [<b>converged-edge-experience-kits/cloud/README.md</b>: Deployment and setup guide](https://github.com/open-ness/converged-edge-experience-kits/blob/master/cloud/README.md)

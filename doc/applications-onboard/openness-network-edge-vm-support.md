@@ -77,7 +77,7 @@ docker build -t centosimage:1.0 .
 ```
 ## Enabling in OpenNESS
 
-The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the OpenNESS experience kit via Ansible\* automation. In this default state, it does not support SRIOV in a VM and additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in the BIOS of the Edge Node.
+The KubeVirt role responsible for bringing up KubeVirt components is enabled by default in the Converged Edge Experience Kits via Ansible\* automation. In this default state, it does not support SRIOV in a VM and additional steps are required to enable it. The following is a complete list of steps to bring up all components related to VM support in Network Edge. VM support also requires Virtualization and VT-d to be enabled in the BIOS of the Edge Node.
 
  1. Configure Ansible for KubeVirt:
     KubeVirt is deployed by default. To provide SRIOV support, configure the following settings:
@@ -108,9 +108,8 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
           kubevirt_default_pv_vol_name: vol
           kubevirt_pv_vm_max_num:  64
           ```
- 2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy_ne.sh -f <flavor>` script in the OpenNESS experience kit top-level directory.
-
-Note: Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/specs/blob/master/doc/flavors.md).
+ 2. Set up other common configurations for the cluster and enable other EPA features as needed and deploy the cluster using the `deploy.py` script in the Converged Edge Experience kits top-level directory.
+    > **NOTE**: for more details about deployment please refer to [CEEK](../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
  3. On successful deployment, the following pods will be in a running state:
     ```shell

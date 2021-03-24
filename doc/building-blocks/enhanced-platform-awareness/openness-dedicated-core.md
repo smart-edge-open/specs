@@ -50,7 +50,8 @@ When POD is qualified as `Guaranteed` QoS class then kubelet removes requested C
    # Reserved CPUs for K8s and OS daemons - list of reserved CPUs
    reserved_cpus: "0,1"
    ```
-3. Deploy the controller with `deploy_ne.sh -f <flavor> controller`.
+3. Deploy the node with `deploy.py`.
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 **Edge Controller / Kubernetes control plane**
 

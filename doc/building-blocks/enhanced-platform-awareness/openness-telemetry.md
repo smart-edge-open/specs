@@ -47,7 +47,7 @@ Depending on the role of the component, it is deployed as either a `Deployment` 
 
 ## Flavors and configuration
 
-The deployment of telemetry components in OpenNESS is easily configurable from the OpenNESS Experience Kit (OEK). The deployment of the Grafana dashboard and PCM (Performance Counter Monitoring) collector is optional (`telemetry_grafana_enable` enabled by default, `telemetry_pcm_enable` disabled by default). There are four distinctive flavors for the deployment of the CollectD collector, enabling the respective set of plugins (`telemetry_flavor`):
+The deployment of telemetry components in OpenNESS is easily configurable from the Converged Edge Experience Kits (CEEK). The deployment of the Grafana dashboard and PCM (Performance Counter Monitoring) collector is optional (`telemetry_grafana_enable` enabled by default, `telemetry_pcm_enable` disabled by default). There are four distinctive flavors for the deployment of the CollectD collector, enabling the respective set of plugins (`telemetry_flavor`):
 
 - common (default)
 - flexran
@@ -69,7 +69,7 @@ Prometheus is an open-source, community-driven toolkit for systems monitoring an
 
 The main idea behind Prometheus is that it defines a unified metrics data format that can be hosted as part of any application that incorporates a simple web server. The data can be then scraped (downloaded) and processed by Prometheus using a simple HTTP/HTTPS connection.
 
-In OpenNESS, Prometheus is deployed as a K8s Deployment with a single pod/replica on the Edge Controller node. It is configured out of the box to scrape all other telemetry endpoints/collectors enabled in OpenNESS and gather data from them. Prometheus is enabled in the OEK by default with the `telemetry/prometheus` role.
+In OpenNESS, Prometheus is deployed as a K8s Deployment with a single pod/replica on the Edge Controller node. It is configured out of the box to scrape all other telemetry endpoints/collectors enabled in OpenNESS and gather data from them. Prometheus is enabled in the CEEK by default with the `telemetry/prometheus` role.
 
 #### Usage
 
@@ -89,7 +89,7 @@ In OpenNESS, Prometheus is deployed as a K8s Deployment with a single pod/replic
 
 ### Grafana
 
-Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on a control plane as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in OEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag.
+Grafana is an open-source visualization and analytics software. It takes the data provided from external sources and displays relevant data to the user via dashboards. It enables the user to create customized dashboards based on the information the user wants to monitor and allows for the provision of additional data sources. In OpenNESS, the Grafana pod is deployed on a control plane as a K8s `Deployment` type and is by default provisioned with data from Prometheus. It is enabled by default in CEEK and can be enabled/disabled by changing the `telemetry_grafana_enable` flag.
 
 #### Usage
 
@@ -139,7 +139,7 @@ Grafana is an open-source visualization and analytics software. It takes the dat
 
 ### Node Exporter
 
-Node Exporter is a Prometheus exporter that exposes hardware and OS metrics of *NIX kernels. The metrics are gathered within the kernel and exposed on a web server so they can be scraped by Prometheus. In OpenNESS, the Node Exporter pod is deployed as a K8s `Daemonset`; it is a privileged pod that runs on every Edge Node in the cluster. It is enabled by default by OEK.
+Node Exporter is a Prometheus exporter that exposes hardware and OS metrics of *NIX kernels. The metrics are gathered within the kernel and exposed on a web server so they can be scraped by Prometheus. In OpenNESS, the Node Exporter pod is deployed as a K8s `Daemonset`; it is a privileged pod that runs on every Edge Node in the cluster. It is enabled by default by CEEK.
 
 #### Usage
 
@@ -169,7 +169,7 @@ CollectD is a daemon/collector enabling the collection of hardware metrics from 
 #### Plugins
 
 There are four distinct sets of plugins (flavors) enabled for CollectD deployment that can be used depending on the use-case/workload being deployed on OpenNESS. `Common` is the default flavor in OpenNESS. The flavors available are: `common`, `corenetwork`, `flexran`, and `smartcity`. Below is a table specifying which CollectD plugins are enabled for each flavor.
-The various OEK flavors are enabled for CollectD deployment as follows:
+The various CEEK flavors are enabled for CollectD deployment as follows:
 
 
 | Common           | Core Network      | FlexRAN           | SmartCity          |
@@ -187,9 +187,9 @@ The various OEK flavors are enabled for CollectD deployment as follows:
 
 #### Usage
 
-1. Select the flavor for the deployment of CollectD from the OEK during OpenNESS deployment; the flavor is to be selected with `telemetry_flavor: <flavor name>`.
+1. Select the flavor for the deployment of CollectD from the CEEK during OpenNESS deployment; the flavor is to be selected with `telemetry_flavor: <flavor name>`.
 
-   In the event of using the `flexran` profile, `OPAE_SDK_1.3.7-5_el7.zip` needs to be available in `./openness-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#edge-controller)
+   In the event of using the `flexran` profile, `OPAE_SDK_1.3.7-5_el7.zip` needs to be available in `./converged-edge-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#edge-controller)
 2. To access metrics available from CollectD, connect to the Prometheus [dashboard](#prometheus).
 3. Look up an example the CollectD metric by specifying the metric name (ie. `collectd_cpufreq`) and pressing `execute` under the `graph` tab.
    ![CollectD Metric](telemetry-images/collectd_metric.png)
@@ -216,7 +216,7 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
     ./build.sh push <harbor_registry_ip> <port>
     ```
 
-3. Create a secret using a root-ca created as part of OEK telemetry deployment (this will authorize against the Collector certificates).
+3. Create a secret using a root-ca created as part of CEEK telemetry deployment (this will authorize against the Collector certificates).
 
    ```shell
    cd edgeapps/applications/telemetry-sample-app/
@@ -246,7 +246,7 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
 ### PCM
 
 Processor Counter Monitor (PCM) is an application programming interface (API) and a set of tools based on the API to monitor performance and energy metrics of Intel® Core™, Xeon®, Atom™ and Xeon Phi™ processors. In OpenNESS, the PCM pod is deployed as a K8s `Daemonset` on every available node. PCM metrics are exposed to Prometheus via the Host's NodePort on each EdgeNode. 
->**NOTE**: The PCM feature is intended to run on physical hardware (i.e., no support for VM virtualized Edge Nodes in OpenNESS). Therefore, this feature is disabled by default. The feature can be enabled by setting the `telemetry_pcm_enable` flag in OEK. Additionally, a preset dashboard is created for PCM in Grafana visualizing the most crucial metrics.
+>**NOTE**: The PCM feature is intended to run on physical hardware (i.e., no support for VM virtualized Edge Nodes in OpenNESS). Therefore, this feature is disabled by default. The feature can be enabled by setting the `telemetry_pcm_enable` flag in CEEK. Additionally, a preset dashboard is created for PCM in Grafana visualizing the most crucial metrics.
 
 #### Usage
 
@@ -265,7 +265,7 @@ Processor Counter Monitor (PCM) is an application programming interface (API) an
 
 - Prometheus: responsible for collecting and providing metrics.
 - Prometheus Adapter: exposes the metrics from Prometheus to a K8s API and is configured to provide metrics from Node Exporter and CollectD collectors.
-TAS is enabled by default in OEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
+TAS is enabled by default in CEEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
 
 #### Usage
 
