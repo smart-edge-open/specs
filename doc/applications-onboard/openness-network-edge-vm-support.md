@@ -81,11 +81,11 @@ The KubeVirt role responsible for bringing up KubeVirt components is enabled by 
 
  1. Configure Ansible for KubeVirt:
     KubeVirt is deployed by default. To provide SRIOV support, configure the following settings:
-      - Enable kubeovn CNI and SRIOV:
+      - Enable calico CNI and SRIOV:
          ```yaml
          # inventory/default/group_vars/all/10-default.yml
          kubernetes_cnis:
-         - kubeovn
+         - calico
          - sriov
          ```
       - Enable SRIOV for KubeVirt:
@@ -165,7 +165,7 @@ To deploy a sample stateful VM with persistent storage and additionally use a Ge
 
 >**NOTE**: Each stateful VM with a new Persistent Volume Claim (PVC) requires a new Persistent Volume (PV) to be created. See more in the [limitations section](#limitations). Also, CDI needs two PVs when creating a PVC and loading a VM image from the qcow2 file: one PV for the actual PVC to be created and one PV to translate the qcow2 image to raw input.
 
->**NOTE**: An issue appears when the CDI upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. It is advised that the user uses other CNI such as Calico CNI when using CDI with OpenNESS.
+>**NOTE**: An issue appears when the CDI upload pod is deployed with Calico CNI, the deployed pods readiness probe fails and pod is never in ready state. It is advised that the user uses other CNI such as Calico CNI when using CDI with OpenNESS.
 
   1. Create a persistent volume for the VM:
 
@@ -451,7 +451,7 @@ Delete VM, DV, PV, PVC, and the Virtual Disk related to VM from the Edge Node:
    [node]# rm /var/vd/vol<vol_num_related_to_pv>/disk.img
    ```
 
-4. Cleanup script `cleanup_ne.sh` does not properly clean up KubeVirt/CDI components, if the user has intentionally/unintentionally deleted one of these components outside the script.
+4. Cleanup script `deploy.py --clean` does not properly clean up KubeVirt/CDI components, if the user has intentionally/unintentionally deleted one of these components outside the script.
 The KubeVirt/CDI components must be cleaned up/deleted in a specific order to wipe them successfully and the cleanup script does that for the user. When a user tries to delete the KubeVirt/CDI operator in the wrong order, the namespace for the component may be stuck indefinitely in a `terminating` state. This is not an issue if the user runs the script to completely clean the cluster but might be troublesome if the user wants to run cleanup for KubeVirt only. To fix this, use:
 
    1. Check which namespace is stuck in a `terminating` state:
@@ -476,7 +476,7 @@ The KubeVirt/CDI components must be cleaned up/deleted in a specific order to wi
 
    3. Run clean up script for kubeVirt again:
       ```shell
-      [controller]# ./cleanup_ne.sh
+      [controller]# python3 deploy.py --clean
       ```
 
 ## Helpful Links
