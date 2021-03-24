@@ -69,14 +69,14 @@ The following figure shows the topology overview for the OpenNESS EMCO orchestra
 _Figure 2 - Topology Overview with OpenNESS EMCO_
 
 All the managed edge clusters and cloud clusters are connected with the EMCO cluster through the WAN network. 
-- The central orchestration (EMCO) cluster can be installed and provisioned by using the [OpenNESS Central Orchestrator Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
-- The edge clusters and the cloud cluster can be installed and provisioned by using the [OpenNESS Flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md). 
+- The central orchestration (EMCO) cluster can be installed and provisioned by using the [OpenNESS Central Orchestrator Flavor](../../flavors.md). 
+- The edge clusters and the cloud cluster can be installed and provisioned by using the [OpenNESS Flavor](../../flavors.md). 
 - The composite application - [SmartCity](https://github.com/OpenVisualCloud/Smart-City-Sample) is composed of two parts: edge application and cloud (web) application. 
   - The edge application executes media processing and analytics on multiple edge clusters to reduce latency.
   - The cloud application is like a web application for additional post-processing, such as calculating statistics and display/visualization on the cloud cluster side.
   - The EMCO user can deploy the SmartCity applications across the clusters. Besides that, EMCO allows the operator to override configurations and profiles to satisfy deployment needs.
 
-This document aims to familiarize the user with EMCO and [OpenNESS deployment flavor](https://github.com/otcshare/specs/blob/master/doc/flavors.md) for EMCO installation and provision, and provide instructions accordingly.
+This document aims to familiarize the user with EMCO and [OpenNESS deployment flavor](../../flavors.md) for EMCO installation and provision, and provide instructions accordingly.
 
 ## EMCO Introduction
 
@@ -301,11 +301,22 @@ Steps for EMCO Authentication and Authorization Setup:
 - Apply Authentication and Authorization Policies
 
 ### EMCO Installation With OpenNESS Flavor
-EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
-- The first step is to prepare one server environment which needs to fulfill the [preconditions](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md#preconditions).
-- Then place the EMCO server hostname in `[controller_group]` group in `inventory/default/inventory.ini` file of openness-experience-kit. 
-> **NOTE**: `[edgenode_group]` and `[edgenode_vca_group]` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
-- Run script `./deploy_ne.sh -f central_orchestrator`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
+EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [Converged Edge Experience Kits](../../getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
+- The first step is to prepare one server environment which needs to fulfill the [preconditions](../../getting-started/network-edge/controller-edge-node-setup.md#preconditions).
+- Place the EMCO server hostname in `controller_group/hosts/ctrl.openness.org:` dictionary in `inventory.yml` file of converged-edge-experience-kit.
+- Update the `inventory.yaml` file by setting the deployment flavor as `central_orchestrator`
+    ```yaml
+    ---
+    all:
+      vars:
+        cluster_name: central_orchestrator_cluster
+        flavor: central_orchestrator
+    ... 
+    ```
+> **NOTE**: `edgenode_group:` and `edgenode_vca_group:` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
+
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
+- Run script `python3 deploy.py`. Deployment should complete successfully. In the flavor, harbor registry is deployed to provide images services as well.
 
 ```shell
 # kubectl get pods -n emco
@@ -322,7 +333,7 @@ emco      ovnaction-5d8d4447f9-nn7l6     1/1     Running  0        14m
 emco      rsync-99b85b4x88-ashmc         1/1     Running  0        14m
 ```
 
-Besides that, OpenNESS EMCO also provides Azure templates and supports deployment automation for EMCO cluster installation on Azure public cloud. More details refer to [OpenNESS Development Kit for Microsoft Azure](https://github.com/otcshare/ido-specs/blob/master/doc/devkits/openness-azure-devkit.md).
+Besides that, OpenNESS EMCO also provides Azure templates and supports deployment automation for EMCO cluster on Azure public cloud. More details refer to [OpenNESS Development Kit for Microsoft Azure](https://github.com/otcshare/ido-specs/blob/master/doc/devkits/openness-azure-devkit.md).
 
 ## EMCO Example: SmartCity Deployment
 - The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
@@ -335,6 +346,7 @@ _Figure 11 - SmartCity Deployment Architecture Overview_
 The example steps are shown as follows:
 - Prerequisites
   - Make one edge cluster and one cloud cluster ready by using OpenNESS Flavor.
+    - If testing with HPA intent, need to prepare two edge clusters.
   - Prepare one server with a vanilla CentOS\* 7.9.2009 for EMCO installation.
 - EMCO installation
 - Cluster setup
@@ -342,14 +354,19 @@ The example steps are shown as follows:
 - Logical cloud Setup
 - Deploy SmartCity application
 
+### EMCO installation
+Follow the guidance as [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
+ 
 ### Cluster Setup
-In the step, cluster provider will be created. And both the edge cluster and the cloud cluster will be registered in the EMCO.
+The step includes:
+- Prepare edge and cloud clusters kubeconfig files, SmartCity helm charts and relevant artifacts.
+- Register clusters provider by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
+- Register provider's clusters by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
+- Register EMCO controllers and resource synchroizer by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
 
-1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
-
-2. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
+1. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
     ```shell
-    HARBORRHOST=<harbor_registry_host>
+    HARBORRHOST=<emco_harbor_registry_host_ip>:30003
 
     cd /etc/docker/certs.d/
     mkdir ${HARBORRHOST}
@@ -361,19 +378,19 @@ In the step, cluster provider will be created. And both the edge cluster and the
 
     > **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
 
-3. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
+2. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
 
-4. Run the command for the environment setup with success return as below:
+3. Artifacts Preparation for clusters's kubeconfig, smartcity helm charts and other relevant artifacts
+   Run the command for the environment setup with success return as below:
     ```shell
     # cd cli-scripts/
     # ./setup_env.sh -e <EMCO_IP> -d <EDGE_HOST_IP> -c <CLOUD_HOST_IP> -r
     ```
 
-    > **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by the edge cluster and the cloud cluster.  `setup_env.sh` will automate it.
-    > **NOTE**: The enviroment setup steps include SmartCity github repo clone, docker images building, helm charts prepration and clusters configuration information preparation.  
+    > **NOTE**: EMCO CLI is used in the setup script, and the steps include SmartCity github repo clone, docker images building, helm charts prepration and clusters configuration information preparation...etc.  
 
 
-5. Run the command for the clusters setup with expected result as below:
+4. Run the command for the clusters setup with expected result as below:
     ```shell
     # cd cli-scripts/
     # ./01_apply.sh
@@ -383,9 +400,12 @@ In the step, cluster provider will be created. And both the edge cluster and the
     ```
 
     > **NOTE**: The cluster setup steps include clusters providers registration, clusters registration, adding labels for the clusters, EMCO controller creation and registration. 
+
     > **NOTE**: The `01_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `01_clusters_template.yaml` which contains the clusters related resources to create in EMCO. For example: Cluster Providers, Labels...etc.
 
 ### Project Setup
+The step includes:
+- Register a project which groups SmartCity application under a common tenant.
 
 Run the command for the project setup with expected result as below:
 
@@ -401,6 +421,8 @@ Run the command for the project setup with expected result as below:
     > **NOTE**: The `02_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `02_project_template.yaml` which contains the projects related resources to create in EMCO.
 
 ### Logical Cloud Setup
+The step includes:
+- Register a logical cloud associated with the physical clusters.
 
 Run the command for the logical cloud setup with expected result as below:
 
@@ -420,6 +442,11 @@ Run the command for the logical cloud setup with expected result as below:
     > **NOTE**: The `03_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `03_logical_cloud_template.yaml` which contains the logical cloud related resources to create in EMCO.
     
 ### Deploy SmartCity Application
+The setup includes:
+- Onboard SmartCity Application helm charts and profiles
+- Create generic placement intent to specify the edge/cloud cluster locations for each applicaiton of SmartCity
+- Create deployment intent references of the generic placement intent and generic actions intent for SmartCity generic kuberenetes resource: configmap, secret...etc.
+- Approve and Instantiate SmartCityp deployment 
 
 1. Run the command for the SmartCity application deployment with expected result as below:
     ```shell
@@ -433,6 +460,7 @@ Run the command for the logical cloud setup with expected result as below:
     ```
 
     > **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
+
     > **NOTE**: The `04_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `04_apps_template.yaml` which contains the application related resources to create in EMCO, for example deployment-intent, application helm chart entries, override profiles, configmap...etc. The placement intent for the use case is cluster label name and provider name.
     
 2. Verify SmartCity Application Deployment Information.
