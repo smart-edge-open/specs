@@ -13,6 +13,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006)
   - [OpenNESS - 20.09](#openness---2009)
   - [OpenNESS - 20.12](#openness---2012)
+  - [OpenNESS - 21.03](#openness---2103)
 - [Changes to Existing Features](#changes-to-existing-features)
   - [OpenNESS - 19.06](#openness---1906-1)
   - [OpenNESS - 19.06.01](#openness---190601)
@@ -270,6 +271,7 @@ This document provides high-level system features, issues, and limitations infor
 - Kubernetes CNI upgrades: Calico 3.17, SR-IOV CNI 2.6, Flannel 0.13.0.
 - Telemetry upgrades: CAdvisor 0.37.5, Grafana 7.4.2, Prometheus 2.24.0, Prometheus Node Exporter 1.0.1.
 - Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
+- Intel CMK support deprecated in favour of Kubernetes native CPU Manaher
 
 # Changes to Existing Features
 
