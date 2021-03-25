@@ -22,7 +22,7 @@ Copyright (c) 2020-2021 Intel Corporation
     - [Traffic Controller](#traffic-controller)
     - [Generic Action Controller](#generic-action-controller)
     - [Resource Synchronizer](#resource-synchronizer)
-    - [Placment and Action Controllers in EMCO](#placment-and-action-controllers-in-emco)
+    - [Placement and Action Controllers in EMCO](#placement-and-action-controllers-in-emco)
     - [Status Monitoring and Queries in EMCO](#status-monitoring-and-queries-in-emco)
   - [EMCO Terminology](#emco-terminology-1)
   - [EMCO API](#emco-api)
@@ -215,7 +215,7 @@ To achieve both the usecases, the controller exposes RESTful APIs to create, upd
 #### Resource Synchronizer
 This microservice is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various microservices are used by this microservice. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
 
-#### Placment and Action Controllers in EMCO
+#### Placement and Action Controllers in EMCO
 This section illustrates some key aspects of the EMCO controller architecture.  Depending on the needs of a composite application, intents that handle specific operations for application resources (e.g. addition, modification, etc.) can be created via the APIs provided by the corresponding controller API.  The following diagram shows the sequence of interactions to register controllers with EMCO.
 
 ![OpenNESS EMCO](openness-emco-images/emco-register-controllers.png)
@@ -404,43 +404,39 @@ The step includes:
     > **NOTE**: The `01_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `01_clusters_template.yaml` which contains the clusters related resources to create in EMCO. For example: Cluster Providers, Labels...etc.
 
 ### Project Setup
-The step includes:
-- Register a project which groups SmartCity application under a common tenant.
+The step invokes EMCO CLI and registers a project which groups SmartCity application under a common tenant.
 
 Run the command for the project setup with expected result as below:
 
-    ```shell
-    # cd cli-scripts/
-    # ./02_apply.sh
+     ```shell
+     # cd cli-scripts/
+     # ./02_apply.sh
 
-    Using config file: emco_cfg.yaml
-    http://localhost:31298/v2
-    URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","description":"","UserData1":"","UserData2":""}}
-    ```
-
-    > **NOTE**: The `02_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `02_project_template.yaml` which contains the projects related resources to create in EMCO.
+     Using config file: emco_cfg.yaml
+     http://localhost:31298/v2
+     URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","description":"","UserData1":"","UserData2":""}}
+     ```
+The `02_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `02_project_template.yaml` which contains the projects related resources to create in EMCO.
 
 ### Logical Cloud Setup
-The step includes:
-- Register a logical cloud associated with the physical clusters.
+The step invokes EMCO CLI and registers a logical cloud associated with the physical clusters.
 
 Run the command for the logical cloud setup with expected result as below:
 
-    ```shell
-    # cd cli-scripts/
-    # ./03_apply.sh
+     ```shell
+     # cd cli-scripts/
+     # ./03_apply.sh
 
-    Using config file: emco_cfg.yaml
-    http://localhost:31877/v2
-    URL: projects/project_smtc/logical-clouds Response Code: 201 Response: {"metadata":{"name":"default","description":"","userData1":"","userData2":""},"spec":{"namespace":"","level":"0","user":{"user-name":"","type":"","user-permissions":null}}}
-    http://localhost:31877/v2
-    URL: projects/project_smtc/logical-clouds/default/cluster-references Response Code: 201 Response: {"metadata":{"name":"lc-edge01","description":"","userData1":"","userData2":""},"spec":{"cluster-provider":"smartcity-cluster-provider","cluster-name":"edge01","loadbalancer-ip":"0.0.0.0","certificate":""}}
-    http://localhost:31877/v2
-    URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200 Response:
-    ```
+     Using config file: emco_cfg.yaml
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds Response Code: 201 Response: {"metadata":{"name":"default","description":"","userData1":"","userData2":""},"spec":{"namespace":"","level":"0","user":{"user-name":"","type":"","user-permissions":null}}}
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds/default/cluster-references Response Code: 201 Response: {"metadata":{"name":"lc-edge01","description":"","userData1":"","userData2":""},"spec":{"cluster-provider":"smartcity-cluster-provider","cluster-name":"edge01","loadbalancer-ip":"0.0.0.0","certificate":""}}
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200 Response:
+     ```
+The `03_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `03_logical_cloud_template.yaml` which contains the logical cloud related resources to create in EMCO.
 
-    > **NOTE**: The `03_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `03_logical_cloud_template.yaml` which contains the logical cloud related resources to create in EMCO.
-    
 ### Deploy SmartCity Application
 The setup includes:
 - Onboard SmartCity Application helm charts and profiles
