@@ -343,7 +343,7 @@ This devkit supports the installation of an OpenNESS Kubernetes cluster on a Mic
 | NRF      | Network function Repository Function            |
 | NUMA     | NonUniform Memory Access                        |
 | OAM      | Operations, Administration and Maintenance      |
-| OEK      | OpenNESS Experience Kit                         |
+| CEEK      | Converged Edge Experience Kits                         |
 | OpenNESS | Open Network Edge Services Software             |
 | PCF      | Policy Control Function                         |
 | PDN      | Packet Data Network                             |

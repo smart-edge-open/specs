@@ -13,6 +13,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006)
   - [OpenNESS - 20.09](#openness---2009)
   - [OpenNESS - 20.12](#openness---2012)
+  - [OpenNESS - 21.03](#openness---2103)
 - [Changes to Existing Features](#changes-to-existing-features)
   - [OpenNESS - 19.06](#openness---1906-1)
   - [OpenNESS - 19.06.01](#openness---190601)
@@ -32,6 +33,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-2)
   - [OpenNESS - 20.12](#openness---2012-2)
   - [OpenNESS - 20.12.02](#openness---201202)
+  - [OpenNESS - 21.03](#openness---2103-1)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -42,6 +44,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-3)
   - [OpenNESS - 20.12](#openness---2012-3)
   - [OpenNESS - 20.12.02](#openness---201202-1)
+  - [OpenNESS - 21.03](#openness---2103-2)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -142,7 +145,7 @@ This document provides high-level system features, issues, and limitations infor
   - Non-Privileged Container: Support deployment of non-privileged pods (CNFs and Applications as reference)
 - Edge Compute EPA features support for On-Premises
   - Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS
-- OpenNESS Experience Kit for Network and OnPremises edge
+- Converged Edge Experience Kits for Network and OnPremises edge
   - Offline Release Package: Customers should be able to create an installer package that can be used to install OnPremises version of OpenNESS without the need for Internet access.
 - 5G NR Edge Cloud deployment support
   - 5G NR edge cloud deployment support with SA mode
@@ -266,8 +269,11 @@ This document provides high-level system features, issues, and limitations infor
 - Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
 
 ## OpenNESS - 21.03
-- Major system Upgrades: CentOS 7.9, Kubernetes 1.20.0, Calico 3.17 and Docker 20.10.2.
+- Major system upgrades: CentOS 7.9, Kubernetes 1.20.0, Docker 20.10.2, QEMU 5.2 and Golang 1.16.
+- Kubernetes CNI upgrades: Calico 3.17, SR-IOV CNI 2.6, Flannel 0.13.0.
+- Telemetry upgrades: CAdvisor 0.37.5, Grafana 7.4.2, Prometheus 2.24.0, Prometheus Node Exporter 1.0.1.
 - Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
+- Intel CMK support deprecated in favour of Kubernetes native CPU Manaher
 
 # Changes to Existing Features
 
@@ -343,6 +349,9 @@ There are no non-Intel issues relevant to this release.
 - Fixed TAS deployment
 - Updated SR-IOV CNI and device plugin to fix issues with image build in offline package creator
 
+## OpenNESS - 21.03
+- Offline deployment issues related to zlib-devel version 1.2.7-19
+
 # Known Issues and Limitations
 ## OpenNESS - 19.06
 There are no issues relevant to this release.
@@ -392,6 +401,11 @@ There is one issue relevant to this release: it is not possible to remove the ap
 
 ## OpenNESS - 20.12.02
 - Offline deployment issues related to zlib-devel version 1.2.7-19
+
+## OpenNESS - 21.03
+- cAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
+- An issue appears when the KubeVirt Containerized Data Importer (CDI) upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. Calico CNI is used by default in OpenNESS when using CDI
+- Telemetry deployment with PCM enabled will cause a deployment failure in single node cluster deployments due to conflict with CollectD deployment, it is advised to not use PCM and CollectD at the same time in OpenNESS at this time
 
 # Release Content
 
@@ -481,4 +495,4 @@ OpenNESS was tested on CentOS Linux release 7.9.2009 (Core)
 
 # Packages Version
 
-Package: telemetry, cadvisor 0.36.0, grafana 7.0.3, prometheus 2.16.0, prometheus: node exporter 1.0.0-rc.0, golang 1.15, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11, ovs 2.14.0, ovn 2.14.0, helm 3.0, kubeovn 1.5.2, flannel 0.13.0, calico 3.17.0, multus 3.6, sriov cni 2.3, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i
+Package: telemetry, cadvisor 0.37.5, grafana 7.4.2, prometheus 2.24.0, prometheus: node exporter 1.0.1, golang 1.16, docker 20.10.2, kubernetes 1.20.0, dpdk 19.11.1, ovs 2.14.0, ovn 2.14.0, helm 3.1.2, kubeovn 1.5.2, flannel 0.13.0, calico 3.17.0, multus 3.6, sriov cni 2.6, nfd 0.6.0, cmk v1.4.1, TAS (from specific commit "a13708825e854da919c6fdf05d50753113d04831"), openssl 1.1.1i, QEMU 5.2

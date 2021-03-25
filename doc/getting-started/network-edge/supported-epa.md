@@ -12,11 +12,16 @@ Enhanced Platform Awareness (EPA) features are supported in on-premises using Ku
 
 ## Features 
 The following EPA features are supported in Open Network Edge Services Software (OpenNESS) Network Edge:
-   * [<b>openness-hugepage.md</b>: Hugepages support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-hugepage.md)
-   * [<b>openness-node-feature-discovery.md</b>: Edge node hardware and software feature discovery support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md)
-   * [<b>openness-sriov-multiple-interfaces.md</b>: Dedicated physical network interface allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
-   * [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-dedicated-core.md)
-   * [<b>openness-bios.md</b>: Edge platform BIOS and firmware and configuration support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-bios.md)
-   * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for edge applications and network functions](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-fpga.md)
-   * [<b>openness-topology-manager.md</b>: Resource locality awareness support through topology manager in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-topology-manager.md)
-
+* [**openness-hugepage.md**: Hugepages support for edge applications and network functions](../../building-blocks/enhanced-platform-awareness/openness-hugepage.md)
+* [**openness-node-feature-discovery.md**: Edge node hardware and software feature discovery support in OpenNESS](../../building-blocks/enhanced-platform-awareness/openness-node-feature-discovery.md)
+* [**openness-sriov-multiple-interfaces.md**: Dedicated physical network interface allocation support for edge applications and network functions](../../building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
+* [**openness-dedicated-core.md**: Dedicated CPU core allocation support for edge applications and network functions](../../building-blocks/enhanced-platform-awareness/openness-dedicated-core.md)
+* [**openness-bios.md**: Edge platform BIOS and firmware and configuration support in OpenNESS](../../building-blocks/enhanced-platform-awareness/openness-bios.md)
+* [**openness-qat.md**: Resource allocation & configuration of Intel® QuickAssist Adapter](../../building-blocks/enhanced-platform-awareness/openness-qat.md)
+* [**openness-fpga.md**: Dedicated FPGA IP resource allocation support for edge applications and network functions](../../building-blocks/enhanced-platform-awareness/openness-fpga.md)
+* [**openness-topology-manager.md**: Resource locality awareness support through topology manager in OpenNESS](../../building-blocks/enhanced-platform-awareness/openness-topology-manager.md)
+* [**openness_hddl.md**: Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution](../../building-blocks/enhanced-platform-awareness/openness_hddl.md)
+* [**openness-telemetry.md**: Telemetry Support in OpenNESS](../../building-blocks/enhanced-platform-awareness/openness-telemetry.md)
+* [**openness-acc100.md**: Resource allocation & configuration of Intel® vRAN Dedicated Accelerator ACC100](../../building-blocks/enhanced-platform-awareness/openness-acc100.md)
+* [**openness-rmd.md**: Cache Allocation for Containers with Resource Management Daemon (RMD)](../../building-blocks/enhanced-platform-awareness/openness-rmd.md)
+* [**openness-vcac-a.md**: Visual Compute Accelerator Card - Analytics (VCAC-A)](../../building-blocks/enhanced-platform-awareness/openness-vcac-a.md)
