@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0       
-Copyright (c) 2020 Intel Corporation
+Copyright (c) 2020-2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # Edge Multi-Cluster Orchestrator (EMCO)
@@ -22,7 +22,7 @@ Copyright (c) 2020 Intel Corporation
     - [Traffic Controller](#traffic-controller)
     - [Generic Action Controller](#generic-action-controller)
     - [Resource Synchronizer](#resource-synchronizer)
-    - [Placment and Action Controllers in EMCO](#placment-and-action-controllers-in-emco)
+    - [Placement and Action Controllers in EMCO](#placement-and-action-controllers-in-emco)
     - [Status Monitoring and Queries in EMCO](#status-monitoring-and-queries-in-emco)
   - [EMCO Terminology](#emco-terminology-1)
   - [EMCO API](#emco-api)
@@ -215,7 +215,7 @@ To achieve both the usecases, the controller exposes RESTful APIs to create, upd
 #### Resource Synchronizer
 This microservice is the one which deploys the resources in edge/cloud clusters. 'Resource contexts' created by various microservices are used by this microservice. It takes care of retrying, in case the remote clusters are not reachable temporarily. 
 
-#### Placment and Action Controllers in EMCO
+#### Placement and Action Controllers in EMCO
 This section illustrates some key aspects of the EMCO controller architecture.  Depending on the needs of a composite application, intents that handle specific operations for application resources (e.g. addition, modification, etc.) can be created via the APIs provided by the corresponding controller API.  The following diagram shows the sequence of interactions to register controllers with EMCO.
 
 ![OpenNESS EMCO](openness-emco-images/emco-register-controllers.png)
@@ -333,6 +333,8 @@ emco      ovnaction-5d8d4447f9-nn7l6     1/1     Running  0        14m
 emco      rsync-99b85b4x88-ashmc         1/1     Running  0        14m
 ```
 
+Besides that, OpenNESS EMCO also provides Azure templates and supports deployment automation for EMCO cluster on Azure public cloud. More details refer to [OpenNESS Development Kit for Microsoft Azure](https://github.com/otcshare/ido-specs/blob/master/doc/devkits/openness-azure-devkit.md).
+
 ## EMCO Example: SmartCity Deployment
 - The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
 - The edge cluster (representing regional office), the cloud cluster and the EMCO are connected with each other.
@@ -344,21 +346,27 @@ _Figure 11 - SmartCity Deployment Architecture Overview_
 The example steps are shown as follows:
 - Prerequisites
   - Make one edge cluster and one cloud cluster ready by using OpenNESS Flavor.
-  - Prepare one server with a vanilla CentOS\* 7.8.2003 for EMCO installation.
+    - If testing with HPA intent, need to prepare two edge clusters.
+  - Prepare one server with a vanilla CentOS\* 7.9.2009 for EMCO installation.
 - EMCO installation
 - Cluster setup
 - Project setup
 - Logical cloud Setup
 - Deploy SmartCity application
 
+### EMCO installation
+Follow the guidance as [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
+ 
 ### Cluster Setup
-In the step, cluster provider will be created. And both the edge cluster and the cloud cluster will be registered in the EMCO.
+The step includes:
+- Prepare edge and cloud clusters kubeconfig files, SmartCity helm charts and relevant artifacts.
+- Register clusters provider by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
+- Register provider's clusters by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
+- Register EMCO controllers and resource synchroizer by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
 
-1. After [EMCO Installation With OpenNESS Flavor](#emco-installation-with-openness-flavor), logon to the EMCO host server and maker sure that Harbor and EMCO microservices are in running status.
-
-2. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
+1. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
     ```shell
-    HARBORRHOST=<harbor_registry_host>
+    HARBORRHOST=<emco_harbor_registry_host_ip>:30003
 
     cd /etc/docker/certs.d/
     mkdir ${HARBORRHOST}
@@ -367,18 +375,22 @@ In the step, cluster provider will be created. And both the edge cluster and the
     HARBORRPW=Harbor12345
     docker login ${HARBORRHOST} -u admin -p ${HARBORRPW}
     ```
+
     > **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
 
-3. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
+2. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
 
-4. Run the command for the environment setup with success return as below:
+3. Artifacts Preparation for clusters's kubeconfig, smartcity helm charts and other relevant artifacts
+   Run the command for the environment setup with success return as below:
     ```shell
     # cd cli-scripts/
-    # ./setup_env.sh
+    # ./setup_env.sh -e <EMCO_IP> -d <EDGE_HOST_IP> -c <CLOUD_HOST_IP> -r
     ```
-    > **NOTE**: [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) secrets need the specific information only accessiable by the edge cluster and the cloud cluster.  `setup_env.sh` will automate it.
 
-5. Run the command for the clusters setup with expected result as below:
+    > **NOTE**: EMCO CLI is used in the setup script, and the steps include SmartCity github repo clone, docker images building, helm charts prepration and clusters configuration information preparation...etc.  
+
+
+4. Run the command for the clusters setup with expected result as below:
     ```shell
     # cd cli-scripts/
     # ./01_apply.sh
@@ -387,37 +399,50 @@ In the step, cluster provider will be created. And both the edge cluster and the
     URL: cluster-providers/smartcity-cluster-provider/clusters/cloud01/labels Response Code: 201 Response: {"label-name":"LabelSmartCityCloud"}
     ```
 
+    > **NOTE**: The cluster setup steps include clusters providers registration, clusters registration, adding labels for the clusters, EMCO controller creation and registration. 
+
+    > **NOTE**: The `01_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `01_clusters_template.yaml` which contains the clusters related resources to create in EMCO. For example: Cluster Providers, Labels...etc.
+
 ### Project Setup
+The step invokes EMCO CLI and registers a project which groups SmartCity application under a common tenant.
 
 Run the command for the project setup with expected result as below:
 
-```shell
-# cd cli-scripts/
-# ./02_apply.sh
+     ```shell
+     # cd cli-scripts/
+     # ./02_apply.sh
 
-Using config file: emco_cfg.yaml
-http://localhost:31298/v2
-URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","description":"","UserData1":"","UserData2":""}}
-```
+     Using config file: emco_cfg.yaml
+     http://localhost:31298/v2
+     URL: projects Response Code: 201 Response: {"metadata":{"name":"project_smtc","description":"","UserData1":"","UserData2":""}}
+     ```
+The `02_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `02_project_template.yaml` which contains the projects related resources to create in EMCO.
 
 ### Logical Cloud Setup
+The step invokes EMCO CLI and registers a logical cloud associated with the physical clusters.
 
 Run the command for the logical cloud setup with expected result as below:
 
-```shell
-# cd cli-scripts/
-# ./03_apply.sh
+     ```shell
+     # cd cli-scripts/
+     # ./03_apply.sh
 
-Using config file: emco_cfg.yaml
-http://localhost:31877/v2
-URL: projects/project_smtc/logical-clouds Response Code: 201 Response: {"metadata":{"name":"default","description":"","userData1":"","userData2":""},"spec":{"namespace":"","level":"0","user":{"user-name":"","type":"","user-permissions":null}}}
-http://localhost:31877/v2
-URL: projects/project_smtc/logical-clouds/default/cluster-references Response Code: 201 Response: {"metadata":{"name":"lc-edge01","description":"","userData1":"","userData2":""},"spec":{"cluster-provider":"smartcity-cluster-provider","cluster-name":"edge01","loadbalancer-ip":"0.0.0.0","certificate":""}}
-http://localhost:31877/v2
-URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200 Response:
-```
+     Using config file: emco_cfg.yaml
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds Response Code: 201 Response: {"metadata":{"name":"default","description":"","userData1":"","userData2":""},"spec":{"namespace":"","level":"0","user":{"user-name":"","type":"","user-permissions":null}}}
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds/default/cluster-references Response Code: 201 Response: {"metadata":{"name":"lc-edge01","description":"","userData1":"","userData2":""},"spec":{"cluster-provider":"smartcity-cluster-provider","cluster-name":"edge01","loadbalancer-ip":"0.0.0.0","certificate":""}}
+     http://localhost:31877/v2
+     URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200 Response:
+     ```
+The `03_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `03_logical_cloud_template.yaml` which contains the logical cloud related resources to create in EMCO.
 
 ### Deploy SmartCity Application
+The setup includes:
+- Onboard SmartCity Application helm charts and profiles
+- Create generic placement intent to specify the edge/cloud cluster locations for each applicaiton of SmartCity
+- Create deployment intent references of the generic placement intent and generic actions intent for SmartCity generic kuberenetes resource: configmap, secret...etc.
+- Approve and Instantiate SmartCityp deployment 
 
 1. Run the command for the SmartCity application deployment with expected result as below:
     ```shell
@@ -429,8 +454,11 @@ URL: projects/project_smtc/logical-clouds/default/instantiate Response Code: 200
     http://localhost:31298/v2
     URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
     ```
+
     > **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 
+    > **NOTE**: The `04_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `04_apps_template.yaml` which contains the application related resources to create in EMCO, for example deployment-intent, application helm chart entries, override profiles, configmap...etc. The placement intent for the use case is cluster label name and provider name.
+    
 2. Verify SmartCity Application Deployment Information.
 The pods on the edge cluster are in the running status as shown as below:
 
@@ -467,13 +495,13 @@ _Figure 12 - SmartCity UI_
 ### SmartCity Termination
 
 Run the command for the SmartCity termination with expected result as below:
-```shell
-# cd cli-scripts/
-# ./88_terminate.sh
+    ```shell
+    # cd cli-scripts/
+    # ./88_terminate.sh
 
-Using config file: emco_cfg.yaml
-http://localhost:31298/v2
-URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/terminate Response Code: 202 Response:
-```
+    Using config file: emco_cfg.yaml
+    http://localhost:31298/v2
+    URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/terminate Response Code: 202 Response:
+    ```
 
 After termination, the SmartCity application will be deleted from the clusters.
