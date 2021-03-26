@@ -34,7 +34,7 @@ disable_dashboard_tls: false # set to true to disable TLS
 
 ### Usage
 
-User can use Kubernetes Dashboard by browsing `https://<controller_ip>:30443` if TLS is enabled or `http://<controller_ip>:30443` if TLS is disabled.
+User can use Kubernetes Dashboard by browsing `https://<controller_ip>:30553` if TLS is enabled or `http://<controller_ip>:30553` if TLS is disabled.
 
 With TLS enabled Kubernetes Dashboard will prompt for `Kubernetes Service Account token` to log in user. You can get the token by executing the following command on your controller:
 
@@ -42,7 +42,7 @@ With TLS enabled Kubernetes Dashboard will prompt for `Kubernetes Service Accoun
 kubectl describe secret -n kube-system $(kubectl get secret -n kube-system | grep 'kubernetes-dashboard-token' | awk '{print $1}') | grep 'token:' | awk '{print $2}'
 ```
 
-> NOTE: To use Kubernetes Dashboard with TLS encryption user will have to add `https://<controller_ip>:30443` to web browser's list of security exceptions.
+> NOTE: To use Kubernetes Dashboard with TLS encryption user will have to add `https://<controller_ip>:30553` to web browser's list of security exceptions.
 
 ### Access rights
 
