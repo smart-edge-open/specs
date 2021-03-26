@@ -247,6 +247,7 @@ OpenCensus exporter/receiver is used in the default OpenNESS configuration for a
 
 Processor Counter Monitor (PCM) is an application programming interface (API) and a set of tools based on the API to monitor performance and energy metrics of Intel® Core™, Xeon®, Atom™ and Xeon Phi™ processors. In OpenNESS, the PCM pod is deployed as a K8s `Daemonset` on every available node. PCM metrics are exposed to Prometheus via the Host's NodePort on each EdgeNode. 
 >**NOTE**: The PCM feature is intended to run on physical hardware (i.e., no support for VM virtualized Edge Nodes in OpenNESS). Therefore, this feature is disabled by default. The feature can be enabled by setting the `telemetry_pcm_enable` flag in CEEK. Additionally, a preset dashboard is created for PCM in Grafana visualizing the most crucial metrics.
+>**NOTE**: There is currently a limitation in OpenNESS where a conflict between deployment of CollectD and PCM prevents PCM server from starting successfully, it is advised to run PCM with CollectD disabled at this time.
 
 #### Usage
 

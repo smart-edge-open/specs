@@ -115,13 +115,8 @@ After a successful deployment, the following pods will be available in the clust
 kubectl get pods -A
 
 NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
-kube-ovn      kube-ovn-cni-hdgrl                        1/1     Running   0          3d19h
-kube-ovn      kube-ovn-cni-px79b                        1/1     Running   0          3d18h
-kube-ovn      kube-ovn-controller-578786b499-74vzm      1/1     Running   0          3d19h
-kube-ovn      kube-ovn-controller-578786b499-j22gl      1/1     Running   0          3d19h
-kube-ovn      ovn-central-5f456db89f-z7d6x              1/1     Running   0          3d19h
-kube-ovn      ovs-ovn-46k8f                             1/1     Running   0          3d18h
-kube-ovn      ovs-ovn-5r2p6                             1/1     Running   0          3d19h
+kube-system   calico-kube-controllers-646546699f-wl6rn  1/1     Running   0          3d19h
+kube-system   calico-node-hrtn4                         1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-mrc82                  1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-wlvhc                  1/1     Running   0          3d19h
 kube-system   etcd-silpixa00394960                      1/1     Running   0          3d19h
@@ -150,7 +145,7 @@ To configure the VFs with the necessary number of queues for the vRAN workload, 
 
 Sample configMap, which can be configured by changing values, if other than typical config is required, with a profile for the queue configuration is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/acc100-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment. Additionally, the default values in Helm chart will deploy FPGA config, a flag needs to be provided to invoke ACC100 config.
 
-Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller:
+Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller (this job needs to be re-run on each node reboot):
 
 ```shell
 helm install --set nodeName=<node_name> --set device=ACC100 intel-acc100-cfg bb_config
