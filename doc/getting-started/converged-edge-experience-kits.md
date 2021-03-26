@@ -89,6 +89,7 @@ The following variables must be defined
   - IP address (`ansible_host`) for both controller and node must be the same
   - `controller_group` and `edgenode_group` groups must contain exactly one host
 * `limit` -- **OPTIONAL**: constrains the deployment to a specific Ansible\* group, e.g., `controller`, `edgenode`, `edgenode_vca_group` or just a particular hostname. This is passed as a `--limit` command-line option when executing `ansible-playbook`.
+* `ansible_user`: deployment will be done for provided user and that user will become kubernetes cluster admin
 
 ## Sample Deployment Definitions
 ### Single Cluster Deployment
