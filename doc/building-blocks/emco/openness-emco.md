@@ -311,6 +311,21 @@ EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tre
       vars:
         cluster_name: central_orchestrator_cluster
         flavor: central_orchestrator
+        single_node_deployment: false
+        limit: controller_group
+    controller_group:
+      hosts:
+        ctrl.openness.org:
+          ansible_host: <controller ip address>
+          ansible_user: openness
+    edgenode_group:
+      hosts:
+    edgenode_vca_group:
+      hosts:
+    ptp_master:
+      hosts:
+    ptp_slave_group:
+      hosts:
     ... 
     ```
 > **NOTE**: `edgenode_group:` and `edgenode_vca_group:` are not required for configuration, since EMCO micro services just need to be deployed on the Kubernetes* control plane node.
