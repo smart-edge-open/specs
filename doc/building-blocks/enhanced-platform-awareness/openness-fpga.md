@@ -10,7 +10,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Intel(R) FPGA PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intelr-fpga-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
 - [Using an FPGA on OpenNESS](#using-an-fpga-on-openness)
   - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
-    - [Converged Edge Experience Kits](#openness-experience-kit)
+    - [Converged Edge Experience Kits](#converged-edge-experience-kits)
   - [FPGA programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
     - [Telemetry monitoring](#telemetry-monitoring)
   - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
@@ -128,13 +128,8 @@ After a successful deployment, the following pods will be available in the clust
 kubectl get pods -A
 
 NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
-kube-ovn      kube-ovn-cni-hdgrl                        1/1     Running   0          3d19h
-kube-ovn      kube-ovn-cni-px79b                        1/1     Running   0          3d18h
-kube-ovn      kube-ovn-controller-578786b499-74vzm      1/1     Running   0          3d19h
-kube-ovn      kube-ovn-controller-578786b499-j22gl      1/1     Running   0          3d19h
-kube-ovn      ovn-central-5f456db89f-z7d6x              1/1     Running   0          3d19h
-kube-ovn      ovs-ovn-46k8f                             1/1     Running   0          3d18h
-kube-ovn      ovs-ovn-5r2p6                             1/1     Running   0          3d19h
+kube-system   calico-kube-controllers-646546699f-wl6rn  1/1     Running   0          3d19h
+kube-system   calico-node-hrtn4                         1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-mrc82                  1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-wlvhc                  1/1     Running   0          3d19h
 kube-system   etcd-silpixa00394960                      1/1     Running   0          3d19h
@@ -161,7 +156,7 @@ openness      syslog-ng-br92z                           1/1     Running   0     
 ### FPGA programming and telemetry on OpenNESS Network Edge
 It is expected the the factory image of the Intel® FPGA PAC N3000 is of version 2.0.x. To program the user image (5GN FEC vRAN) of the Intel® FPGA PAC N3000 via OPAE a `kubectl` plugin for K8s is provided - it is expected that the provided user image is signed or un-signed (development purposes) by the user, see the [documentation](https://www.intel.com/content/www/us/en/programmable/documentation/pei1570494724826.html) for more information on how to sign/un-sign the image file. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs that run to completion on the desired host and display the logs/output of the command.
 
-The following are the operations supported by the `kubectl rsu` K8s plugin. They are run from the Edge Controller:
+The following are the operations supported by the `kubectl rsu` K8s plugin. They are run from the Edge Controller (the user who runs the commands needs to be a privileged user):
 
 1. To check the version of the MAX10 image and FW run:
 ```
@@ -234,7 +229,7 @@ To configure the VFs with the necessary number of queues for the vRAN workload t
 
 Sample configMap, which can be configured by changing values if other than typical configuration is required, with a profile for the queue configuration, is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/fpga-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
 
-Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller:
+Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller (this job needs to be re-run on each node reboot):
 
 ```shell
 helm install --set nodeName=<node_name> intel-fpga-cfg bb_config
