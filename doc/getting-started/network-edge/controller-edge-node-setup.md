@@ -39,7 +39,7 @@ Copyright (c) 2019-2021 Intel Corporation
   - [Obtaining installation files](#obtaining-installation-files)
   - [Setting Git](#setting-git)
     - [GitHub token](#github-token)
-    - [Customize tag/branch/sha to checkout](#customize-tagbranchsha-to-checkout)
+    - [Customize tag/branch/sha to checkout on edgeservices repository](#customize-tagbranchsha-to-checkout-on-edgeservices-repository)
   - [Customization of kernel, grub parameters, and tuned profile](#customization-of-kernel-grub-parameters-and-tuned-profile)
 
 # Quickstart
@@ -706,16 +706,12 @@ To generate a GitHub token, refer to [GitHub help - Creating a personal access t
 
 To provide the token, edit the value of `git_repo_token` variable in `inventory/default/group_vars/all/10-default.yml`.
 
-### Customize tag/branch/sha to checkout
-
-A specific tag, branch, or commit SHA can be checked out by setting the `controller_repository_branch` and the `edgenode_repository_branch` variables in `inventory/default/group_vars/all/10-default.yml` for Edge Nodes and Kubernetes control plane / Edge Controller, respectively.
-
+### Customize tag/branch/sha to checkout on edgeservices repository
+A specific tag, branch, or commit SHA on edgeservices repository can be checked out by setting the `git_repo_branch` variable in `inventory/default/group_vars/all/10-open.yml`.
 ```yaml
-controller_repository_branch: master
-edgenode_repository_branch: master
+git_repo_branch: master
 # or
-controller_repository_branch: openness-20.03
-edgenode_repository_branch: openness-20.03
+git_repo_branch: openness-20.03
 ```
 
 ## Customization of kernel, grub parameters, and tuned profile

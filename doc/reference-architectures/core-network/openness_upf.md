@@ -45,7 +45,7 @@ As part of the end-to-end integration of the Edge cloud deployment using OpenNES
 
 # Purpose
 
-This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Container Networking function (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
+This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Cloud-native network functions (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
 
 These scripts are validated through a reference UPF solution (implementation is based on Vector Packet Processing (VPP)) that is not part of the OpenNESS release.
 
@@ -59,14 +59,17 @@ These scripts are validated through a reference UPF solution (implementation is 
 
 1. To keep the build and deploy process straightforward, the Docker\* build and image are stored on the Edge node.
 
+2. Copy the upf binary package to the Docker build folder. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+
     ```bash
-    ne-node# cd <5g-upf-binary-package>
+    ne-node# cp -rf <5g-upf-binary-package> edgeapps/network-functions/core-network/5G/UPF/upf
     ```
 
-2. Copy the Docker files to the node and build the Docker image. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+3. Build the Docker image.
 
     ```bash
-    ne-node# ./build_image.sh
+    ne-node# cd edgeapps/network-functions/core-network/5G/UPF
+    ne-node# ./build_image.sh -b ./upf/ -i upf-cnf
 
     ne-node# docker image ls | grep upf
     upf-cnf     1.0                 e0ce467c13d0        15 hours ago        490MB
@@ -139,9 +142,9 @@ Below is a list of minimal configuration parameters for VPP-based applications s
 3. Enable the vfio-pci/igb-uio driver on the node. The below example shows the enabling of the `igb_uio` driver:
 
     ```bash
-    ne-node# /opt/openness/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
+    ne-node# /opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
-    ne-node# /opt/openness/dpdk-18.11.6/usertools/dpdk-devbind.py --status
+    ne-node# /opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py --status
     Network devices using DPDK-compatible driver
     ============================================
     0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
@@ -322,12 +325,9 @@ In this reference validation, the UPF application will be started manually after
 
 2. Exec into the UPF pod and start the UPF:
 
-    >**NOTE**: The command `groupadd vpp` needs to be given only for the first execution.
-
     ```bash
     ne-controller# kubectl exec -it upf-cnf -- /bin/bash
-    upf-cnf# groupadd vpp
-    upf-cnf# ./run_upf.sh
+    upf-cnf# sudo ./run_upf.sh
     ```
 
 ## Uninstall UPF pod from OpenNESS controller
