@@ -10,18 +10,19 @@ Copyright (c) 2021 Intel Corporation
 
 ## Overview
 
-OpenNESS provides a possibility to install all required files on Kubernetes a control plane and nodes with or without root rights. From security perspective it is advised to use non-root user installation of our platform where all tasks are executed with non-root user’s permissions. Tasks that require root privileges use privilege escalation property "become".
+OpenNESS provides a possibility to install all required files on a Kubernetes control plane and nodes with or without root user. From security perspective it is advised to use non-root user installation of the OpenNESS platform where all tasks are executed with non-root user’s permissions. Tasks that require root privileges use privilege escalation property "become".
 
    ```yml
   - name: Run a command as root
       command: whoami
       become: yes
    ```
->**NOTE**: For more about privileges escalation in ansible please refer to https://docs.ansible.com/ansible/latest/user_guide/become.html#
+
+>**NOTE**: For more about privileges escalation in Ansible please refer to https://docs.ansible.com/ansible/latest/user_guide/become.html#
 
 ## Steps on K8s nodes
 
-Before ansible installation is started a non-root user needs to be created on the machines marked in Ansible's inventory. To create a user `openness` a command can be executed:
+Before Ansible installation is started a non-root user needs to be created on the machines defined in `inventory.yml` . To create a user `openness` execute the command:
 
 ```bash
 adduser "openness"
@@ -41,11 +42,24 @@ echo "openness  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/openness
 
 ## Repository modification
 
-To be able to start ansible as a non-root user a modification in inventory is required. Replacement of root user in variable `ansible_ssh_user` to already created non-root user will cause an execution of all tasks as non-root user specified.
+To run Ansible as a non-root user a modification in `inventory.yml` is required. Setting a user in variable `ansible_user` to already created non-root user will cause an execution of all tasks as non-root user specified.
 
-```ini
-[all]
-controller ansible_ssh_user=openness ansible_host=192.168.1.10
-node01 ansible_ssh_user=openness ansible_host=192.168.1.11
-node02 ansible_ssh_user=openness ansible_host=192.168.1.12
+```yaml
+---
+all:
+  vars:
+    cluster_name: minimal_cluster
+    flavor: minimal
+    single_node_deployment: false
+    limit:
+controller_group:
+  hosts:
+    ctrl.openness.org:
+      ansible_host: 172.16.0.1
+      ansible_user: openness
+edgenode_group:
+  hosts:
+    node01.openness.org:
+      ansible_host: 172.16.0.2
+      ansible_user: openness
 ```
