@@ -10,7 +10,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Intel(R) FPGA PAC N3000 remote system update flow in OpenNESS Network edge Kubernetes](#intelr-fpga-pac-n3000-remote-system-update-flow-in-openness-network-edge-kubernetes)
 - [Using an FPGA on OpenNESS](#using-an-fpga-on-openness)
   - [FPGA (FEC) Ansible installation for OpenNESS Network Edge](#fpga-fec-ansible-installation-for-openness-network-edge)
-    - [OpenNESS Experience Kit](#openness-experience-kit)
+    - [Converged Edge Experience Kits](#converged-edge-experience-kits)
   - [FPGA programming and telemetry on OpenNESS Network Edge](#fpga-programming-and-telemetry-on-openness-network-edge)
     - [Telemetry monitoring](#telemetry-monitoring)
   - [FEC VF configuration for OpenNESS Network Edge](#fec-vf-configuration-for-openness-network-edge)
@@ -84,22 +84,22 @@ For information on how to update and flash the MAX10 to supported version see [I
 ### FPGA (FEC) Ansible installation for OpenNESS Network Edge
 To run the OpenNESS package with FPGA (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
-#### OpenNESS Experience Kit
-To enable FPGA support from OEK, change the variable `ne_opae_fpga_enable` in `group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
+#### Converged Edge Experience Kits
+To enable FPGA support from CEEK, change the variable `ne_opae_fpga_enable` in `inventory/default/group_vars/all/10-default.yml` (or flavor alternative file) to `true`:
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 ne_opae_fpga_enable: true
 ```
 
 Additionally, SRIOV must be enabled in OpenNESS:
 ```yaml
-# group_vars/all/10-default.yml
+# inventory/default/group_vars/all/10-default.yml
 kubernetes_cnis:
 - <main CNI>
 - sriov
 ```
 
-Also, enable the following options in `group_vars/all/10-default.yml`:
+Also, enable the following options in `inventory/default/group_vars/all/10-default.yml`:
 The following device config is the default config for the Intel® FPGA PAC N3000 with a 5GNR vRAN user image tested (this configuration is common to both the EdgeNode and EdgeController setup).
 ```yaml
 # group_var/all/10-default.yml
@@ -117,25 +117,19 @@ fpga_userspace_vf:
 
 The following packages need to be placed into specific directories for the feature to work:
 
-1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `openness-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
+1. The OPAE package `OPAE_SDK_1.3.7-5_el7.zip` needs to be placed inside the `converged-edge-experience-kits/opae_fpga` directory. The package can be obtained as part of Intel® FPGA PAC N3000 OPAE beta release. To obtain the package, contact your Intel representative.
 
-Run setup script `deploy_ne.sh -f <flavor>`.
+Run setup script `deploy.py` with defined `inventory.yml` file.
 
-**Note:**
-Up to version 20.12 choosing flavor was optional. Since version 21.03 and moving forward this parameter is no longer optional. To learn more about [flavors go to this page](https://github.com/otcshare/x-specs/blob/master/doc/flavors.md).
+> **NOTE**: for more details about deployment and defining inventory please refer to [CEEK](../../getting-started/converged-edge-experience-kits.md#converged-edge-experience-kit-explained) getting started page.
 
 After a successful deployment, the following pods will be available in the cluster (CNI pods may vary depending on deployment):
 ```shell
 kubectl get pods -A
 
 NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
-kube-ovn      kube-ovn-cni-hdgrl                        1/1     Running   0          3d19h
-kube-ovn      kube-ovn-cni-px79b                        1/1     Running   0          3d18h
-kube-ovn      kube-ovn-controller-578786b499-74vzm      1/1     Running   0          3d19h
-kube-ovn      kube-ovn-controller-578786b499-j22gl      1/1     Running   0          3d19h
-kube-ovn      ovn-central-5f456db89f-z7d6x              1/1     Running   0          3d19h
-kube-ovn      ovs-ovn-46k8f                             1/1     Running   0          3d18h
-kube-ovn      ovs-ovn-5r2p6                             1/1     Running   0          3d19h
+kube-system   calico-kube-controllers-646546699f-wl6rn  1/1     Running   0          3d19h
+kube-system   calico-node-hrtn4                         1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-mrc82                  1/1     Running   0          3d19h
 kube-system   coredns-6955765f44-wlvhc                  1/1     Running   0          3d19h
 kube-system   etcd-silpixa00394960                      1/1     Running   0          3d19h
@@ -162,7 +156,7 @@ openness      syslog-ng-br92z                           1/1     Running   0     
 ### FPGA programming and telemetry on OpenNESS Network Edge
 It is expected the the factory image of the Intel® FPGA PAC N3000 is of version 2.0.x. To program the user image (5GN FEC vRAN) of the Intel® FPGA PAC N3000 via OPAE a `kubectl` plugin for K8s is provided - it is expected that the provided user image is signed or un-signed (development purposes) by the user, see the [documentation](https://www.intel.com/content/www/us/en/programmable/documentation/pei1570494724826.html) for more information on how to sign/un-sign the image file. The plugin also allows for obtaining basic FPGA telemetry. This plugin will deploy K8s jobs that run to completion on the desired host and display the logs/output of the command.
 
-The following are the operations supported by the `kubectl rsu` K8s plugin. They are run from the Edge Controller:
+The following are the operations supported by the `kubectl rsu` K8s plugin. They are run from the Edge Controller (the user who runs the commands needs to be a privileged user):
 
 1. To check the version of the MAX10 image and FW run:
 ```
@@ -226,7 +220,7 @@ To run vRAN workloads on the Intel® FPGA PAC N3000, the FPGA must be programmed
 
 #### Telemetry monitoring
 
-  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
+  Support for monitoring temperature and power telemetry of the Intel® FPGA PAC N3000 is also provided from OpenNESS with a CollectD collector that is configured for the `flexran` flavor. Intel® FPGA PAC N3000 telemetry monitoring is provided to CollectD as a plugin. It collects the temperature and power metrics from the card and exposes them to Prometheus\* from which the user can easily access the metrics. For more information on how to enable telemetry for FPGA in OpenNESS, see the [telemetry whitepaper](../../building-blocks/enhanced-platform-awareness/openness-telemetry.md#collectd).
 
   ![PACN3000 telemetry](fpga-images/openness-fpga4.png)
 
@@ -235,7 +229,7 @@ To configure the VFs with the necessary number of queues for the vRAN workload t
 
 Sample configMap, which can be configured by changing values if other than typical configuration is required, with a profile for the queue configuration, is provided as part of Helm chart template `/opt/openness/helm-charts/bb_config/templates/fpga-config.yaml` populated with values from `/opt/openness/helm-charts/bb_config/values.yaml`. Helm chart installation requires a provision of hostname for the target node during job deployment.
 
-Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller:
+Install the Helm chart by providing configmap and BBDEV config utility job with the following command from `/opt/openness/helm-charts/` on Edge Controller (this job needs to be re-run on each node reboot):
 
 ```shell
 helm install --set nodeName=<node_name> intel-fpga-cfg bb_config
@@ -269,7 +263,7 @@ kubectl get node <node_name> -o json | jq '.status.allocatable'
 ```
 
 To request the device as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
-**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/openness-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/files/sriov/templates/configMap.yml).
+**NOTE**: The name of the resource must match the name specified in the configMap for the K8s devices plugin [configMap.yml](https://github.com/otcshare/converged-edge-experience-kits/blob/master/roles/kubernetes/cni/sriov/controlplane/templates/configMap.yml.j2).
 
 A sample pod requesting the FPGA (FEC) VF may look like this:
 
@@ -323,7 +317,7 @@ Build the image:
 
 `./build-image.sh`
 
-From the Edge Controlplane, deploy the application pod. The pod specification is located at `/opt/openness/edgenode/edgecontroller/fpga/fpga-sample-app.yaml`:
+From the Edge Controlplane, deploy the application pod. The pod specification is located at `/opt/openness/edgeservices/edgecontroller/fpga/fpga-sample-app.yaml`:
 
 ```
 kubectl create -f fpga-sample-app.yaml

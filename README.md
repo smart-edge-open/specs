@@ -21,7 +21,7 @@ Below is the complete list of OpenNESS solution documentation
 ## Getting Started - Setup
 
 * [<b>getting-started</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started)
-   * [<b>openness-experience-kits.md</b>: Overview of the OpenNESS Experience kits that are used to install the Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md)
+   * [<b>converged-edge-experience-kits.md</b>: Overview of the Converged Edge Experience Kits that are used to install the Network Edge solutions](https://github.com/otcshare/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md)
    * [<b>network-edge</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge)
      * [<b>controller-edge-node-setup.md</b>: Started here for installing and trying OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
      * [<b>supported-epa.md</b>: List of Silicon and Software EPA that are features that are supported in OpenNESS Network Edge](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md)
@@ -57,6 +57,7 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-sriov-multiple-interfaces.md</b>: Dedicated Physical Network interface allocation support for Edge Applications and Network Functions](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
    * [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for Edge Applications and Network Functions](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-dedicated-core.md)
    * [<b>openness-bios.md</b>: Edge platform BIOS and Firmware and configuration support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-bios.md)
+   * [<b>openness-qat.md</b>: Resource allocation & configuration of Intel® QuickAssist Adapter](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-qat.md)
    * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for Edge Applications and Network Functions](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md)
    * [<b>openness_hddl.md</b>: Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness_hddl.md)
    * [<b>openness-topology-manager.md</b>: Resource Locality awareness support through Topology manager in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-topology-manager.md)
@@ -152,5 +153,5 @@ Below is the complete list of OpenNESS solution documentation
 - COTS: Commercial Off-The-Shelf
 - DU: Distributed Unit of RAN
 - CU: Centralized Unit of RAN
-- OEK: OpenNESS Experience Kit
+- CEEK: Converged Edge Experience Kits
 - IDO: Intel Distribution of OpenNESS

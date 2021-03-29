@@ -9,7 +9,7 @@ Copyright (c) 2019-2020 Intel Corporation
     - [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration)
 - [5G NGC components bring up and Configuration using CNCA](#5g-ngc-components-bring-up-and-configuration-using-cnca)
   - [Network Edge mode](#network-edge-mode)
-    - [Bring up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
+    - [Bring-up of NGC components in Network Edge mode](#bring-up-of-ngc-components-in-network-edge-mode)
     - [Configuring in Network Edge mode](#configuring-in-network-edge-mode-1)
       - [Edge Node services operations with 5G Core (through OAM interface)](#edge-node-services-operations-with-5g-core-through-oam-interface)
         - [Registration of UPF services associated with Edge-node with 5G Core](#registration-of-upf-services-associated-with-edge-node-with-5g-core)
@@ -40,7 +40,7 @@ Available management with `kube-cnca` against LTE CUPS OAM agent are:
 2. Deletion of LTE CUPS userplanes
 3. Updating (patching) LTE CUPS userplanes
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-experience-kits.md).
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](../getting-started/converged-edge-experience-kits.md).
 In the following sections, a detailed explanation with examples is provided about the CNCA management.
 
 Creation of the LTE CUPS userplane is performed based on the configuration provided by the given YAML file. The YAML configuration should follow the provided sample YAML in [Sample YAML LTE CUPS userplane configuration](#sample-yaml-lte-cups-userplane-configuration) section. Use the `apply` command to post a userplane creation request onto Application Function (AF):
@@ -105,7 +105,7 @@ policy:
 
 # 5G NGC components bring up and Configuration using CNCA
 
-OpenNESS provides ansible scripts for setting up NGC components for two scenarios. Each of the scenarios is supported by a separate role in the OpenNESS Experience Kit:
+OpenNESS provides ansible scripts for setting up NGC components for two scenarios. Each of the scenarios is supported by a separate role in the Converged Edge Experience Kits:
 
 1. Role "ngc_test"
   This role brings up the 5g OpenNESS setup in the loopback mode for testing and demonstrating its usability. This scenario is currently the default 5G OpenNESS scenario. The ansible scripts that are part of "ngc_test" role build, configure and start AF, NEF and OAM in the Network Edge. Within this role, AF, NEF and OAM are set up on the controller node.  Description of the configuration and setup of the NGC components provided in the next sections of this document refers to ngc_test role. The NGC componetns set up within ngc_test role can be fully integrated and tested with provided Kubectl plugin or CNCA UI.
@@ -118,10 +118,10 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 ### Bring-up of NGC components in Network Edge mode
 
 1. If the Edge controller is not yet deployed through openness-experience-kit then:
-   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` before running `deploy_ne.sh -f <flavor> controller` or `deploy_ne.sh -f <flavor>` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
+   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` before running `deploy.py` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `group_vars/all/10-default.yml` and then re-run `deploy_ne.sh -f <flavor> controller` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` and then re-run `deploy.py` with `limit` set to `controller_group` in `inventory.yml` (define only one cluster on which the role should be enabled) as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
 
     **NOTE:**
     In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.
@@ -165,7 +165,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 For Network Edge mode, the CNCA provides a kubectl plugin to configure the 5G Core network. Kubernetes adopted plugin concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes ecosystem. The plugin performs remote callouts against NGC OAM and AF microservice on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [OpenNESS Experience Kit](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

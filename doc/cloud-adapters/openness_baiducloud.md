@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2019 Intel Corporation
+Copyright (c) 2019-2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # OpenNESS Integration with Baidu OpenEdge
@@ -322,7 +322,7 @@ The scripts can be found in the release package with the subfolder name `setup_b
 └── measure_rtt_openedge.py
 ```
 
-Before running the scripts, install python3.6 and paho mqtt on a CentOS\* Linux\* machine, where the recommended version is CentOS Linux release 7.8.2003 (Core). 
+Before running the scripts, install python3.6 and paho mqtt on a CentOS\* Linux\* machine, where the recommended version is CentOS Linux release 7.9.2009 (Core).
 The following are recommended install commands:
 
 ```docker

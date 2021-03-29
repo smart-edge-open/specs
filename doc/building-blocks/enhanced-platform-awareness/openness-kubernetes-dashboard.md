@@ -17,7 +17,7 @@ Kubernetes Dashboard is a web user interface for Kubernetes. User can use Dashbo
 
 ## Details - Kubernetes Dashboard support in OpenNESS
 
-Kubernetes Dashboard is disabled by default in OpenNESS Experience Kits. It can be enabled by setting variable `kubernetes_dashboard_enable` in `group_vars/all/10-default.yml` file to `true` value:
+Kubernetes Dashboard is disabled by default in Converged Edge Experience Kits. It can be enabled by setting variable `kubernetes_dashboard_enable` in `inventory/default/group_vars/all/10-default.yml` file to `true` value:
 
 ```yaml
 # Kubernetes Dashboard
@@ -26,7 +26,7 @@ kubernetes_dashboard_enable: false # set to true to enable Kubernetes Dashboard
 
 ### TLS encryption
 
-TLS for Kubernetes dashboard is enabled by default. User can disable TLS encryption using variable `disable_dashboard_tls` in `group_vars/all/10-default.yml`:
+TLS for Kubernetes dashboard is enabled by default. User can disable TLS encryption using variable `disable_dashboard_tls` in `inventory/default/group_vars/all/10-default.yml`:
 
 ```yaml
 disable_dashboard_tls: false # set to true to disable TLS
@@ -46,7 +46,7 @@ kubectl describe secret -n kube-system $(kubectl get secret -n kube-system | gre
 
 ### Access rights
 
-By default OpenNESS will deploy Kubernetes Dashboard with read-only access to every information except Kubernetes' secrets. To change access rights (for example hide information about persistent volumes claims, etc.) please modify cluster role defined in `roles/kubernetes/dashboard/files/clusterrole.yml` of OpenNESS Experience Kits.
+By default OpenNESS will deploy Kubernetes Dashboard with read-only access to every information except Kubernetes' secrets. To change access rights (for example hide information about persistent volumes claims, etc.) please modify cluster role defined in `roles/kubernetes/dashboard/files/clusterrole.yml` of Converged Edge Experience Kits.
 
 ## Reference
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)

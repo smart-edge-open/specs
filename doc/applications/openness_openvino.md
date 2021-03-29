@@ -133,7 +133,7 @@ openvino-prod-app       1.0
 
 ### Streaming & Displaying the Augmented Video
 
-The OpenVINO edge application accepts a UDP video stream. This video stream can
+The OpenVINO edge application accepts a TCP video stream. This video stream can
 be from any video source such as an IP camera. The Client Simulator provided in
 this project uses a sample mp4 video file to continuously transmit the video
 stream to the OpenNESS Edge Node. Object detection is executed on this video

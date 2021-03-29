@@ -27,10 +27,10 @@ Each implementation for each hardware is an inference engine plugin.
 The plugin for the Intel® Movidius™ Myriad™ X HDDL solution, or IE HDDL plugin for short, supports the Intel® Movidius™ Myriad™ X HDDL Solution hardware PCIe card. It communicates with the Intel® Movidius™ Myriad™ X HDDL HAL API to manage multiple Intel® Movidius™ Myriad™ X devices in the card, and it schedules deep-learning neural networks and inference tasks to these devices.
 
 ## HDDL OpenNESS Integration
-OpenNESS provides support for the deployment of OpenVINO™ applications and workloads accelerated through Intel® Vision Accelerator Design with the Intel® Movidius™ VPU HDDL-R add-in card. As a prerequisite for enabling the support, it is required for the HDDL add-in card to be inserted into the PCI slot of the Edge Node platform. The support is then enabled by setting the appropriate flag - 'ne_hddl_enable' in the '/group_vars/all/10-default.yml' before running OEK playbooks.
+OpenNESS provides support for the deployment of OpenVINO™ applications and workloads accelerated through Intel® Vision Accelerator Design with the Intel® Movidius™ VPU HDDL-R add-in card. As a prerequisite for enabling the support, it is required for the HDDL add-in card to be inserted into the PCI slot of the Edge Node platform. The support is then enabled by setting the appropriate flag - 'ne_hddl_enable' in the 'inventory/default/group_vars/all/10-default.yml' before running CEEK playbooks.
 > **NOTE** No pre-defined flavor is provided for HDDL. If user wants to enable HDDL with flavor, can set flag - 'ne_hddl_enable' in the 'flavors/<flavor-name>/all.yml'. The node with HDDL card inserted will be labelled as 'hddl-zone=true'.
 
-The OEK automation script for HDDL will involve the following steps:
+The CEEK automation script for HDDL will involve the following steps:
 - Download the HDDL DaemonSet yaml file from [Open Visual Cloud dockerfiles software](https://github.com/OpenVisualCloud/Dockerfiles) and templates it with specific configuration to satifiy OpenNESS need such as OpenVINO version...etc.
 - Download the OpenVINO™, install kernel-devel and then install HDDL dependencies.
 - Build the HDDLDdaemon image.
@@ -38,7 +38,7 @@ The OEK automation script for HDDL will involve the following steps:
 - HDDL Daemon automatically brings up on the node with label 'hddl-zone=true'.
 
 The HDDL Daemon provides the backend service to manage VPUs and dispatch inference tasks to VPUs. OpenVINO™-based applications that utilizes HDDL hardware need to access the device node '/dev/ion' and domain socket under '/var/tmp' to communicate with the kernel and HDDL service.
-> **NOTE** With the default kernel used by OpenNESS OEK, the ion driver will not enabled by OpenVINO™ toolkits, and the shared memory - '/dev/shm' will be used as fallback.  More details refer to [installing_openvino_docker_linux](https://docs.openvinotoolkit.org/2020.2/_docs_install_guides_installing_openvino_docker_linux.html) 
+> **NOTE** With the default kernel used by OpenNESS CEEK, the ion driver will not enabled by OpenVINO™ toolkits, and the shared memory - '/dev/shm' will be used as fallback.  More details refer to [installing_openvino_docker_linux](https://docs.openvinotoolkit.org/2020.2/_docs_install_guides_installing_openvino_docker_linux.html) 
 
 
 ![HDDL-Block-Diagram](hddl-images/hddlservice.png)

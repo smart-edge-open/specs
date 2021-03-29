@@ -49,7 +49,7 @@ This document explains the build and deployment of two applications:
 2. OpenVINO™ application: A close to real-world inference application
 
 ## Building sample application images
-The sample application is available in [the edgeapps repository](https://github.com/otcshare/edgeapps/tree/master/sample-app); further information about the application is contained within the `Readme.md` file.
+The sample application is available in [the edgeapps repository](https://github.com/otcshare/edgeapps/tree/master/applications/sample-app); further information about the application is contained within the `Readme.md` file.
 
 The following steps are required to build the sample application Docker images for testing the OpenNESS Edge Application Agent (EAA) with consumer and producer applications:
 
@@ -64,7 +64,7 @@ The following steps are required to build the sample application Docker images f
    docker images | grep consumer
    ```
 ## Building the OpenVINO application images
-The OpenVINO application is available in [the EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/openvino); further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in [the EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/applications/openvino); further information about the application is contained within `Readme.md` file.
 
 The following steps are required to build the sample application Docker images for testing OpenVINO consumer and producer applications:
 
@@ -114,7 +114,7 @@ To verify that the images for sample application consumer and producer are [buil
 ## Applying Kubernetes network policies
 Kubernetes NetworkPolicy is a mechanism that enables control over how pods are allowed to communicate with each other and other network endpoints. By default, in the Network Edge environment, all *ingress* traffic is blocked (services running inside of deployed applications are not reachable) and all *egress* traffic is enabled (pods can reach the internet).
 
-1. To apply a network policy for the sample application allowing ingress traffic, create a `sample_policy.yml` file that specifies the network policy:
+1. To apply a network policy for the sample application allowing ingress traffic, create a `sample_policy.yml` file that specifies the network policy (in the example network policy `cidr` field contains Calico CNI cidr; for other CNI use specific CNI cidr, e.g. for Kube-ovn CNI use `10.16.0.0/16`):
    ```yml
    apiVersion: networking.k8s.io/v1
    kind: NetworkPolicy
@@ -128,7 +128,7 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
      ingress:
      - from:
        - ipBlock:
-           cidr: 10.16.0.0/16
+           cidr: 10.245.0.0/16
        ports:
        - protocol: TCP
          port: 80
@@ -411,13 +411,13 @@ Kubernetes NetworkPolicy is a mechanism that enables control over how pods are a
            - name: certs
              emptyDir: {}
    ```
-8. Accept the consumer's CSR:
-   ```
-   kubectl certificate approve consumer
-   ```
-9. Deploy the pod:
+8. Deploy the pod:
    ```
    kubectl create -f sample_consumer.yml
+   ```
+9. Accept the consumer's CSR:
+   ```
+   kubectl certificate approve consumer
    ```
 10. Check that the pod is running:
    ```
@@ -504,12 +504,8 @@ This section guides users through the complete process of onboarding the OpenVIN
 3. Verify that no errors show up in the logs of the OpenVINO consumer application:
    ```
    kubectl logs openvino-cons-app
-   ```
-4. Log into the consumer application pod and modify `analytics.openness` entry in `/etc/hosts` with the IP address set in step one of [Setting up Networking Interfaces](#Setting-up-Networking-Interfaces) (192.168.1.10 by default, the physical interface connected to traffic generating host).
-   ```
-   kubectl exec -it openvino-cons-app /bin/sh
-   apt-get install vim
-   vim /etc/hosts
+   kubectl get po -o custom-columns=NAME:.metadata.name,IP:.status.podIP | grep cons-app | awk '{print $2}'
+   <ip>
    ```
 
 ## Applying Kubernetes network policies
@@ -540,7 +536,7 @@ By default, in a Network Edge environment, all *ingress* traffic is blocked (ser
    spec:
      podSelector:
        matchLabels:
-         name: openvino-cons-app
+         app: openvino-cons-app
      policyTypes:
      - Ingress
      ingress:
@@ -726,10 +722,10 @@ kubectl interfaceservice get <officeX_host_name>
 
 ## Inter application communication
 The IAC is available via the default overlay network used by Kubernetes - Kube-OVN.
-For more information on Kube-OVN, refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
+For more information on Kube-OVN, refer to the Kube-OVN support in OpenNESS [documentation](https://github.com/otcshare/specs/blob/master/doc/building-blocks/dataplane/openness-interapp.md#interapp-communication-support-in-openness-network-edge)
 
 # Enhanced Platform Awareness
-Enhanced platform awareness (EPA) is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default. Refer to the [NFD whitepaper](https://github.com/otcshare/specs/blob/master/doc/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
+Enhanced platform awareness (EPA) is supported in OpenNESS via the use of the Kubernetes NFD plugin. This plugin is enabled in OpenNESS for Network Edge by default. Refer to the [NFD whitepaper](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-node-feature-discovery.md) for information on how to make your application pods aware of the supported platform capabilities.
 
 Refer to [<b>supported-epa.md</b>](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/supported-epa.md) for the list of supported EPA features on OpenNESS network edge.
 

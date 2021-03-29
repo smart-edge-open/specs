@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2020 Intel Corporation
+Copyright (c) 2020-2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using Visual Compute Accelerator Card - Analytics (VCAC-A) in OpenNESS
@@ -15,7 +15,7 @@ Copyright (c) 2020 Intel Corporation
 - [References](#references)
 
 ## Overview
-The Visual Cloud Accelerator Card - Analytics (VCAC-A) equips 2nd Generation Intel® Xeon® processor- based platforms with Iris® Pro Graphics and Intel® Movidius™ VPUs to enhance video codec, computer vision, and inference capabilities. Comprised of one Intel i3-7100U CPU and 12 Intel® Movidius™ VPUs, this PCIe add-in card delivers competent stream inference capability and outstanding total cost of ownership. Provisioning the network edge with VCAC-A acceleration through the OpenNESS Experience Kits (OEK) enables dense and performant media analytics and transcoding pipelines.
+The Visual Cloud Accelerator Card - Analytics (VCAC-A) equips 2nd Generation Intel® Xeon® processor- based platforms with Iris® Pro Graphics and Intel® Movidius™ VPUs to enhance video codec, computer vision, and inference capabilities. Comprised of one Intel i3-7100U CPU and 12 Intel® Movidius™ VPUs, this PCIe add-in card delivers competent stream inference capability and outstanding total cost of ownership. Provisioning the network edge with VCAC-A acceleration through the Converged Edge Experience Kits (CEEK) enables dense and performant media analytics and transcoding pipelines.
 
 ## Architecture
 
@@ -27,10 +27,10 @@ Equipped with a CPU, the VCAC-A card is installed with a standalone operating sy
 > * The full acronym *VCAC-A* is loosely used when talking about the PCIe card.
 
 The VCAC-A installation involves a [two-stage build](https://github.com/OpenVisualCloud/VCAC-SW-Analytics/):
-1. VCA host kernel build and configuration: this stage patches the CentOS\* 7.8 kernel and builds the necessary modules and dependencies.
+1. VCA host kernel build and configuration: this stage patches the CentOS\* 7.9 kernel and builds the necessary modules and dependencies.
 2. VCAC-A system image (VCAD) generation: this stage builds an Ubuntu\*-based (VCAD) image that is loaded on the VCAC-A card.
 
-The OEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical node to the OpenNESS cluster. The OEK supports force build VCAC-A system image (VCAD) via flag (force\_build\_enable: true (default value)), it also allows the customer to disable the flag to re-use last system image built. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
+The CEEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical node to the OpenNESS cluster. The CEEK supports force build VCAC-A system image (VCAD) via flag (force\_build\_enable: true (default value)), it also allows the customer to disable the flag to re-use last system image built. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
 
 When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
 
@@ -94,7 +94,7 @@ $ kubectl get no -o json | jq '.items[].metadata.labels'
 ```
 
 ## VPU, GPU Device Plugins, and HDDL Daemonset
-Kubernetes provides the [Device Plugins framework](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/) that is used to advertise system hardware resources. The device plugins of interest for VCAC-A are: [VPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/vpu_plugin/README.md) and [GPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/gpu_plugin/README.md). They are installed as part of the VCAC-A install sequence that is performed by the OEK.
+Kubernetes provides the [Device Plugins framework](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/) that is used to advertise system hardware resources. The device plugins of interest for VCAC-A are: [VPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/vpu_plugin/README.md) and [GPU](https://github.com/intel/intel-device-plugins-for-kubernetes/blob/master/cmd/gpu_plugin/README.md). They are installed as part of the VCAC-A install sequence that is performed by the CEEK.
 
 Another ingredient involved in the inference execution through VCAC-A VPUs is the *HDDL-daemon* that is deployed as a [Kubernetes Daemonset](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/script/setup_hddl_daemonset.yaml). It acts as an arbiter for the various applications/Pods trying to gain access to VPU resources. Therefore, the OpenNESS cluster is ready for onboarding applications and availing of VCAC-A acceleration without worrying about other dependencies.
 
@@ -106,7 +106,7 @@ default       intel-vpu-plugin   1         1         1       1            1     
 kube-system   intel-vpu-hddl     1         1         1       1            1           vcac-zone=yes   31h
 ...
 ```
-> VPU and GPU device plugins as well as HDDL Daemonset are deployed in the OpenNESS cluster as part of the VCAC-A installation sequence that is performed by the OEK.
+> VPU and GPU device plugins as well as HDDL Daemonset are deployed in the OpenNESS cluster as part of the VCAC-A installation sequence that is performed by the CEEK.
 
 ## Telemetry Support
 VCAC-A telemetry is an integral part of the OpenNESS telemetry suite that enables the Kubernetes scheduler to perform telemetry-aware scheduling decisions. The following metrics are exported:
@@ -118,13 +118,13 @@ The VCAC-A VPU metrics are exported by the *NodeExporter* that integrates with P
 ```
 $ /opt/intel/vcaa/vpu_metric/run.sh start
 ```
-> The VPU metrics exporter script is executed as part of the VCAC-A install sequence that is performed by the OEK.
+> The VPU metrics exporter script is executed as part of the VCAC-A install sequence that is performed by the CEEK.
 
 ![Exporting VCAC-A VPU Metrics to OpenNESS Telemetry](vcaca-images/vcac-a-vpu-metrics.png)
 
 _Figure - Exporting VCAC-A VPU Metrics to OpenNESS Telemetry_
 
-Telemetry-Aware Scheduling (TAS) is the mechanism of defining policies that the controller aims to fulfill at run-time (based on the collected real-time metrics). A sample VCAC-A VPU telemetry policy is given below that is applied by default as part of the install sequence performed by the OEK.
+Telemetry-Aware Scheduling (TAS) is the mechanism of defining policies that the controller aims to fulfill at run-time (based on the collected real-time metrics). A sample VCAC-A VPU telemetry policy is given below that is applied by default as part of the install sequence performed by the CEEK.
 
 ```yaml
 apiVersion: telemetry.intel.com/v1alpha1
@@ -152,7 +152,7 @@ spec:
       - metricname: vpu_device_utilization
         operator: LessThan
 ```
-> The above telemetry policy is applied by default as part of the VCAC-A install sequence performed by OEK.
+> The above telemetry policy is applied by default as part of the VCAC-A install sequence performed by CEEK.
 
 The diagram below demonstrates an example use of the VCAC-A telemetry within the OpenNESS context:
 
@@ -166,11 +166,11 @@ _Figure - Using VCAC-A Telemetry with OpenNESS_
 4. Now that the VPU device usage became 60, when the `OpenVINO` application turns up, it gets scheduled on VCA pool B in fulfillment of the policy.
 
 ## Media-Analytics-VCA Flavor
-The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the OEK playbook as described in the [OpenNESS Flavors](../flavors.md#media-analytics-flavor-with-vcac-a) document and encompasses the VCAC-A installation.
+The pre-defined OpenNESS flavor *media-analytics-vca* is provided to provision an optimized system configuration for media analytics workloads leveraging VCAC-A acceleration. This flavor is applied through the CEEK playbook as described in the [OpenNESS Flavors](../flavors.md#media-analytics-flavor-with-vcac-a) document and encompasses the VCAC-A installation.
 
-The VCAC-A installation in OEK performs the following tasks:
+The VCAC-A installation in CEEK performs the following tasks:
 - Pull the release package from [Open Visual Cloud VCAC-A card media analytics software](https://github.com/OpenVisualCloud/VCAC-SW-Analytics) and the required dependencies
-- Apply CentOS 7.8 kernel patches and build kernel RPM
+- Apply CentOS 7.9 kernel patches and build kernel RPM
 - Apply module patches and build driver RPM
 - Build daemon utilities RPM
 - Install docker-ce and kubernetes on the VCA host
