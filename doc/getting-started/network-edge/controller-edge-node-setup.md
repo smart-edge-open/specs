@@ -205,12 +205,12 @@ To deploy Network Edge in a single-node cluster scenario, follow the steps below
         limit:  
     controller_group:
       hosts:
-        node.openness.org:
+        controller:
           ansible_host: 10.102.227.234
           ansible_user: openness
     edgenode_group:
       hosts:
-        node.openness.org:
+        node01:
           ansible_host: 10.102.227.234
           ansible_user: openness
     edgenode_vca_group:
