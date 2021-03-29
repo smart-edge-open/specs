@@ -7,6 +7,7 @@ Copyright (c) 2021 Intel Corporation
 - [Overview](#overview)
 - [Steps on K8s nodes](#steps-on-k8s-nodes)
 - [Repository modification](#repository-modification)
+- [Running edge apps](#running-edge-apps)
 
 ## Overview
 
@@ -63,3 +64,7 @@ edgenode_group:
       ansible_host: 172.16.0.2
       ansible_user: openness
 ```
+
+## Running edge apps
+
+When deployment is done using non root user, the edge apps should also be managed using the same non root user. To run edge apps some command (e.g. docker image push) require sudo privilages, those commands should be executed with sudo privilage.
