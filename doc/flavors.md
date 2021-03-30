@@ -84,7 +84,7 @@ This deployment flavor enables the following ingredients:
 
 ## CERA Media Analytics Flavor with VCAC-A
 
-The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging Visual Cloud Accelerator Card for Analytics (VCAC-A) acceleration. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
+The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging Visual Cloud Accelerator Card for Analytics (VCAC-A) acceleration.
 
 The following are steps to install this flavor:
 1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
@@ -121,7 +121,6 @@ This deployment flavor enables the following ingredients:
 * VPU and GPU device plugins
 * HDDL daemonset
 * The `weavenet` Kubernetes CNI
-* Video analytics services
 * Telemetry
 
 ## CERA CDN Transcode Flavor
