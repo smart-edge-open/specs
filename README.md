@@ -37,12 +37,6 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-eaa.md</b>: Edge Application Agent: Description of Edge Application APIs and Edge Application Authentication APIs](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-eaa.md)
    * [<b>openness-certsigner.md</b>: Steps for issuing platform certificates](https://github.com/otcshare/specs/blob/master/doc/applications-onboard/openness-certsigner.md)
 
-## Radio Access Network (RAN)
-* [<b>ran</b>: Folder containing details of 4G and 5G RAN deployment support](https://github.com/otcshare/specs/tree/master/doc/reference-architectures/ran)
-   * [<b>openness_ran.md</b>: Whitepaper detailing the 4G and 5G RAN deployment support on OpenNESS for Network Edge](https://github.com/otcshare/specs/blob/master/doc/reference-architectures/ran/openness_ran.md)
-   * [<b>openness_xran.md</b>: Whitepaper detailing O-RAN Sample Application deployment support on OpenNESS](https://github.com/otcshare/specs/blob/master/doc/reference-architectures/ran/openness_xran.md)
-
-
 ## Core Network - 4G and 5G
 
 * [<b>core-network</b>: Folder containing details of 4G CUPS and 5G edge cloud deployment support](https://github.com/otcshare/specs/tree/master/doc/reference-architectures/core-network)

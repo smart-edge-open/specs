@@ -79,7 +79,7 @@ The full pipeline of preparing the device for workload deployment and deploying 
 - Simple sample BBDEV application to validate the pipeline (i.e., SRIOV creation - Queue configuration - Device orchestration - Pod deployment): Script delivery and instructions to build Docker image for sample application delivered as part of Edge Apps package.
 
 ### ACC100 (FEC) Ansible Installation for OpenNESS Network Edge
-To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node. It can be deployed via the ["flexran" flavor of OpenNESS](https://github.com/otcshare/converged-edge-experience-kits/tree/master/flavors/flexran).
+To run the OpenNESS package with ACC100 (FEC) functionality, the feature needs to be enabled on both Edge Controller and Edge Node.
 
 #### Converged Edge Experience Kits
 To enable ACC100 support from CEEK, SRIOV must be enabled in OpenNESS:
