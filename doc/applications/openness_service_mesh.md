@@ -164,8 +164,8 @@ _Figure - Book Info Sample Application_
 > kubectl delete netpol block-all-ingress
 > ```
 
-> **NOTE**: It was observed at limited occasions that the BookInfo sample application deployment pods may end up not being successfully running, i.e. `reviews` pods (all the three versions) get stuck in `CrashLoopBack` state. A quick work-around is to create a patch file `bookinfo-patch.yaml` with the following contents:
->
+> **NOTE**: A known [issue](https://github.com/istio/istio/issues/4941) when deploying the BookInfo sample application with CentOS 7.6 is that the deployment pods may end up being not successful, i.e. `reviews` pods (all the three versions) get stuck in `CrashLoopBack` state. Create a patch file `bookinfo-patch.yaml` with the following contents:
+> 
 > ```yaml
 > spec:
 >   template:
@@ -176,9 +176,9 @@ _Figure - Book Info Sample Application_
 >         - name: WLP_OUTPUT_DIR
 >           value: /opt/output
 > ```
->
-> Then, apply the patch to the three deployments: `reviews-v1`, `reviews-v2` and `reviews-v3`, through the commands:
->
+> 
+> Apply the patch to the three deployments: `reviews-v1`, `reviews-v2` and `reviews-v3`, through the commands:
+> 
 > ```shell
 > $ patch deployment reviews-v1 --patch "$(cat bookinfo-patch.yaml)"
 > $ patch deployment reviews-v2 --patch "$(cat bookinfo-patch.yaml)"
