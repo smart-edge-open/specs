@@ -588,7 +588,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
    Add to the file:
    nameserver <edge_dns_ip_address>
    ```
-2. Verify that `openvino.openness` is correctly resolved (“ANSWER” section should contain IP of Edge DNS).
+2. Verify that `openvino.openness` is correctly resolved (“ANSWER” section should contain IP of Consumer pod IP).
    ```
    dig openvino.openness
    ```
