@@ -287,7 +287,7 @@ helm install \<pod-name\> \<path to the upf helm chart\> \<list of configuration
 Here is an example:
 
   ```bash
-  ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+  ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/home/nruser --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
   ```
 
 The following table describes the helm parameters using the above example.
@@ -296,7 +296,7 @@ The following table describes the helm parameters using the above example.
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | image.repository=upf-cnf                     | Image repository to upf-cnf, i.e., local image on the node                       |
 | node.name=ne-node                            | Node on which the UPF is to be deployed                                          |
-| node.path=/root/upf                          | Location on the node where the UPF binary is available                           |
+| node.path=/home/nruser                       | Location on the node where the UPF binary is available                           |
 | upf.vf_if_name=VirtualFunctionEthernetaf/a/0 | VF interface name                                                                |
 | hugePageSize=hugepages-1Gi                   | Hugepage size                                                                    |
 | hugePageAmount=4Gi                           | Amount of hugepages to be reserved for the pod                                   |
@@ -327,7 +327,7 @@ In this reference validation, the UPF application will be started manually after
 
     ```bash
     ne-controller# kubectl exec -it upf-cnf -- /bin/bash
-    upf-cnf# sudo ./run_upf.sh
+    upf-cnf# sudo -E ./run_upf.sh
     ```
 
 ## Uninstall UPF pod from OpenNESS controller
