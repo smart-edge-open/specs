@@ -5,20 +5,27 @@ title: "Getting Started"
 path: /getting-started/
 order: 1
 section:
-  - title: OpenNESS Experience Kits
-    path: /doc/getting-started/openness-experience-kits
+  - title: OpenNESS Cluster Setup
+    path: /doc/getting-started/openness-cluster-setup
+    meta_title: Controller and Edge Node Setup
+    meta_description: OpenNESS Network Edge Controller and Edge nodes must be set up on different machines and provided in the inventory may reboot during the installation.
+
+  - title: Converged Edge Experience Kits
+    path: /doc/getting-started/converged-edge-experience-kits
     meta_title: OpenNESS Experience Kits Easy Setup of OpenNESS in Network Edge
     meta_description: OpenNESS Experience Kits repository contains easy setup of OpenNESS in Network Edge mode.
 
-  - title: Network Edge
-    path: 
-    section:
-    - title: Controller & Edge Node Setup
-      path: /doc/getting-started/network-edge/controller-edge-node-setup
-      meta_title: Controller and Edge Node Setup
-      meta_description: OpenNESS Network Edge Controller and Edge nodes must be set up on different machines and provided in the inventory may reboot during the installation.
+  - title: Non-root User in OpenNESS
+    path: /doc/getting-started/non-root-user
+    meta_title: The non-root user on the OpenNESS Platform
+    meta_description: OpenNESS provides a possibility to install all required files on Kubernetes a control plane and nodes with or without root rights.
 
-    - title: Enhanced Platform Awareness Features Supported
-      path: /doc/getting-started/network-edge/supported-epa
-      meta_title: OpenNESS Network Edge - Enhanced Platform Awareness Features Supported
-      meta_description: Enhanced Platform Awareness features supported for network edge is to expose capability to edge cloud orchestrator for better performance, consistency, and reliability.
+  - title: Harbor Registry Service
+    path: /doc/getting-started/harbor-registry
+    meta_title: Harbor Registry Service in OpenNESS
+    meta_description: Enabling Harbor registry service in OpenNESS
+
+  - title: Kubernetes Dashboard in OpenNESS
+    path: /doc/getting-started/kubernetes-dashboard
+    meta_title: Kubernetes Dashboard in OpenNESS
+    meta_description: OpenNESS supports Kubernetes Dashboard that can be used to inspect and manage Kubernetes cluster.

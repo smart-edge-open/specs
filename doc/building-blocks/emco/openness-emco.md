@@ -302,7 +302,7 @@ Steps for EMCO Authentication and Authorization Setup:
 
 ### EMCO Installation With OpenNESS Flavor
 EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [Converged Edge Experience Kits](../../getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
-- The first step is to prepare one server environment which needs to fulfill the [preconditions](../../getting-started/network-edge/controller-edge-node-setup.md#preconditions).
+- The first step is to prepare one server environment which needs to fulfill the [preconditions](../../getting-started/openness-cluster-setup.md#preconditions).
 - Place the EMCO server hostname in `controller_group/hosts/ctrl.openness.org:` dictionary in `inventory.yml` file of converged-edge-experience-kit.
 - Update the `inventory.yaml` file by setting the deployment flavor as `central_orchestrator`
     ```yaml

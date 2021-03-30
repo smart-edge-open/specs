@@ -24,7 +24,7 @@ This document introduces the supported deployment flavors that are deployable th
 The pre-defined *minimal* deployment flavor provisions the minimal set of configurations for bringing up the OpenNESS network edge deployment.
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Update the `inventory.yaml` file by setting the deployment flavor as `minimal`
     ```yaml
     ---
@@ -55,7 +55,7 @@ Available in Intel Distribution of OpenNESS
 The pre-defined *media-analytics* deployment flavor provisions an optimized system configuration for media analytics workloads on Intel® Xeon® platforms. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Update the `inventory.yaml` file by setting the deployment flavor as `media-analytics`
     ```yaml
     ---
@@ -87,7 +87,7 @@ This deployment flavor enables the following ingredients:
 The pre-defined *media-analytics-vca* deployment flavor provisions an optimized system configuration for media analytics workloads leveraging Visual Cloud Accelerator Card for Analytics (VCAC-A) acceleration. It also provisions a set of video analytics services based on the [Video Analytics Serving](https://github.com/intel/video-analytics-serving) for analytics pipeline management and execution.
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Add the VCA host name in the `edgenode_vca_group:` group in `inventory.yml` file of the CEEK, e.g:
     ```yaml
     edgenode_vca_group:
@@ -129,7 +129,7 @@ This deployment flavor enables the following ingredients:
 The pre-defined *cdn-transcode* deployment flavor provisions an optimized system configuration for Content Delivery Network (CDN) transcode sample workloads on Intel® Xeon® platforms.
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Update the `inventory.yaml` file by setting the deployment flavor as `cdn-transcode`
     ```yaml
     ---
@@ -154,7 +154,7 @@ This deployment flavor enables the following ingredients:
 The pre-defined *cdn-caching* deployment flavor provisions an optimized system configuration for CDN content delivery workloads on Intel® Xeon® platforms.
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Update the `inventory.yaml` file by setting the deployment flavor as `cdn-caching`
     ```yaml
     ---
@@ -202,7 +202,7 @@ Central Orchestrator Flavor is used to deploy EMCO.
 The pre-defined *orchestration* deployment flavor provisions an optimized system configuration for emco (central orchestrator) workloads on Intel Xeon servers. It also provisions a set of central orchestrator services for [edge, multiple clusters orchestration](building-blocks/emco/openness-emco.md).
 
 The following are steps to install this flavor:
-1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/network-edge/controller-edge-node-setup.md).
+1. Configure the CEEK as described in the [OpenNESS Getting Started Guide for Network Edge](getting-started/openness-cluster-setup.md).
 2. Update the `inventory.yaml` file by setting the deployment flavor as `central_orchestrator`
     ```yaml
     ---

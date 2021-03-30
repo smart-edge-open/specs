@@ -117,11 +117,11 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 ### Bring-up of NGC components in Network Edge mode
 
-1. If the Edge controller is not yet deployed through openness-experience-kit then:
-   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` before running `deploy.py` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document,  **otherwise skip this step.**
+1. If the Edge controller is not yet deployed through converged-edge-experience-kits then:
+   Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` before running `deploy.py` as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/openness-cluster-setup.md) document,  **otherwise skip this step.**
 
 2. If Edge-controller is already deployed (but without enabling ngc role) and at a later stage you want to enable NGC components on edge-controller then,
-  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` and then re-run `deploy.py` with `limit` set to `controller_group` in `inventory.yml` (define only one cluster on which the role should be enabled) as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/network-edge/controller-edge-node-setup.md) document.
+  Enable the role for ngc by changing `ne_ngc_test_enable` variable to `true` in `inventory/default/group_vars/all/10-default.yml` and then re-run `deploy.py` with `limit` set to `controller_group` in `inventory.yml` (define only one cluster on which the role should be enabled) as described in [OpenNESS Network Edge: Controller and Edge node setup](../getting-started/openness-cluster-setup.md) document.
 
     **NOTE:**
     In addition to the OpenNESS controller bringup, by enabling the ngc rule the playbook scripts performs:  Clone epcforedge repo from github, builds AF, NEF and OAM micro services, generates certificate files, creates docker images and starts PODs.
@@ -165,7 +165,7 @@ OpenNESS provides ansible scripts for setting up NGC components for two scenario
 
 For Network Edge mode, the CNCA provides a kubectl plugin to configure the 5G Core network. Kubernetes adopted plugin concepts to extend its functionality. The `kube-cnca` plugin executes CNCA related functions within the Kubernetes ecosystem. The plugin performs remote callouts against NGC OAM and AF microservice on the controller itself.
 
-The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
+The `kube-cnca` plugin is installed automatically on the control plane during the installation phase of the [Converged Edge Experience Kits](https://github.com/otcshare/specs/blob/master/doc/getting-started/openness-cluster-setup.md)
 
 #### Edge Node services operations with 5G Core (through OAM interface)
 

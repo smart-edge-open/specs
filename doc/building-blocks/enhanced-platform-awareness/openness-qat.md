@@ -71,12 +71,8 @@ kubernetes_cnis:
 - <primary CNI>
 - sriov
 ```
----
-**NOTE**
 
-`sriov` cannot be the primary CNI.
-
----
+> **NOTE**: `sriov` cannot be the primary CNI.
 
 Intel® QuickAssist Adapter Device Plugin is enabled by default in the `cera_5g_on_prem` flavor:
 

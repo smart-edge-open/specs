@@ -91,11 +91,6 @@ section:
       meta_title: Telemetry support in OpenNESS
       meta_description: OpenNESS supports platform and application telemetry allowing users to retrieve information about the platform, the underlying hardware, cluster and applications deployed.
 
-    - title: Kubernetes Dashboard in OpenNESS
-      path: /doc/building-blocks/enhanced-platform-awareness/openness-kubernetes-dashboard
-      meta_title: Kubernetes Dashboard in OpenNESS
-      meta_description: OpenNESS supports Kubernetes Dashboard that can be used to inspect and manage Kubernetes cluster.
-
   - title: Multi-Cluster Orchestration
     path:
     section:
