@@ -9,7 +9,7 @@ Copyright (c) 2019-2020 Intel Corporation
 - [Summary](#summary)
 
 ## OVN Introduction
-Open Virtual Network (OVN) is an open-source solution based on the Open vSwitch-based (OVS) software-defined networking (SDN) solution for providing network services to instances. OVN adds to the capabilities of OVS to provide native support for virtual network abstractions, such as virtual L2 and L3 overlays and security groups. Further information about the OVN architecture can be found [here](https://www.openvswitch.org/support/dist-docs/ovn-architecture.7.html)
+Open Virtual Network (OVN) is an open-source solution based on the Open vSwitch-based (OVS) software-defined networking (SDN) solution for providing network services to instances. OVN adds to the capabilities of OVS to provide native support for virtual network abstractions, such as virtual L2 and L3 overlays and security groups. Further information about the OVN architecture can be found [here](http://www.openvswitch.org/support/dist-docs-2.5/ovn-architecture.7.html)
 
 ## OVN/OVS support in OpenNESS Network Edge
 The primary objective of supporting OVN/OVS in OpenNESS is to demonstrate the capability of using a standard dataplane such as OVS for an Edge Compute platform. Using OVN/OVS further provides standard SDN-based flow configuration for the edge Dataplane.
@@ -18,7 +18,7 @@ The diagram below shows OVS as a dataplane and OVN overlay. This mode of deploym
 
 ![OpenNESS with NTS as dataplane overview](ovn_images/openness_ovn.png)
 
-[Kube-OVN](https://github.com/alauda/kube-ovn) has been chosen as the CNI implementation for OpenNESS. Additionally, in the following configuration, OpenNESS applications on Edge Nodes are deployed as DaemonSet Pods (in separate "openness" namespace) and exposed to client applications by k8s services.
+[Kube-OVN](https://github.com/alauda/kube-ovn) can be chosen as the CNI implementation for OVN/OVS in OpenNESS. Additionally, in the following configuration, OpenNESS applications on Edge Nodes are deployed as DaemonSet Pods (in separate "openness" namespace) and exposed to client applications by k8s services.
 
 OVN/OVS is used as the default networking infrastructure for:
 - Dataplane Interface: UE's to edge applications

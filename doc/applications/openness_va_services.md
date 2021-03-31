@@ -16,12 +16,12 @@ OpenNESS furnishes the Video Analytics Services to enable third-party edge appli
 
 ## Getting Started with Video Analytics Services
 
-To get started with deploying Video Analytics Services through OpenNESS Experience Kits (OEK), refer to [Media Analytics Flavor](../flavors.md#media-analytics-flavor) and [Media Analytics Flavor with VCAC-A](../flavors.md#media-analytics-flavor-with-vcac-a).
+To get started with deploying Video Analytics Services through Converged Edge Experience Kits (CEEK), refer to [Media Analytics Flavor](../flavors.md#media-analytics-flavor).
 
 > **NOTE**: If creating a customized flavor, the *Video Analytics Services* role can be included in the Ansible\* playbook by setting the flag `video_analytics_services_enable: true` in the flavor file.
 
 ## Video Analytics Services Deployment
-Video Analytics Services are installed by the OEK when `media-services` or `media-services-vca` flavors are deployed. These flavors include the *Video Analytics Services* role in the Ansible playbook by turning on the flag `video_analytics_services_enable: true` under the hood. When the role is included, multiple Video Analytics Services are deployed. One instance of the Video Analytics Services consists of two containers:
+Video Analytics Services are installed by the CEEK when `media-services`. These flavors include the *Video Analytics Services* role in the Ansible playbook by turning on the flag `video_analytics_services_enable: true` under the hood. When the role is included, multiple Video Analytics Services are deployed. One instance of the Video Analytics Services consists of two containers:
 1. Video analytics serving gateway (VAS gateway)
 2. Video analytics serving sidecar (VAS sidecar)
 
@@ -29,13 +29,15 @@ The *VAS gateway* is the artifact created when [building the VAS](https://github
 
 The *VAS sidecar* interfaces with the Edge Application Agent (EAA) to register a Video Analytics Service whereby it becomes discoverable by third-party (consumer) applications. The service registration phase provides information about the service such as:
 1. Service endpoint URI, e.g., `http://analytics-ffmpeg.media:8080`
-2. Acceleration used: `Xeon`, `HDDL`, or `VCAC-A`
+2. Acceleration used: `Xeon`, `HDDL`\*, or `VCAC-A`\*
 3. Underpinning multimedia framework: `GStreamer` or `FFmpeg`
 4. Available pipelines: `emotion_recoginition`, `object_detection`, and other custom pipelines
 
 ![Video Analytics Services Deployment](va-service-images/va-services-deployment.png)
 
-_Figure - Video Analytics Services Deployment_
+_Figure - Video Analytics Services Deployment\*_
+
+> **\*NOTE**: Video Analytics Services acceleration through HDDL & VCAC-A are directional and are not currently supported in OpenNESS.
 
 Multiple instances of the Video Analytics Service can co-exist in an OpenNESS cluster depending on the available hardware resources, as depicted in the figure above. Standalone service endpoints are created for every multimedia framework and acceleration type.
 

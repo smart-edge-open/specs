@@ -41,13 +41,13 @@ Intel SYSCFG must be manually downloaded by the user after accepting the license
 
 ### Setup
 To enable BIOSFW, perform the following steps:
-1. The SYSCFG package must be downloaded and stored inside OpenNESS Experience Kits' `biosfw/` directory as a `syscfg_package.zip`:
-`openness-experience-kits/biosfw/syscfg_package.zip`
-2. Change the variable `ne_biosfw_enable` in `group_vars/all/10-default.yml` to “true”:
+1. The SYSCFG package must be downloaded and stored inside Converged Edge Experience Kits' `biosfw/` directory as a `syscfg_package.zip`:
+`converged-edge-experience-kits/biosfw/syscfg_package.zip`
+2. Change the variable `ne_biosfw_enable` in `inventory/default/group_vars/all/10-default.yml` to “true”:
    ```yaml
    ne_biosfw_enable: true
    ```
-3. OpenNESS Experience Kits' NetworkEdge deployment for both controller and nodes can be started.
+3. Converged Edge Experience Kits' NetworkEdge deployment for both controller and nodes can be started.
 
 ### Usage
 

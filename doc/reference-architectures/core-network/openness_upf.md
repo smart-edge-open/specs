@@ -45,7 +45,7 @@ As part of the end-to-end integration of the Edge cloud deployment using OpenNES
 
 # Purpose
 
-This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Container Networking function (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
+This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Cloud-native network functions (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
 
 These scripts are validated through a reference UPF solution (implementation is based on Vector Packet Processing (VPP)) that is not part of the OpenNESS release.
 
@@ -59,14 +59,17 @@ These scripts are validated through a reference UPF solution (implementation is 
 
 1. To keep the build and deploy process straightforward, the Docker\* build and image are stored on the Edge node.
 
+2. Copy the upf binary package to the Docker build folder. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+
     ```bash
-    ne-node# cd <5g-upf-binary-package>
+    ne-node# cp -rf <5g-upf-binary-package> edgeapps/network-functions/core-network/5G/UPF/upf
     ```
 
-2. Copy the Docker files to the node and build the Docker image. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+3. Build the Docker image.
 
     ```bash
-    ne-node# ./build_image.sh
+    ne-node# cd edgeapps/network-functions/core-network/5G/UPF
+    ne-node# ./build_image.sh -b ./upf/ -i upf-cnf
 
     ne-node# docker image ls | grep upf
     upf-cnf     1.0                 e0ce467c13d0        15 hours ago        490MB
@@ -139,9 +142,9 @@ Below is a list of minimal configuration parameters for VPP-based applications s
 3. Enable the vfio-pci/igb-uio driver on the node. The below example shows the enabling of the `igb_uio` driver:
 
     ```bash
-    ne-node# /opt/openness/dpdk-18.11.6/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
+    ne-node# /opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py -b igb_uio 0000:af:0a.0
 
-    ne-node# /opt/openness/dpdk-18.11.6/usertools/dpdk-devbind.py --status
+    ne-node# /opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py --status
     Network devices using DPDK-compatible driver
     ============================================
     0000:af:0a.0 'Ethernet Virtual Function 700 Series 154c' drv=igb_uio unused=i40evf,vfio-pci
@@ -284,7 +287,7 @@ helm install \<pod-name\> \<path to the upf helm chart\> \<list of configuration
 Here is an example:
 
   ```bash
-  ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/root/upf --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
+  ne-controller# helm install upf-cnf ./upf/ --set image.repository=upf-cnf --set node.name=ne-node --set node.path=/home/nruser --set upf.vf_if_name=VirtualFunctionEthernetaf/a/0 --set upf.pci_bus_addr=0000:af:0a.1 --set upf.uio_driver=igb_uio --set upf.huge_memory=6G --set upf.main_core=2 --set upf.worker_cores="3\,4" --set upf.pfcp_thread.cores=5 --set upf.pfcp_thread.count=2 --set upf.n3_addr=192.179.120.180/24  --set upf.n4_addr=192.179.120.180 --set upf.n6_addr=192.179.120.180/24 --set upf.n6_gw_addr=192.168.1.180 --set hugePageSize=hugepages-1Gi --set hugePageAmount=4Gi
   ```
 
 The following table describes the helm parameters using the above example.
@@ -293,7 +296,7 @@ The following table describes the helm parameters using the above example.
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | image.repository=upf-cnf                     | Image repository to upf-cnf, i.e., local image on the node                       |
 | node.name=ne-node                            | Node on which the UPF is to be deployed                                          |
-| node.path=/root/upf                          | Location on the node where the UPF binary is available                           |
+| node.path=/home/nruser                       | Location on the node where the UPF binary is available                           |
 | upf.vf_if_name=VirtualFunctionEthernetaf/a/0 | VF interface name                                                                |
 | hugePageSize=hugepages-1Gi                   | Hugepage size                                                                    |
 | hugePageAmount=4Gi                           | Amount of hugepages to be reserved for the pod                                   |
@@ -322,12 +325,9 @@ In this reference validation, the UPF application will be started manually after
 
 2. Exec into the UPF pod and start the UPF:
 
-    >**NOTE**: The command `groupadd vpp` needs to be given only for the first execution.
-
     ```bash
     ne-controller# kubectl exec -it upf-cnf -- /bin/bash
-    upf-cnf# groupadd vpp
-    upf-cnf# ./run_upf.sh
+    upf-cnf# sudo -E ./run_upf.sh
     ```
 
 ## Uninstall UPF pod from OpenNESS controller

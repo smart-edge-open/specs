@@ -154,6 +154,9 @@ OpenNESS supports the following accelerator microservices.
   - FPGA device plugin for inferencing
   - SR-IOV device plugin for FPGA/eASIC
   - Dynamic Device Profile for Network Interface Cards (NIC) 
+- **Intel® QuickAssist Technology (Intel® QAT)**: Software that enables offloading of security and compression task on data in rest or in-motion for the cloud, networking, big data, and storage applications: 
+  - Kubernetes CRD operator for discrete and on-board Intel® QAT devices
+  - Intel QuickAssist Technology (QAT) device plugin for Kubernetes
 
 ### Dataplane/Container Network Interfaces
 
@@ -343,7 +346,7 @@ This devkit supports the installation of an OpenNESS Kubernetes cluster on a Mic
 | NRF      | Network function Repository Function            |
 | NUMA     | NonUniform Memory Access                        |
 | OAM      | Operations, Administration and Maintenance      |
-| OEK      | OpenNESS Experience Kit                         |
+| CEEK      | Converged Edge Experience Kits                         |
 | OpenNESS | Open Network Edge Services Software             |
 | PCF      | Policy Control Function                         |
 | PDN      | Packet Data Network                             |

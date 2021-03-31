@@ -19,7 +19,7 @@ Copyright (c) 2020 Intel Corporation
   - [Circuit Breaker](#circuit-breaker)
 - [Prometheus, Grafana & Kiali integration](#prometheus-grafana--kiali-integration)
 - [Getting Started](#getting-started)
-  - [Enabling Service Mesh through the Service Mesh Flavor](#enabling-service-mesh-through-the-service-mesh-flavor)
+  - [Enabling Service Mesh through enabling the Service Mesh Role](#enabling-service-mesh-through-enabling-the-service-mesh-role)
   - [Enabling Service Mesh with the Media Analytics Flavor](#enabling-service-mesh-with-the-media-analytics-flavor)
 - [References](#references)
 
@@ -34,7 +34,7 @@ With the Service Mesh approach, the applications do not decide which service end
 
 ## OpenNESS Service Mesh Enablement through Istio
 
-[Istio](https://istio.io/) is a feature-rich, cloud-native service mesh platform that provides a collection of key capabilities such as: [Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/), [Security](https://istio.io/latest/docs/concepts/security/) and [Observability](https://istio.io/latest/docs/concepts/observability/) uniformly across a network of services. OpenNESS integrates natively with the Istio service mesh to help reduce the complexity of large scale edge applications, services, and network functions. The Istio service mesh is deployed automatically through OpenNESS Experience Kits (OEK) with an option to onboard the media analytics services on the service mesh.
+[Istio](https://istio.io/) is a feature-rich, cloud-native service mesh platform that provides a collection of key capabilities such as: [Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/), [Security](https://istio.io/latest/docs/concepts/security/) and [Observability](https://istio.io/latest/docs/concepts/observability/) uniformly across a network of services. OpenNESS integrates natively with the Istio service mesh to help reduce the complexity of large scale edge applications, services, and network functions. The Istio service mesh is deployed automatically through Converged Edge Experience Kits (CEEK) with an option to onboard the media analytics services on the service mesh.
 
 Istio mandates injecting [Envoy sidecars](https://istio.io/latest/docs/ops/deployment/architecture/#envoy) into the applications and services pods to become part of the service mesh. The Envoy sidecars intercept all inter-pod traffic, making it easy to manage, secure, and observe. Sidecar injection is automatically enabled to the `default` namespace in the OpenNESS cluster. This is done by applying the label `istio-injection=enabled` to the `default` namespace.
 
@@ -62,7 +62,7 @@ The service mesh framework takes care of provisioning, monitoring, and routing t
 
 ## Video Analytics Service Mesh Deployment
 
-The media analytics services can be automatically deployed on the Istio service mesh using the OEK. To do so, the entry `ne_istio_enable` in the file `flavors/media-analytics/all.yml` needs to be set to `true`. After running the `deploy.sh` script, the output should include the following pods in the `default` and `istio-system` namespaces on the cluster:
+The media analytics services can be automatically deployed on the Istio service mesh using the CEEK. To do so, the entry `ne_istio_enable` in the file `flavors/media-analytics/all.yml` needs to be set to `true`. After running the `deploy.sh` script, the output should include the following pods in the `default` and `istio-system` namespaces on the cluster:
 
 ```shell
 $ kubectl get pods -A
@@ -164,8 +164,8 @@ _Figure - Book Info Sample Application_
 > kubectl delete netpol block-all-ingress
 > ```
 
-> **NOTE**: It was observed at limited occasions that the BookInfo sample application deployment pods may end up not being successfully running, i.e. `reviews` pods (all the three versions) get stuck in `CrashLoopBack` state. A quick work-around is to create a patch file `bookinfo-patch.yaml` with the following contents:
->
+> **NOTE**: A known [issue](https://github.com/istio/istio/issues/4941) when deploying the BookInfo sample application with CentOS 7.6 is that the deployment pods may end up being not successful, i.e. `reviews` pods (all the three versions) get stuck in `CrashLoopBack` state. Create a patch file `bookinfo-patch.yaml` with the following contents:
+> 
 > ```yaml
 > spec:
 >   template:
@@ -176,9 +176,9 @@ _Figure - Book Info Sample Application_
 >         - name: WLP_OUTPUT_DIR
 >           value: /opt/output
 > ```
->
-> Then, apply the patch to the three deployments: `reviews-v1`, `reviews-v2` and `reviews-v3`, through the commands:
->
+> 
+> Apply the patch to the three deployments: `reviews-v1`, `reviews-v2` and `reviews-v3`, through the commands:
+> 
 > ```shell
 > $ patch deployment reviews-v1 --patch "$(cat bookinfo-patch.yaml)"
 > $ patch deployment reviews-v2 --patch "$(cat bookinfo-patch.yaml)"
@@ -419,15 +419,28 @@ _Figure - Istio Telemetry with Grafana_
 
 ## Getting Started
 
-### Enabling Service Mesh through the Service Mesh Flavor
+### Enabling Service Mesh through enabling the Service Mesh Role
 
-Istio service mesh can be deployed with OpenNESS using the OEK through the pre-defined *service-mesh* flavor as described in [Service Mesh Flavor](../flavors.md#service-mesh-flavor) section. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/). 
-The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials: 
+Istio service mesh can be deployed with OpenNESS using the CEEK through the defined istio role. Istio role is enabled with setting parameter `ne_istio_enable: true`. Istio is installed with `default` profile by default (for Istio installation profiles refer to: https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
+The Istio management console, [Kiali](https://kiali.io/), is deployed alongside Istio with the default credentials:
 
 * Username: `admin`
 * Nodeport set to `30001`
 
-To get the randomly generated password run the following command on Kubernetes controller:  
+The above settings can be customized by adjusting following parameters in the `inventory/default/group_vars/all/10-default.yml`:
+
+```yml
+# Istio deployment profile possible values: default, demo, minimal, remote
+istio_deployment_profile: "default"
+# Istio is deployed to "default" namespace in the cluster
+istio_deployment_namespace: "default"
+# Kiali 
+istio_kiali_username: "admin"
+istio_kiali_password: "{{ lookup('password', '/dev/null length=16') }}"
+istio_kiali_nodeport: 30001
+```
+
+To get the randomly generated password run the following command on Kubernetes controller:
 `kubectl get secrets/kiali -n istio-system -o json | jq -r '.data.passphrase' | base64 -d`
 
 Prometheus and Grafana are deployed in the OpenNESS platform as part of the telemetry role and are integrated with the Istio service mesh.
@@ -468,12 +481,12 @@ Status:       Active
 ```
 
 Users can change the namespace labeled with istio label using the parameter `istio_deployment_namespace`
-* in `flavors/service-mesh/all.yml` for deployment with service-mesh flavor
 * in `flavors/media-analytics/all.yml` for deployment with media-analytics flavor
+* in `inventory/default/group_vars/all/10-default.yml` for deployment with any flavor (and istio role enabled)
 
 > **NOTE**: The default OpenNESS network policy applies to pods in the `default` namespace and blocks all ingress traffic. Users must remove the default policy and apply custom network policy when deploying applications in the `default` namespace. Refer to the [Kubernetes NetworkPolicies](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md#applying-kubernetes-network-policies) for an example policy allowing ingress traffic from `192.168.1.0/24` subnet on a specific port.
 
-Kiali console is accessible from a browser using `http://<CONTROLLER_IP>:30001` and credentials defined in OpenNESS Experience Kits:
+Kiali console is accessible from a browser using `http://<CONTROLLER_IP>:30001` and credentials defined in Converged Edge Experience Kits:
 
 ![Kiali Dashboard Login](./service-mesh-images/kiali-login.png)
 
@@ -481,7 +494,7 @@ _Figure - Kiali Dashboard Login_
 
 ### Enabling Service Mesh with the Media Analytics Flavor
 
-The Istio service mesh is not enabled by default in OpenNESS. It can be installed alongside the video analytics services by setting the flag `ne_istio_enable` to `true` in the *media-analytics* flavor. The media analytics services are installed with the OpenNESS service mesh through the OEK playbook as described in the [Media Analytics](../flavors.md#media-analytics-flavor) section.
+The Istio service mesh is not enabled by default in OpenNESS. It can be installed alongside the video analytics services by setting the flag `ne_istio_enable` to `true` in the *media-analytics* flavor. The media analytics services are installed with the OpenNESS service mesh through the CEEK playbook as described in the [Media Analytics](../flavors.md#media-analytics-flavor) section.
 
 ## References
 

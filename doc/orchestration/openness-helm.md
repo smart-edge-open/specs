@@ -12,7 +12,7 @@ Copyright (c) 2020 Intel Corporation
 - [References](#references)
 
 ## Introduction
-Helm is a package manager for Kubernetes\*. It allows developers and operators to easily package, configure, and deploy applications and services onto Kubernetes clusters. For details refer to the [Helm Website](https://helm.sh). With OpenNESS, Helm is used to extend the [OpenNESS Experience Kits](https://github.com/open-ness/openness-experience-kits) Ansible\* playbooks to deploy Kubernetes packages. Helm adds considerable flexibility. It enables users to upgrade an existing installation without requiring a re-install. It provides the option to selectively deploy individual microservices if a full installation of OpenNESS is not needed. And it provides a standard process to deploy different applications or network functions. This document aims to familiarize the user with Helm and provide instructions on how to use the specific Helm charts available for OpenNESS. 
+Helm is a package manager for Kubernetes\*. It allows developers and operators to easily package, configure, and deploy applications and services onto Kubernetes clusters. For details refer to the [Helm Website](https://helm.sh). With OpenNESS, Helm is used to extend the [Converged Edge Experience Kits](https://github.com/open-ness/converged-edge-experience-kits) Ansible\* playbooks to deploy Kubernetes packages. Helm adds considerable flexibility. It enables users to upgrade an existing installation without requiring a re-install. It provides the option to selectively deploy individual microservices if a full installation of OpenNESS is not needed. And it provides a standard process to deploy different applications or network functions. This document aims to familiarize the user with Helm and provide instructions on how to use the specific Helm charts available for OpenNESS. 
 
 ## Architecture
 The below figure shows the architecture for the OpenNESS Helm in this document.
@@ -22,7 +22,7 @@ _Figure - Helm Architecture in OpenNESS_
 
 
 ## Helm Installation
-Helm 3 is used for OpenNESS. The installation is automatically conducted by the [OpenNESS Experience Kits](https://github.com/open-ness/openness-experience-kits) Ansible playbooks as below:
+Helm 3 is used for OpenNESS. The installation is automatically conducted by the [Converged Edge Experience Kits](https://github.com/open-ness/converged-edge-experience-kits) Ansible playbooks as below:
    ```yaml
    - role: kubernetes/helm
    ```
@@ -39,7 +39,7 @@ OpenNESS provides the following helm charts:
   - CNI plugins including Multus\* and SRIOV CNI
   - Video analytics service
   - 5G control plane pods including AF, NEF, OAM, and CNTF
-> **NOTE**: NFD, CMK, Prometheus, NodeExporter, and Grafana leverage existing third-party helm charts: [Container Experience Kits](https://github.com/intel/container-experience-kits) and [Helm GitHub\* Repo](https://github.com/helm/charts). For other helm charts, [OpenNESS Experience Kits](https://github.com/open-ness/openness-experience-kits) Ansible playbooks perform automatic charts generation and deployment.
+> **NOTE**: NFD, CMK, Prometheus, NodeExporter, and Grafana leverage existing third-party helm charts: [Container Experience Kits](https://github.com/intel/container-experience-kits) and [Helm GitHub\* Repo](https://github.com/helm/charts). For other helm charts, [Converged Edge Experience Kits](https://github.com/open-ness/converged-edge-experience-kits) Ansible playbooks perform automatic charts generation and deployment.
 
 - Sample applications, network functions, and services that can be deployed and verified on the OpenNESS platform:
   - Applications
@@ -49,11 +49,11 @@ OpenNESS provides the following helm charts:
     - [Telemetry Sample Application Helm Charts](https://github.com/open-ness/edgeapps/tree/master/applications/telemetry-sample-app)
     - [EIS Sample Application Helm Charts](https://github.com/open-ness/edgeapps/tree/master/applications/eis-experience-kit)
   - Network Functions
-    - [FlexRAN Helm Charts](https://github.com/open-ness/edgeapps/tree/master/network-functions/ran/charts/flexran)
+    - [FlexRAN Helm Charts](https://github.com/open-ness/edgeapps/tree/master/network-functions/ran/charts/du-dev)
     - [xRAN Helm Charts](https://github.com/open-ness/edgeapps/tree/master/network-functions/xran/helmcharts/xranchart)
     - [UPF Helm Charts](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
-The EPA, Telemetry, and k8s plugins helm chart files will be saved in a specific directory on the OpenNESS controller. To modify the directory, change the following variable `ne_helm_charts_default_dir` in the `group_vars/all/10-default.yml` file:
+The EPA, Telemetry, and k8s plugins helm chart files will be saved in a specific directory on the OpenNESS controller. To modify the directory, change the following variable `ne_helm_charts_default_dir` in the `inventory/default/group_vars/all/10-default.yml` file:
    ```yaml
    ne_helm_charts_default_dir: /opt/openness/helm-charts/
    ```

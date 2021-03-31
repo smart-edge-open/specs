@@ -6,7 +6,7 @@ Copyright (c) 2019-2020 Intel Corporation
 # OpenNESS Quick Start
 
    ## <b>Network Edge</b>
-   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md)
+   ### <b>Step 1.</b> Get Hardware &#9658; <b>Step 2.</b> [Getting started](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-cluster-setup.md) &#9658; <b>Step 3.</b> [Applications Onboarding](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/network-edge-applications-onboarding.md)
 
 
 # OpenNESS solution documentation index
@@ -21,10 +21,11 @@ Below is the complete list of OpenNESS solution documentation
 ## Getting Started - Setup
 
 * [<b>getting-started</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge solutions](https://github.com/open-ness/specs/blob/master/doc/getting-started)
-   * [<b>openness-experience-kits.md</b>: Overview of the OpenNESS Experience kits that are used to install the Network Edge solutions](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-experience-kits.md)
-   * [<b>network-edge</b>: Folder containing how to get started with installing and trying OpenNESS Network Edge](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge)
-     * [<b>controller-edge-node-setup.md</b>: Started here for installing and trying OpenNESS Network Edge](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/controller-edge-node-setup.md)
-     * [<b>supported-epa.md</b>: List of Silicon and Software EPA that are features that are supported in OpenNESS Network Edge](https://github.com/open-ness/specs/blob/master/doc/getting-started/network-edge/supported-epa.md)
+   * [<b>openness-cluster-setup.md</b>: Getting started here for installing and trying OpenNESS Network Edge](https://github.com/open-ness/specs/blob/master/doc/getting-started/openness-cluster-setup.md)
+   * [<b>converged-edge-experience-kits.md</b>: Overview of the Converged Edge Experience Kits that are used to install the Network Edge solutions](https://github.com/open-ness/specs/blob/master/doc/getting-started/converged-edge-experience-kits.md)
+   * [<b>non-root-user.md</b>: Using the non-root user on the OpenNESS Platform](https://github.com/open-ness/specs/blob/master/doc/getting-started/non-root-user.md)
+   * [<b>harbor-registry.md</b>: Enabling Harbor Registry service in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/getting-started/harbor-registry.md)
+   * [<b>kubernetes-dashboard.md</b>: Installing  Kubernetes Dashboard for OpenNESS Network Edge cluster](https://github.com/open-ness/specs/blob/master/doc/getting-started/kubernetes-dashboard.md)
 
 ## Application onboarding - Deployment
 
@@ -35,12 +36,6 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>using-openness-cnca.md</b>: Steps for configuring 4G CUPS or 5G Application Function for Edge deployment for Network Edge](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/using-openness-cnca.md)
    * [<b>openness-eaa.md</b>: Edge Application Agent: Description of Edge Application APIs and Edge Application Authentication APIs](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-eaa.md)
    * [<b>openness-certsigner.md</b>: Steps for issuing platform certificates](https://github.com/open-ness/specs/blob/master/doc/applications-onboard/openness-certsigner.md)
-
-## Radio Access Network (RAN)
-* [<b>ran</b>: Folder containing details of 4G and 5G RAN deployment support](https://github.com/open-ness/specs/tree/master/doc/reference-architectures/ran)
-   * [<b>openness_ran.md</b>: Whitepaper detailing the 4G and 5G RAN deployment support on OpenNESS for Network Edge](https://github.com/open-ness/specs/blob/master/doc/reference-architectures/ran/openness_ran.md)
-   * [<b>openness_xran.md</b>: Whitepaper detailing O-RAN Sample Application deployment support on OpenNESS](https://github.com/open-ness/specs/blob/master/doc/reference-architectures/ran/openness_xran.md)
-
 
 ## Core Network - 4G and 5G
 
@@ -57,11 +52,11 @@ Below is the complete list of OpenNESS solution documentation
    * [<b>openness-sriov-multiple-interfaces.md</b>: Dedicated Physical Network interface allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-sriov-multiple-interfaces.md)
    * [<b>openness-dedicated-core.md</b>: Dedicated CPU core allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-dedicated-core.md)
    * [<b>openness-bios.md</b>: Edge platform BIOS and Firmware and configuration support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-bios.md)
+   * [<b>openness-qat.md</b>: Resource allocation & configuration of Intel® QuickAssist Adapter](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-qat.md)
    * [<b>openness-fpga.md</b>: Dedicated FPGA IP resource allocation support for Edge Applications and Network Functions](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md)
    * [<b>openness_hddl.md</b>: Using Intel® Movidius™ Myriad™ X High Density Deep Learning (HDDL) solution in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness_hddl.md)
    * [<b>openness-topology-manager.md</b>: Resource Locality awareness support through Topology manager in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-topology-manager.md)
    * [<b>openness-vca.md</b>: Visual Compute Accelerator Card - Analytics (VCAC-A)](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md)
-   * [<b>openness-kubernetes-dashboard.md</b>: Kubernetes Dashboard in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-kubernetes-dashboard.md)
    * [<b>openness-rmd.md</b>: Cache Allocation using Resource Management Daemon(RMD) in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-rmd.md)
    * [<b>openness-telemetry</b>: Telemetry Support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-telemetry.md)
 
@@ -152,5 +147,5 @@ Below is the complete list of OpenNESS solution documentation
 - COTS: Commercial Off-The-Shelf
 - DU: Distributed Unit of RAN
 - CU: Centralized Unit of RAN
-- OEK: OpenNESS Experience Kit
+- CEEK: Converged Edge Experience Kits
 - IDO: Intel Distribution of OpenNESS
