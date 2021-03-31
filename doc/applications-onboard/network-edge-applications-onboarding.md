@@ -442,7 +442,7 @@ This section guides users through the complete process of onboarding the OpenVIN
 
 ## Prerequisites
 
-* OpenNESS for Network Edge is fully installed and set up.
+* OpenNESS for Network Edge is fully installed and set up (kubeovn as cni to support Interfaceservice which is openness developed kubectl plugin.).
 * The Docker images for OpenVINO are available on the Edge Node.
 * A separate host used for generating traffic via Client Simulator is set up.
 * The Edge Node host and traffic generating host are connected point to point via unused physical network interfaces.
