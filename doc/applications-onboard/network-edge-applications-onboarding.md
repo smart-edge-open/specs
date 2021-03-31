@@ -42,14 +42,14 @@ Users must provide the application to be deployed on the OpenNESS platform for N
 
 > **Note**: The Harbor registry setup is out of scope for this document. If users already have a docker container image file and would like to copy it to the node manually, they can use the `docker load` command to add the image. The success of using a pre-built Docker image depends on the application dependencies that users must know.
 
-The OpenNESS [edgeapps](https://github.com/otcshare/edgeapps) repository provides images for OpenNESS supported applications. Pull the repository to your Edge Node to build the images.
+The OpenNESS [edgeapps](https://github.com/open-ness/edgeapps) repository provides images for OpenNESS supported applications. Pull the repository to your Edge Node to build the images.
 
 This document explains the build and deployment of two applications:
 1. Sample application: a simple “Hello, World!” reference application for OpenNESS
 2. OpenVINO™ application: A close to real-world inference application
 
 ## Building sample application images
-The sample application is available in [the edgeapps repository](https://github.com/otcshare/edgeapps/tree/master/applications/sample-app); further information about the application is contained within the `Readme.md` file.
+The sample application is available in [the edgeapps repository](https://github.com/open-ness/edgeapps/tree/master/applications/sample-app); further information about the application is contained within the `Readme.md` file.
 
 The following steps are required to build the sample application Docker images for testing the OpenNESS Edge Application Agent (EAA) with consumer and producer applications:
 
@@ -64,7 +64,7 @@ The following steps are required to build the sample application Docker images f
    docker images | grep consumer
    ```
 ## Building the OpenVINO application images
-The OpenVINO application is available in [the EdgeApps repository](https://github.com/otcshare/edgeapps/tree/master/applications/openvino); further information about the application is contained within `Readme.md` file.
+The OpenVINO application is available in [the EdgeApps repository](https://github.com/open-ness/edgeapps/tree/master/applications/openvino); further information about the application is contained within `Readme.md` file.
 
 The following steps are required to build the sample application Docker images for testing OpenVINO consumer and producer applications:
 
@@ -491,12 +491,12 @@ This section guides users through the complete process of onboarding the OpenVIN
 
 ## Deploying the Application
 
-1. An application `yaml` specification file for the OpenVINO producer that is used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
+1. An application `yaml` specification file for the OpenVINO producer that is used to deploy the K8s pod can be found in the Edge Apps repository at [./applications/openvino/producer/openvino-prod-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/producer/openvino-prod-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the producer application by running:
    ```
    kubectl apply -f openvino-prod-app.yaml
    kubectl certificate approve openvino-prod-app
    ```
-2. An application `yaml` specification file for the OpenVINO consumer that is used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the consumer application by running:
+2. An application `yaml` specification file for the OpenVINO consumer that is used to deploy K8s pod can be found in the Edge Apps repository at [./applications/openvino/consumer/openvino-cons-app.yaml](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/consumer/openvino-cons-app.yaml). The pod will use the Docker image, which must be [built](#building-openvino-application-images) and available on the platform. Deploy the consumer application by running:
    ```
    kubectl apply -f openvino-cons-app.yaml
    kubectl certificate approve openvino-cons-app
@@ -593,7 +593,7 @@ The following is an example of how to set up DNS resolution for OpenVINO consume
    dig openvino.openness
    ```
 3. On the traffic generating host build the image for the [Client Simulator](#building-openvino-application-images)
-4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/otcshare/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. A graphical user environment is required to view the results of the returning augmented videos stream.
+4. Run the following from [edgeapps/applications/openvino/clientsim](https://github.com/open-ness/edgeapps/blob/master/applications/openvino/clientsim/run-docker.sh) to start the video traffic via the containerized Client Simulator. A graphical user environment is required to view the results of the returning augmented videos stream.
    ```
    ./run_docker.sh
    ```

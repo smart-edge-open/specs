@@ -45,21 +45,21 @@ As part of the end-to-end integration of the Edge cloud deployment using OpenNES
 
 # Purpose
 
-This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/otcshare/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Cloud-native network functions (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
+This document provides the required steps to deploy UPF on the OpenNESS platform. 4G/(Long Term Evolution network)LTE or 5G UPF can run as network functions on the Edge node in a virtualized environment.  The reference [Dockerfile](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/Dockerfile) and [5g-upf.yaml](https://github.com/open-ness/edgeapps/blob/master/network-functions/core-network/5G/UPF/5g-upf.yaml) provide details on how to deploy UPF as a Cloud-native network functions (CNF) in a K8s pod on OpenNESS edge node using OpenNESS Enhanced Platform Awareness (EPA) features.
 
 These scripts are validated through a reference UPF solution (implementation is based on Vector Packet Processing (VPP)) that is not part of the OpenNESS release.
 
 >**NOTE**: The AF and NEF Dockerfile and pod specification can be found here:
 >
-> - AF - [dockerfile](https://github.com/otcshare/epcforedge/blob/master/ngc/build/networkedge/af/Dockerfile). [Pod Specification](https://github.com/otcshare/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podAF.yaml)
-> - NEF - [dockerfile](https://github.com/otcshare/epcforedge/blob/master/ngc/build/networkedge/nef/Dockerfile). [Pod Specification](https://github.com/otcshare/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podNEF.yaml)
-> - OAM - [dockerfile](https://github.com/otcshare/epcforedge/blob/master/ngc/build/networkedge/oam/Dockerfile). [Pod Specification](https://github.com/otcshare/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podOAM.yaml)
+> - AF - [dockerfile](https://github.com/open-ness/epcforedge/blob/master/ngc/build/networkedge/af/Dockerfile). [Pod Specification](https://github.com/open-ness/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podAF.yaml)
+> - NEF - [dockerfile](https://github.com/open-ness/epcforedge/blob/master/ngc/build/networkedge/nef/Dockerfile). [Pod Specification](https://github.com/open-ness/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podNEF.yaml)
+> - OAM - [dockerfile](https://github.com/open-ness/epcforedge/blob/master/ngc/build/networkedge/oam/Dockerfile). [Pod Specification](https://github.com/open-ness/epcforedge/blob/master/ngc/scripts/networkedge/ngctest/podOAM.yaml)
 
 # How to build
 
 1. To keep the build and deploy process straightforward, the Docker\* build and image are stored on the Edge node.
 
-2. Copy the upf binary package to the Docker build folder. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
+2. Copy the upf binary package to the Docker build folder. Reference Docker files and the Helm chart for deploying the UPF is available at [edgeapps_upf_docker](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/5G/UPF) and [edgeapps_upf_helmchart](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf) respectively
 
     ```bash
     ne-node# cp -rf <5g-upf-binary-package> edgeapps/network-functions/core-network/5G/UPF/upf
@@ -77,7 +77,7 @@ These scripts are validated through a reference UPF solution (implementation is 
 
 # UPF configuration
 
-To keep the bring up setup simple, the UPF configuration can be provided through the Helm charts. A reference Helm chart is available at  [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
+To keep the bring up setup simple, the UPF configuration can be provided through the Helm charts. A reference Helm chart is available at  [edgeapps_upf_helmchart](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
 Below is a list of minimal configuration parameters for VPP-based applications such as UPF.
 
@@ -280,7 +280,7 @@ Below is a list of minimal configuration parameters for VPP-based applications s
 
 ## Deploy UPF pod from OpenNESS controller
 
-In this reference validation, UPF will be deployed using Helm charts. The reference Helm chart for UPF is available at [edgeapps_upf_helmchart](https://github.com/otcshare/edgeapps/tree/master/network-functions/core-network/charts/upf)
+In this reference validation, UPF will be deployed using Helm charts. The reference Helm chart for UPF is available at [edgeapps_upf_helmchart](https://github.com/open-ness/edgeapps/tree/master/network-functions/core-network/charts/upf)
 
 helm install \<pod-name\> \<path to the upf helm chart\> \<list of configuration values\>
 

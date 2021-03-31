@@ -112,7 +112,7 @@ Edge Multi-Cluster Orchestration(EMCO), is a Geo-distributed application orchest
 
 ![](arch-images/openness-emco.png)
 
-Link: [EMCO](https://github.com/otcshare/specs/blob/master/doc/building-blocks/emco/openness-emco.md)
+Link: [EMCO](https://github.com/open-ness/specs/blob/master/doc/building-blocks/emco/openness-emco.md)
 ### Resource Management
 
 Resource Management represents a methodology which involves identification of the hardware and software resources on the edge cluster, Configuration and allocation of the resources and continuous monitoring of the resources for any changes.
@@ -137,7 +137,7 @@ Resource Allocation involves configuration of the certain hardware resources lik
 
 Resource monitoring involves tracking the usage of allocated resources to the applications and services and also tracking the remaining allocatable resources. OpenNESS provides collectors, node exporters using collectd, telegraf and custom exporters as part of telemetry and monitoring of current resource usage. Resource monitoring support is provided for CPU, VPU, FPGA AND Memory.
 
-Link: [Enhanced Platform Awareness: Documents covering Accelerators and Resource Management](https://github.com/otcshare/specs/tree/master/doc/building-blocks/enhanced-platform-awareness)
+Link: [Enhanced Platform Awareness: Documents covering Accelerators and Resource Management](https://github.com/open-ness/specs/tree/master/doc/building-blocks/enhanced-platform-awareness)
 
 ### Accelerators
 
@@ -177,13 +177,13 @@ OpenNESS supports the following CNIs:
 - <b>Kube-OVN CNI</b>: integrates the OVN-based network virtualization with Kubernetes. It offers an advanced container network fabric for enterprises with the most functions and the easiest operation.
 - <b>Calico CNI/eBPF</b>: supports applications with higher performance using eBPF and IPv4/IPv6 dual-stack
 
-Link: [Dataplane and CNI](https://github.com/otcshare/specs/tree/master/doc/building-blocks/dataplane)
+Link: [Dataplane and CNI](https://github.com/open-ness/specs/tree/master/doc/building-blocks/dataplane)
 
 ### Edge Aware Service Mesh 
 
 Istio is a feature-rich, cloud-native service mesh platform that provides a collection of key capabilities such as: Traffic Management, Security and Observability uniformly across a network of services. OpenNESS integrates natively with the Istio service mesh to help reduce the complexity of large scale edge applications, services, and network functions. 
 
-Link: [Service Mesh](https://github.com/otcshare/specs/blob/master/doc/applications/openness_service_mesh.md)
+Link: [Service Mesh](https://github.com/open-ness/specs/blob/master/doc/applications/openness_service_mesh.md)
 
 ### Telemetry and Monitoring
 
@@ -293,7 +293,7 @@ The following is a subset of supported reference network functions:
 
 - <b>gNodeB or eNodeB</b>: 5G or 4G base station implementation on Intel architecture based on Intel’s FlexRAN.
 
-Link: [Documents covering OpenNESS supported Reference Architectures](https://github.com/otcshare/specs/tree/master/doc/reference-architectures)
+Link: [Documents covering OpenNESS supported Reference Architectures](https://github.com/open-ness/specs/tree/master/doc/reference-architectures)
 ## OpenNESS Optimized Commercial Applications 
 
 OpenNESS Optimized Commercial applications are available at [Intel® Network Builders](https://networkbuilders.intel.com/commercial-applications)
