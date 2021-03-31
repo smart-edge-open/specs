@@ -23,6 +23,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.06](#openness---2006-1)
   - [OpenNESS - 20.09](#openness---2009-1)
   - [OpenNESS - 20.12](#openness---2012-1)
+  - [OpenNESS - 21.03](#openness---2103-1)
 - [Fixed Issues](#fixed-issues)
   - [OpenNESS - 19.06](#openness---1906-2)
   - [OpenNESS - 19.06.01](#openness---190601-1)
@@ -33,7 +34,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-2)
   - [OpenNESS - 20.12](#openness---2012-2)
   - [OpenNESS - 20.12.02](#openness---201202)
-  - [OpenNESS - 21.03](#openness---2103-1)
+  - [OpenNESS - 21.03](#openness---2103-2)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -44,7 +45,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-3)
   - [OpenNESS - 20.12](#openness---2012-3)
   - [OpenNESS - 20.12.02](#openness---201202-1)
-  - [OpenNESS - 21.03](#openness---2103-2)
+  - [OpenNESS - 21.03](#openness---2103-3)
 - [Release Content](#release-content)
   - [OpenNESS - 19.06](#openness---1906-4)
   - [OpenNESS - 19.06.01](#openness---190601-4)
@@ -55,6 +56,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 20.09](#openness---2009-4)
   - [OpenNESS - 20.12](#openness---2012-4)
   - [OpenNESS - 20.12.02](#openness---201202-2)
+  - [OpenNESS - 21.03](#openness---2103-4)
 - [Hardware and Software Compatibility](#hardware-and-software-compatibility)
   - [Intel® Xeon® D Processor](#intel-xeon-d-processor)
   - [2nd Generation Intel® Xeon® Scalable Processors](#2nd-generation-intel-xeon-scalable-processors)
@@ -269,11 +271,15 @@ This document provides high-level system features, issues, and limitations infor
 - Major system Upgrades: Kubernetes 1.19.3, CentOS 7.8, Calico 3.16, and Kube-OVN 1.5.2.
 
 ## OpenNESS - 21.03
+- Edge Insights for Industrial updated to 2.4
+- Support for Intel® Ethernet Controller E810 
+- Improvements to Converged Edge Reference Architecture framework including support for deploying one or more OpenNESS Kubernetes clusters 
+- OpenVINO upgraded to  2021.1.110
 - Major system upgrades: CentOS 7.9, Kubernetes 1.20.0, Docker 20.10.2, QEMU 5.2 and Golang 1.16.
 - Kubernetes CNI upgrades: Calico 3.17, SR-IOV CNI 2.6, Flannel 0.13.0.
 - Telemetry upgrades: CAdvisor 0.37.5, Grafana 7.4.2, Prometheus 2.24.0, Prometheus Node Exporter 1.0.1.
-- Set Calico as a default cni for cdn-transcode, central_orchestrator and minimal flavor.
-- Intel CMK support deprecated in favour of Kubernetes native CPU Manaher
+- Set Calico as a default cni for cdn-transcode, central_orchestrator, core-cplane, core-uplane, media-analytics and minimal flavor.
+- Intel CMK is replaced with Kubernetes native CPU manager for core resource allocation
 
 # Changes to Existing Features
 
@@ -303,6 +309,14 @@ There are no unsupported or discontinued features relevant to this release.
 ## OpenNESS - 20.12
 There are no unsupported or discontinued features relevant to this release.
 
+## OpenNESS - 21.03
+- FlexRAN/Access Edge CERA Flavor is only aviable in Intel Distribution of OpenNESS
+- OpenNESS repositories have been consolidated to the following 
+  - https://github.com/otcshare/converged-edge-experience-kits
+  - https://github.com/otcshare/specs
+  - https://github.com/otcshare/edgeapps
+  - https://github.com/otcshare/edgeservices
+  - https://github.com/otcshare/openshift-operator
 # Fixed Issues
 
 ## OpenNESS - 19.06
@@ -351,7 +365,7 @@ There are no non-Intel issues relevant to this release.
 
 ## OpenNESS - 21.03
 - Offline deployment issues related to zlib-devel version 1.2.7-19
-
+- CAdvisor resource utilization has been optimized using "--docker_only=true" which decreased CPU usage from 15-25% to 5-6% (confirmed with ‘docker stats’ and ‘top’ commands). Memory usage also decreased by around 15-20%.
 # Known Issues and Limitations
 ## OpenNESS - 19.06
 There are no issues relevant to this release.
@@ -403,10 +417,12 @@ There is one issue relevant to this release: it is not possible to remove the ap
 - Offline deployment issues related to zlib-devel version 1.2.7-19
 
 ## OpenNESS - 21.03
-- cAdvisor CPU utilization of Edge Node is high and could cause a delay to get an interactive SSH session. A work around is to remove CAdvisor if not needed using `helm uninstall cadvisor -n telemetry`
 - An issue appears when the KubeVirt Containerized Data Importer (CDI) upload pod is deployed with Kube-OVN CNI, the deployed pods readiness probe fails and pod is never in ready state. Calico CNI is used by default in OpenNESS when using CDI
 - Telemetry deployment with PCM enabled will cause a deployment failure in single node cluster deployments due to conflict with CollectD deployment, it is advised to not use PCM and CollectD at the same time in OpenNESS at this time
-
+- Kafka and Zookeeper resource consumption is on the higher side. When deployed in the context of uCPE and SD-WAN users need to consider this. 
+- When flannel CNI is being used and worker node is being manually joined or re-joined to the cluster, then 
+`kubectl patch node NODE_NAME -p '{ "spec":{ "podCIDR":"10.244.0.0/24" }}`
+command should be issued on controller to enable flannel CNI on that node.
 # Release Content
 
 ## OpenNESS - 19.06
@@ -441,6 +457,12 @@ OpenNESS Edge node, OpenNESS Controller, Common, Spec, OpenNESS Applications, an
 ## OpenNESS - 20.12.02
 - Open Source: Edge node, Controller, Epcforedge, Common, Spec, Applications and Experience kit.
 - IDO: IDO Edge node, IDO Controller, IDO Epcforedge, IDO Spec and IDO Experience kit.
+## OpenNESS - 21.03
+  - https://github.com/otcshare/converged-edge-experience-kits
+  - https://github.com/otcshare/specs
+  - https://github.com/otcshare/edgeapps
+  - https://github.com/otcshare/edgeservices
+  - https://github.com/otcshare/openshift-operator
 
 # Hardware and Software Compatibility
 OpenNESS Edge Node has been tested using the following hardware specification:
