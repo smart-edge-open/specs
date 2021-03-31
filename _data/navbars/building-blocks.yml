@@ -72,7 +72,7 @@ section:
       meta_description: The Visual Cloud Accelerator Card - Analytics (VCAC-A) equips Intel® Xeon® Scalable Processor based platforms and Intel Movidius™ VPU to enhance the video codec, computer vision, and inference capabilities.
 
     - title: Intel® QuickAssist Adapter
-      path: /doc/building-blocks/enhanced-platform-awareness/openness-qat.md
+      path: /doc/building-blocks/enhanced-platform-awareness/openness-qat
       meta_title: Using Intel® QuickAssist Adapter in OpenNESS - Resource Allocation, and Configuration
       meta_description: Intel® QuickAssist Adapter plays a key role in accelerating cryptographic operations in 5G networking.
 
