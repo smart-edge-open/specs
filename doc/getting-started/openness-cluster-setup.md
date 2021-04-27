@@ -34,7 +34,7 @@ The following set of actions must be completed to set up the Open Network Edge S
 
 1. Fulfill the [Preconditions](#preconditions).
 2. Become familiar with [supported features](#supported-epa-features) and enable them if desired.
-3. Clone [Converged Edge Experience Kits](https://github.com/otcshare/converged-edge-experience-kits)
+3. Clone [Converged Edge Experience Kits](https://github.com/open-ness/converged-edge-experience-kits)
 4. Install deployment helper script pre-requisites (first time only)
    
     ```shell
