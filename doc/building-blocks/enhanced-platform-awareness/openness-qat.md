@@ -1,6 +1,6 @@
 ```text
 SPDX-License-Identifier: Apache-2.0
-Copyright (c) 2020 Intel Corporation
+Copyright (c) 2021 Intel Corporation
 ```
 <!-- omit in toc -->
 # Using Intel® QuickAssist Adapter in OpenNESS: Resource Allocation, and Configuration
@@ -11,6 +11,7 @@ Copyright (c) 2020 Intel Corporation
   - [Intel QuickAssist Adapter for OpenNESS Network Edge](#intel-quickassist-adapter-for-openness-network-edge)
     - [Converged Edge Experience Kits (CEEK)](#converged-edge-experience-kits-ceek)
   - [Requesting Resources and Running Pods for OpenNESS Network Edge](#requesting-resources-and-running-pods-for-openness-network-edge)
+  - [Verification of the QAT and the Device Plugin](#verification-of-the-qat-and-the-device-plugin)
 - [Reference](#reference)
 
 ## Overview
@@ -89,8 +90,12 @@ As part of the OpenNESS Ansible automation, a K8s SRIOV device plugin to orchest
 
 ```shell
 kubectl get node $(hostname) -o json | jq '.status.allocatable'
-
+```
+Sample output:
+```shell
+[...]
 "qat.intel.com/generic": "48"
+[...]
 ```
 
 To request the QAT VFs as a resource in the pod, add the request for the resource into the pod specification file by specifying its name and the amount of resources required. If the resource is not available or the amount of resources requested is greater than the number of resources available, the pod status will be “Pending” until the resource is available.
@@ -98,53 +103,142 @@ To request the QAT VFs as a resource in the pod, add the request for the resourc
 A sample pod requesting the Intel® QuickAssist Adapter VF may look like this:
 
 ```yaml
-apiVersion: v1
 kind: Pod
+apiVersion: v1
 metadata:
-  name: test
-  labels:
-    env: test
+  name: qat-dpdk
 spec:
   containers:
-  - name: test
-    image: centos:latest
+  - name: crypto-perf
+    image: intel/crypto-perf:devel
+    imagePullPolicy: IfNotPresent
     command: [ "/bin/bash", "-c", "--" ]
     args: [ "while true; do sleep 300000; done;" ]
+    volumeMounts:
+    - name: hugepages
+      mountPath: /hugepages
+    - name: varvol
+      mountPath: /var/run
+      readOnly: false
     resources:
       requests:
-        qat.intel.com/generic: 1
+        cpu: 3
+        memory: 1Gi
+        qat.intel.com/generic: 4
+        hugepages-1Gi: 1Gi
       limits:
-        qat.intel.com/generic: 1
+        cpu: 3
+        memory: 1Gi
+        qat.intel.com/generic: 4
+        hugepages-1Gi: 1Gi
+    securityContext:
+      readOnlyRootFilesystem: true
+      capabilities:
+        add:
+        - IPC_LOCK
+        - SYS_NICE
+        - SYS_ADMIN
+        - NET_ADMIN
+  restartPolicy: Never
+  volumes:
+  - name: hugepages
+    emptyDir:
+      medium: HugePages
+  - name: varvol
+    hostPath:
+      path: /var/run
+
 ```
 
 To test the resource allocation to the pod, save the above code snippet to the `sample.yaml` file and create the pod.
 ```
 kubectl create -f sample.yaml
 ```
+
+### Verification of the QAT and the Device Plugin
 Once the pod is in the 'Running' state, check that the device was allocated to the pod (a uioX device and an environmental variable with a device PCI address should be available):
-```
-kubectl exec -it test -- ls /dev
-kubectl exec -it test -- printenv | grep QAT
+```shell
+kubectl exec qat-dpdk -- ls -l /dev/vfio | grep -P '^c.*\d$'
 ```
 Sample output:
 ```shell
-[...]
-crw------- 1 root root 241, 18 Mar 22 14:11 uio18
-crw------- 1 root root 241, 39 Mar 22 14:11 uio39
-crw------- 1 root root 241, 46 Mar 22 14:11 uio46
-crw------- 1 root root 241,  8 Mar 22 14:11 uio8
-[...]
+crw------- 1 root root 244,  18 Apr  9 17:05 108
+crw------- 1 root root 244,  22 Apr  9 17:05 112
+crw------- 1 root root 244,  31 Apr  9 17:05 121
+crw------- 1 root root 244,   8 Apr  9 17:05 98
 ```
 ```shell
-QAT3=0000:1e:02.6
-QAT2=0000:1c:01.2
-QAT1=0000:1e:01.7
-QAT0=0000:1a:02.0
+kubectl exec qat-dpdk -- env | grep QAT
+```
+Sample output:
+```shell
+QAT2=0000:b1:02.0
+QAT1=0000:b3:01.2
+QAT0=0000:b3:01.6
+QAT3=0000:b3:02.7
 ```
 To check the number of devices currently allocated to pods, run (and search for 'Allocated Resources'):
 
 ```shell
 kubectl describe node $(hostname)
+```
+
+To test pod QAT resources allocation by QAT device plugin, run dpdk-test-crypto-perf application:
+> **NOTE**: At least one free 1Gi hugepage is needed on the system to run this application successfully.
+
+```shell
+kubectl exec qat-dpdk -- bash -c 'dpdk-test-crypto-perf -a $QAT0 -- --ptest throughput --devtype crypto_qat --optype cipher-only --cipher-algo aes-cbc --cipher-op encrypt --cipher-key-sz 16 --total-ops 10000000 --burst-sz 32 --buffer-sz 64'
+```
+
+Sample output:
+
+```shell
+EAL: Detected 96 lcore(s)
+EAL: Detected 2 NUMA nodes
+EAL: Detected static linkage of DPDK
+EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+EAL: Selected IOVA mode 'PA'
+EAL: Probing VFIO support...
+EAL: VFIO support initialized
+EAL:   using IOMMU type 1 (Type 1)
+EAL: Probe PCI driver: qat (8086:37c9) device: 0000:b3:01.6 (socket 1)
+CRYPTODEV: Creating cryptodev 0000:b3:01.6_qat_sym
+
+CRYPTODEV: Initialisation parameters - name: 0000:b3:01.6_qat_sym,socket id: 1, max queue pairs: 0
+CRYPTODEV: Creating cryptodev 0000:b3:01.6_qat_asym
+
+CRYPTODEV: Initialisation parameters - name: 0000:b3:01.6_qat_asym,socket id: 1, max queue pairs: 0
+Allocated pool "priv_sess_mp_1" on socket 1
+CRYPTODEV: elt_size 0 is expanded to 240
+
+Allocated pool "sess_mp_1" on socket 1
+# Crypto Performance Application Options:
+#
+# cperf test: throughput
+#
+# size of crypto op / mbuf pool: 8192
+# total number of ops: 10000000
+# buffer sizes: 64 
+# burst sizes: 32 
+
+# segment size: 64
+#
+# cryptodev type: crypto_qat
+#
+# number of queue pairs per device: 2
+# crypto operation: cipher-only
+# sessionless: no
+# out of place: no
+#
+# cipher algorithm: aes-cbc
+# cipher operation: encrypt
+# cipher key size: 16
+# cipher iv size: 16
+#
+    lcore id    Buf Size  Burst Size    Enqueued    Dequeued  Failed Enq  Failed Deq        MOps        Gbps  Cycles/Buf
+
+          72          64          32    10000000    10000000    40671829    37530011      3.2557      1.6669      703.38
+          25          64          32    10000000    10000000    62127666    58085366      3.2539      1.6660      703.78
 ```
 
 ## Reference
