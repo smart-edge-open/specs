@@ -16,6 +16,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 21.03](#openness---2103)
   - [OpenNESS - 21.03.01](#openness---210301)
   - [OpenNESS - 21.03.02](#openness---210302)
+  - [OpenNESS - 21.03.03](#openness---210303)
 - [Changes to Existing Features](#changes-to-existing-features)
   - [OpenNESS - 19.06](#openness---1906-1)
   - [OpenNESS - 19.06.01](#openness---190601)
@@ -39,6 +40,7 @@ This document provides high-level system features, issues, and limitations infor
   - [OpenNESS - 21.03](#openness---2103-2)
   - [OpenNESS - 21.03.01](#openness---210301-1)
   - [OpenNESS - 21.03.02](#openness---210302-1)
+  - [OpenNESS - 21.03.03](#openness---210303-1)
 - [Known Issues and Limitations](#known-issues-and-limitations)
   - [OpenNESS - 19.06](#openness---1906-3)
   - [OpenNESS - 19.06.01](#openness---190601-3)
@@ -295,6 +297,9 @@ This document provides high-level system features, issues, and limitations infor
 - EII upgraded from 2.4 to 2.4.1
 - VCA package upgraded from R5 to R5.1
 
+## OpenNESS - 21.03.03
+- Changed the CNI used for Azure cloud deployment from default Calico to Azure-supported kube-ovn.
+
 # Changes to Existing Features
 
 ## OpenNESS - 19.06
@@ -391,6 +396,9 @@ There are no non-Intel issues relevant to this release.
 - Corrected Azure single node deployment issues due to incorrect configuration in the setup script.
 - Resolved offline installation of Ansible prerequisites.
 - VCA card is now correctly brought up after node reboot.
+
+## OpenNESS - 21.03.03
+- Fixed multi-node deployment for Azure cloud by changing CNI to kube-ovn as Calico is not supported by Azure.
 
 # Known Issues and Limitations
 ## OpenNESS - 19.06
