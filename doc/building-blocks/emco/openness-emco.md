@@ -133,7 +133,7 @@ The Distributed Application Scheduler supports operations on a deployment intent
 - status: (may be invoked at any step) provides information on the status of the deployment intent group.
 - terminate: terminates the application resources of an instantiated application from all of the clusters to which it was deployed. In some cases, if a remote cluster is intermittently unreachable, the instantiate operation may still retry the instantiate operation for that cluster. The terminate operation will cause the instantiate operation to complete (i.e. fail), before the termination operation is performed.
 - stop: In some cases, if the remote cluster is intermittently unreachable, the Resource Synchronizer will continue retrying an instantiate or terminate operation. The stop operation can be used to force the retry operation to stop, and the instantiate or terminate  operation will complete (with a failed status). In the case of terminate, this allows the deployment intent group resource to be deleted via the API, since deletion is prevented until a deployment intent group resource has reached a completed terminate operation status.
-Refer to [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md) for more details.
+Refer to [EMCO Resource Lifecycle Operations](https://github.com/open-ness/EMCO/tree/main/docs/user/Resource_Lifecycle.md) for more details.
 
 #### Network Configuration Management
 The network configuration management (NCM) microservice:
@@ -237,7 +237,7 @@ _Figure 7 - Instantiate a Deployment Intent Group_
 In this initial release of EMCO, a built-in generic placement controller is provided in the `orchestrator`.  As described above, the three provided action controllers are the OVN Action, Traffic and Generic Action controllers.
 
 #### Status Monitoring and Queries in EMCO
-When a resource like a Deployment Intent Group is instantiated, status information about both the deployment and the deployed resources in the cluster are collected and made available for query by the API. The following diagram illustrates the key components involved.  For more information about status queries see [EMCO Resource Lifecycle Operations](https://github.com/otcshare/EMCO/tree/main/docs/user/Resource_Lifecycle.md).
+When a resource like a Deployment Intent Group is instantiated, status information about both the deployment and the deployed resources in the cluster are collected and made available for query by the API. The following diagram illustrates the key components involved.  For more information about status queries see [EMCO Resource Lifecycle Operations](https://github.com/open-ness/EMCO/tree/main/docs/user/Resource_Lifecycle.md).
 
 ![OpenNESS EMCO](openness-emco-images/emco-status-monitoring.png)
 
@@ -262,7 +262,7 @@ _Figure 8 - Status Monitoring and Query Sequence_
 
 
 ### EMCO API
-For user interaction, EMCO provides [RESTful API](https://github.com/otcshare/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl)
+For user interaction, EMCO provides [RESTful API](https://github.com/open-ness/EMCO/blob/main/docs/emco_apis.yaml). Apart from that, EMCO also provides CLI. For the detailed usage, refer to [EMCO CLI](https://github.com/open-ness/EMCO/tree/main/src/tools/emcoctl)
 > **NOTE**: The EMCO RESTful API is the foundation for the other interaction facilities like the EMCO CLI, EMCO GUI (available in the future) and other orchestrators.
 
 ### EMCO Authentication and Authorization
@@ -287,7 +287,7 @@ The following figure shows the authentication flow with EMCO, Istio and Authserv
 
 _Figure 10 - EMCO Authenication with external OATH2 Server_
 
-Detailed steps for configuring EMCO with Istio can be found in [EMCO Integrity and Access Management](https://github.com/otcshare/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
+Detailed steps for configuring EMCO with Istio can be found in [EMCO Integrity and Access Management](https://github.com/open-ness/EMCO/tree/main/docs/user/Emco_Integrity_Access_Management.md) document.
 
 Steps for EMCO Authentication and Authorization Setup:
 - Install and Configure Keycloak Server to be used in the setup. This server runs outside the EMCO cluster
@@ -301,7 +301,7 @@ Steps for EMCO Authentication and Authorization Setup:
 - Apply Authentication and Authorization Policies
 
 ### EMCO Installation With OpenNESS Flavor
-EMCO supports [multiple deployment options](https://github.com/otcshare/EMCO/tree/main/deployments). [Converged Edge Experience Kits](../../getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
+EMCO supports [multiple deployment options](https://github.com/open-ness/EMCO/tree/main/deployments). [Converged Edge Experience Kits](../../getting-started/converged-edge-experience-kits.md) offers the `central_orchestrator` flavor to automate EMCO build and deployment as mentioned below.
 - The first step is to prepare one server environment which needs to fulfill the [preconditions](../../getting-started/openness-cluster-setup.md#preconditions).
 - Place the EMCO server hostname in `controller_group/hosts/ctrl.openness.org:` dictionary in `inventory.yml` file of converged-edge-experience-kit.
 - Update the `inventory.yaml` file by setting the deployment flavor as `central_orchestrator`
@@ -348,7 +348,7 @@ emco      ovnaction-5d8d4447f9-nn7l6     1/1     Running  0        14m
 emco      rsync-99b85b4x88-ashmc         1/1     Running  0        14m
 ```
 
-Besides that, OpenNESS EMCO also provides Azure templates and supports deployment automation for EMCO cluster on Azure public cloud. More details refer to [OpenNESS Development Kit for Microsoft Azure](https://github.com/otcshare/ido-specs/blob/master/doc/devkits/openness-azure-devkit.md).
+Besides that, OpenNESS EMCO also provides Azure templates and supports deployment automation for EMCO cluster on Azure public cloud. More details refer to [OpenNESS Development Kit for Microsoft Azure](https://github.com/open-ness/ido-specs/blob/master/doc/devkits/openness-azure-devkit.md).
 
 ## EMCO Example: SmartCity Deployment
 - The [SmartCity application](https://github.com/OpenVisualCloud/Smart-City-Sample) is a sample application that is built on top of the OpenVINO™ and Open Visual Cloud software stacks for media processing and analytics. The composite application is composed of two parts: EdgeApp + WebApp (cloud application for additional post-processing such as calculating statistics and display/visualization) 
@@ -375,9 +375,9 @@ Follow the guidance as [EMCO Installation With OpenNESS Flavor](#emco-installati
 ### Cluster Setup
 The step includes:
 - Prepare edge and cloud clusters kubeconfig files, SmartCity helm charts and relevant artifacts.
-- Register clusters provider by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
-- Register provider's clusters by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
-- Register EMCO controllers and resource synchroizer by [EMCO CLI](https://github.com/otcshare/EMCO/tree/main/src/tools/emcoctl).
+- Register clusters provider by [EMCO CLI](https://github.com/open-ness/EMCO/tree/main/src/tools/emcoctl).
+- Register provider's clusters by [EMCO CLI](https://github.com/open-ness/EMCO/tree/main/src/tools/emcoctl).
+- Register EMCO controllers and resource synchroizer by [EMCO CLI](https://github.com/open-ness/EMCO/tree/main/src/tools/emcoctl).
 
 1. On the edge and cloud cluster, run the following command to make Docker logon to the Harbor deployed on the EMCO server, thus the clusters can pull SmartCity images from the Harbor:
     ```shell
@@ -393,7 +393,7 @@ The step includes:
 
     > **NOTE**: <harbor_registry_host> should be `<EMCO Server IP Address>:30003`.
 
-2. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app/emco).
+2. On the EMCO server, download the [scripts,profiles and configmap JSON files](https://github.com/open-ness/edgeapps/tree/master/applications/smart-city-app/emco).
 
 3. Artifacts Preparation for clusters's kubeconfig, smartcity helm charts and other relevant artifacts
    Run the command for the environment setup with success return as below:
@@ -470,7 +470,7 @@ The setup includes:
     URL: projects/project_smtc/composite-apps/composite_smtc/v1/deployment-intent-groups/smtc-deployment-intent-group/instantiate Response Code: 202 Response:
     ```
 
-    > **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/otcshare/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
+    > **NOTE**: EMCO supports generic K8S resource configuration including configmap, secret,etc. The example offers the usage about [configmap configuration](https://github.com/open-ness/edgeapps/blob/master/applications/smart-city-app/emco/cli-scripts/04_apps_template.yaml) to the clusters. 
 
     > **NOTE**: The `04_apply.sh` script invokes EMCO CLI tool - `emcoctl` and applies resource template file - `04_apps_template.yaml` which contains the application related resources to create in EMCO, for example deployment-intent, application helm chart entries, override profiles, configmap...etc. The placement intent for the use case is cluster label name and provider name.
     

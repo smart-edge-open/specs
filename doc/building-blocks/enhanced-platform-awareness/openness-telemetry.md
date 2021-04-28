@@ -149,7 +149,7 @@ Node Exporter is a Prometheus exporter that exposes hardware and OS metrics of *
 
 #### VCAC-A
 
-Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file; this text file is used as an input to the Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md).
+Node Exporter also enables exposure of telemetry from Intel's VCAC-A card to Prometheus. The telemetry from the VCAC-A card is saved into a text file; this text file is used as an input to the Node Exporter. More information on VCAC-A usage in OpenNESS is available [here](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md).
 
 ### cAdvisor
 
@@ -189,7 +189,7 @@ The various CEEK flavors are enabled for CollectD deployment as follows:
 
 1. Select the flavor for the deployment of CollectD from the CEEK during OpenNESS deployment; the flavor is to be selected with `telemetry_flavor: <flavor name>`.
 
-   In the event of using the `flexran` profile, `OPAE_SDK_1.3.7-5_el7.zip` needs to be available in `./converged-edge-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#edge-controller)
+   In the event of using the `flexran` profile, `OPAE_SDK_1.3.7-5_el7.zip` needs to be available in `./converged-edge-experience-kits/opae_fpga` directory; for details about the packages, see [FPGA support in OpenNESS](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-fpga.md#edge-controller)
 2. To access metrics available from CollectD, connect to the Prometheus [dashboard](#prometheus).
 3. Look up an example the CollectD metric by specifying the metric name (ie. `collectd_cpufreq`) and pressing `execute` under the `graph` tab.
    ![CollectD Metric](telemetry-images/collectd_metric.png)
@@ -266,7 +266,7 @@ Processor Counter Monitor (PCM) is an application programming interface (API) an
 
 - Prometheus: responsible for collecting and providing metrics.
 - Prometheus Adapter: exposes the metrics from Prometheus to a K8s API and is configured to provide metrics from Node Exporter and CollectD collectors.
-TAS is enabled by default in CEEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/otcshare/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
+TAS is enabled by default in CEEK, a sample scheduling policy for TAS is provided for [VCAC-A node deployment](https://github.com/open-ness/specs/blob/master/doc/building-blocks/enhanced-platform-awareness/openness-vcac-a.md#telemetry-support).
 
 #### Usage
 

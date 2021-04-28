@@ -32,7 +32,7 @@ The VCAC-A installation involves a [two-stage build](https://github.com/OpenVisu
 
 The CEEK automates the overall build and installation process of the VCAC-A card by joining it as a standalone logical node to the OpenNESS cluster. The CEEK supports force build VCAC-A system image (VCAD) via flag (force\_build\_enable: true (default value)), it also allows the customer to disable the flag to re-use last system image built. When successful, the OpenNESS controller is capable of selectively scheduling workloads on the "VCA node" for proximity to the hardware acceleration.
 
-When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/otcshare/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
+When onboarding applications such as [Open Visual Cloud Smart City Sample](https://github.com/open-ness/edgeapps/tree/master/applications/smart-city-app) with the existence of VCAC-A, the OpenNESS controller schedules all the application pods onto the edge node except the *video analytics* processing that is scheduled on the VCA node as shown in the figure below.
 
 ![Smart City Setup](vcaca-images/smart-city-app-vcac-a.png)
 
