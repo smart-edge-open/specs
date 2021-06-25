@@ -27,16 +27,3 @@ section:
       path: /doc/reference-architectures/core-network/openness_upf
       meta_title: User Plane Function (UPF)
       meta_description: User Plane Function is the evolution of Control and User Plane Separation which part of the Rel.14 in Evolved Packet core. CUPS enabled PGW to be split into PGW-C and PGW-U.
-
-  - title: Radio Access Network
-    path:
-    section:
-    - title: OpenNESS Radio Access Network
-      path: /doc/reference-architectures/ran/openness_ran
-      meta_title: OpenNESS Radio Access Network is the Edge of Wireless Network
-      meta_description: OpenNESS Radio Access Network is the edge of the wireless network. OpenNESS Intel FlexRAN uses as a reference 4G and 5G base station for 4G and 5G end-to-end testing.
-
-    - title: O-RAN Front Haul Sample Application in OpenNESS 
-      path: /doc/reference-architectures/ran/openness_xran
-      meta_title: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge
-      meta_description: 5GNR FlexRAN Front Haul functional units deployment with OpenNESS based on O-RAN specifications at the Network Edge.
