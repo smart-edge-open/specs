@@ -23,7 +23,7 @@ participant "NEF" as nef
 end box 
 
 box "Edge components" #LightBlue
-participant "OpenNESS\nAF" as af 
+participant "Smart Edge Open\nAF" as af 
 participant "OSS" as oss
 end box
 

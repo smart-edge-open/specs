@@ -4,7 +4,7 @@
 syntax = "proto3";
 
 package openness.cups;
-option go_package = "github.com/open-ness/cups;cups";
+option go_package = "github.com/smart-edge-open/cups;cups";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";

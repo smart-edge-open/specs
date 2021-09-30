@@ -6,11 +6,11 @@ path: /cloud-adapters/
 order: 6
 section:
   - title: AWS Greengrass
-    path: /doc/cloud-adapters/openness_awsgreengrass
-    meta_title: OpenNESS Integration with AWS Greengrass
-    meta_description: OpenNESS is an open source software platform that enables easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments.
+    path: /doc/cloud-adapters/smartedge-open_awsgreengrass
+    meta_title: Smart Edge Open Integration with AWS Greengrass
+    meta_description: Smart Edge Open is an open source software platform that enables easy orchestration of edge services across diverse network platform and access technologies in multi-cloud environments.
     
   - title: Baidu Cloud
-    path: /doc/cloud-adapters/openness_baiducloud
-    meta_title: OpenNESS Integration with Baidu OpenEdge
-    meta_description: OpenNESS can integrate with Baidu Cloud Connector, OpenEdge which is Edge IoT Gateway. Baidu Edge solution is called as Baidu® IntelliEdge.
+    path: /doc/cloud-adapters/smartedge-open_baiducloud
+    meta_title: Smart Edge Open Integration with Baidu OpenEdge
+    meta_description: Smart Edge Open can integrate with Baidu Cloud Connector, OpenEdge which is Edge IoT Gateway. Baidu Edge solution is called as Baidu® IntelliEdge.

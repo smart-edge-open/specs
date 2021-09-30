@@ -4,21 +4,21 @@ Copyright (c) 2019-2020 Intel Corporation
 ```
 
 <!-- omit in toc -->
-# OpenNESS Overview
+# Smart Edge Open Overview
 
-- [Introduction to OpenNESS](#introduction-to-openness)
-- [Why consider OpenNESS](#why-consider-openness)
+- [Introduction to Smart Edge Open](#introduction-to-smart-edge-open)
+- [Why consider Smart Edge Open](#why-consider-smart-edge-open)
 - [Building Blocks](#building-blocks)
 - [Distributions](#distributions)
 - [Consumption Models](#consumption-models)
 
-## Introduction to OpenNESS 
+## Introduction to Smart Edge Open 
 
-OpenNESS is an edge computing software toolkit that enables highly optimized and performant edge platforms to on-board and manage applications and network functions with cloud-like agility across any type of network.
+Smart Edge Open is an edge computing software toolkit that enables highly optimized and performant edge platforms to on-board and manage applications and network functions with cloud-like agility across any type of network.
 
 The toolkit includes a variety of Building Blocks that enable you to build different types of Converged Edge platforms that combine IT (Information Technology), OT (Operational Technology) and CT (Communications Technology).
 
-OpenNESS can help speed up the development of Edges such as:
+Smart Edge Open can help speed up the development of Edges such as:
 
 - Cloud Native RAN with Apps
 - 5G distributed UPF with Apps
@@ -26,9 +26,9 @@ OpenNESS can help speed up the development of Edges such as:
 - AI/vision inferencing apps with MEC 
 - Media apps with MEC
 
-OpenNESS is a Certified Kubernetes* offering. See the [CNCF Software Conformance program](https://www.cncf.io/certification/software-conformance/) for details.
+Smart Edge Open is a Certified Kubernetes* offering. See the [CNCF Software Conformance program](https://www.cncf.io/certification/software-conformance/) for details.
 
-## Why consider OpenNESS
+## Why consider Smart Edge Open
 
 In the era of 5G, as the cloud architectures start to disaggregate, various locations on the Telco edge start to become prime candidates for compute workloads that are capable of delivering a new set of KPIs for a new breed of apps and services. These locations include the On-prem edge (located typically in an enterprise), the Access Edge (located at or close to a 5G basestation), the Near Edge (the next aggregation point hosting a distributed UPF) and the Regional Data Center (hosting a Next Gen Central Office with wireless/wireline convergence).
 
@@ -40,9 +40,9 @@ As the industry seeks to settle on a consistent cloud native platform approach c
 - Optimize cloud native frameworks to meet stringent edge KPIs and simplify network complexity
 - Leverage a broad ecosystem and evolving standards for edge computing
 
-OpenNESS brings together the best of breed cloud native frameworks to build a horizontal edge computing platform to address these challenges.
+Smart Edge Open brings together the best of breed cloud native frameworks to build a horizontal edge computing platform to address these challenges.
 
-**Benefits of OpenNESS**
+**Benefits of Smart Edge Open**
 
 Edge Performant & Optimized: 
 
@@ -61,7 +61,7 @@ Ease of Use, Consumability & Time to Market (TTM)
 
 ## Building Blocks
 
-OpenNESS is composed of a set of Building Blocks, each intended to offer a set of capabilities for edge solutions.
+Smart Edge Open is composed of a set of Building Blocks, each intended to offer a set of capabilities for edge solutions.
 
 | Building Block                   | Summary                                                      |
 | -------------------------------- | ------------------------------------------------------------ |
@@ -78,30 +78,30 @@ OpenNESS is composed of a set of Building Blocks, each intended to offer a set o
 
 
 ## Distributions
-OpenNESS is released as two distributions:
-1. <b>OpenNESS </b>: A full open-source distribution of OpenNESS
-2. <b>Intel® Distribution of OpenNESS </b>: A licensed distribution from Intel that includes all the features in OpenNESS along with additional microservices, Kubernetes\* extensions, enhancements, and optimizations for Intel® architecture. 
+Smart Edge Open is released as two distributions:
+1. <b>Smart Edge Open </b>: A full open-source distribution of Smart Edge Open
+2. <b>Intel® Distribution of Smart Edge Open </b>: A licensed distribution from Intel that includes all the features in Smart Edge Open along with additional microservices, Kubernetes\* extensions, enhancements, and optimizations for Intel® architecture. 
 
-The Intel Distribution of OpenNESS requires a secure login to the OpenNESS GitHub repository. For access to the Intel Distribution of OpenNESS, contact your Intel support representative. 
+The Intel Distribution of Smart Edge Open requires a secure login to the Smart Edge Open GitHub repository. For access to the Intel Distribution of Smart Edge Open, contact your Intel support representative. 
 
 ## Consumption Models
 
-OpenNESS can be consumed as a whole or as individual building blocks. Whether you are an infrastructure developer or an app developer, if you are moving your business to the Edge, you may benefit from utilizing OpenNESS in your next project. 
+Smart Edge Open can be consumed as a whole or as individual building blocks. Whether you are an infrastructure developer or an app developer, if you are moving your business to the Edge, you may benefit from utilizing Smart Edge Open in your next project. 
 
 **Building Blocks**
 
-You can explore the various building blocks packaged as Helm Charts and Kubernetes* Operators via the [OpenNESS github project](https://github.com/open-ness).
+You can explore the various building blocks packaged as Helm Charts and Kubernetes* Operators via the [Smart Edge Open github project](https://github.com/smart-edge-open).
 
-**Converged Edge Reference Architectures (CERA)**
+**Converged Edge Reference Architectures (Smart Edge Open Experience Kit)**
 
-CERA is a set of pre-integrated and readily deployable HW/SW Reference Architectures powered by OpenNESS to significantly accelerate Edge Platform Development, available via the [OpenNESS github project](https://github.com/open-ness).
+Smart Edge Open Experience Kit is a set of pre-integrated and readily deployable HW/SW Reference Architectures powered by Smart Edge Open to significantly accelerate Edge Platform Development, available via the [Smart Edge Open github project](https://github.com/smart-edge-open).
 
 **Cloud Devkits**
 
-Software toolkits to easily deploy an OpenNESS cluster in a cloud environment such as Azure Cloud, available via the [OpenNESS github project](https://github.com/open-ness). 
+Software toolkits to easily deploy an Smart Edge Open cluster in a cloud environment such as Azure Cloud, available via the [Smart Edge Open github project](https://github.com/smart-edge-open). 
 
 **Converged Edge Insights**
 
 Ready to deploy software packages available via the [Intel® Edge Software Hub](https://www.intel.com/content/www/us/en/edge-computing/edge-software-hub.html), comes with use case specific reference implementations to kick start your next pathfinding effort for the Edge.
 
-Next explore the [OpenNESS Architecture](architecture.md). 
+Next explore the [Smart Edge Open Architecture](architecture.md). 

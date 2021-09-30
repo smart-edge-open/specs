@@ -3,9 +3,9 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2019 Intel Corporation
 ```
 <!-- omit in toc -->
-# Kubernetes Dashboard in OpenNESS
+# Kubernetes Dashboard in Smart Edge Open
 - [Overview](#overview)
-- [Details - Kubernetes Dashboard support in OpenNESS](#details---kubernetes-dashboard-support-in-openness)
+- [Details - Kubernetes Dashboard support in Smart Edge Open](#details---kubernetes-dashboard-support-in-smart-edge-open)
   - [TLS encryption](#tls-encryption)
   - [Usage](#usage)
   - [Access rights](#access-rights)
@@ -13,9 +13,9 @@ Copyright (c) 2019 Intel Corporation
 
 ## Overview
 
-Kubernetes Dashboard is a web user interface for Kubernetes. User can use Dashboard to check the state of deployed pods, get information about all kinds of deployments that are being run on cluster and be provided with lots of useful insights about cluster and running applications. In OpenNESS environment Kubernetes Dashboard will be deployed with read-only access to all information except Kubernetes' Secrets. User can modify this role to disable or enable accesses as explained in [Access rights](#access-rights) chapter of this document.
+Kubernetes Dashboard is a web user interface for Kubernetes. User can use Dashboard to check the state of deployed pods, get information about all kinds of deployments that are being run on cluster and be provided with lots of useful insights about cluster and running applications. In Smart Edge Open environment Kubernetes Dashboard will be deployed with read-only access to all information except Kubernetes' Secrets. User can modify this role to disable or enable accesses as explained in [Access rights](#access-rights) chapter of this document.
 
-## Details - Kubernetes Dashboard support in OpenNESS
+## Details - Kubernetes Dashboard support in Smart Edge Open
 
 Kubernetes Dashboard is disabled by default in Converged Edge Experience Kits. It can be enabled by setting variable `kubernetes_dashboard_enable` in `inventory/default/group_vars/all/10-default.yml` file to `true` value:
 
@@ -46,7 +46,7 @@ kubectl describe secret -n kube-system $(kubectl get secret -n kube-system | gre
 
 ### Access rights
 
-By default OpenNESS will deploy Kubernetes Dashboard with read-only access to every information except Kubernetes' secrets. To change access rights (for example hide information about persistent volumes claims, etc.) please modify cluster role defined in `roles/kubernetes/dashboard/files/clusterrole.yml` of Converged Edge Experience Kits.
+By default Smart Edge Open will deploy Kubernetes Dashboard with read-only access to every information except Kubernetes' secrets. To change access rights (for example hide information about persistent volumes claims, etc.) please modify cluster role defined in `roles/kubernetes/dashboard/files/clusterrole.yml` of Converged Edge Experience Kits.
 
 ## Reference
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
