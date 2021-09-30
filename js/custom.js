@@ -34,7 +34,7 @@ jQuery(document).ready(function(){
             jQuery('.collapseArea').slideToggle();
     });
     jQuery('.nav-mobile').on('click', function(){
-            jQuery('.opennessmenu').slideToggle();
+            jQuery('.smartedge-openmenu').slideToggle();
     });
         
         

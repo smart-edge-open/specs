@@ -21,7 +21,7 @@ participant "Af Microservice" as AF
 participant "NEF" as NEF
 participant "NGC CP Function" as 5GC
 
-box "OpenNESS Controller Components" #LightBlue
+box "Smart Edge Open Controller Components" #LightBlue
 	participant UI
     participant AF
 end box
@@ -29,7 +29,7 @@ end box
 box "5G Core Components" #LightGreen
 	participant NEF
     note over NEF 
-        OpenNESS provided 
+        Smart Edge Open provided 
         Core component with 
         limited functionality
     end note    

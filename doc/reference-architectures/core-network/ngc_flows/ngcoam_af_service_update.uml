@@ -12,16 +12,16 @@ skinparam sequenceArrowThickness 3
 
 header "Intel Corporation"
 footer "Proprietary and Confidential"
-title "NGC OAM flows between OpenNESS Controller and NGC Core OAM Component"
+title "NGC OAM flows between Smart Edge Open Controller and NGC Core OAM Component"
 
 actor "Admin" as user
-box  "OpenNESS Controller" #LightBlue
+box  "Smart Edge Open Controller" #LightBlue
 participant "UI/CLI" as cnca 
 end box
 box  "NGC component" #LightGreen
 participant "OAM"  as oam
 note over oam
-   OpenNESS provided component 
+   Smart Edge Open provided component 
    with REST based HTTP interface 
    (for reference)
 end note
@@ -36,7 +36,7 @@ group Update DNS config values for DNN served by Edge DNN
     cnca -> oam : /ngcoam/v1/af/services/{afServiceId} : PATCH \n {dnn, dnai, snssai, tac, dns-ip, upf-ip} 
     activate oam 
     oam -> oam : NGC_OAM_STUB()
-    oam -> ngccp : {Open: 3rd Party NGC integration with OpenNESS(oam)} 
+    oam -> ngccp : {Open: 3rd Party NGC integration with Smart Edge Open(oam)} 
     ngccp --> oam : 
     oam --> cnca :  OK \n ERROR: {400/500}
     deactivate oam

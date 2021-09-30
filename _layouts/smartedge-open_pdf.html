@@ -1,0 +1,24 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright (c) 2020 Intel Corporation
+-->
+
+---
+  pdf: 
+    - cache: false | directory | default:.asset-cache 
+      page_size: A4, Letter, etc. | default:A4 
+      layout: layout | default:pdf
+      
+  pdf_layout: smartedge-open_pdf
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css">
+</head>
+<body>
+  Page {{ page.pdf.page }} of {{ page.pdf.topage }}
+</body>
+</html>

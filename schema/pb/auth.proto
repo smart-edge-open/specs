@@ -4,7 +4,7 @@
 syntax = "proto3";
 
 package openness.auth;
-option go_package = "github.com/open-ness/schema;auth";
+option go_package = "github.com/smart-edge-open/schema;auth";
 
 import "google/api/annotations.proto";
 import "protoc-gen-swagger/options/annotations.proto";

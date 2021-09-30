@@ -11,17 +11,17 @@ skinparam sequenceArrowThickness 3
 
 header Intel Corporation
 footer Proprietary and Confidential
-title Traffic influencing flows between OpenNESS controller and 5G Core
+title Traffic influencing flows between Smart Edge Open controller and 5G Core
 
 actor "User/Admin" as user
-box "OpenNESS Controller components" #LightBlue
+box "Smart Edge Open Controller components" #LightBlue
     participant "UI/CLI" as cnca 
     participant "AF Microservice" as af
 end box
 box "5G Core components" #LightGreen
     participant "NEF" as nef
     note over nef 
-        OpenNESS provided 
+        Smart Edge Open provided 
         Core component with 
         limited functionality
     end note
@@ -36,7 +36,7 @@ group Update a subscribed traffic influence by subscriptionId
     af -> nef : /3gpp-traffic-Influence/v1/{afId}/subscriptions/{subscriptionId} : PUT
     activate nef
     nef -> nef : NGC_STUB(PCF,UDR,BSF)
-    nef -> ngccp : {Open: 3rd party NGC integration with OpenNESS(NEF)}
+    nef -> ngccp : {Open: 3rd party NGC integration with Smart Edge Open(NEF)}
     ngccp --> nef :
     nef --> af : OK : Update success, traffic influence info \n ERROR: {400/500}
     deactivate nef

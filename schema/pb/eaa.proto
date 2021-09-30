@@ -4,7 +4,7 @@
 syntax = "proto3";
 
 package openness.eaa;
-option go_package = "github.com/open-ness/eaa;eaa";
+option go_package = "github.com/smart-edge-open/eaa;eaa";
 
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";

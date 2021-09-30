@@ -33,7 +33,7 @@ The Converged Edge Experience Kit is a refreshed repository of Ansible\* playboo
 
 The Converged Edge Experience Kit introduces the following capabilities:
 1. Wide range of deployments from individual building blocks to full end-to-end reference deployments
-2. Minimal to near-zero user interventions.. Typically, the user provides the details of the nodes that constitute the OpenNESS edge cluster and executes the deployment script
+2. Minimal to near-zero user interventions.. Typically, the user provides the details of the nodes that constitute the Smart Edge Open edge cluster and executes the deployment script
 3. More advanced deployments can be customized in the form of Ansible\* group and host variables. This mode requires users with in-depth knowledge and expertise of the subject edge deployment
 4. Enablement of end-to-end multi-cluster deployments such as Near Edge and On-premises reference architectures
 
@@ -83,8 +83,8 @@ The inventory file defines the group of physical nodes that constitute the edge 
 
 The following variables must be defined 
 
-* `cluster_name`: a given name for the OpenNESS edge cluster deployment - separated by underscores `_` instead of spaces.
-* `flavor`: the deployment flavor applicable for the OpenNESS edge deployment as defined in the [Deployment flavors](../flavors.md) document.
+* `cluster_name`: a given name for the Smart Edge Open edge cluster deployment - separated by underscores `_` instead of spaces.
+* `flavor`: the deployment flavor applicable for the Smart Edge Open edge deployment as defined in the [Deployment flavors](../flavors.md) document.
 * `single_node_deployment`: If set to `true`, a single-node cluster is deployed.. Must satisfy the following conditions:
   - IP address (`ansible_host`) for both controller and node must be the same
   - `controller_group` and `edgenode_group` groups must contain exactly one host
@@ -237,7 +237,7 @@ The following are several common customization scenarios.
 ### IP address range allocation for various CNIs and interfaces
 
 The Converged Edge Experience kits deployment uses/allocates/reserves a set of IP address ranges for different CNIs and interfaces. The server or host IP address should not conflict with the default address allocation.
-In case if there is a critical need for the server IP address used by the OpenNESS default deployment, it would require to modify the default addresses used by the OpenNESS.
+In case if there is a critical need for the server IP address used by the Smart Edge Open default deployment, it would require to modify the default addresses used by the Smart Edge Open.
 
 Following files specify the CIDR for CNIs and interfaces. These are the IP address ranges allocated and used by default just for reference.
 
@@ -253,7 +253,7 @@ roles/kubernetes/cni/kubeovn/controlplane/templates/crd_local.yml.j2:13:  cidrBl
 The `192.168.*.*` is used for SRIOV and interface service IP address allocation in Kube-ovn CNI. So it is not allowed for the server IP address, which conflicting with this range.
 Completely avoid the range of address defined as per the netmask as it may conflict in routing rules.
 
-E.g., If the server/host IP address is required to use `192.168.*.*` while this range by default used for SRIOV interfaces in OpenNESS. The IP address range for `cidrBlock` in `roles/kubernetes/cni/kubeovn/controlplane/templates/crd_local.yml.j2` file can be changed to `192.167.{{ loop.index0 + 1 }}.0/24` to use some other IP segment for SRIOV interfaces.
+E.g., If the server/host IP address is required to use `192.168.*.*` while this range by default used for SRIOV interfaces in Smart Edge Open. The IP address range for `cidrBlock` in `roles/kubernetes/cni/kubeovn/controlplane/templates/crd_local.yml.j2` file can be changed to `192.167.{{ loop.index0 + 1 }}.0/24` to use some other IP segment for SRIOV interfaces.
 
 
 ### Default values
@@ -407,7 +407,7 @@ The following are basic prechecks that are currently executed:
   * Check if `kubeovn` is requested as a primary (first on the list).
   * Check if the requested CNI is available (check if some CNI is requested that isn't present in the `available_kubernetes_cnis` list).
 * CNI roles should be as self-contained as possible (unless necessary, CNI-specific tasks should not be present in `kubernetes/{controlplane,node,common}` or `openness/network_edge/{controlplane,node}`).
-* If the CNI needs a custom OpenNESS service (e.g., Interface Service in case of `kube-ovn`), it can be added to the `openness/network_edge/{controlplane,node}`.<br>
+* If the CNI needs a custom Smart Edge Open service (e.g., Interface Service in case of `kube-ovn`), it can be added to the `openness/network_edge/{controlplane,node}`.<br>
   Preferably, such tasks would be contained in a separate task file (e.g., `roles/openness/controlplane/tasks/kube-ovn.yml`) and executed only if the CNI is requested. For example:
   ```yaml
   - name: deploy interface service for kube-ovn

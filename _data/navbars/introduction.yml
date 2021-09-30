@@ -5,22 +5,22 @@ title: "Introduction"
 path: /introduction/
 order: 0
 section:
-  - title: OpenNESS Overview
+  - title: Smart Edge Open Overview
     path: /doc/overview
-    meta_title: OpenNESS Overview
-    meta_description: OpenNESS is an edge computing software toolkit that enables highly optimized and performant edge platforms to on-board and manage applications and network functions with cloud-like agility across any type of network.
+    meta_title: Smart Edge Open Overview
+    meta_description: Smart Edge Open is an edge computing software toolkit that enables highly optimized and performant edge platforms to on-board and manage applications and network functions with cloud-like agility across any type of network.
 
-  - title: OpenNESS Architecture & Solution Overview
+  - title: Smart Edge Open Architecture & Solution Overview
     path: /doc/architecture
-    meta_title: OpenNESS Architecture And Solution Overview
-    meta_description: OpenNESS is an open source software to enable easy orchestration of edge services and network functions across diverse network platform in multi-cloud environments.
+    meta_title: Smart Edge Open Architecture And Solution Overview
+    meta_description: Smart Edge Open is an open source software to enable easy orchestration of edge services and network functions across diverse network platform in multi-cloud environments.
 
-  - title: OpenNESS Deployment Flavors
+  - title: Smart Edge Open Deployment Flavors
     path: /doc/flavors
-    meta_title: OpenNESS Deployment Flavors
-    meta_description: Pre-defined deployment flavors using OpenNESS that are available in the OpenNESS Experience Kits.
+    meta_title: Smart Edge Open Deployment Flavors
+    meta_description: Pre-defined deployment flavors using Smart Edge Open that are available in the Smart Edge Open Experience Kits.
 
-  - title: OpenNESS Helm
-    path: /doc/orchestration/openness-helm
-    meta_title: OpenNESS Helm
-    meta_description: OpenNESS supports Helm for user to package, configure, and deploy applications and services onto Kubernetes clusters.
+  - title: Smart Edge Open Helm
+    path: /doc/orchestration/smartedge-open-helm
+    meta_title: Smart Edge Open Helm
+    meta_description: Smart Edge Open supports Helm for user to package, configure, and deploy applications and services onto Kubernetes clusters.

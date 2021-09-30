@@ -3,7 +3,7 @@ SPDX-License-Identifier: Apache-2.0
 Copyright (c) 2021 Intel Corporation
 ```
 <!-- omit in toc -->
-# The non-root user on the OpenNESS Platform
+# The non-root user on the Smart Edge Open Platform
 - [Overview](#overview)
 - [Steps on K8s nodes](#steps-on-k8s-nodes)
 - [Repository modification](#repository-modification)
@@ -11,7 +11,7 @@ Copyright (c) 2021 Intel Corporation
 
 ## Overview
 
-OpenNESS provides a possibility to install all required files on a Kubernetes control plane and nodes with or without root user. From security perspective it is advised to use non-root user installation of the OpenNESS platform where all tasks are executed with non-root user’s permissions. Tasks that require root privileges use privilege escalation property "become".
+Smart Edge Open provides a possibility to install all required files on a Kubernetes control plane and nodes with or without root user. From security perspective it is advised to use non-root user installation of the Smart Edge Open platform where all tasks are executed with non-root user’s permissions. Tasks that require root privileges use privilege escalation property "become".
 
    ```yml
   - name: Run a command as root
@@ -35,7 +35,7 @@ A password for the given user is required.
 passwd "openness"
 ```
 
-As some tasks require root privileges the non-root user needs to have a possibility to become a root. For the user `openness` the following command must be performed:
+As some tasks require root privileges the non-root user needs to have a possibility to become a root. For the user `smartedge-open` the following command must be performed:
 
 ```bash
 echo "openness  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/openness
